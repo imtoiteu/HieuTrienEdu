@@ -10,9 +10,10 @@ from __future__ import annotations
 
 from functools import lru_cache
 from pathlib import Path
+from typing import Annotated
 
 from pydantic import Field, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 
@@ -47,7 +48,12 @@ class Settings(BaseSettings):
     api_v1_prefix: str = "/api/v1"
     # Several ports are allowed by default because port 3000 is frequently already taken on a
     # developer machine; the web app falls back to the next free one.
-    cors_origins: list[str] = Field(
+    #
+    # `NoDecode` is essential here. For a complex field type such as list[str], pydantic-settings
+    # JSON-decodes the environment value *before* any validator runs — so a comma-separated
+    # CORS_ORIGINS would raise SettingsError at import and the API would refuse to start, which
+    # is exactly what Docker Compose passes. NoDecode hands the raw string to the validator below.
+    cors_origins: Annotated[list[str], NoDecode] = Field(
         default_factory=lambda: [
             "http://localhost:3000",
             "http://127.0.0.1:3000",
@@ -80,11 +86,22 @@ class Settings(BaseSettings):
     @field_validator("cors_origins", mode="before")
     @classmethod
     def _split_origins(cls, value: object) -> object:
-        """Accept both a JSON list and a comma-separated string (friendlier in Compose)."""
+        """Accept a JSON array or a comma-separated string.
+
+        Because the field is annotated `NoDecode`, pydantic-settings hands us the raw environment
+        string and does no JSON parsing of its own — so this validator has to handle both forms.
+        Comma-separated is what a human writes in a .env file or a Compose environment block;
+        JSON is what tooling tends to emit.
+        """
         if isinstance(value, str):
             stripped = value.strip()
             if stripped.startswith("["):
-                return value
+                import json
+
+                try:
+                    return json.loads(stripped)
+                except json.JSONDecodeError as exc:
+                    raise ValueError(f"CORS_ORIGINS looks like JSON but is invalid: {exc}") from exc
             return [item.strip() for item in stripped.split(",") if item.strip()]
         return value
 

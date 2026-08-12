@@ -102,7 +102,18 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
       body: body !== undefined ? JSON.stringify(body) : undefined,
     });
   } catch (cause) {
-    // fetch only rejects on network failure, so this is genuinely "cannot reach the server".
+    // fetch only rejects on a network-level failure. In development the overwhelmingly common
+    // cause is not that the API is down but that it is running and rejecting the request on
+    // CORS grounds — which the browser reports to JavaScript as an indistinguishable network
+    // error. That happens whenever the web app is served from an origin missing from the API's
+    // CORS_ORIGINS, which is easy to hit because the dev server falls back to another port when
+    // 3000 is taken. The hint costs nothing and saves a long debugging session.
+    if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
+      console.error(
+        `[api] Request to ${API_BASE} failed at the network level.\n` +
+          `If the API is running, check that CORS_ORIGINS includes ${window.location.origin}.`,
+      );
+    }
     throw new ApiError('Cannot reach the server', 0, cause);
   }
 

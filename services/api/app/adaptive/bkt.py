@@ -61,6 +61,10 @@ MASTERY_THRESHOLD = 0.95
 # Below this, the student needs support rather than more of the same practice.
 STRUGGLING_THRESHOLD = 0.40
 
+# Learning credit applied after an incorrect attempt, as a fraction of the skill's transit rate.
+# See the comment in update_mastery for why this is not 1.0.
+INCORRECT_TRANSIT_FACTOR = 0.5
+
 # Clamp the posterior away from the asymptotes. At exactly 0 or 1 the Bayes update becomes a
 # fixed point — no future evidence could ever move the estimate again, so a student who got
 # unlucky early would be permanently stuck.
@@ -178,7 +182,25 @@ def update_mastery(
     # should already prevent. Falling back to the prior is the neutral choice.
     posterior = prior if denominator <= 0 else numerator / denominator
 
-    mastery = posterior + (1.0 - posterior) * params.p_transit
+    # Textbook BKT applies the full learning term after *any* attempt, on the reasoning that the
+    # attempt was itself a practice opportunity. At low mastery that term outweighs the negative
+    # evidence: a student sitting at 0.100 who answers incorrectly comes out at 0.101.
+    #
+    # That is defensible as a model and indefensible as a product. Telling a student their mastery
+    # went *up* after getting a question wrong destroys trust in the number, and a parent reading
+    # the same figure would rightly call it nonsense.
+    #
+    # So we apply a reduced learning rate on an incorrect attempt. The student did have a practice
+    # opportunity and will read the worked solution, so some learning credit is right — but less
+    # than for an attempt they actually got right. The clamp underneath then guarantees the
+    # property outright, including at the very bottom of the range where the reduced rate alone
+    # would not. Both are deliberate, documented deviations — see docs/ADAPTIVE_LEARNING.md.
+    transit = params.p_transit if is_correct else params.p_transit * INCORRECT_TRANSIT_FACTOR
+    mastery = posterior + (1.0 - posterior) * transit
+
+    if not is_correct:
+        mastery = min(mastery, prior)
+
     mastery = min(max(mastery, _MIN_P), _MAX_P)
 
     return BKTUpdate(

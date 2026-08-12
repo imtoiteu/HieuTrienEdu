@@ -1,0 +1,109 @@
+# HieuTrienEducation — full local stack.
+#
+#   docker compose up --build
+#
+# then run the one-off seed:
+#
+#   docker compose run --rm seed
+#
+# The web app is on http://localhost:3000 and the API on http://localhost:8000 (docs at /docs).
+
+name: hietrieneducation
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: hietedu
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hietedu-dev-password}
+      POSTGRES_DB: hietedu
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
+    healthcheck:
+      # The API waits on this, so it must test that Postgres accepts queries, not merely that
+      # the process is up.
+      test: ['CMD-SHELL', 'pg_isready -U hietedu -d hietedu']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    command: ['redis-server', '--save', '', '--appendonly', 'no']
+    ports:
+      - '${REDIS_PORT:-6379}:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg://hietedu:${POSTGRES_PASSWORD:-hietedu-dev-password}@db:5432/hietedu
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: ${SECRET_KEY:-dev-only-insecure-secret-change-me}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      DEBUG: ${DEBUG:-true}
+      CONTENT_DIR: /srv/content
+      CORS_ORIGINS: 'http://localhost:3000,http://127.0.0.1:3000'
+      AI_PROVIDER: ${AI_PROVIDER:-disabled}
+      LIVE_CLASS_PROVIDER: ${LIVE_CLASS_PROVIDER:-manual}
+      PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-manual}
+      STORAGE_PROVIDER: ${STORAGE_PROVIDER:-local}
+      GEOGEBRA_ENABLED: ${GEOGEBRA_ENABLED:-false}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - '${API_PORT:-8000}:8000'
+    # Migrations run on start so a fresh volume comes up with the right schema without a
+    # separate manual step.
+    command: >
+      sh -c "alembic upgrade head &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+  # One-off: loads curriculum content and demo data. Not part of `up`, because re-seeding on
+  # every restart would be surprising.
+  seed:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg://hietedu:${POSTGRES_PASSWORD:-hietedu-dev-password}@db:5432/hietedu
+      CONTENT_DIR: /srv/content
+      SECRET_KEY: ${SECRET_KEY:-dev-only-insecure-secret-change-me}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ['python', '-m', 'app.seed.seed']
+    profiles: ['tools']
+    restart: 'no'
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+      args:
+        # The browser talks to the API directly, so this must be an address the *browser* can
+        # reach — not the internal service name.
+        NEXT_PUBLIC_API_URL: ${PUBLIC_API_URL:-http://localhost:8000}
+        NEXT_PUBLIC_GEOGEBRA_ENABLED: ${GEOGEBRA_ENABLED:-false}
+    environment:
+      NEXT_PUBLIC_API_URL: ${PUBLIC_API_URL:-http://localhost:8000}
+      NODE_ENV: production
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - '${WEB_PORT:-3000}:3000'
+
+volumes:
+  postgres-data:
