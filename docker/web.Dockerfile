@@ -34,6 +34,12 @@ ARG NEXT_PUBLIC_GEOGEBRA_ENABLED=false
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL \
     NEXT_PUBLIC_GEOGEBRA_ENABLED=$NEXT_PUBLIC_GEOGEBRA_ENABLED
 
+# Cap V8's heap so the build fits on a memory-constrained host. Left to itself, Node grows the
+# old space until the container is killed; a ceiling makes it collect more often and finish
+# slower instead of dying. Raise it via --build-arg on a machine with room to spare.
+ARG NODE_HEAP_MB=2048
+ENV NODE_OPTIONS=--max-old-space-size=$NODE_HEAP_MB
+
 RUN npm run build --workspace=@hietedu/web
 
 # --- runtime ----------------------------------------------------------------------------

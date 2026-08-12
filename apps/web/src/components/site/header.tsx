@@ -135,7 +135,11 @@ export function SiteHeader() {
             <Logo />
           </Link>
 
-          <nav aria-label="Main" className="hidden items-center gap-0.5 xl:flex">
+          {/* `shrink-0` plus `whitespace-nowrap` on each item: a nav label is either shown whole or
+              not at all. Without them flex squeezes the links and the labels wrap onto two lines —
+              invisible in English, where every label is one word, and immediately obvious in
+              Vietnamese, where "Toán học" and "Giới thiệu" are two. */}
+          <nav aria-label="Main" className="hidden shrink-0 items-center gap-0.5 xl:flex">
             {NAV.map((item) =>
               item.children ? (
                 <div
@@ -150,7 +154,7 @@ export function SiteHeader() {
                     aria-haspopup="true"
                     onClick={() => setOpenDropdown(openDropdown === item.href ? null : item.href)}
                     className={cn(
-                      'flex items-center gap-1 rounded-xl px-2.5 py-2 text-sm font-bold transition-colors',
+                      'flex items-center gap-1 whitespace-nowrap rounded-xl px-2.5 py-2 text-sm font-bold transition-colors',
                       isActive(item.href)
                         ? 'bg-brand-100 text-brand-800'
                         : 'text-ink-700 hover:bg-ink-100',
@@ -182,7 +186,7 @@ export function SiteHeader() {
                   href={href(item.href)}
                   aria-current={isActive(item.href) ? 'page' : undefined}
                   className={cn(
-                    'rounded-xl px-2.5 py-2 text-sm font-bold transition-colors',
+                    'whitespace-nowrap rounded-xl px-2.5 py-2 text-sm font-bold transition-colors',
                     isActive(item.href)
                       ? 'bg-brand-100 text-brand-800'
                       : 'text-ink-700 hover:bg-ink-100',
