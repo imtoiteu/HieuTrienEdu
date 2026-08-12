@@ -17,6 +17,19 @@ interface NavItem {
   children?: { labelKey: string; href: string }[];
 }
 
+/**
+ * Six top-level entries, not eight.
+ *
+ * Eight did not fit. The bar also carries a logo, a locale switcher, a login link and a CTA, and
+ * at 1280px — the width of a great many laptops — the total ran about 130px over the available
+ * space. The old header absorbed that by letting flex squash the buttons, so "Learning methods"
+ * and "Log in" wrapped onto two lines and the CTA was clipped off the right edge.
+ *
+ * The four items that moved under About are the ones a visitor reads once (who teaches here, how
+ * it is taught, articles, how to get in touch) rather than the ones they navigate to repeatedly.
+ * Subjects, courses, tutoring formats and pricing — what a parent actually shops for — stay one
+ * click away at the top level.
+ */
 const NAV: NavItem[] = [
   { labelKey: 'nav.mathematics', href: '/mathematics' },
   { labelKey: 'nav.physics', href: '/physics' },
@@ -32,11 +45,38 @@ const NAV: NavItem[] = [
       { labelKey: 'nav.recordedCourses', href: '/tutoring/recorded' },
     ],
   },
-  { labelKey: 'nav.teachers', href: '/teachers' },
-  { labelKey: 'nav.methods', href: '/learning-methods' },
   { labelKey: 'nav.pricing', href: '/pricing' },
-  { labelKey: 'nav.blog', href: '/blog' },
+  {
+    labelKey: 'nav.about',
+    href: '/about',
+    children: [
+      // The parent renders as a dropdown trigger rather than a link, so the overview page needs
+      // its own entry or it becomes unreachable from the header.
+      { labelKey: 'nav.aboutOverview', href: '/about' },
+      { labelKey: 'nav.teachers', href: '/teachers' },
+      { labelKey: 'nav.methods', href: '/learning-methods' },
+      { labelKey: 'nav.blog', href: '/blog' },
+      { labelKey: 'nav.contact', href: '/contact' },
+    ],
+  },
 ];
+
+/**
+ * One sizing treatment shared by every button in the header's action group.
+ *
+ * The group only reads as a group if its members agree, so login, dashboard and the CTA all take
+ * this rather than each inheriting whatever the default `sm` size happens to be.
+ *
+ * 13px rather than the default 14px: at 14px bold the Vietnamese CTA "Bắt đầu miễn phí" runs wide
+ * enough to crowd its own border and pull the whole right-hand side out of balance. Dropping one
+ * step keeps the button prominent — it is still the only coral element in the bar — while letting
+ * the padding, not the text, define its size.
+ *
+ * `leading-none` makes the text box exactly the glyph height so the flex centring is optically
+ * true. That matters more here than in English: Vietnamese stacks diacritics (ắ, ầ, ễ), and with a
+ * default line-height the extra box height pushes the visual centre of the label downwards.
+ */
+const ACTION_BUTTON = 'h-9 px-[1.125rem] text-[0.8125rem] leading-none';
 
 export function SiteHeader() {
   const { t, locale } = useI18n();
@@ -77,79 +117,98 @@ export function SiteHeader() {
         {t('common.skipToContent')}
       </a>
 
-      <div className="mx-auto flex h-[4.5rem] w-full max-w-7xl items-center justify-between gap-4 px-5 sm:px-8 lg:px-12">
-        <Link href={href('')} aria-label={t('brand.name')} className="shrink-0">
-          <Logo />
-        </Link>
+      {/* Three-part layout, but only two flex children: a left cluster holding the brand and its
+          navigation, and an action group pushed right with ml-auto.
 
-        <nav aria-label="Main" className="hidden items-center gap-1 xl:flex">
-          {NAV.map((item) =>
-            item.children ? (
-              <div
-                key={item.href}
-                className="relative"
-                onMouseEnter={() => setOpenDropdown(item.href)}
-                onMouseLeave={() => setOpenDropdown(null)}
-              >
-                <button
-                  type="button"
-                  aria-expanded={openDropdown === item.href}
-                  aria-haspopup="true"
-                  onClick={() =>
-                    setOpenDropdown(openDropdown === item.href ? null : item.href)
-                  }
+          The previous version made the nav a third sibling under `justify-between`, which
+          distributed the free space *between* all three — so the nav floated in the middle of the
+          bar, detached from the logo and drifting further right on every wider screen. Grouping
+          brand and nav means the nav stays anchored to the logo at any width, and the whitespace
+          collects in one deliberate gap before the actions instead of two accidental ones. */}
+      <div className="mx-auto flex h-16 w-full max-w-7xl items-center px-5 sm:px-8 lg:px-10">
+        {/* No `min-w-0` here on purpose. It would let this cluster shrink below its content, and
+            since nav items do not wrap they would simply overflow *underneath* the action group —
+            a silent overlap. Left at its natural minimum, any future overflow shows up as a page
+            scrollbar instead, which is visible and therefore fixable. */}
+        <div className="flex items-center gap-7 2xl:gap-10">
+          <Link href={href('')} aria-label={t('brand.name')} className="shrink-0">
+            <Logo />
+          </Link>
+
+          <nav aria-label="Main" className="hidden items-center gap-0.5 xl:flex">
+            {NAV.map((item) =>
+              item.children ? (
+                <div
+                  key={item.href}
+                  className="relative"
+                  onMouseEnter={() => setOpenDropdown(item.href)}
+                  onMouseLeave={() => setOpenDropdown(null)}
+                >
+                  <button
+                    type="button"
+                    aria-expanded={openDropdown === item.href}
+                    aria-haspopup="true"
+                    onClick={() => setOpenDropdown(openDropdown === item.href ? null : item.href)}
+                    className={cn(
+                      'flex items-center gap-1 rounded-xl px-2.5 py-2 text-sm font-bold transition-colors',
+                      isActive(item.href)
+                        ? 'bg-brand-100 text-brand-800'
+                        : 'text-ink-700 hover:bg-ink-100',
+                    )}
+                  >
+                    {t(item.labelKey)}
+                    <ChevronDown className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                  {openDropdown === item.href && (
+                    <div className="absolute left-0 top-full w-60 pt-2">
+                      <ul className="animate-pop-in rounded-2xl border-2 border-ink-100 bg-white p-2 shadow-lift">
+                        {item.children.map((child) => (
+                          <li key={child.href}>
+                            <Link
+                              href={href(child.href)}
+                              className="block rounded-xl px-3 py-2 text-sm font-semibold text-ink-700 hover:bg-brand-50 hover:text-brand-800"
+                            >
+                              {t(child.labelKey)}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={href(item.href)}
+                  aria-current={isActive(item.href) ? 'page' : undefined}
                   className={cn(
-                    'flex items-center gap-1 rounded-xl px-3 py-2 text-sm font-bold transition-colors',
+                    'rounded-xl px-2.5 py-2 text-sm font-bold transition-colors',
                     isActive(item.href)
                       ? 'bg-brand-100 text-brand-800'
                       : 'text-ink-700 hover:bg-ink-100',
                   )}
                 >
                   {t(item.labelKey)}
-                  <ChevronDown className="h-4 w-4" aria-hidden="true" />
-                </button>
-                {openDropdown === item.href && (
-                  <div className="absolute left-0 top-full w-60 pt-2">
-                    <ul className="animate-pop-in rounded-2xl border-2 border-ink-100 bg-white p-2 shadow-lift">
-                      {item.children.map((child) => (
-                        <li key={child.href}>
-                          <Link
-                            href={href(child.href)}
-                            className="block rounded-xl px-3 py-2 text-sm font-semibold text-ink-700 hover:bg-brand-50 hover:text-brand-800"
-                          >
-                            {t(child.labelKey)}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <Link
-                key={item.href}
-                href={href(item.href)}
-                aria-current={isActive(item.href) ? 'page' : undefined}
-                className={cn(
-                  'rounded-xl px-3 py-2 text-sm font-bold transition-colors',
-                  isActive(item.href)
-                    ? 'bg-brand-100 text-brand-800'
-                    : 'text-ink-700 hover:bg-ink-100',
-                )}
-              >
-                {t(item.labelKey)}
-              </Link>
-            ),
-          )}
-        </nav>
+                </Link>
+              ),
+            )}
+          </nav>
+        </div>
 
-        <div className="flex items-center gap-2">
+        {/* Action group. `shrink-0` keeps the CTA intact if the navigation ever grows wide enough
+            to compete for space — a squashed primary button is worse than a tighter nav. */}
+        <div className="ml-auto flex shrink-0 items-center gap-1.5 pl-6">
           <LocaleSwitcher />
+
+          {/* A hairline rather than more whitespace: it reads the locale switcher and the session
+              actions as one deliberate group, which is what stops the right side looking like
+              three unrelated controls that happen to sit near each other. */}
+          <span className="mx-1 hidden h-6 w-px bg-ink-200 sm:block" aria-hidden="true" />
 
           {!loading && user ? (
             <div className="hidden items-center gap-2 sm:flex">
               <Link href={dashboardHref()}>
-                <Button size="sm" variant="outline">
+                <Button size="sm" variant="outline" className={ACTION_BUTTON}>
                   <LayoutDashboard className="h-4 w-4" aria-hidden="true" />
                   <span className="hidden lg:inline">{t('nav.dashboard')}</span>
                 </Button>
@@ -168,12 +227,12 @@ export function SiteHeader() {
             !loading && (
               <div className="hidden items-center gap-2 sm:flex">
                 <Link href={href('/login')}>
-                  <Button size="sm" variant="ghost">
+                  <Button size="sm" variant="ghost" className={ACTION_BUTTON}>
                     {t('common.login')}
                   </Button>
                 </Link>
                 <Link href={href('/register')}>
-                  <Button size="sm" variant="coral">
+                  <Button size="sm" variant="coral" className={ACTION_BUTTON}>
                     {t('common.getStarted')}
                   </Button>
                 </Link>
@@ -197,18 +256,28 @@ export function SiteHeader() {
       {mobileOpen && (
         <div
           id="mobile-nav"
-          className="max-h-[calc(100vh-4.5rem)] overflow-y-auto border-t-2 border-ink-100 bg-cream px-5 py-4 xl:hidden"
+          className="max-h-[calc(100vh-4rem)] overflow-y-auto border-t-2 border-ink-100 bg-cream px-5 py-4 xl:hidden"
         >
           <nav aria-label="Mobile">
             <ul className="space-y-1">
               {NAV.map((item) => (
                 <li key={item.href}>
-                  <Link
-                    href={href(item.href)}
-                    className="block rounded-xl px-3 py-2.5 font-bold text-ink-800 hover:bg-ink-100"
-                  >
-                    {t(item.labelKey)}
-                  </Link>
+                  {/* A parent with children is a heading here, not a link. "Tutoring" points at
+                      /tutoring, which is not a page — only /tutoring/[format] exists — so linking
+                      it sent anyone using the mobile menu to a 404. Every destination is listed
+                      below it, including the group's own overview page where there is one. */}
+                  {item.children ? (
+                    <span className="block px-3 pb-1 pt-3 text-xs font-extrabold uppercase tracking-widest text-ink-400">
+                      {t(item.labelKey)}
+                    </span>
+                  ) : (
+                    <Link
+                      href={href(item.href)}
+                      className="block rounded-xl px-3 py-2.5 font-bold text-ink-800 hover:bg-ink-100"
+                    >
+                      {t(item.labelKey)}
+                    </Link>
+                  )}
                   {item.children && (
                     <ul className="ml-3 border-l-2 border-ink-100 pl-3">
                       {item.children.map((child) => (
@@ -225,14 +294,6 @@ export function SiteHeader() {
                   )}
                 </li>
               ))}
-              <li>
-                <Link
-                  href={href('/contact')}
-                  className="block rounded-xl px-3 py-2.5 font-bold text-ink-800 hover:bg-ink-100"
-                >
-                  {t('nav.contact')}
-                </Link>
-              </li>
             </ul>
           </nav>
 
@@ -304,9 +365,7 @@ function LocaleSwitcher() {
                 aria-current={code === locale ? 'true' : undefined}
                 className={cn(
                   'block rounded-xl px-3 py-2 text-sm font-semibold',
-                  code === locale
-                    ? 'bg-brand-100 text-brand-800'
-                    : 'text-ink-700 hover:bg-ink-100',
+                  code === locale ? 'bg-brand-100 text-brand-800' : 'text-ink-700 hover:bg-ink-100',
                 )}
               >
                 {LOCALE_NAMES[code]}

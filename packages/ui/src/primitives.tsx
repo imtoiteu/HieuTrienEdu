@@ -68,6 +68,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       disabled={disabled || loading}
       className={cn(
         'inline-flex items-center justify-center rounded-2xl border-2 font-bold',
+        // Every size below sets a fixed height, so a label that wraps does not make the button
+        // taller — it spills out of it. Vietnamese labels are the ones that expose this: "Bắt đầu
+        // miễn phí" is three words where the English is two, and it wrapped inside the header CTA.
+        'whitespace-nowrap',
         'transition-all duration-150 select-none',
         'disabled:pointer-events-none disabled:opacity-50',
         BUTTON_VARIANTS[variant],
