@@ -45,10 +45,14 @@ class Settings(BaseSettings):
 
     # ---- http -----------------------------------------------------------------------
     api_v1_prefix: str = "/api/v1"
+    # Several ports are allowed by default because port 3000 is frequently already taken on a
+    # developer machine; the web app falls back to the next free one.
     cors_origins: list[str] = Field(
         default_factory=lambda: [
             "http://localhost:3000",
             "http://127.0.0.1:3000",
+            "http://localhost:3100",
+            "http://127.0.0.1:3100",
         ]
     )
 

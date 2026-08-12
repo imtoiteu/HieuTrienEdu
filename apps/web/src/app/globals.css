@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: 'Nunito Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-display: 'Baloo 2', 'Nunito Sans', system-ui, sans-serif;
+  }
+
+  * {
+    @apply border-ink-200;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-cream text-ink-900 antialiased;
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    @apply font-extrabold tracking-tight text-ink-900;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* A visible, high-contrast focus ring everywhere. Never removed — keyboard users need it,
+     and :focus-visible means mouse users never see it. */
+  :focus-visible {
+    @apply outline-none ring-4 ring-brand-500/40 ring-offset-2 ring-offset-cream rounded-lg;
+  }
+
+  ::selection {
+    @apply bg-brand-200 text-ink-900;
+  }
+
+  /* Respect a user's reduced-motion preference: disable decorative animation entirely rather
+     than merely shortening it. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12;
+  }
+
+  .container-prose {
+    @apply mx-auto w-full max-w-3xl px-5 sm:px-8;
+  }
+
+  /* Section eyebrow — the small coloured label above a heading. */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full bg-brand-100 px-4 py-1.5
+           text-xs font-bold uppercase tracking-widest text-brand-700;
+  }
+
+  .card {
+    @apply rounded-3xl border-2 border-ink-100 bg-white p-6 shadow-soft;
+  }
+
+  .card-interactive {
+    @apply card transition-all duration-200 hover:-translate-y-1 hover:border-brand-200
+           hover:shadow-lift focus-within:-translate-y-1 focus-within:shadow-lift;
+  }
+
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100]
+           focus:rounded-xl focus:bg-ink-900 focus:px-5 focus:py-3 focus:text-white;
+  }
+
+  /* KaTeX sizing — the default is slightly too large inline against our body text. */
+  .katex {
+    font-size: 1.06em;
+  }
+
+  .katex-display {
+    @apply my-5 overflow-x-auto overflow-y-hidden py-1;
+  }
+
+  /* Long content that must scroll inside its own box rather than the page. */
+  .scroll-x {
+    @apply overflow-x-auto;
+    scrollbar-width: thin;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Organic blob shape used behind hero art and illustration panels. */
+  .blob {
+    border-radius: 42% 58% 63% 37% / 47% 42% 58% 53%;
+  }
+
+  .blob-2 {
+    border-radius: 63% 37% 39% 61% / 43% 62% 38% 57%;
+  }
+
+  .stripe-brand {
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgb(109 74 255 / 0.09) 0px,
+      rgb(109 74 255 / 0.09) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+  }
+}

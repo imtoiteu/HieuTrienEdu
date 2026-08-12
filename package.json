@@ -1,0 +1,25 @@
+{
+  "name": "hietrieneducation",
+  "version": "0.1.0",
+  "private": true,
+  "description": "HieuTrienEducation \u2014 Mathematics & Physics learning platform and tutoring centre",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=@hietedu/web",
+    "build": "npm run build --workspace=@hietedu/web",
+    "start": "npm run start --workspace=@hietedu/web",
+    "lint": "npm run lint --workspace=@hietedu/web",
+    "typecheck": "npm run typecheck --workspace=@hietedu/web",
+    "test": "npm run test --workspace=@hietedu/web",
+    "test:e2e": "npm run test:e2e --workspace=@hietedu/web",
+    "api": "cd services/api && .venv/bin/uvicorn app.main:app --reload --host 0.0.0.0 --port 8000",
+    "api:seed": "cd services/api && .venv/bin/python -m app.seed.seed",
+    "api:test": "cd services/api && .venv/bin/python -m pytest -q"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  }
+}
