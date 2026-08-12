@@ -194,9 +194,15 @@ def _grade_numeric(answer, user, _rendered) -> GradeResult:
         # A factor-of-ten error is the single most common numeric mistake; naming it is more
         # useful than a generic "incorrect".
         if expected != 0 and abs(value / expected - 10) < 0.01:
-            message = "Close — your answer is ten times too large. Check your units or decimal point."
+            message = (
+                "Close — your answer is ten times too large. "
+                "Check your units or decimal point."
+            )
         elif expected != 0 and abs(value / expected - 0.1) < 0.001:
-            message = "Close — your answer is ten times too small. Check your units or decimal point."
+            message = (
+                "Close — your answer is ten times too small. "
+                "Check your units or decimal point."
+            )
         elif expected != 0 and abs(value + expected) < max(1e-9, tolerance * abs(expected)):
             message = "You have the right magnitude but the wrong sign."
         else:

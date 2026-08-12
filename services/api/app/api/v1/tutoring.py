@@ -21,7 +21,6 @@ from app.models import (
     Order,
     OrderItem,
     OrderStatus,
-    ScheduleSlot,
     TeacherProfile,
     TutoringProduct,
     TutoringRequest,

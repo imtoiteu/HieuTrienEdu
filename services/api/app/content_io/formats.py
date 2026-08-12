@@ -332,7 +332,9 @@ def parse_qti(xml_source: str, *, license: str = "CC-BY-4.0",
         multiple = max_choices != "1" or len(correct_values) > 1
         return ImportedQuestion(
             prompt=prompt,
-            question_type=QuestionType.MULTIPLE_SELECT if multiple else QuestionType.MULTIPLE_CHOICE,
+            question_type=QuestionType.MULTIPLE_SELECT
+            if multiple
+            else QuestionType.MULTIPLE_CHOICE,
             options={"choices": choices},
             license=license,
             attribution=attribution,

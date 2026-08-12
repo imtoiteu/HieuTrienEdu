@@ -6,10 +6,8 @@ If it passes, the product's central claim works.
 
 from __future__ import annotations
 
-from sqlalchemy import select
-
 from app.adaptive import MASTERY_THRESHOLD
-from app.models import Attempt, QuestionVariant, StudentSkillMastery
+from app.models import QuestionVariant, StudentSkillMastery
 
 
 class TestPracticeLoop:

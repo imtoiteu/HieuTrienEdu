@@ -19,10 +19,10 @@ from pathlib import Path
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+from app.content_io.loader import load_all
 from app.core.config import settings
 from app.core.db import SessionLocal, engine
 from app.core.security import hash_password
-from app.content_io.loader import load_all
 from app.models import (
     Achievement,
     Base,
@@ -469,16 +469,19 @@ def seed_site_content(db: Session) -> None:
         ("Nguyễn Thị Lan", "Parent of a Grade 7 student", 5, "mathematics", 7, True,
          "My daughter used to hide her maths homework from me. Two terms in, she explains it to "
          "her younger brother. The weekly report showed us exactly which skills were weak, and "
-         "the practice actually targeted them instead of giving her more of what she already knew."),
+         "the practice actually targeted them instead of giving her more of what "
+         "she already knew."),
         ("Trần Minh Quân", "Grade 9 student", 5, "physics", 9, True,
          "The practice never runs out, which sounds obvious but no other site I tried did that. "
-         "Every question is different so I couldn't memorise answers — I had to actually learn it."),
+         "Every question is different so I couldn't memorise answers — I had to "
+         "actually learn it."),
         ("Phạm Thu Hà", "Parent of a Grade 8 student", 5, "physics", 8, True,
          "Cô Triền found the exact misunderstanding behind months of confusion in a single "
          "session. My son went from 5.5 to 8.0 in one term."),
         ("Lê Hoàng Nam", "Parent of two students", 5, "mathematics", 6, False,
          "Both my children study here, in different grades and with different teachers. What I "
-         "value most is that I can see real progress data rather than being told 'he's doing fine'."),
+         "value most is that I can see real progress data rather than being told "
+         "'he's doing fine'."),
         ("Vũ Thị Mai Anh", "Grade 8 student", 4, "mathematics", 8, False,
          "The learning path makes it obvious what to do next. I used to waste time deciding what "
          "to revise; now I just open it and start."),
@@ -559,7 +562,8 @@ def seed_site_content(db: Session) -> None:
                 "- how likely a knowing student is to slip,\n"
                 "- how likely a non-knowing student is to guess correctly.\n\n"
                 "We adjust the guess probability by question type, because a four-option multiple "
-                "choice is guessable one time in four and a numeric answer essentially never is.\n\n"
+                "choice is guessable one time in four and a numeric answer essentially "
+                "never is.\n\n"
                 "## When we say mastered\n\n"
                 "A skill is marked mastered when that probability passes 95%, which typically "
                 "takes around five correct answers from a cold start — more if hints were used, "
@@ -799,7 +803,9 @@ def _synthesise_answer(variant, correct: bool, rng: random.Random) -> dict | Non
 
     if qtype == "numeric":
         value = answer.get("value", 0)
-        return {"value": value if correct else value + rng.choice([1, -1, 10]) * max(1, abs(value) * 0.1)}
+        if correct:
+            return {"value": value}
+        return {"value": value + rng.choice([1, -1, 10]) * max(1, abs(value) * 0.1)}
 
     if qtype == "true_false":
         value = answer.get("value")

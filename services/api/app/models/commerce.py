@@ -90,7 +90,10 @@ class Payment(Base, TimestampMixin):
 
 
 class Subscription(Base, TimestampMixin):
-    """Recurring access to self-study content (as opposed to a fixed number of tutoring sessions)."""
+    """Recurring access to self-study content.
+
+    Distinct from a fixed number of tutoring sessions.
+    """
 
     __tablename__ = "subscriptions"
 

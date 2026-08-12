@@ -287,7 +287,9 @@ def _build_matching(
         left_id = f"l{index + 1}"
         right_id = f"r{index + 1}"
         left_items.append({"id": left_id, "label": render_template(str(pair["left"]), namespace)})
-        right_items.append({"id": right_id, "label": render_template(str(pair["right"]), namespace)})
+        right_items.append(
+            {"id": right_id, "label": render_template(str(pair["right"]), namespace)}
+        )
         mapping[left_id] = right_id
 
     # Shuffle only the right column — shuffling both makes the question needlessly hard to read.

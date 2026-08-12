@@ -21,7 +21,6 @@ from app.models import (
     Subject,
     Topic,
     Unit,
-    User,
     UserRole,
 )
 from app.schemas.curriculum import (

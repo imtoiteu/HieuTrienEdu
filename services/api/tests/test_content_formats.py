@@ -92,7 +92,7 @@ class TestLicenceGate:
 
     @pytest.mark.parametrize("licence", ["AGPL-3.0", "All rights reserved", None, ""])
     def test_other_licences_are_refused(self, licence):
-        """An accidental licence violation is far harder to undo than an import that did not happen."""
+        """A licence violation is much harder to undo than an import that did not happen."""
         with pytest.raises(LicenseError):
             ImportedQuestion(prompt="x", question_type="true_false", license=licence)\
                 .validate_license()

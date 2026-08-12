@@ -320,7 +320,9 @@ def child_schedule(student_id: int, db: DbSession, parent: CurrentParent) -> lis
 
 
 @router.get("/payments")
-def payment_history(db: DbSession, user: CurrentUser, parent: CurrentParent) -> list[dict[str, Any]]:
+def payment_history(
+    db: DbSession, user: CurrentUser, parent: CurrentParent
+) -> list[dict[str, Any]]:
     orders = db.scalars(
         select(Order)
         .where(Order.user_id == user.id)

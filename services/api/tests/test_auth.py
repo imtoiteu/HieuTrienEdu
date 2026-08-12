@@ -23,7 +23,7 @@ class TestPasswordHashing:
         assert not verify_password("wrong password", hashed)
 
     def test_hashes_are_salted(self):
-        """Two hashes of the same password must differ, or the database leaks which users share one."""
+        """Two hashes of one password must differ, or the database leaks shared passwords."""
         assert hash_password("same") != hash_password("same")
 
     def test_rejects_overlong_password(self):
@@ -199,7 +199,7 @@ class TestAuthorisation:
         assert client.get("/api/v1/teacher/students", headers=teacher_headers).status_code == 200
 
     def test_admin_can_reach_teacher_routes(self, client, admin_headers, curriculum):
-        """Admins support teachers, so locking them out of teacher tools would be counterproductive."""
+        """Admins support teachers, so locking them out of teacher tools helps nobody."""
         assert client.get("/api/v1/teacher/students", headers=admin_headers).status_code == 200
 
     def test_change_password_requires_the_current_one(self, client, student_headers):

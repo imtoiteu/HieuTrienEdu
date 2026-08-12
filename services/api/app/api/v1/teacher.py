@@ -28,7 +28,6 @@ from app.models import (
     Skill,
     StudentProfile,
     StudentSkillMastery,
-    TeacherProfile,
     Topic,
     Unit,
     UserRole,
@@ -261,7 +260,10 @@ def publish_question(question_id: int, db: DbSession) -> QuestionRead:
 
 @router.delete("/questions/{question_id}", status_code=status.HTTP_204_NO_CONTENT)
 def archive_question(question_id: int, db: DbSession) -> None:
-    """Soft-delete by rejecting. Attempts reference questions, so hard deletion would lose history."""
+    """Soft-delete by rejecting.
+
+    Attempts reference questions, so hard deletion would lose a student's history.
+    """
     question = db.get(Question, question_id)
     if question is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Question not found")
@@ -426,7 +428,9 @@ def all_students(db: DbSession, teacher: CurrentTeacher) -> list[StudentRow]:
 
 
 @router.get("/students/{student_id}/mastery")
-def student_mastery(student_id: int, db: DbSession, teacher: CurrentTeacher) -> list[dict[str, Any]]:
+def student_mastery(
+    student_id: int, db: DbSession, teacher: CurrentTeacher
+) -> list[dict[str, Any]]:
     rows = db.scalars(
         select(StudentSkillMastery)
         .where(StudentSkillMastery.student_id == student_id)
@@ -500,7 +504,7 @@ def analytics(
             Question.times_served, Question.times_correct,
         )
         .where(Question.times_served >= 5)
-        .order_by((Question.times_correct * 1.0 / Question.times_served))
+        .order_by(Question.times_correct * 1.0 / Question.times_served)
         .limit(8)
     ).all()
 

@@ -164,7 +164,6 @@ def recommend_next(
 
     mastery_records = _mastery_map(db, student_id)
     prerequisites = _prerequisite_map(db, [s.id for s in skills])
-    by_id = {skill.id: skill for skill in skills}
 
     mastery_of: dict[int, float] = {
         skill.id: _current_mastery(mastery_records.get(skill.id), skill, now) for skill in skills

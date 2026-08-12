@@ -10,6 +10,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 from app.adaptive import build_learning_path, recommend_next
+from app.core.deps import CurrentStudent, DbSession
 from app.exercise_engine import AnswerFormatError
 from app.models import (
     PracticeSession,
@@ -19,7 +20,6 @@ from app.models import (
     Topic,
     Unit,
 )
-from app.core.deps import CurrentStudent, DbSession
 from app.schemas.practice import (
     HintRead,
     MasteryChange,
