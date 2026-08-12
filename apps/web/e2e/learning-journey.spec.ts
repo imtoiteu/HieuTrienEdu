@@ -43,7 +43,9 @@ test.describe('public site', () => {
     await expect(page.getByRole('heading', { name: 'Courses', exact: true })).toBeVisible();
 
     await page.getByRole('link', { name: /Mathematics — Grade 8/ }).first().click();
-    await expect(page).toHaveURL(/\/en\/courses\/math-8/);
+    // Generous timeout: on a cold dev server this is the first compile of the
+    // /[locale]/courses/[slug] route, which can take longer than the default expect timeout.
+    await expect(page).toHaveURL(/\/en\/courses\/math-8/, { timeout: 60_000 });
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Mathematics — Grade 8');
 
     // Units come from the database, not hard-coded copy.
