@@ -113,7 +113,7 @@ class StudentSkillMastery(Base, TimestampMixin):
         ForeignKey("skills.id", ondelete="CASCADE"), nullable=False
     )
 
-    mastery_probability: Mapped[float] = mapped_column(default=0.15, nullable=False)
+    mastery_probability: Mapped[float] = mapped_column(default=0.10, nullable=False)
     attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     correct: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     incorrect: Mapped[int] = mapped_column(Integer, default=0, nullable=False)

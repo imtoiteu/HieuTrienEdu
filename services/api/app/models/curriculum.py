@@ -131,10 +131,10 @@ class Skill(Base, TimestampMixin):
     tags: Mapped[list[str]] = mapped_column(default=list)
 
     # BKT parameters — see docs/ADAPTIVE_LEARNING.md for what each one means.
-    bkt_p_init: Mapped[float] = mapped_column(default=0.15, nullable=False)
-    bkt_p_transit: Mapped[float] = mapped_column(default=0.12, nullable=False)
-    bkt_p_slip: Mapped[float] = mapped_column(default=0.10, nullable=False)
-    bkt_p_guess: Mapped[float] = mapped_column(default=0.20, nullable=False)
+    bkt_p_init: Mapped[float] = mapped_column(default=0.10, nullable=False)
+    bkt_p_transit: Mapped[float] = mapped_column(default=0.08, nullable=False)
+    bkt_p_slip: Mapped[float] = mapped_column(default=0.15, nullable=False)
+    bkt_p_guess: Mapped[float] = mapped_column(default=0.28, nullable=False)
 
     topic: Mapped[Topic] = relationship(back_populates="skills")
     questions: Mapped[list[Question]] = relationship(back_populates="skill")
