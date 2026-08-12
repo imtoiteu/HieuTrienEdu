@@ -1,0 +1,42 @@
+# dependencies
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.uv/
+
+# builds
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# data & local state
+data/
+*.db
+*.sqlite3
+
+# env
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# tests / tooling
+.pytest_cache/
+.ruff_cache/
+coverage/
+.coverage
+playwright-report/
+test-results/
+blob-report/
+.playwright/
+
+# editors & os
+.DS_Store
+.idea/
+.vscode/
+*.swp
