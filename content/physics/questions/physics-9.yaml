@@ -1,0 +1,281 @@
+# Physics — Grade 9 question templates
+defaults:
+  license: proprietary
+  source: HieuTrienEducation
+  status: published
+
+questions:
+  - slug: p9-suvat-final-velocity
+    skill: physics-9-suvat
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      An object starts at {{u}} m/s and accelerates at {{a}} m/s^2 for {{t}} s.
+      What is its final velocity, in m/s?
+    variables:
+      u: {type: int, min: 0, max: 25}
+      a: {type: int, min: 1, max: 10}
+      t: {type: int, min: 2, max: 15}
+    answer: {expression: "u + a*t", unit: "m/s"}
+    options:
+      distractors: ["u * a * t", "a * t"]
+    hints:
+      - text: "Use v = u + at."
+    solution:
+      - text: "v = {{u}} + {{a}} x {{t}} = {{u + a*t}} m/s."
+
+  - slug: p9-suvat-distance
+    skill: physics-9-suvat
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      An object starts from rest and accelerates at {{a}} m/s^2 for {{t}} s.
+      How far does it travel, in metres?
+    variables:
+      a: {type: int, min: 2, max: 10}
+      t: {type: int, min: 2, max: 12}
+    answer: {expression: "0.5 * a * t * t", unit: "m", tolerance: 0.001}
+    options:
+      distractors: ["a * t", "a * t * t"]
+    hints:
+      - text: "Starting from rest, s = 1/2 a t^2."
+      - text: "{{t}}^2 = {{t*t}}."
+    solution:
+      - text: "s = 0.5 x {{a}} x {{t*t}} = {{0.5*a*t*t}} m."
+
+  - slug: p9-free-fall
+    skill: physics-9-projectiles
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      An object is dropped from rest and falls for {{t}} s.
+      How fast is it moving, in m/s? Use g = 10 m/s^2 and ignore air resistance.
+    variables:
+      t: {type: float, min: 0.5, max: 8.0, decimals: 1}
+    answer: {expression: "10 * t", unit: "m/s", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["t / 10", "5 * t * t"]
+    hints:
+      - text: "Starting from rest, v = g x t."
+    solution:
+      - text: "v = 10 x {{t}} = {{10*t : 2}} m/s."
+
+  - slug: p9-momentum
+    skill: physics-9-momentum-calc
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      Calculate the momentum, in kg m/s, of a {{m}} kg object moving at {{v}} m/s.
+    variables:
+      m: {type: int, min: 2, max: 2000, step: 2}
+      v: {type: int, min: 2, max: 40}
+    answer: {expression: "m * v", unit: "kg m/s"}
+    options:
+      distractors: ["m / v", "0.5 * m * v * v"]
+    hints:
+      - text: "Momentum p = m x v."
+    solution:
+      - text: "p = {{m}} x {{v}} = {{m*v}} kg m/s."
+
+  - slug: p9-conservation-momentum
+    skill: physics-9-conservation-momentum
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      A {{m1}} kg trolley moving at {{v1}} m/s collides with a stationary {{m2}} kg trolley.
+      They stick together. What is their combined velocity afterwards, in m/s?
+    variables:
+      m1: {type: int, min: 1, max: 12}
+      m2: {type: int, min: 1, max: 12}
+      v1: {type: int, min: 2, max: 20}
+    answer:
+      expression: "m1 * v1 / (m1 + m2)"
+      unit: "m/s"
+      decimals: 3
+      tolerance: 0.005
+    options:
+      distractors: ["v1", "m1 * v1"]
+    hints:
+      - text: "Total momentum before = total momentum after."
+      - text: "Momentum before = {{m1}} x {{v1}} = {{m1*v1}} kg m/s."
+    solution:
+      - text: "Before: p = {{m1}} x {{v1}} = {{m1*v1}} kg m/s."
+      - text: "After: the combined mass is {{m1 + m2}} kg."
+      - text: "v = {{m1*v1}} ÷ {{m1+m2}} = {{m1*v1/(m1+m2) : 3}} m/s."
+
+  - slug: p9-specific-heat
+    skill: physics-9-specific-heat
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      How much energy, in joules, is needed to raise the temperature of {{m}} kg of a
+      substance by {{dt}} degrees Celsius? Its specific heat capacity is {{c}} J/kg/degC.
+    variables:
+      m: {type: int, min: 1, max: 20}
+      dt: {type: int, min: 5, max: 80, step: 5}
+      c: {type: choice, choices: [900, 2400, 4200, 385, 500]}
+    answer: {expression: "m * c * dt", unit: "J"}
+    options:
+      distractors: ["m * c / dt", "c * dt"]
+    hints:
+      - text: "Use E = m c delta-theta."
+    solution:
+      - text: "E = {{m}} x {{c}} x {{dt}} = {{m*c*dt}} J."
+
+  - slug: p9-latent-heat
+    skill: physics-9-latent-heat
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      How much energy, in joules, is needed to melt {{m}} kg of ice?
+      The specific latent heat of fusion is {{l}} J/kg.
+    variables:
+      m: {type: float, min: 0.5, max: 8.0, decimals: 1}
+      l: {type: choice, choices: [334000, 330000]}
+    answer: {expression: "m * l", unit: "J", tolerance: 0.001}
+    options:
+      distractors: ["l / m", "m + l"]
+    hints:
+      - text: "Use E = m x L."
+      - text: "There is no temperature change during melting."
+    solution:
+      - text: "E = {{m}} x {{l}} = {{m*l}} J."
+
+  - slug: p9-gas-pressure
+    skill: physics-9-gas-laws
+    type: multiple_choice
+    difficulty: 4
+    prompt: >-
+      A fixed mass of gas is compressed into half its original volume at constant temperature.
+      What happens to its pressure?
+    options:
+      choices:
+        - {label: "It doubles", correct: true}
+        - {label: "It halves", correct: false}
+        - {label: "It stays the same", correct: false}
+        - {label: "It quadruples", correct: false}
+    hints:
+      - text: "At constant temperature, pressure and volume are inversely proportional."
+      - text: "p x V stays constant."
+    solution:
+      - text: "Halving V must double p to keep pV constant."
+
+  - slug: p9-magnetic-field
+    skill: physics-9-magnetic-fields
+    type: multiple_choice
+    difficulty: 2
+    prompt: "In which direction do magnetic field lines point outside a bar magnet?"
+    options:
+      choices:
+        - {label: "From the north pole to the south pole", correct: true}
+        - {label: "From the south pole to the north pole", correct: false}
+        - {label: "Always straight downwards", correct: false}
+        - {label: "In random directions", correct: false}
+    hints:
+      - text: "Field lines show the direction a free north pole would move."
+    solution:
+      - text: "Outside the magnet, field lines run from north to south."
+
+  - slug: p9-motor-effect
+    skill: physics-9-motor-effect
+    type: multiple_choice
+    difficulty: 4
+    prompt: >-
+      A current-carrying wire sits in a magnetic field. Which change would *reverse*
+      the direction of the force on the wire?
+    options:
+      choices:
+        - {label: "Reversing the direction of the current", correct: true}
+        - {label: "Increasing the current", correct: false}
+        - {label: "Using a stronger magnet", correct: false}
+        - {label: "Making the wire longer", correct: false}
+    hints:
+      - text: "Fleming's left-hand rule relates field, current and force directions."
+      - text: "The other options change the size of the force, not its direction."
+    solution:
+      - text: "Reversing either the current or the field reverses the force."
+
+  - slug: p9-induction
+    skill: physics-9-induction
+    type: true_false
+    difficulty: 4
+    prompt: >-
+      True or false: a voltage is induced in a coil when a magnet is held stationary inside it.
+    answer: {value: false}
+    hints:
+      - text: "Induction requires a *changing* magnetic field."
+    solution:
+      - text: "A stationary magnet gives an unchanging field, so no voltage is induced."
+      - text: "The magnet must move, or the field must otherwise change."
+
+  - slug: p9-atom-particles
+    skill: physics-9-atom-structure
+    type: numeric
+    difficulty: 2
+    prompt: >-
+      An atom has an atomic number of {{z}} and a mass number of {{a}}.
+      How many neutrons does it have?
+    variables:
+      z: {type: int, min: 3, max: 40}
+      n: {type: int, min: 3, max: 50}
+      a: {type: derived, expression: "z + n"}
+    answer: {expression: "a - z"}
+    options:
+      distractors: ["a + z", "z"]
+    hints:
+      - text: "Mass number = protons + neutrons."
+      - text: "Atomic number = number of protons."
+    solution:
+      - text: "neutrons = {{a}} - {{z}} = {{a - z}}."
+
+  - slug: p9-isotopes
+    skill: physics-9-isotopes
+    type: multiple_choice
+    difficulty: 3
+    prompt: "Two isotopes of the same element always differ in which quantity?"
+    options:
+      choices:
+        - {label: "Number of neutrons", correct: true}
+        - {label: "Number of protons", correct: false}
+        - {label: "Number of electrons when neutral", correct: false}
+        - {label: "Chemical symbol", correct: false}
+    hints:
+      - text: "If the number of protons changed, it would be a different element."
+    solution:
+      - text: "Isotopes share the same proton number but have different neutron numbers."
+
+  - slug: p9-radiation-types
+    skill: physics-9-radiation-types
+    type: matching
+    difficulty: 3
+    prompt: "Match each type of radiation to what stops it."
+    options:
+      pairs:
+        - {left: "Alpha", right: "a sheet of paper"}
+        - {left: "Beta", right: "a few millimetres of aluminium"}
+        - {left: "Gamma", right: "several centimetres of lead"}
+    hints:
+      - text: "The most ionising radiation is also the least penetrating."
+    solution:
+      - text: "Alpha is highly ionising but stopped by paper; gamma is weakly ionising but very penetrating."
+
+  - slug: p9-half-life
+    skill: physics-9-half-life
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A radioactive sample has an activity of {{a0}} Bq and a half-life of {{h}} days.
+      What is its activity, in Bq, after {{n}} half-lives?
+    variables:
+      k: {type: int, min: 2, max: 8}
+      n: {type: int, min: 1, max: 4}
+      h: {type: int, min: 2, max: 30}
+      a0: {type: derived, expression: "k * 2 ** n * 100"}
+    answer: {expression: "a0 / (2 ** n)", unit: "Bq"}
+    options:
+      distractors: ["a0 / n", "a0 * 2 ** n"]
+    hints:
+      - text: "Each half-life halves the activity."
+      - text: "After {{n}} half-lives the activity is divided by 2^{{n}} = {{2 ** n}}."
+    solution:
+      - text: "{{a0}} ÷ {{2 ** n}} = {{a0 / (2 ** n)}} Bq."

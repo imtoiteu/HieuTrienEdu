@@ -1,0 +1,532 @@
+# Mathematics — Grade 7 question templates
+defaults:
+  license: proprietary
+  source: HieuTrienEducation
+  status: published
+
+questions:
+  - slug: m7-multiply-integers
+    skill: math-7-multiply-divide-integers
+    type: numeric
+    difficulty: 2
+    prompt: "Calculate ({{a}}) x ({{b}})."
+    variables:
+      a: {type: int, min: -12, max: 12, exclude: [0, 1, -1]}
+      b: {type: int, min: -12, max: 12, exclude: [0, 1, -1]}
+    answer: {expression: "a * b"}
+    options:
+      distractors: ["abs(a) * abs(b)", "-(a * b)"]
+    hints:
+      - text: "Two negatives multiply to give a positive; one negative gives a negative."
+    solution:
+      - text: "{{abs(a)}} x {{abs(b)}} = {{abs(a)*abs(b)}}."
+      - text: "The signs give a {{a*b}} overall."
+
+  - slug: m7-divide-integers
+    skill: math-7-multiply-divide-integers
+    type: numeric
+    difficulty: 2
+    prompt: "Calculate ({{p}}) ÷ ({{b}})."
+    variables:
+      a: {type: int, min: -12, max: 12, exclude: [0]}
+      b: {type: int, min: -9, max: 9, exclude: [0, 1, -1]}
+      p: {type: derived, expression: "a * b"}
+    answer: {expression: "p / b"}
+    hints:
+      - text: "The sign rules for division are the same as for multiplication."
+    solution:
+      - text: "{{p}} ÷ {{b}} = {{p/b}}."
+
+  - slug: m7-exponents-evaluate
+    skill: math-7-exponents-basics
+    type: numeric
+    difficulty: 2
+    prompt: "Evaluate {{b}} to the power of {{e}}."
+    variables:
+      b: {type: int, min: 2, max: 7}
+      e: {type: int, min: 2, max: 4}
+    answer: {expression: "b ** e"}
+    options:
+      distractors: ["b * e", "b + e"]
+    hints:
+      - text: "An exponent tells you how many times to multiply the base by itself."
+      - text: "{{b}} to the power {{e}} means {{b}} multiplied {{e}} times."
+    solution:
+      - text: "{{b}}^{{e}} = {{b ** e}}."
+
+  - slug: m7-absolute-value
+    skill: math-7-absolute-value
+    type: numeric
+    difficulty: 2
+    prompt: "Evaluate |{{a}}| + |{{b}}|."
+    variables:
+      a: {type: int, min: -20, max: -1}
+      b: {type: int, min: 1, max: 20}
+    answer: {expression: "abs(a) + abs(b)"}
+    options:
+      distractors: ["a + b"]
+    hints:
+      - text: "Absolute value is distance from zero, so it is never negative."
+    solution:
+      - text: "|{{a}}| = {{abs(a)}} and |{{b}}| = {{abs(b)}}."
+      - text: "Sum = {{abs(a) + abs(b)}}."
+
+  - slug: m7-rational-add
+    skill: math-7-rational-add-subtract
+    type: numeric
+    difficulty: 3
+    prompt: "Calculate {{a}} + ({{b}}). Give your answer as a decimal."
+    variables:
+      a: {type: float, min: -9.5, max: 9.5, decimals: 1}
+      b: {type: float, min: -9.5, max: -0.5, decimals: 1}
+    answer: {expression: "a + b", decimals: 2, tolerance: 0.001}
+    hints:
+      - text: "Adding a negative number moves you left on the number line."
+    solution:
+      - text: "{{a}} + ({{b}}) = {{a + b : 2}}."
+
+  - slug: m7-rational-multiply
+    skill: math-7-rational-multiply-divide
+    type: numeric
+    difficulty: 3
+    prompt: "Calculate ({{a}}) x ({{b}}). Give your answer as a decimal."
+    variables:
+      a: {type: float, min: -8.0, max: -0.5, decimals: 1}
+      b: {type: float, min: 0.5, max: 8.0, decimals: 1}
+    answer: {expression: "a * b", decimals: 2, tolerance: 0.005}
+    hints:
+      - text: "A negative times a positive gives a negative."
+    solution:
+      - text: "{{a}} x {{b}} = {{a * b : 2}}."
+
+  - slug: m7-proportion-solve
+    skill: math-7-proportion-solve
+    type: numeric
+    difficulty: 2
+    prompt: "Solve for x:   {{a}}/{{b}} = x/{{b*k}}"
+    variables:
+      a: {type: int, min: 2, max: 12}
+      b: {type: int, min: 2, max: 10}
+      k: {type: int, min: 2, max: 7}
+    answer: {expression: "a * k"}
+    options:
+      distractors: ["a + k", "a * b"]
+    hints:
+      - text: "The denominator was multiplied by {{k}}."
+      - text: "Cross multiply: {{a}} x {{b*k}} = x x {{b}}."
+    solution:
+      - text: "x = {{a}} x {{k}} = {{a*k}}."
+
+  - slug: m7-constant-of-proportionality
+    skill: math-7-constant-proportionality
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      In a proportional relationship, y = {{k}}x. When x = {{x}}, what is y?
+    variables:
+      k: {type: int, min: 2, max: 12}
+      x: {type: int, min: 2, max: 15}
+    answer: {expression: "k * x"}
+    options:
+      distractors: ["k + x", "x / k"]
+    hints:
+      - text: "The constant of proportionality k multiplies every x value."
+    solution:
+      - text: "y = {{k}} x {{x}} = {{k*x}}."
+
+  - slug: m7-scale-drawing
+    skill: math-7-scale-drawings
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A map has a scale of 1 cm to {{s}} km. Two towns are {{d}} cm apart on the map.
+      What is the real distance between them, in km?
+    variables:
+      s: {type: int, min: 2, max: 25}
+      d: {type: int, min: 2, max: 18}
+    answer: {expression: "s * d", unit: "km"}
+    options:
+      distractors: ["d / s", "s + d"]
+    hints:
+      - text: "Every centimetre on the map represents {{s}} km in reality."
+    solution:
+      - text: "{{d}} cm x {{s}} km/cm = {{s*d}} km."
+
+  - slug: m7-percent-increase
+    skill: math-7-percent-change
+    type: numeric
+    difficulty: 3
+    prompt: "A price of {{n}} thousand dong increases by {{p}}%. What is the new price, in thousand dong?"
+    variables:
+      p: {type: choice, choices: [5, 10, 20, 25, 50]}
+      n: {type: int, min: 40, max: 900, step: 20}
+    constraints: ["(p * n) % 100 == 0"]
+    answer: {expression: "n + p*n/100", unit: "thousand dong"}
+    options:
+      distractors: ["n - p*n/100", "p*n/100"]
+    hints:
+      - text: "Find the increase first, then add it to the original."
+    solution:
+      - text: "Increase = {{p}}% of {{n}} = {{p*n/100}}."
+      - text: "New price = {{n}} + {{p*n/100}} = {{n + p*n/100}}."
+
+  - slug: m7-percent-change-find
+    skill: math-7-percent-change
+    type: numeric
+    difficulty: 4
+    prompt: "A value rises from {{a}} to {{b}}. What is the percentage increase?"
+    variables:
+      a: {type: int, min: 20, max: 200, step: 10}
+      k: {type: choice, choices: [10, 20, 25, 50]}
+      b: {type: derived, expression: "a + a*k/100"}
+    constraints: ["(a * k) % 100 == 0"]
+    answer: {expression: "(b - a) / a * 100", unit: "%", tolerance: 0.001}
+    hints:
+      - text: "Percentage change = (change ÷ original) x 100."
+      - text: "The change is {{b - a}}."
+    solution:
+      - text: "Change = {{b}} - {{a}} = {{b - a}}."
+      - text: "({{b-a}} ÷ {{a}}) x 100 = {{(b-a)/a*100}}%."
+
+  - slug: m7-simple-interest
+    skill: math-7-simple-interest
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      {{p}} million dong is invested at a simple interest rate of {{r}}% per year for {{t}} years.
+      How much interest is earned, in million dong?
+    variables:
+      p: {type: int, min: 10, max: 200, step: 10}
+      r: {type: choice, choices: [4, 5, 6, 8, 10]}
+      t: {type: int, min: 2, max: 6}
+    answer: {expression: "p * r * t / 100", unit: "million dong", tolerance: 0.001}
+    options:
+      distractors: ["p * r / 100", "p + p*r*t/100"]
+    hints:
+      - text: "Simple interest I = P x r x t, with r written as a decimal."
+    solution:
+      - text: "I = {{p}} x {{r/100}} x {{t}} = {{p*r*t/100}} million dong."
+
+  - slug: m7-like-terms
+    skill: math-7-like-terms
+    type: expression
+    difficulty: 2
+    prompt: "Simplify {{a}}x + {{b}}x + {{c}}."
+    variables:
+      a: {type: int, min: 2, max: 12}
+      b: {type: int, min: 2, max: 12}
+      c: {type: int, min: 1, max: 20}
+    answer:
+      expression: "{{a + b}}*x + {{c}}"
+      symbols: [x]
+    options:
+      placeholder: "e.g. 7x + 3"
+    hints:
+      - text: "Only terms with the same variable part can be combined."
+      - text: "{{a}}x + {{b}}x = {{a+b}}x."
+    solution:
+      - text: "{{a}}x + {{b}}x = {{a+b}}x, and {{c}} stays separate."
+      - text: "Answer: {{a+b}}x + {{c}}."
+
+  - slug: m7-distributive
+    skill: math-7-distributive
+    type: expression
+    difficulty: 2
+    prompt: "Expand {{a}}(x + {{b}})."
+    variables:
+      a: {type: int, min: 2, max: 12}
+      b: {type: int, min: 2, max: 12}
+    answer:
+      expression: "{{a}}*x + {{a*b}}"
+      symbols: [x]
+    options:
+      placeholder: "e.g. 3x + 12"
+    hints:
+      - text: "Multiply the {{a}} by each term inside the bracket."
+    solution:
+      - text: "{{a}} x x = {{a}}x and {{a}} x {{b}} = {{a*b}}."
+      - text: "Answer: {{a}}x + {{a*b}}."
+
+  - slug: m7-factorise-linear
+    skill: math-7-factorise-linear
+    type: expression
+    difficulty: 3
+    prompt: "Factorise {{a*g}}x + {{b*g}}."
+    variables:
+      g: {type: int, min: 2, max: 9}
+      a: {type: int, min: 2, max: 9}
+      b: {type: int, min: 2, max: 9}
+    constraints: ["gcd(a, b) == 1"]
+    answer:
+      expression: "{{g}}*({{a}}*x + {{b}})"
+      symbols: [x]
+    options:
+      placeholder: "e.g. 3(2x + 5)"
+    hints:
+      - text: "Find the greatest common factor of {{a*g}} and {{b*g}}."
+      - text: "The GCF is {{g}}."
+    solution:
+      - text: "{{a*g}}x + {{b*g}} = {{g}}({{a}}x + {{b}})."
+
+  - slug: m7-two-step-equation
+    skill: math-7-two-step-equations
+    type: numeric
+    difficulty: 2
+    prompt: "Solve for x:   {{a}}x + {{b}} = {{c}}"
+    variables:
+      a: {type: int, min: 2, max: 12}
+      x: {type: int, min: -8, max: 15}
+      b: {type: int, min: -20, max: 20, exclude: [0]}
+      c: {type: derived, expression: "a*x + b"}
+    answer: {expression: "(c - b) / a"}
+    options:
+      distractors: ["(c + b) / a", "c / a - b"]
+    hints:
+      - text: "First undo the {{b}} by subtracting it from both sides."
+      - text: "Then divide both sides by {{a}}."
+    solution:
+      - text: "{{a}}x = {{c}} - ({{b}}) = {{c - b}}."
+      - text: "x = {{c-b}} ÷ {{a}} = {{(c-b)/a}}."
+
+  - slug: m7-multi-step-equation
+    skill: math-7-multi-step-equations
+    type: numeric
+    difficulty: 4
+    prompt: "Solve for x:   {{a}}x + {{b}} = {{c}}x + {{d}}"
+    variables:
+      a: {type: int, min: 3, max: 12}
+      c: {type: int, min: 1, max: 9}
+      x: {type: int, min: -6, max: 12}
+      b: {type: int, min: -15, max: 15, exclude: [0]}
+      d: {type: derived, expression: "a*x + b - c*x"}
+    constraints: ["a != c"]
+    answer: {expression: "(d - b) / (a - c)"}
+    hints:
+      - text: "Collect the x terms on one side and the numbers on the other."
+      - text: "Subtract {{c}}x from both sides to get {{a-c}}x + {{b}} = {{d}}."
+    solution:
+      - text: "{{a-c}}x = {{d}} - ({{b}}) = {{d - b}}."
+      - text: "x = {{d-b}} ÷ {{a-c}} = {{(d-b)/(a-c)}}."
+
+  - slug: m7-inequality-solve
+    skill: math-7-solve-inequalities
+    type: multiple_choice
+    difficulty: 4
+    prompt: "Solve the inequality:   -{{a}}x > {{b}}"
+    variables:
+      a: {type: int, min: 2, max: 9}
+      x: {type: int, min: -12, max: -1}
+      b: {type: derived, expression: "-a * x - a"}
+    options:
+      choices:
+        - {label: "x < {{-b/a : 2}}", correct: true}
+        - {label: "x > {{-b/a : 2}}", correct: false}
+        - {label: "x < {{b/a : 2}}", correct: false}
+        - {label: "x > {{b/a : 2}}", correct: false}
+    hints:
+      - text: "Divide both sides by -{{a}}."
+      - text: "Dividing by a negative number reverses the inequality sign."
+    solution:
+      - text: "Dividing by -{{a}} gives x < {{-b/a : 2}} — note the flipped sign."
+
+  - slug: m7-angle-pairs
+    skill: math-7-angle-pairs
+    type: numeric
+    difficulty: 2
+    prompt: "Two angles are supplementary. One measures {{a}} degrees. What is the other, in degrees?"
+    variables:
+      a: {type: int, min: 15, max: 165, step: 5}
+    answer: {expression: "180 - a", unit: "degrees"}
+    options:
+      distractors: ["90 - a", "360 - a"]
+    hints:
+      - text: "Supplementary angles add to 180 degrees."
+    solution:
+      - text: "180 - {{a}} = {{180 - a}} degrees."
+
+  - slug: m7-complementary
+    skill: math-7-angle-pairs
+    type: numeric
+    difficulty: 2
+    prompt: "Two angles are complementary. One measures {{a}} degrees. What is the other, in degrees?"
+    variables:
+      a: {type: int, min: 10, max: 80, step: 5}
+    answer: {expression: "90 - a", unit: "degrees"}
+    options:
+      distractors: ["180 - a"]
+    hints:
+      - text: "Complementary angles add to 90 degrees."
+    solution:
+      - text: "90 - {{a}} = {{90 - a}} degrees."
+
+  - slug: m7-parallel-lines
+    skill: math-7-parallel-lines
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      Two parallel lines are cut by a transversal. One angle measures {{a}} degrees.
+      What is the size of its co-interior (allied) angle, in degrees?
+    variables:
+      a: {type: int, min: 35, max: 145, step: 5}
+    answer: {expression: "180 - a", unit: "degrees"}
+    options:
+      distractors: ["a", "90 - a"]
+    hints:
+      - text: "Co-interior angles between parallel lines add to 180 degrees."
+      - text: "Corresponding and alternate angles are equal; co-interior ones are not."
+    solution:
+      - text: "180 - {{a}} = {{180 - a}} degrees."
+
+  - slug: m7-triangle-angle
+    skill: math-7-triangle-angles
+    type: numeric
+    difficulty: 3
+    prompt: "A triangle has angles of {{a}} degrees and {{b}} degrees. What is the third angle, in degrees?"
+    variables:
+      a: {type: int, min: 20, max: 110, step: 5}
+      b: {type: int, min: 20, max: 110, step: 5}
+    constraints: ["a + b < 170"]
+    answer: {expression: "180 - a - b", unit: "degrees"}
+    options:
+      distractors: ["360 - a - b", "a + b"]
+    hints:
+      - text: "The angles in a triangle add to 180 degrees."
+    solution:
+      - text: "180 - {{a}} - {{b}} = {{180 - a - b}} degrees."
+
+  - slug: m7-circumference
+    skill: math-7-circumference
+    type: numeric
+    difficulty: 2
+    prompt: >-
+      A circle has radius {{r}} cm. Calculate its circumference in cm,
+      giving your answer to 2 decimal places. Use pi = 3.14159.
+    variables:
+      r: {type: int, min: 2, max: 20}
+    answer: {expression: "2 * pi * r", unit: "cm", decimals: 2, tolerance: 0.01}
+    hints:
+      - text: "Circumference C = 2 pi r."
+    solution:
+      - text: "C = 2 x pi x {{r}} = {{2*pi*r : 2}} cm."
+
+  - slug: m7-circle-area
+    skill: math-7-circle-area
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A circle has radius {{r}} cm. Calculate its area in square cm,
+      to 2 decimal places. Use pi = 3.14159.
+    variables:
+      r: {type: int, min: 2, max: 18}
+    answer: {expression: "pi * r * r", unit: "cm^2", decimals: 2, tolerance: 0.01}
+    options:
+      distractors: ["2 * pi * r"]
+    hints:
+      - text: "Area A = pi r squared — square the radius, do not double it."
+    solution:
+      - text: "A = pi x {{r}}^2 = pi x {{r*r}} = {{pi*r*r : 2}} square cm."
+
+  - slug: m7-cylinder-volume
+    skill: math-7-volume-cylinders
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A cylinder has radius {{r}} cm and height {{h}} cm. Calculate its volume in cubic cm,
+      to 2 decimal places. Use pi = 3.14159.
+    variables:
+      r: {type: int, min: 2, max: 12}
+      h: {type: int, min: 3, max: 20}
+    answer: {expression: "pi * r * r * h", unit: "cm^3", decimals: 2, tolerance: 0.05}
+    hints:
+      - text: "Volume = area of the circular cross-section x height."
+    solution:
+      - text: "Cross-section = pi x {{r*r}} = {{pi*r*r : 2}} square cm."
+      - text: "Volume = {{pi*r*r : 2}} x {{h}} = {{pi*r*r*h : 2}} cubic cm."
+
+  - slug: m7-simple-probability
+    skill: math-7-simple-probability
+    type: short_answer
+    difficulty: 2
+    prompt: >-
+      A bag contains {{r}} red counters and {{b}} blue counters. One counter is taken at random.
+      What is the probability that it is red? Give your answer as a fraction in simplest form.
+    variables:
+      g: {type: int, min: 1, max: 6}
+      p: {type: int, min: 1, max: 7}
+      q: {type: int, min: 1, max: 7}
+      r: {type: derived, expression: "g * p"}
+      b: {type: derived, expression: "g * q"}
+    constraints: ["gcd(p, p + q) == 1"]
+    answer:
+      accepted: ["{{p}}/{{p+q}}", "{{p}} / {{p+q}}"]
+    hints:
+      - text: "Probability = favourable outcomes ÷ total outcomes."
+      - text: "There are {{r + b}} counters altogether."
+    solution:
+      - text: "P(red) = {{r}}/{{r + b}}, which simplifies to {{p}}/{{p+q}}."
+
+  - slug: m7-compound-probability
+    skill: math-7-compound-probability
+    type: short_answer
+    difficulty: 4
+    prompt: >-
+      A fair coin is flipped and a fair {{n}}-sided dice is rolled.
+      What is the probability of getting heads and a {{target}}?
+      Give your answer as a fraction.
+    variables:
+      n: {type: choice, choices: [4, 6, 8, 10]}
+      target: {type: int, min: 1, max: 4}
+    answer:
+      accepted: ["1/{{2*n}}", "1 / {{2*n}}"]
+    hints:
+      - text: "For independent events, multiply the individual probabilities."
+      - text: "P(heads) = 1/2 and P({{target}}) = 1/{{n}}."
+    solution:
+      - text: "1/2 x 1/{{n}} = 1/{{2*n}}."
+
+  - slug: m7-compare-datasets
+    skill: math-7-compare-data-sets
+    type: multiple_choice
+    difficulty: 3
+    prompt: >-
+      Class A has a mean score of {{a}} with a range of {{ra}}.
+      Class B has a mean score of {{b}} with a range of {{rb}}.
+      Which statement is correct?
+    variables:
+      a: {type: int, min: 50, max: 80}
+      b: {type: int, min: 50, max: 80}
+      ra: {type: int, min: 5, max: 20}
+      rb: {type: int, min: 5, max: 20}
+    constraints: ["a != b", "ra != rb"]
+    options:
+      choices:
+        - {label: "Class A scored higher on average", correct: "{{a > b}}"}
+        - {label: "Class B scored higher on average", correct: "{{b > a}}"}
+        - {label: "Both classes scored the same on average", correct: false}
+    hints:
+      - text: "The mean measures the average; the range measures the spread."
+    solution:
+      - text: "Comparing means: {{a}} against {{b}}."
+
+  - slug: m7-sampling
+    skill: math-7-sampling
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      In a random sample of {{s}} students, {{f}} said they walk to school.
+      Estimate how many of the school's {{total}} students walk to school.
+    variables:
+      s: {type: choice, choices: [20, 25, 40, 50]}
+      f: {type: int, min: 4, max: 18}
+      k: {type: int, min: 8, max: 30}
+      total: {type: derived, expression: "s * k"}
+    constraints: ["f < s"]
+    answer: {expression: "f * k"}
+    options:
+      distractors: ["f + k", "total / f"]
+    hints:
+      - text: "The proportion in the sample should match the proportion in the whole school."
+      - text: "The school is {{k}} times larger than the sample."
+    solution:
+      - text: "{{total}} ÷ {{s}} = {{k}}, so multiply the sample count by {{k}}."
+      - text: "{{f}} x {{k}} = {{f*k}} students."

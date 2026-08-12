@@ -1,0 +1,379 @@
+# Physics — Grade 8 question templates
+defaults:
+  license: proprietary
+  source: HieuTrienEducation
+  status: published
+
+questions:
+  - slug: p8-first-law
+    skill: physics-8-first-law
+    type: multiple_choice
+    difficulty: 2
+    prompt: "A car travels at a constant velocity along a straight road. What can you say about the forces on it?"
+    options:
+      choices:
+        - {label: "The forces are balanced, so the resultant force is zero", correct: true}
+        - {label: "The driving force must be larger than the resistive forces", correct: false}
+        - {label: "There are no forces acting at all", correct: false}
+        - {label: "The resultant force is constant but not zero", correct: false}
+    hints:
+      - text: "Newton's first law links constant velocity to zero resultant force."
+    solution:
+      - text: "Constant velocity means no acceleration, which means a resultant force of zero."
+      - text: "Forces still act — they simply cancel out."
+
+  - slug: p8-second-law
+    skill: physics-8-second-law
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A resultant force of {{f}} N acts on a mass of {{m}} kg.
+      What is the acceleration, in m/s^2?
+    variables:
+      a: {type: int, min: 2, max: 12}
+      m: {type: int, min: 2, max: 50}
+      f: {type: derived, expression: "a * m"}
+    answer: {expression: "f / m", unit: "m/s^2"}
+    options:
+      distractors: ["m / f", "f * m"]
+    hints:
+      - text: "F = ma, so a = F ÷ m."
+    solution:
+      - text: "a = {{f}} ÷ {{m}} = {{f/m}} m/s^2."
+
+  - slug: p8-second-law-force
+    skill: physics-8-second-law
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      What resultant force, in newtons, is needed to accelerate a {{m}} kg trolley
+      at {{a}} m/s^2?
+    variables:
+      m: {type: int, min: 2, max: 60}
+      a: {type: float, min: 0.5, max: 8.0, decimals: 1}
+    answer: {expression: "m * a", unit: "N", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["m / a", "a / m"]
+    hints:
+      - text: "Use F = m x a."
+    solution:
+      - text: "F = {{m}} x {{a}} = {{m*a : 2}} N."
+
+  - slug: p8-third-law
+    skill: physics-8-third-law
+    type: multiple_choice
+    difficulty: 3
+    prompt: >-
+      A book rests on a table. The book pushes down on the table with force A.
+      Which force is the Newton's-third-law pair to force A?
+    options:
+      choices:
+        - {label: "The table pushes up on the book", correct: true}
+        - {label: "The weight of the book", correct: false}
+        - {label: "The normal contact force from the floor on the table", correct: false}
+        - {label: "The friction between book and table", correct: false}
+    hints:
+      - text: "A third-law pair acts on two *different* objects and is the same type of force."
+      - text: "If A is 'book on table', the pair must be 'table on book'."
+    solution:
+      - text: "The pair to 'book pushes table' is 'table pushes book' — equal, opposite, on different objects."
+
+  - slug: p8-weight
+    skill: physics-8-weight-mass
+    type: numeric
+    difficulty: 2
+    prompt: >-
+      Calculate the weight, in newtons, of a {{m}} kg object on Earth
+      where g = 10 N/kg.
+    variables:
+      m: {type: int, min: 2, max: 90}
+    answer: {expression: "m * 10", unit: "N"}
+    options:
+      distractors: ["m / 10", "m"]
+    hints:
+      - text: "Weight W = m x g."
+    solution:
+      - text: "W = {{m}} x 10 = {{m*10}} N."
+
+  - slug: p8-work-done
+    skill: physics-8-work-done
+    type: numeric
+    difficulty: 2
+    prompt: >-
+      A force of {{f}} N moves an object {{d}} m in the direction of the force.
+      How much work is done, in joules?
+    variables:
+      f: {type: int, min: 5, max: 200, step: 5}
+      d: {type: int, min: 2, max: 30}
+    answer: {expression: "f * d", unit: "J"}
+    options:
+      distractors: ["f / d", "f + d"]
+    hints:
+      - text: "Work done = force x distance moved in the direction of the force."
+    solution:
+      - text: "W = {{f}} x {{d}} = {{f*d}} J."
+
+  - slug: p8-power
+    skill: physics-8-power
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      {{w}} J of work is done in {{t}} s. What is the power, in watts?
+    variables:
+      p: {type: int, min: 5, max: 200, step: 5}
+      t: {type: int, min: 2, max: 30}
+      w: {type: derived, expression: "p * t"}
+    answer: {expression: "w / t", unit: "W"}
+    options:
+      distractors: ["t / w", "w * t"]
+    hints:
+      - text: "Power = work done ÷ time taken."
+    solution:
+      - text: "P = {{w}} ÷ {{t}} = {{w/t}} W."
+
+  - slug: p8-efficiency
+    skill: physics-8-efficiency
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A motor is supplied with {{total}} J and does {{useful}} J of useful work.
+      What is its efficiency, as a percentage?
+    variables:
+      total: {type: int, min: 100, max: 2000, step: 100}
+      pct: {type: choice, choices: [10, 20, 25, 40, 50, 60, 75, 80]}
+      useful: {type: derived, expression: "total * pct / 100"}
+    answer: {expression: "useful / total * 100", unit: "%", tolerance: 0.001}
+    options:
+      distractors: ["total / useful * 100", "total - useful"]
+    hints:
+      - text: "Efficiency = (useful output ÷ total input) x 100%."
+    solution:
+      - text: "({{useful}} ÷ {{total}}) x 100 = {{useful/total*100}}%."
+
+  - slug: p8-kinetic-energy
+    skill: physics-8-kinetic-energy
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      Calculate the kinetic energy, in joules, of a {{m}} kg object moving at {{v}} m/s.
+    variables:
+      m: {type: int, min: 2, max: 80, step: 2}
+      v: {type: int, min: 2, max: 30}
+    answer: {expression: "0.5 * m * v * v", unit: "J", tolerance: 0.001}
+    options:
+      distractors: ["m * v", "0.5 * m * v"]
+    hints:
+      - text: "KE = 1/2 m v^2 — remember to square the velocity."
+      - text: "{{v}}^2 = {{v*v}}."
+    solution:
+      - text: "KE = 0.5 x {{m}} x {{v*v}} = {{0.5*m*v*v}} J."
+
+  - slug: p8-gpe
+    skill: physics-8-gpe
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      Calculate the gravitational potential energy gained, in joules, when a {{m}} kg mass
+      is lifted {{h}} m. Use g = 10 N/kg.
+    variables:
+      m: {type: int, min: 2, max: 60}
+      h: {type: int, min: 2, max: 40}
+    answer: {expression: "m * 10 * h", unit: "J"}
+    options:
+      distractors: ["m * h", "m * 10 / h"]
+    hints:
+      - text: "GPE = m x g x h."
+    solution:
+      - text: "GPE = {{m}} x 10 x {{h}} = {{m*10*h}} J."
+
+  - slug: p8-charge-current
+    skill: physics-8-charge-current
+    type: numeric
+    difficulty: 2
+    prompt: >-
+      A current of {{i}} A flows for {{t}} s. How much charge passes, in coulombs?
+    variables:
+      i: {type: int, min: 1, max: 15}
+      t: {type: int, min: 5, max: 120, step: 5}
+    answer: {expression: "i * t", unit: "C"}
+    options:
+      distractors: ["i / t", "t / i"]
+    hints:
+      - text: "Q = I x t."
+    solution:
+      - text: "Q = {{i}} x {{t}} = {{i*t}} C."
+
+  - slug: p8-voltage-meaning
+    skill: physics-8-voltage
+    type: multiple_choice
+    difficulty: 3
+    prompt: "What does a potential difference of 1 volt mean?"
+    options:
+      choices:
+        - {label: "1 joule of energy is transferred per coulomb of charge", correct: true}
+        - {label: "1 coulomb of charge flows per second", correct: false}
+        - {label: "1 joule of energy is transferred per second", correct: false}
+        - {label: "1 amp of current flows through 1 ohm", correct: false}
+    hints:
+      - text: "Voltage is energy per unit charge."
+    solution:
+      - text: "V = E ÷ Q, so 1 volt is 1 joule per coulomb."
+
+  - slug: p8-ohms-law
+    skill: physics-8-ohms-law
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A resistor of {{r}} ohms carries a current of {{i}} A.
+      What is the potential difference across it, in volts?
+    variables:
+      r: {type: int, min: 2, max: 100, step: 2}
+      i: {type: float, min: 0.1, max: 5.0, decimals: 1}
+    answer: {expression: "i * r", unit: "V", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["r / i", "i / r"]
+    hints:
+      - text: "Use V = I x R."
+    solution:
+      - text: "V = {{i}} x {{r}} = {{i*r : 2}} V."
+
+  - slug: p8-ohms-law-resistance
+    skill: physics-8-ohms-law
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A component has {{v}} V across it and a current of {{i}} A through it.
+      What is its resistance, in ohms?
+    variables:
+      r: {type: int, min: 2, max: 60}
+      i: {type: int, min: 1, max: 10}
+      v: {type: derived, expression: "i * r"}
+    answer: {expression: "v / i", unit: "ohms"}
+    options:
+      distractors: ["i / v", "v * i"]
+    hints:
+      - text: "Rearrange V = IR to R = V ÷ I."
+    solution:
+      - text: "R = {{v}} ÷ {{i}} = {{v/i}} ohms."
+
+  - slug: p8-series-resistance
+    skill: physics-8-series-parallel
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      Two resistors of {{r1}} ohms and {{r2}} ohms are connected in series.
+      What is the total resistance, in ohms?
+    variables:
+      r1: {type: int, min: 2, max: 80, step: 2}
+      r2: {type: int, min: 2, max: 80, step: 2}
+    answer: {expression: "r1 + r2", unit: "ohms"}
+    options:
+      distractors: ["r1 * r2 / (r1 + r2)", "r1 * r2"]
+    hints:
+      - text: "In series, resistances simply add."
+    solution:
+      - text: "R = {{r1}} + {{r2}} = {{r1 + r2}} ohms."
+
+  - slug: p8-parallel-current
+    skill: physics-8-series-parallel
+    type: multiple_choice
+    difficulty: 4
+    prompt: "In a parallel circuit, which statement is correct?"
+    options:
+      choices:
+        - {label: "Each branch has the same potential difference across it", correct: true}
+        - {label: "Each branch carries the same current", correct: false}
+        - {label: "The total resistance is larger than any single branch", correct: false}
+        - {label: "Removing one branch stops the whole circuit", correct: false}
+    hints:
+      - text: "Think about what is shared between parallel branches: current or voltage?"
+    solution:
+      - text: "Parallel branches share the same voltage; current divides between them."
+      - text: "Adding parallel branches *reduces* total resistance."
+
+  - slug: p8-electrical-power
+    skill: physics-8-electrical-power
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      An appliance operates at {{v}} V and draws {{i}} A.
+      What is its power, in watts?
+    variables:
+      v: {type: choice, choices: [12, 24, 110, 220, 240]}
+      i: {type: float, min: 0.5, max: 12.0, decimals: 1}
+    answer: {expression: "v * i", unit: "W", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["v / i", "i / v"]
+    hints:
+      - text: "Electrical power P = V x I."
+    solution:
+      - text: "P = {{v}} x {{i}} = {{v*i : 2}} W."
+
+  - slug: p8-wave-anatomy
+    skill: physics-8-wave-anatomy
+    type: matching
+    difficulty: 2
+    prompt: "Match each wave property to its definition."
+    options:
+      pairs:
+        - {left: "Amplitude", right: "maximum displacement from the rest position"}
+        - {left: "Wavelength", right: "distance between two matching points on adjacent waves"}
+        - {left: "Frequency", right: "number of waves passing a point each second"}
+        - {left: "Period", right: "time taken for one complete wave to pass"}
+    hints:
+      - text: "Frequency and period are reciprocals of one another."
+    solution:
+      - text: "Amplitude and wavelength are distances; frequency and period describe timing."
+
+  - slug: p8-wave-equation
+    skill: physics-8-wave-equation
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A wave has a frequency of {{f}} Hz and a wavelength of {{w}} m.
+      What is its speed, in m/s?
+    variables:
+      f: {type: int, min: 2, max: 60}
+      w: {type: float, min: 0.5, max: 12.0, decimals: 1}
+    answer: {expression: "f * w", unit: "m/s", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["f / w", "w / f"]
+    hints:
+      - text: "Use v = f x lambda."
+    solution:
+      - text: "v = {{f}} x {{w}} = {{f*w : 2}} m/s."
+
+  - slug: p8-sound-pitch
+    skill: physics-8-sound-properties
+    type: multiple_choice
+    difficulty: 2
+    prompt: "Increasing the frequency of a sound wave changes which property of the sound?"
+    options:
+      choices:
+        - {label: "Its pitch becomes higher", correct: true}
+        - {label: "It becomes louder", correct: false}
+        - {label: "It travels faster", correct: false}
+        - {label: "Its amplitude increases", correct: false}
+    hints:
+      - text: "Pitch depends on frequency; loudness depends on amplitude."
+    solution:
+      - text: "Higher frequency means higher pitch. Loudness is controlled by amplitude."
+
+  - slug: p8-echo
+    skill: physics-8-echoes
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A sound is made and its echo returns after {{t}} s.
+      If the speed of sound is {{v}} m/s, how far away is the reflecting wall, in metres?
+    variables:
+      t: {type: float, min: 0.4, max: 4.0, decimals: 1}
+      v: {type: choice, choices: [330, 340, 343]}
+    answer: {expression: "v * t / 2", unit: "m", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["v * t", "t / v"]
+    hints:
+      - text: "The sound travels to the wall *and back*, so it covers twice the distance."
+    solution:
+      - text: "Total distance = {{v}} x {{t}} = {{v*t : 2}} m."
+      - text: "The wall is half that away: {{v*t/2 : 2}} m."

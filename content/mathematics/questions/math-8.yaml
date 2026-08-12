@@ -1,0 +1,406 @@
+# Mathematics — Grade 8 question templates
+defaults:
+  license: proprietary
+  source: HieuTrienEducation
+  status: published
+
+questions:
+  - slug: m8-perfect-square
+    skill: math-8-squares-roots
+    type: numeric
+    difficulty: 2
+    prompt: "Evaluate the square root of {{n}}."
+    variables:
+      r: {type: int, min: 2, max: 20}
+      n: {type: derived, expression: "r * r"}
+    answer: {expression: "sqrt(n)"}
+    options:
+      distractors: ["n / 2", "n * 2"]
+    hints:
+      - text: "Ask yourself: which number multiplied by itself gives {{n}}?"
+    solution:
+      - text: "{{r}} x {{r}} = {{n}}, so the square root of {{n}} is {{r}}."
+
+  - slug: m8-estimate-root
+    skill: math-8-squares-roots
+    type: multiple_choice
+    difficulty: 3
+    prompt: "Between which two consecutive whole numbers does the square root of {{n}} lie?"
+    variables:
+      r: {type: int, min: 3, max: 14}
+      n: {type: derived, expression: "r*r + r"}
+    options:
+      choices:
+        - {label: "{{r}} and {{r+1}}", correct: true}
+        - {label: "{{r-1}} and {{r}}", correct: false}
+        - {label: "{{r+1}} and {{r+2}}", correct: false}
+        - {label: "{{r+2}} and {{r+3}}", correct: false}
+    hints:
+      - text: "Find the nearest perfect squares below and above {{n}}."
+    solution:
+      - text: "{{r*r}} < {{n}} < {{(r+1)*(r+1)}}, so the root lies between {{r}} and {{r+1}}."
+
+  - slug: m8-classify-number
+    skill: math-8-irrational-numbers
+    type: multiple_select
+    difficulty: 3
+    prompt: "Select all the numbers below that are irrational."
+    variables:
+      r: {type: int, min: 2, max: 12}
+      n: {type: derived, expression: "r * r"}
+      m: {type: derived, expression: "r*r + 1"}
+    options:
+      choices:
+        - {label: "square root of {{m}}", correct: true}
+        - {label: "pi", correct: true}
+        - {label: "square root of {{n}}", correct: false}
+        - {label: "{{r}}/4", correct: false}
+    hints:
+      - text: "An irrational number cannot be written as a fraction of two integers."
+      - text: "The square root of a perfect square is rational."
+    solution:
+      - text: "{{n}} is a perfect square ({{r}}^2), so its root is the whole number {{r}}."
+      - text: "{{m}} is not a perfect square, so its root is irrational, as is pi."
+
+  - slug: m8-index-law-product
+    skill: math-8-index-laws
+    type: numeric
+    difficulty: 3
+    prompt: "Simplify {{b}}^{{m}} x {{b}}^{{n}} and write the result as a single power of {{b}}. What is the new exponent?"
+    variables:
+      b: {type: int, min: 2, max: 9}
+      m: {type: int, min: 2, max: 8}
+      n: {type: int, min: 2, max: 8}
+    answer: {expression: "m + n"}
+    options:
+      distractors: ["m * n", "m - n"]
+    hints:
+      - text: "When multiplying powers with the same base, add the exponents."
+    solution:
+      - text: "{{b}}^{{m}} x {{b}}^{{n}} = {{b}}^({{m}}+{{n}}) = {{b}}^{{m+n}}."
+
+  - slug: m8-index-law-quotient
+    skill: math-8-index-laws
+    type: numeric
+    difficulty: 3
+    prompt: "Simplify {{b}}^{{m}} ÷ {{b}}^{{n}} as a single power of {{b}}. What is the new exponent?"
+    variables:
+      b: {type: int, min: 2, max: 9}
+      m: {type: int, min: 5, max: 12}
+      n: {type: int, min: 2, max: 4}
+    answer: {expression: "m - n"}
+    options:
+      distractors: ["m + n", "m / n"]
+    hints:
+      - text: "When dividing powers with the same base, subtract the exponents."
+    solution:
+      - text: "{{b}}^{{m}} ÷ {{b}}^{{n}} = {{b}}^{{m-n}}."
+
+  - slug: m8-zero-negative-index
+    skill: math-8-negative-indices
+    type: multiple_choice
+    difficulty: 3
+    prompt: "What is the value of {{b}}^-{{n}}?"
+    variables:
+      b: {type: int, min: 2, max: 6}
+      n: {type: int, min: 1, max: 3}
+    options:
+      choices:
+        - {label: "1 / {{b ** n}}", correct: true}
+        - {label: "-{{b ** n}}", correct: false}
+        - {label: "{{b ** n}}", correct: false}
+        - {label: "0", correct: false}
+    hints:
+      - text: "A negative index means take the reciprocal."
+    solution:
+      - text: "{{b}}^-{{n}} = 1 / {{b}}^{{n}} = 1/{{b ** n}}."
+
+  - slug: m8-scientific-notation
+    skill: math-8-scientific-notation
+    type: numeric
+    difficulty: 3
+    prompt: "Write {{a}} x 10^{{e}} as an ordinary number."
+    variables:
+      a: {type: float, min: 1.1, max: 9.9, decimals: 1}
+      e: {type: int, min: 2, max: 5}
+    answer: {expression: "a * 10 ** e", tolerance: 0.0001}
+    hints:
+      - text: "Move the decimal point {{e}} places to the right."
+    solution:
+      - text: "{{a}} x 10^{{e}} = {{a * 10 ** e}}."
+
+  - slug: m8-function-or-not
+    skill: math-8-function-concept
+    type: true_false
+    difficulty: 2
+    prompt: >-
+      A relation pairs each input with exactly one output.
+      True or false: the set of points ({{a}}, 1), ({{b}}, 2), ({{c}}, 3) is a function.
+    variables:
+      a: {type: int, min: 1, max: 9}
+      b: {type: int, min: 1, max: 9}
+      c: {type: int, min: 1, max: 9}
+    answer: {expression: "a != b and b != c and a != c"}
+    hints:
+      - text: "A function fails only if the same input appears twice with different outputs."
+    solution:
+      - text: "The inputs are {{a}}, {{b}} and {{c}} — check whether any repeat."
+
+  - slug: m8-function-table
+    skill: math-8-function-tables
+    type: numeric
+    difficulty: 3
+    prompt: "A function is defined by y = {{m}}x + {{c}}. What is y when x = {{x}}?"
+    variables:
+      m: {type: int, min: -8, max: 9, exclude: [0]}
+      c: {type: int, min: -12, max: 12}
+      x: {type: int, min: -6, max: 10}
+    answer: {expression: "m*x + c"}
+    options:
+      distractors: ["(m + c) * x", "m + c*x"]
+    hints:
+      - text: "Substitute x = {{x}} and multiply before adding."
+    solution:
+      - text: "y = {{m}} x {{x}} + {{c}} = {{m*x}} + {{c}} = {{m*x + c}}."
+
+  - slug: m8-gradient
+    skill: math-8-gradient
+    type: numeric
+    difficulty: 3
+    prompt: "Find the gradient of the line through ({{x1}}, {{y1}}) and ({{x2}}, {{y2}})."
+    variables:
+      x1: {type: int, min: -8, max: 8}
+      m: {type: int, min: -5, max: 5, exclude: [0]}
+      d: {type: int, min: 1, max: 5}
+      y1: {type: int, min: -8, max: 8}
+      x2: {type: derived, expression: "x1 + d"}
+      y2: {type: derived, expression: "y1 + m*d"}
+    answer: {expression: "(y2 - y1) / (x2 - x1)"}
+    options:
+      distractors: ["(x2 - x1) / (y2 - y1)", "(y2 + y1) / (x2 + x1)"]
+    hints:
+      - text: "Gradient = rise ÷ run = (y2 - y1) ÷ (x2 - x1)."
+      - text: "Rise = {{y2 - y1}}, run = {{x2 - x1}}."
+    solution:
+      - text: "m = ({{y2}} - {{y1}}) ÷ ({{x2}} - {{x1}}) = {{y2-y1}} ÷ {{x2-x1}} = {{(y2-y1)/(x2-x1)}}."
+
+  - slug: m8-slope-intercept-read
+    skill: math-8-slope-intercept
+    type: numeric
+    difficulty: 3
+    prompt: "For the line y = {{m}}x + {{c}}, what is the y-intercept?"
+    variables:
+      m: {type: int, min: -9, max: 9, exclude: [0]}
+      c: {type: int, min: -15, max: 15, exclude: [0]}
+    answer: {expression: "c"}
+    options:
+      distractors: ["m", "m + c", "-c"]
+    hints:
+      - text: "In y = mx + c, the y-intercept is c — the value of y when x = 0."
+    solution:
+      - text: "Setting x = 0 gives y = {{c}}."
+
+  - slug: m8-write-linear-equation
+    skill: math-8-write-linear-equations
+    type: expression
+    difficulty: 4
+    prompt: >-
+      A line has gradient {{m}} and passes through (0, {{c}}).
+      Write its equation in the form y = mx + c (give the right-hand side only).
+    variables:
+      m: {type: int, min: -8, max: 9, exclude: [0]}
+      c: {type: int, min: -12, max: 12}
+    answer:
+      expression: "{{m}}*x + {{c}}"
+      symbols: [x]
+    options:
+      placeholder: "e.g. 3x - 4"
+    hints:
+      - text: "The point (0, {{c}}) is the y-intercept."
+    solution:
+      - text: "y = {{m}}x + {{c}}."
+
+  - slug: m8-systems-graphing
+    skill: math-8-systems-graphing
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      The lines y = {{m1}}x + {{c1}} and y = {{m2}}x + {{c2}} intersect at one point.
+      What is the x-coordinate of that point?
+    variables:
+      m1: {type: int, min: -6, max: 6, exclude: [0]}
+      m2: {type: int, min: -6, max: 6, exclude: [0]}
+      x: {type: int, min: -6, max: 8}
+      c1: {type: int, min: -10, max: 10}
+      c2: {type: derived, expression: "m1*x + c1 - m2*x"}
+    constraints: ["m1 != m2"]
+    answer: {expression: "(c2 - c1) / (m1 - m2)"}
+    hints:
+      - text: "At the intersection the two y values are equal, so set the expressions equal."
+    solution:
+      - text: "{{m1}}x + {{c1}} = {{m2}}x + {{c2}}."
+      - text: "{{m1 - m2}}x = {{c2 - c1}}, so x = {{(c2-c1)/(m1-m2)}}."
+
+  - slug: m8-systems-elimination
+    skill: math-8-systems-substitution
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      Solve the simultaneous equations and give the value of x.
+      x + y = {{s}}
+      x - y = {{d}}
+    variables:
+      x: {type: int, min: -10, max: 20}
+      y: {type: int, min: -10, max: 20}
+      s: {type: derived, expression: "x + y"}
+      d: {type: derived, expression: "x - y"}
+    answer: {expression: "(s + d) / 2"}
+    options:
+      distractors: ["(s - d) / 2", "s + d"]
+    hints:
+      - text: "Adding the two equations eliminates y."
+      - text: "(x + y) + (x - y) = 2x."
+    solution:
+      - text: "Adding: 2x = {{s}} + {{d}} = {{s + d}}."
+      - text: "x = {{(s+d)/2}}."
+
+  - slug: m8-pythagoras-hypotenuse
+    skill: math-8-pythagoras-hypotenuse
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A right-angled triangle has shorter sides of {{a}} cm and {{b}} cm.
+      What is the length of the hypotenuse, in cm?
+    variables:
+      k: {type: int, min: 1, max: 5}
+      t: {type: choice, choices: [3, 5, 8, 7, 20]}
+      a: {type: derived, expression: "3 * k"}
+      b: {type: derived, expression: "4 * k"}
+    answer: {expression: "sqrt(a*a + b*b)", unit: "cm"}
+    options:
+      distractors: ["a + b", "sqrt(abs(b*b - a*a))"]
+    hints:
+      - text: "Use a squared + b squared = c squared."
+      - text: "{{a}}^2 + {{b}}^2 = {{a*a}} + {{b*b}} = {{a*a + b*b}}."
+    solution:
+      - text: "c^2 = {{a*a}} + {{b*b}} = {{a*a + b*b}}."
+      - text: "c = square root of {{a*a + b*b}} = {{sqrt(a*a + b*b)}} cm."
+
+  - slug: m8-pythagoras-leg
+    skill: math-8-pythagoras-leg
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A right-angled triangle has hypotenuse {{c}} cm and one shorter side {{a}} cm.
+      What is the length of the other shorter side, in cm?
+    variables:
+      k: {type: int, min: 1, max: 5}
+      a: {type: derived, expression: "3 * k"}
+      b: {type: derived, expression: "4 * k"}
+      c: {type: derived, expression: "5 * k"}
+    answer: {expression: "sqrt(c*c - a*a)", unit: "cm"}
+    options:
+      distractors: ["sqrt(c*c + a*a)", "c - a"]
+    hints:
+      - text: "Rearrange to b squared = c squared - a squared."
+    solution:
+      - text: "b^2 = {{c*c}} - {{a*a}} = {{c*c - a*a}}."
+      - text: "b = {{sqrt(c*c - a*a)}} cm."
+
+  - slug: m8-distance-formula
+    skill: math-8-distance-formula
+    type: numeric
+    difficulty: 4
+    prompt: "Find the distance between the points ({{x1}}, {{y1}}) and ({{x2}}, {{y2}})."
+    variables:
+      k: {type: int, min: 1, max: 4}
+      x1: {type: int, min: -6, max: 6}
+      y1: {type: int, min: -6, max: 6}
+      x2: {type: derived, expression: "x1 + 3*k"}
+      y2: {type: derived, expression: "y1 + 4*k"}
+    answer: {expression: "sqrt((x2-x1)**2 + (y2-y1)**2)"}
+    hints:
+      - text: "Draw a right-angled triangle: the horizontal and vertical gaps are the two legs."
+      - text: "Horizontal gap = {{x2-x1}}, vertical gap = {{y2-y1}}."
+    solution:
+      - text: "d^2 = {{(x2-x1)**2}} + {{(y2-y1)**2}} = {{(x2-x1)**2 + (y2-y1)**2}}."
+      - text: "d = {{sqrt((x2-x1)**2 + (y2-y1)**2)}}."
+
+  - slug: m8-translation
+    skill: math-8-transformations-basic
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      The point ({{x}}, {{y}}) is translated {{dx}} units right and {{dy}} units up.
+      What is the new x-coordinate?
+    variables:
+      x: {type: int, min: -8, max: 8}
+      y: {type: int, min: -8, max: 8}
+      dx: {type: int, min: 1, max: 9}
+      dy: {type: int, min: 1, max: 9}
+    answer: {expression: "x + dx"}
+    options:
+      distractors: ["x - dx", "y + dy"]
+    hints:
+      - text: "Moving right increases the x-coordinate."
+    solution:
+      - text: "{{x}} + {{dx}} = {{x + dx}}."
+
+  - slug: m8-similar-figures
+    skill: math-8-similar-figures
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      Two triangles are similar. The first has a side of {{a}} cm matching a side of {{b}} cm
+      on the second. Another side of the first triangle is {{c}} cm.
+      What is the matching side on the second triangle, in cm?
+    variables:
+      a: {type: int, min: 2, max: 12}
+      k: {type: int, min: 2, max: 5}
+      c: {type: int, min: 2, max: 15}
+      b: {type: derived, expression: "a * k"}
+    answer: {expression: "c * k", unit: "cm"}
+    options:
+      distractors: ["c / k", "c + k"]
+    hints:
+      - text: "Find the scale factor by dividing matching sides."
+      - text: "Scale factor = {{b}} ÷ {{a}} = {{k}}."
+    solution:
+      - text: "Scale factor is {{k}}, so {{c}} x {{k}} = {{c*k}} cm."
+
+  - slug: m8-scatter-association
+    skill: math-8-scatter-plots
+    type: multiple_choice
+    difficulty: 3
+    prompt: >-
+      A scatter plot shows that as hours of revision increase, exam scores also increase.
+      How would you describe this association?
+    options:
+      choices:
+        - {label: "Positive association", correct: true}
+        - {label: "Negative association", correct: false}
+        - {label: "No association", correct: false}
+        - {label: "It proves revision causes higher scores", correct: false}
+    hints:
+      - text: "When both variables move in the same direction, the association is positive."
+      - text: "Remember that association is not the same as causation."
+    solution:
+      - text: "Both variables increase together, so the association is positive."
+      - text: "A scatter plot alone cannot establish cause and effect."
+
+  - slug: m8-line-of-best-fit
+    skill: math-8-line-of-best-fit
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A line of best fit has the equation y = {{m}}x + {{c}}.
+      Use it to predict y when x = {{x}}.
+    variables:
+      m: {type: int, min: 2, max: 12}
+      c: {type: int, min: 5, max: 40}
+      x: {type: int, min: 2, max: 15}
+    answer: {expression: "m*x + c"}
+    hints:
+      - text: "Substitute x = {{x}} into the equation."
+    solution:
+      - text: "y = {{m}} x {{x}} + {{c}} = {{m*x + c}}."

@@ -1,0 +1,429 @@
+# Mathematics lessons — original content authored for HieuTrienEducation.
+#
+# A lesson is an ordered list of typed blocks. Supported types:
+#   text, math, callout, example, figure, interactive, table, practice, summary
+# See docs/CURRICULUM.md for the full block schema.
+lessons:
+  - slug: lesson-math-6-order-of-operations
+    title: Order of Operations
+    topic: math-6-whole-numbers
+    skill: math-6-order-of-operations
+    estimated_minutes: 15
+    summary: Why 2 + 3 x 4 is 14 and not 20, and the rule that settles every such argument.
+    objectives:
+      - Apply the correct order of operations to multi-step calculations
+      - Explain why the order matters
+      - Use brackets to change the order deliberately
+    blocks:
+      - type: text
+        markdown: |
+          Two students work out `2 + 3 x 4`.
+
+          - **An** says 20. She added 2 and 3 to get 5, then multiplied by 4.
+          - **Binh** says 14. He multiplied 3 by 4 to get 12, then added 2.
+
+          They cannot both be right — and mathematics cannot have a calculation that means two
+          different things depending on who reads it. So there is an agreed order.
+      - type: callout
+        variant: tip
+        title: The order
+        text: >-
+          Brackets → Indices (powers) → Division and Multiplication (left to right) →
+          Addition and Subtraction (left to right).
+      - type: text
+        markdown: |
+          The last part matters more than students expect: division and multiplication sit at the
+          **same level**, so you work through them from left to right. The same is true of
+          addition and subtraction.
+      - type: example
+        title: Working through a calculation
+        steps:
+          - text: "Start with the expression."
+            math: "20 - 3 \\times (2 + 4)^2 \\div 9"
+          - text: "Brackets first."
+            math: "20 - 3 \\times 6^2 \\div 9"
+          - text: "Then the index."
+            math: "20 - 3 \\times 36 \\div 9"
+          - text: "Multiplication and division, left to right: 3 × 36 = 108, then 108 ÷ 9 = 12."
+            math: "20 - 12"
+          - text: "Finally the subtraction."
+            math: "8"
+      - type: callout
+        variant: warning
+        title: A common trap
+        text: >-
+          In 24 ÷ 4 × 2, work left to right: 24 ÷ 4 = 6, then 6 × 2 = 12. Doing the
+          multiplication first gives 3, which is wrong.
+      - type: practice
+        skill: math-6-order-of-operations
+        prompt: Try a few yourself — the questions are generated fresh each time.
+      - type: summary
+        points:
+          - Brackets, then indices, then × and ÷ left to right, then + and − left to right
+          - Multiplication does not always come before division — read left to right
+          - Use brackets whenever you want to force a different order
+
+  - slug: lesson-math-6-adding-fractions
+    title: Adding and Subtracting Fractions
+    topic: math-6-fraction-operations
+    skill: math-6-add-fractions
+    estimated_minutes: 20
+    summary: Why you cannot just add the tops and bottoms, and what to do instead.
+    objectives:
+      - Explain why fractions need a common denominator before adding
+      - Find a common denominator using the LCM
+      - Add and subtract fractions with unlike denominators
+    blocks:
+      - type: text
+        markdown: |
+          Here is the single most common mistake in middle-school mathematics:
+
+          $$\frac{1}{2} + \frac{1}{3} = \frac{2}{5} \quad \text{(wrong!)}$$
+
+          You can see it must be wrong without doing any algebra. One half is already bigger
+          than two fifths — so adding something to it cannot make it smaller.
+      - type: callout
+        variant: note
+        title: The reason
+        text: >-
+          A fraction's denominator says what size the pieces are. You can only add pieces that
+          are the same size. Halves and thirds are different sizes, so they have to be
+          re-cut before they can be combined.
+      - type: interactive
+        widget: fraction-bars
+        config:
+          fractions: [[1, 2], [1, 3]]
+          target: [5, 6]
+          caption: Two bars cut into different sizes — re-cut both into sixths to combine them.
+      - type: example
+        title: Adding one half and one third
+        steps:
+          - text: "The lowest common denominator of 2 and 3 is 6."
+          - text: "Re-cut each fraction into sixths."
+            math: "\\frac{1}{2} = \\frac{3}{6} \\qquad \\frac{1}{3} = \\frac{2}{6}"
+          - text: "Now the pieces are the same size, so add the numerators."
+            math: "\\frac{3}{6} + \\frac{2}{6} = \\frac{5}{6}"
+      - type: text
+        markdown: |
+          ### Finding the common denominator
+
+          Use the **lowest common multiple** of the two denominators. You can always use the
+          product of the two denominators instead — it works, it just leaves you more
+          simplifying to do at the end.
+      - type: table
+        headers: ["Fractions", "Denominators", "LCM", "Rewritten"]
+        rows:
+          - ["1/4 + 1/6", "4 and 6", "12", "3/12 + 2/12 = 5/12"]
+          - ["2/5 + 1/3", "5 and 3", "15", "6/15 + 5/15 = 11/15"]
+          - ["3/8 − 1/4", "8 and 4", "8", "3/8 − 2/8 = 1/8"]
+      - type: callout
+        variant: tip
+        title: Always check
+        text: >-
+          When you have finished, ask whether the answer can be simplified — and whether it
+          looks sensible. Adding two fractions less than 1 should not give you something huge.
+      - type: practice
+        skill: math-6-add-fractions
+      - type: summary
+        points:
+          - Fractions can only be added when their denominators match
+          - Use the LCM of the denominators as the common denominator
+          - Add the numerators only — the denominator stays the same
+          - Simplify at the end and sanity-check the size of your answer
+
+  - slug: lesson-math-6-ratios
+    title: Understanding Ratios
+    topic: math-6-ratios
+    skill: math-6-understanding-ratios
+    estimated_minutes: 18
+    summary: Comparing two quantities — the idea behind recipes, maps, and mixing paint.
+    objectives:
+      - Write a ratio from a described situation
+      - Simplify a ratio to its lowest terms
+      - Distinguish part-to-part from part-to-whole
+    blocks:
+      - type: text
+        markdown: |
+          A class has 12 boys and 18 girls. We can compare these two numbers in several ways,
+          and a **ratio** is one of them.
+
+          We write the ratio of boys to girls as `12 : 18`.
+      - type: text
+        markdown: |
+          ### Simplifying
+
+          Just like a fraction, a ratio can be simplified by dividing both parts by a common
+          factor. The greatest common factor of 12 and 18 is 6:
+
+          $$12 : 18 = 2 : 3$$
+
+          This says something useful: for every 2 boys there are 3 girls.
+      - type: callout
+        variant: warning
+        title: Part-to-part is not part-to-whole
+        text: >-
+          The ratio of boys to girls is 2 : 3. But the *fraction* of the class that is boys is
+          2/5, not 2/3 — because there are 5 parts in total. Mixing these up is the most common
+          ratio error.
+      - type: example
+        title: Sharing in a ratio
+        steps:
+          - text: "Share 350,000 VND between two students in the ratio 3 : 4."
+          - text: "Total parts: 3 + 4 = 7."
+          - text: "One part: 350,000 ÷ 7 = 50,000 VND."
+          - text: "First student gets 3 × 50,000 = 150,000 VND."
+          - text: "Second student gets 4 × 50,000 = 200,000 VND."
+          - text: "Check: 150,000 + 200,000 = 350,000. ✓"
+      - type: practice
+        skill: math-6-understanding-ratios
+      - type: summary
+        points:
+          - A ratio compares two quantities of the same kind
+          - Simplify by dividing both parts by their greatest common factor
+          - For part-to-whole questions, add the parts first to find the total
+
+  - slug: lesson-math-7-two-step-equations
+    title: Solving Two-Step Equations
+    topic: math-7-solving-equations
+    skill: math-7-two-step-equations
+    estimated_minutes: 20
+    summary: Undoing two operations in the right order to find the unknown.
+    objectives:
+      - Solve equations of the form ax + b = c
+      - Explain why the operations are undone in reverse order
+      - Check a solution by substitution
+    blocks:
+      - type: text
+        markdown: |
+          An equation is a balance. Whatever you do to one side, you must do to the other —
+          otherwise the two sides stop being equal.
+
+          To solve `3x + 5 = 20` we need to get `x` on its own. The trick is to **undo the
+          operations in reverse order**.
+      - type: callout
+        variant: tip
+        title: Think of getting dressed
+        text: >-
+          You put socks on before shoes. To undo it you take shoes off before socks — reverse
+          order. Equations work the same way: the last thing done to x is the first thing you undo.
+      - type: example
+        title: Solving 3x + 5 = 20
+        steps:
+          - text: "The equation."
+            math: "3x + 5 = 20"
+          - text: "The last operation applied to x was '+ 5', so undo it first — subtract 5 from both sides."
+            math: "3x = 15"
+          - text: "Now undo the '× 3' by dividing both sides by 3."
+            math: "x = 5"
+          - text: "Check by substituting back: 3(5) + 5 = 15 + 5 = 20. ✓"
+      - type: math
+        latex: "ax + b = c \\quad \\Longrightarrow \\quad x = \\frac{c - b}{a}"
+        caption: The general result — but it is far better to reason through the steps than to memorise this.
+      - type: callout
+        variant: warning
+        title: Watch the signs
+        text: >-
+          With 4x − 7 = 13, the operation is '− 7', so you undo it by *adding* 7:
+          4x = 20, so x = 5.
+      - type: practice
+        skill: math-7-two-step-equations
+      - type: summary
+        points:
+          - Whatever you do to one side, do to the other
+          - Undo operations in reverse order — addition/subtraction first, then multiplication/division
+          - Always substitute your answer back to check
+
+  - slug: lesson-math-8-gradient
+    title: Gradient of a Straight Line
+    topic: math-8-linear-graphs
+    skill: math-8-gradient
+    estimated_minutes: 22
+    summary: Measuring steepness with a single number, and what it means in a real context.
+    objectives:
+      - Calculate gradient from two points
+      - Interpret positive, negative and zero gradients
+      - Explain what gradient represents in a real-world graph
+    blocks:
+      - type: text
+        markdown: |
+          The **gradient** of a line measures how steep it is. It answers the question: *for
+          every step to the right, how far up (or down) do we go?*
+
+          $$m = \frac{\text{rise}}{\text{run}} = \frac{y_2 - y_1}{x_2 - x_1}$$
+      - type: interactive
+        widget: function-plot
+        config:
+          functions:
+            - {expression: "2*x + 1", label: "y = 2x + 1", color: "primary"}
+            - {expression: "-x + 4", label: "y = -x + 4", color: "accent"}
+            - {expression: "3", label: "y = 3", color: "muted"}
+          xRange: [-6, 6]
+          yRange: [-6, 8]
+          caption: Three lines with gradients 2, −1 and 0. Steeper lines have a larger gradient in size.
+      - type: example
+        title: Finding the gradient through (1, 3) and (5, 11)
+        steps:
+          - text: "Label the points."
+            math: "(x_1, y_1) = (1, 3) \\qquad (x_2, y_2) = (5, 11)"
+          - text: "Rise: the change in y."
+            math: "11 - 3 = 8"
+          - text: "Run: the change in x."
+            math: "5 - 1 = 4"
+          - text: "Gradient."
+            math: "m = \\frac{8}{4} = 2"
+      - type: table
+        headers: ["Gradient", "What the line does", "Example"]
+        rows:
+          - ["Positive", "Rises left to right", "m = 3"]
+          - ["Negative", "Falls left to right", "m = −2"]
+          - ["Zero", "Horizontal", "m = 0"]
+          - ["Undefined", "Vertical (run is zero)", "x = 4"]
+      - type: callout
+        variant: note
+        title: Gradient means something
+        text: >-
+          On a distance-time graph the gradient is speed. On a cost graph it is the price per
+          item. Gradient is almost always a *rate* — that is why it matters far beyond geometry.
+      - type: callout
+        variant: warning
+        title: Keep the order consistent
+        text: >-
+          If you start with y₂ on top, you must start with x₂ on the bottom. Swapping one but
+          not the other flips the sign of your gradient.
+      - type: practice
+        skill: math-8-gradient
+      - type: summary
+        points:
+          - Gradient = rise ÷ run = (y₂ − y₁) ÷ (x₂ − x₁)
+          - Positive rises, negative falls, zero is horizontal
+          - Gradient represents a rate of change in real contexts
+
+  - slug: lesson-math-8-pythagoras
+    title: Pythagoras' Theorem
+    topic: math-8-pythagoras
+    skill: math-8-pythagoras-hypotenuse
+    estimated_minutes: 25
+    summary: The relationship between the three sides of every right-angled triangle.
+    objectives:
+      - State and apply Pythagoras' theorem
+      - Identify the hypotenuse correctly
+      - Solve problems involving right-angled triangles
+    blocks:
+      - type: text
+        markdown: |
+          In **any** right-angled triangle, the square of the longest side equals the sum of the
+          squares of the other two.
+
+          $$a^2 + b^2 = c^2$$
+
+          The longest side, `c`, is called the **hypotenuse**. It is always the side opposite
+          the right angle.
+      - type: figure
+        shape: right-triangle
+        config:
+          base: 4
+          height: 3
+          labels: {base: "b = 4", height: "a = 3", hypotenuse: "c = 5"}
+          caption: The 3-4-5 triangle. 3² + 4² = 9 + 16 = 25 = 5².
+      - type: callout
+        variant: tip
+        title: Find the hypotenuse first
+        text: >-
+          Before doing any arithmetic, identify the right angle and look directly across from
+          it. That side is the hypotenuse — and it must be the longest.
+      - type: example
+        title: Finding a hypotenuse
+        steps:
+          - text: "A triangle has shorter sides of 6 cm and 8 cm."
+          - text: "Apply the theorem."
+            math: "c^2 = 6^2 + 8^2"
+          - text: "Square each side."
+            math: "c^2 = 36 + 64 = 100"
+          - text: "Take the square root."
+            math: "c = \\sqrt{100} = 10\\text{ cm}"
+      - type: example
+        title: Finding a shorter side
+        steps:
+          - text: "A ladder 13 m long leans against a wall, with its foot 5 m from the base."
+          - text: "The ladder is the hypotenuse, so rearrange the theorem."
+            math: "a^2 = c^2 - b^2"
+          - text: "Substitute."
+            math: "a^2 = 13^2 - 5^2 = 169 - 25 = 144"
+          - text: "So the ladder reaches 12 m up the wall."
+            math: "a = 12\\text{ m}"
+      - type: callout
+        variant: warning
+        title: Subtract when finding a shorter side
+        text: >-
+          Adding when you should subtract is the most common Pythagoras error. If you are
+          looking for a shorter side, your answer must come out *smaller* than the hypotenuse —
+          if it does not, you have added instead of subtracted.
+      - type: practice
+        skill: math-8-pythagoras-hypotenuse
+      - type: summary
+        points:
+          - a² + b² = c², where c is the hypotenuse
+          - The hypotenuse is opposite the right angle and is always the longest side
+          - To find a shorter side, subtract rather than add
+          - Only works for right-angled triangles
+
+  - slug: lesson-math-9-factorising-quadratics
+    title: Factorising Quadratics
+    topic: math-9-expanding
+    skill: math-9-factorise-quadratics
+    estimated_minutes: 25
+    summary: Running expansion backwards — the key skill for solving quadratic equations.
+    objectives:
+      - Factorise expressions of the form x² + bx + c
+      - Choose the correct pair of numbers systematically
+      - Check a factorisation by expanding
+    blocks:
+      - type: text
+        markdown: |
+          You already know how to expand:
+
+          $$(x + 2)(x + 3) = x^2 + 5x + 6$$
+
+          **Factorising** is the same process run backwards. Given `x² + 5x + 6`, we want to get
+          back to `(x + 2)(x + 3)`.
+      - type: callout
+        variant: tip
+        title: The two numbers
+        text: >-
+          For x² + bx + c, look for two numbers that **multiply to c** and **add to b**.
+          Start with the multiplication — there are usually fewer options.
+      - type: example
+        title: Factorising x² + 7x + 12
+        steps:
+          - text: "We need two numbers that multiply to 12 and add to 7."
+          - text: "Factor pairs of 12: (1, 12), (2, 6), (3, 4)."
+          - text: "Their sums: 13, 8, 7. The last one works."
+          - text: "So the factorisation is:"
+            math: "x^2 + 7x + 12 = (x + 3)(x + 4)"
+          - text: "Check by expanding: x² + 4x + 3x + 12 = x² + 7x + 12. ✓"
+      - type: text
+        markdown: |
+          ### When the signs change
+
+          The signs of `b` and `c` tell you the signs inside the brackets before you start:
+      - type: table
+        headers: ["Sign of c", "Sign of b", "Signs in brackets", "Example"]
+        rows:
+          - ["positive", "positive", "both positive", "x² + 7x + 12 = (x+3)(x+4)"]
+          - ["positive", "negative", "both negative", "x² − 7x + 12 = (x−3)(x−4)"]
+          - ["negative", "either", "one of each", "x² − x − 12 = (x−4)(x+3)"]
+      - type: callout
+        variant: note
+        title: Why this matters
+        text: >-
+          Factorising is not busywork. Once an expression is a product, the **null factor law**
+          applies: if A × B = 0 then A = 0 or B = 0. That is what makes quadratic equations
+          solvable.
+      - type: practice
+        skill: math-9-factorise-quadratics
+      - type: summary
+        points:
+          - Find two numbers that multiply to c and add to b
+          - Use the signs of b and c to predict the signs in the brackets
+          - Always check by expanding
+          - Factorising is the gateway to solving quadratic equations

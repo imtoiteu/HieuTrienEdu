@@ -1,0 +1,339 @@
+# Mathematics — Grade 6
+# Original curriculum authored for HieuTrienEducation. See docs/CONTENT_LICENSES.md.
+subject:
+  slug: mathematics
+  name: Mathematics
+  description: >-
+    Number, algebra, geometry and data for middle school. Every skill is practised with
+    endlessly-generated questions and tracked with a mastery model.
+  icon: sigma
+  color: "#6D4AFF"
+  position: 1
+
+course:
+  slug: math-6
+  title: Mathematics — Grade 6
+  grade: 6
+  summary: Build fluency with fractions, decimals, ratios and the first steps into algebra.
+  description: >-
+    Grade 6 is where arithmetic becomes reasoning. Students consolidate the number system,
+    gain real fluency with fractions and decimals, meet ratios and percentages, and write
+    their first algebraic expressions and equations.
+  estimated_hours: 70
+
+units:
+  - slug: math-6-number-system
+    title: The Number System
+    icon: hash
+    summary: Place value, factors and multiples, and the arrival of negative numbers.
+    topics:
+      - slug: math-6-whole-numbers
+        title: Whole Numbers and Operations
+        summary: Reading large numbers, rounding sensibly, and getting the order of operations right.
+        skills:
+          - slug: math-6-place-value
+            name: Place value to millions
+            description: Identify and use the value of each digit in numbers up to the millions.
+            difficulty: 1
+            tags: [number, foundation]
+          - slug: math-6-rounding
+            name: Rounding whole numbers
+            description: Round to a given place value and judge when an estimate is good enough.
+            difficulty: 1
+            prerequisites: [math-6-place-value]
+            tags: [number, estimation]
+          - slug: math-6-order-of-operations
+            name: Order of operations
+            description: Evaluate expressions using brackets, indices, division/multiplication, then addition/subtraction.
+            difficulty: 2
+            tags: [number, foundation]
+
+      - slug: math-6-factors-multiples
+        title: Factors, Multiples and Primes
+        summary: The building blocks that make fractions and algebra manageable later.
+        skills:
+          - slug: math-6-factors-multiples-skill
+            name: Factors and multiples
+            description: List factors and multiples of a number and tell the two apart.
+            difficulty: 2
+            tags: [number]
+          - slug: math-6-primes
+            name: Prime factorisation
+            description: Write a number as a product of its prime factors.
+            difficulty: 2
+            prerequisites: [math-6-factors-multiples-skill]
+            tags: [number]
+          - slug: math-6-gcf-lcm
+            name: Greatest common factor and lowest common multiple
+            description: Find the GCF and LCM of two numbers and choose which one a problem needs.
+            difficulty: 3
+            prerequisites: [math-6-factors-multiples-skill, math-6-primes]
+            tags: [number]
+
+      - slug: math-6-integers
+        title: Integers
+        summary: Numbers below zero, and what happens when you add and subtract them.
+        skills:
+          - slug: math-6-negative-numbers
+            name: Understanding negative numbers
+            description: Place negative numbers on a number line and interpret them in context.
+            difficulty: 1
+            tags: [number, integers]
+          - slug: math-6-compare-integers
+            name: Comparing and ordering integers
+            description: Order positive and negative numbers and use the < and > symbols correctly.
+            difficulty: 2
+            prerequisites: [math-6-negative-numbers]
+            tags: [number, integers]
+          - slug: math-6-add-subtract-integers
+            name: Adding and subtracting integers
+            description: Add and subtract positive and negative numbers, including double negatives.
+            difficulty: 3
+            prerequisites: [math-6-compare-integers]
+            tags: [number, integers]
+
+  - slug: math-6-fractions-decimals
+    title: Fractions and Decimals
+    icon: divide
+    summary: The single most important topic of middle-school arithmetic.
+    topics:
+      - slug: math-6-understanding-fractions
+        title: Understanding Fractions
+        summary: What a fraction means, and when two of them are the same number.
+        skills:
+          - slug: math-6-equivalent-fractions
+            name: Equivalent fractions
+            description: Recognise and generate fractions of equal value.
+            difficulty: 1
+            tags: [fractions, foundation]
+          - slug: math-6-simplify-fractions
+            name: Simplifying fractions
+            description: Write a fraction in its lowest terms.
+            difficulty: 2
+            prerequisites: [math-6-equivalent-fractions, math-6-gcf-lcm]
+            tags: [fractions]
+          - slug: math-6-compare-fractions
+            name: Comparing fractions
+            description: Decide which of two fractions is larger, with or without a common denominator.
+            difficulty: 2
+            prerequisites: [math-6-equivalent-fractions]
+            tags: [fractions]
+
+      - slug: math-6-fraction-operations
+        title: Fraction Operations
+        summary: Adding, subtracting, multiplying and dividing fractions with confidence.
+        skills:
+          - slug: math-6-common-denominators
+            name: Common denominators
+            description: Rewrite two fractions over a shared denominator.
+            difficulty: 2
+            prerequisites: [math-6-equivalent-fractions, math-6-gcf-lcm]
+            tags: [fractions]
+          - slug: math-6-add-fractions
+            name: Adding and subtracting fractions
+            description: Add and subtract fractions with unlike denominators.
+            difficulty: 3
+            prerequisites: [math-6-common-denominators]
+            related: [math-6-simplify-fractions]
+            tags: [fractions, core]
+          - slug: math-6-multiply-fractions
+            name: Multiplying fractions
+            description: Multiply fractions and simplify the result.
+            difficulty: 2
+            prerequisites: [math-6-simplify-fractions]
+            tags: [fractions]
+          - slug: math-6-divide-fractions
+            name: Dividing fractions
+            description: Divide by a fraction by multiplying by its reciprocal.
+            difficulty: 3
+            prerequisites: [math-6-multiply-fractions]
+            tags: [fractions]
+          - slug: math-6-mixed-numbers
+            name: Mixed numbers
+            description: Convert between mixed numbers and improper fractions, and calculate with them.
+            difficulty: 3
+            prerequisites: [math-6-add-fractions]
+            tags: [fractions]
+
+      - slug: math-6-decimals
+        title: Decimals
+        summary: Decimal place value and the bridge between decimals, fractions and percentages.
+        skills:
+          - slug: math-6-decimal-place-value
+            name: Decimal place value
+            description: Read, write, compare and round decimal numbers.
+            difficulty: 1
+            prerequisites: [math-6-place-value]
+            tags: [decimals]
+          - slug: math-6-decimal-operations
+            name: Operations with decimals
+            description: Add, subtract, multiply and divide decimal numbers.
+            difficulty: 2
+            prerequisites: [math-6-decimal-place-value]
+            tags: [decimals]
+          - slug: math-6-fraction-decimal-conversion
+            name: Converting fractions and decimals
+            description: Convert between fractions, decimals and percentages.
+            difficulty: 2
+            prerequisites: [math-6-decimal-place-value, math-6-equivalent-fractions]
+            tags: [decimals, fractions]
+
+  - slug: math-6-ratios-percentages
+    title: Ratios, Rates and Percentages
+    icon: percent
+    summary: Comparing quantities — the maths behind recipes, maps, discounts and speed.
+    topics:
+      - slug: math-6-ratios
+        title: Ratios and Rates
+        summary: Describing how two quantities relate to one another.
+        skills:
+          - slug: math-6-understanding-ratios
+            name: Understanding ratios
+            description: Write and interpret ratios, including part-to-part and part-to-whole.
+            difficulty: 2
+            tags: [ratio, core]
+          - slug: math-6-equivalent-ratios
+            name: Equivalent ratios
+            description: Scale ratios up and down and solve for a missing value.
+            difficulty: 2
+            prerequisites: [math-6-understanding-ratios, math-6-equivalent-fractions]
+            tags: [ratio]
+          - slug: math-6-unit-rates
+            name: Unit rates
+            description: Find and compare unit rates such as price per kilogram or km per hour.
+            difficulty: 3
+            prerequisites: [math-6-understanding-ratios]
+            tags: [ratio, application]
+
+      - slug: math-6-percentages
+        title: Percentages
+        summary: Percentages as a special ratio out of one hundred.
+        skills:
+          - slug: math-6-understanding-percentages
+            name: Understanding percentages
+            description: Interpret a percentage and convert it to a fraction or decimal.
+            difficulty: 2
+            prerequisites: [math-6-fraction-decimal-conversion]
+            tags: [percentage]
+          - slug: math-6-percent-of-quantity
+            name: Percentage of a quantity
+            description: Calculate a percentage of an amount.
+            difficulty: 3
+            prerequisites: [math-6-understanding-percentages]
+            tags: [percentage, core]
+          - slug: math-6-percent-problems
+            name: Percentage word problems
+            description: Solve discount, increase and decrease problems in real contexts.
+            difficulty: 3
+            prerequisites: [math-6-percent-of-quantity]
+            tags: [percentage, application]
+
+  - slug: math-6-expressions-equations
+    title: Expressions and Equations
+    icon: variable
+    summary: Letters standing for numbers — the beginning of algebra.
+    topics:
+      - slug: math-6-expressions
+        title: Algebraic Expressions
+        summary: Writing and evaluating expressions with variables.
+        skills:
+          - slug: math-6-variables
+            name: Variables and expressions
+            description: Understand what a variable represents and read algebraic notation.
+            difficulty: 2
+            tags: [algebra, foundation]
+          - slug: math-6-evaluate-expressions
+            name: Evaluating expressions
+            description: Substitute values into an expression and calculate the result.
+            difficulty: 2
+            prerequisites: [math-6-variables, math-6-order-of-operations]
+            tags: [algebra, core]
+          - slug: math-6-write-expressions
+            name: Writing expressions from words
+            description: Translate a worded description into an algebraic expression.
+            difficulty: 3
+            prerequisites: [math-6-variables]
+            tags: [algebra, application]
+
+      - slug: math-6-equations
+        title: One-Step Equations
+        summary: Undoing an operation to find an unknown.
+        skills:
+          - slug: math-6-one-step-add
+            name: One-step equations (addition and subtraction)
+            description: Solve equations of the form x + a = b.
+            difficulty: 2
+            prerequisites: [math-6-evaluate-expressions]
+            tags: [algebra, equations]
+          - slug: math-6-one-step-multiply
+            name: One-step equations (multiplication and division)
+            description: Solve equations of the form ax = b.
+            difficulty: 2
+            prerequisites: [math-6-evaluate-expressions]
+            tags: [algebra, equations]
+          - slug: math-6-inequalities
+            name: Inequalities on a number line
+            description: Represent and interpret simple inequalities.
+            difficulty: 3
+            prerequisites: [math-6-compare-integers, math-6-variables]
+            tags: [algebra]
+
+  - slug: math-6-geometry-data
+    title: Geometry, Measurement and Data
+    icon: shapes
+    summary: Area, volume, coordinates and making sense of a set of numbers.
+    topics:
+      - slug: math-6-area
+        title: Area and Surface Area
+        summary: Measuring the space inside two-dimensional shapes.
+        skills:
+          - slug: math-6-area-rectangles-triangles
+            name: Area of rectangles and triangles
+            description: Calculate the area of rectangles, squares and triangles.
+            difficulty: 2
+            tags: [geometry, core]
+          - slug: math-6-area-parallelogram-trapezium
+            name: Area of parallelograms and trapeziums
+            description: Apply the area formulas for parallelograms and trapeziums.
+            difficulty: 3
+            prerequisites: [math-6-area-rectangles-triangles]
+            tags: [geometry]
+          - slug: math-6-surface-area
+            name: Surface area of prisms
+            description: Find the total surface area of a rectangular prism using a net.
+            difficulty: 3
+            prerequisites: [math-6-area-rectangles-triangles]
+            tags: [geometry]
+
+      - slug: math-6-volume-coordinates
+        title: Volume and the Coordinate Plane
+        summary: Three-dimensional space, and locating points with coordinates.
+        skills:
+          - slug: math-6-volume-prisms
+            name: Volume of rectangular prisms
+            description: Calculate volume using length x width x height, including fractional edges.
+            difficulty: 2
+            prerequisites: [math-6-area-rectangles-triangles]
+            tags: [geometry, measurement]
+          - slug: math-6-coordinate-plane
+            name: The coordinate plane
+            description: Plot and read points in all four quadrants.
+            difficulty: 2
+            prerequisites: [math-6-negative-numbers]
+            tags: [geometry, graphs]
+
+      - slug: math-6-statistics
+        title: Statistics
+        summary: Summarising data with a single number, and knowing which one to choose.
+        skills:
+          - slug: math-6-mean-median-mode
+            name: Mean, median and mode
+            description: Calculate the three averages and explain what each one tells you.
+            difficulty: 2
+            tags: [statistics, core]
+          - slug: math-6-range-spread
+            name: Range and outliers
+            description: Measure the spread of a data set and spot values that distort the mean.
+            difficulty: 3
+            prerequisites: [math-6-mean-median-mode]
+            tags: [statistics]

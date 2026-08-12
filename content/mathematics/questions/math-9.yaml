@@ -1,0 +1,340 @@
+# Mathematics — Grade 9 question templates
+defaults:
+  license: proprietary
+  source: HieuTrienEducation
+  status: published
+
+questions:
+  - slug: m9-expand-binomials
+    skill: math-9-expand-binomials
+    type: expression
+    difficulty: 3
+    prompt: "Expand and simplify (x + {{a}})(x + {{b}})."
+    variables:
+      a: {type: int, min: -9, max: 9, exclude: [0]}
+      b: {type: int, min: -9, max: 9, exclude: [0]}
+    answer:
+      expression: "x**2 + {{a + b}}*x + {{a*b}}"
+      symbols: [x]
+    options:
+      placeholder: "e.g. x^2 + 5x + 6"
+    hints:
+      - text: "Multiply every term in the first bracket by every term in the second."
+      - text: "The x coefficient is {{a}} + {{b}} and the constant is {{a}} x {{b}}."
+    solution:
+      - text: "x x x = x^2."
+      - text: "The x terms: {{a}}x + {{b}}x = {{a+b}}x."
+      - text: "The constant: {{a}} x {{b}} = {{a*b}}."
+
+  - slug: m9-perfect-square-expand
+    skill: math-9-expand-binomials
+    type: expression
+    difficulty: 4
+    prompt: "Expand and simplify (x + {{a}})^2."
+    variables:
+      a: {type: int, min: -9, max: 9, exclude: [0]}
+    answer:
+      expression: "x**2 + {{2*a}}*x + {{a*a}}"
+      symbols: [x]
+    hints:
+      - text: "(x + a)^2 means (x + a)(x + a) — it is not x^2 + a^2."
+    solution:
+      - text: "(x + {{a}})^2 = x^2 + 2({{a}})x + {{a}}^2 = x^2 + {{2*a}}x + {{a*a}}."
+
+  - slug: m9-factorise-quadratic
+    skill: math-9-factorise-quadratics
+    type: multiple_choice
+    difficulty: 4
+    prompt: "Factorise x^2 + {{a + b}}x + {{a*b}}."
+    variables:
+      a: {type: int, min: 1, max: 9}
+      b: {type: int, min: 1, max: 9}
+    constraints: ["a != b"]
+    options:
+      choices:
+        - {label: "(x + {{a}})(x + {{b}})", correct: true}
+        - {label: "(x - {{a}})(x - {{b}})", correct: false}
+        - {label: "(x + {{a+b}})(x + {{a*b}})", correct: false}
+        - {label: "(x + {{a}})(x - {{b}})", correct: false}
+    hints:
+      - text: "Find two numbers that multiply to {{a*b}} and add to {{a+b}}."
+    solution:
+      - text: "{{a}} x {{b}} = {{a*b}} and {{a}} + {{b}} = {{a+b}}."
+      - text: "So the factorisation is (x + {{a}})(x + {{b}})."
+
+  - slug: m9-difference-of-squares
+    skill: math-9-special-products
+    type: multiple_choice
+    difficulty: 4
+    prompt: "Factorise x^2 - {{a*a}}."
+    variables:
+      a: {type: int, min: 2, max: 12}
+    options:
+      choices:
+        - {label: "(x + {{a}})(x - {{a}})", correct: true}
+        - {label: "(x - {{a}})(x - {{a}})", correct: false}
+        - {label: "(x + {{a}})(x + {{a}})", correct: false}
+        - {label: "It cannot be factorised", correct: false}
+    hints:
+      - text: "This is a difference of two squares: a^2 - b^2 = (a + b)(a - b)."
+    solution:
+      - text: "x^2 - {{a*a}} = x^2 - {{a}}^2 = (x + {{a}})(x - {{a}})."
+
+  - slug: m9-simplify-surd
+    skill: math-9-simplify-surds
+    type: short_answer
+    difficulty: 4
+    prompt: >-
+      Simplify the square root of {{n}} into the form a x root(b).
+      Write it as, for example, 3root2.
+    variables:
+      a: {type: int, min: 2, max: 7}
+      b: {type: choice, choices: [2, 3, 5, 6, 7, 10]}
+      n: {type: derived, expression: "a*a*b"}
+    answer:
+      accepted: ["{{a}}root{{b}}", "{{a}} root {{b}}", "{{a}}sqrt{{b}}", "{{a}}√{{b}}"]
+    hints:
+      - text: "Look for the largest perfect square that divides {{n}}."
+      - text: "{{n}} = {{a*a}} x {{b}}."
+    solution:
+      - text: "root({{n}}) = root({{a*a}}) x root({{b}}) = {{a}}root{{b}}."
+
+  - slug: m9-algebraic-fraction
+    skill: math-9-algebraic-fractions
+    type: expression
+    difficulty: 4
+    prompt: "Simplify the fraction ({{a}}x + {{a*b}}) / {{a}}."
+    variables:
+      a: {type: int, min: 2, max: 9}
+      b: {type: int, min: 2, max: 12}
+    answer:
+      expression: "x + {{b}}"
+      symbols: [x]
+    hints:
+      - text: "Factorise the numerator first."
+      - text: "{{a}}x + {{a*b}} = {{a}}(x + {{b}})."
+    solution:
+      - text: "{{a}}(x + {{b}}) ÷ {{a}} = x + {{b}}."
+
+  - slug: m9-quadratic-factorising
+    skill: math-9-quadratic-by-factorising
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      Solve x^2 + {{a + b}}x + {{a*b}} = 0.
+      Give the larger of the two solutions.
+    variables:
+      a: {type: int, min: 1, max: 9}
+      b: {type: int, min: 1, max: 9}
+    constraints: ["a != b"]
+    answer: {expression: "-min(a, b)"}
+    hints:
+      - text: "Factorise into (x + p)(x + q) = 0."
+      - text: "Then either x + p = 0 or x + q = 0."
+    solution:
+      - text: "(x + {{a}})(x + {{b}}) = 0."
+      - text: "So x = {{-a}} or x = {{-b}}; the larger is {{-min(a,b)}}."
+
+  - slug: m9-quadratic-formula-discriminant
+    skill: math-9-quadratic-formula
+    type: numeric
+    difficulty: 5
+    prompt: "For the equation {{a}}x^2 + {{b}}x + {{c}} = 0, calculate the discriminant b^2 - 4ac."
+    variables:
+      a: {type: int, min: 1, max: 6}
+      b: {type: int, min: -12, max: 12}
+      c: {type: int, min: -10, max: 10}
+    answer: {expression: "b*b - 4*a*c"}
+    options:
+      distractors: ["b*b + 4*a*c", "b - 4*a*c"]
+    hints:
+      - text: "The discriminant is b^2 - 4ac."
+      - text: "Here a = {{a}}, b = {{b}} and c = {{c}}."
+    solution:
+      - text: "b^2 = {{b*b}} and 4ac = {{4*a*c}}."
+      - text: "Discriminant = {{b*b}} - {{4*a*c}} = {{b*b - 4*a*c}}."
+
+  - slug: m9-parabola-vertex
+    skill: math-9-parabola-features
+    type: numeric
+    difficulty: 4
+    prompt: "For the parabola y = x^2 + {{b}}x + {{c}}, find the x-coordinate of the vertex."
+    variables:
+      b: {type: int, min: -12, max: 12, step: 2, exclude: [0]}
+      c: {type: int, min: -10, max: 10}
+    answer: {expression: "-b / 2"}
+    options:
+      distractors: ["b / 2", "-b"]
+    hints:
+      - text: "The axis of symmetry is at x = -b ÷ (2a)."
+      - text: "Here a = 1, so x = -{{b}} ÷ 2."
+    solution:
+      - text: "x = -({{b}}) ÷ 2 = {{-b/2}}."
+
+  - slug: m9-parabola-direction
+    skill: math-9-sketch-parabola
+    type: multiple_choice
+    difficulty: 4
+    prompt: "In which direction does the parabola y = {{a}}x^2 + {{b}}x + {{c}} open?"
+    variables:
+      a: {type: int, min: -6, max: 6, exclude: [0]}
+      b: {type: int, min: -8, max: 8}
+      c: {type: int, min: -8, max: 8}
+    options:
+      choices:
+        - {label: "Upwards (minimum turning point)", correct: "{{a > 0}}"}
+        - {label: "Downwards (maximum turning point)", correct: "{{a < 0}}"}
+        - {label: "It is a straight line", correct: false}
+    hints:
+      - text: "Look at the sign of the x^2 coefficient."
+    solution:
+      - text: "The coefficient of x^2 is {{a}}, which determines the direction."
+
+  - slug: m9-trig-ratio-identify
+    skill: math-9-trig-ratios
+    type: multiple_choice
+    difficulty: 3
+    prompt: >-
+      In a right-angled triangle, which ratio equals the opposite side divided by the hypotenuse?
+    options:
+      choices:
+        - {label: "sine", correct: true}
+        - {label: "cosine", correct: false}
+        - {label: "tangent", correct: false}
+        - {label: "the reciprocal of tangent", correct: false}
+    hints:
+      - text: "Remember SOH CAH TOA."
+    solution:
+      - text: "SOH: Sine = Opposite ÷ Hypotenuse."
+
+  - slug: m9-trig-find-side
+    skill: math-9-find-side
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      In a right-angled triangle the hypotenuse is {{h}} cm and one angle is {{a}} degrees.
+      Find the length of the side opposite that angle, in cm, to 2 decimal places.
+    variables:
+      h: {type: int, min: 5, max: 30}
+      a: {type: int, min: 20, max: 70, step: 5}
+    answer:
+      expression: "h * sin(radians(a))"
+      unit: "cm"
+      decimals: 2
+      tolerance: 0.01
+    hints:
+      - text: "You know the hypotenuse and want the opposite side, so use sine."
+      - text: "opposite = hypotenuse x sin(angle)."
+    solution:
+      - text: "opposite = {{h}} x sin({{a}} degrees) = {{h * sin(radians(a)) : 2}} cm."
+
+  - slug: m9-trig-find-angle
+    skill: math-9-find-angle
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A right-angled triangle has an opposite side of {{o}} cm and a hypotenuse of {{h}} cm.
+      Find the angle, in degrees, to 1 decimal place.
+    variables:
+      h: {type: int, min: 10, max: 30}
+      o: {type: int, min: 3, max: 9}
+    constraints: ["o < h"]
+    answer:
+      expression: "degrees(asin(o / h))"
+      unit: "degrees"
+      decimals: 1
+      tolerance: 0.02
+    hints:
+      - text: "Use the inverse sine function."
+      - text: "angle = arcsin(opposite ÷ hypotenuse)."
+    solution:
+      - text: "sin(angle) = {{o}} ÷ {{h}} = {{o/h : 4}}."
+      - text: "angle = {{degrees(asin(o/h)) : 1}} degrees."
+
+  - slug: m9-elevation
+    skill: math-9-trig-applications
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      From a point {{d}} m from the base of a tower, the angle of elevation to the top is
+      {{a}} degrees. How tall is the tower, in metres, to 2 decimal places?
+    variables:
+      d: {type: int, min: 10, max: 80, step: 5}
+      a: {type: int, min: 20, max: 65, step: 5}
+    answer:
+      expression: "d * tan(radians(a))"
+      unit: "m"
+      decimals: 2
+      tolerance: 0.02
+    hints:
+      - text: "You know the adjacent side and want the opposite side, so use tangent."
+      - text: "height = distance x tan(angle)."
+    solution:
+      - text: "height = {{d}} x tan({{a}} degrees) = {{d * tan(radians(a)) : 2}} m."
+
+  - slug: m9-cylinder-surface-area
+    skill: math-9-surface-area-volume
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A closed cylinder has radius {{r}} cm and height {{h}} cm.
+      Find its total surface area in square cm, to 2 decimal places. Use pi = 3.14159.
+    variables:
+      r: {type: int, min: 2, max: 12}
+      h: {type: int, min: 3, max: 20}
+    answer:
+      expression: "2 * pi * r * (r + h)"
+      unit: "cm^2"
+      decimals: 2
+      tolerance: 0.05
+    hints:
+      - text: "Surface area = two circles + the curved rectangle."
+      - text: "A = 2 pi r^2 + 2 pi r h."
+    solution:
+      - text: "Two circles: 2 x pi x {{r*r}} = {{2*pi*r*r : 2}}."
+      - text: "Curved surface: 2 x pi x {{r}} x {{h}} = {{2*pi*r*h : 2}}."
+      - text: "Total = {{2*pi*r*(r+h) : 2}} square cm."
+
+  - slug: m9-quartiles
+    skill: math-9-quartiles
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A data set has lower quartile {{q1}} and upper quartile {{q3}}.
+      What is the interquartile range?
+    variables:
+      q1: {type: int, min: 5, max: 40}
+      gap: {type: int, min: 5, max: 35}
+      q3: {type: derived, expression: "q1 + gap"}
+    answer: {expression: "q3 - q1"}
+    options:
+      distractors: ["q3 + q1", "(q3 + q1) / 2"]
+    hints:
+      - text: "The interquartile range is Q3 - Q1."
+    solution:
+      - text: "IQR = {{q3}} - {{q1}} = {{q3 - q1}}."
+
+  - slug: m9-box-plot-read
+    skill: math-9-box-plots
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A box plot has minimum {{mn}}, Q1 {{q1}}, median {{med}}, Q3 {{q3}} and maximum {{mx}}.
+      What is the range?
+    variables:
+      mn: {type: int, min: 0, max: 20}
+      a: {type: int, min: 3, max: 12}
+      b: {type: int, min: 3, max: 12}
+      c: {type: int, min: 3, max: 12}
+      d: {type: int, min: 3, max: 12}
+      q1: {type: derived, expression: "mn + a"}
+      med: {type: derived, expression: "mn + a + b"}
+      q3: {type: derived, expression: "mn + a + b + c"}
+      mx: {type: derived, expression: "mn + a + b + c + d"}
+    answer: {expression: "mx - mn"}
+    options:
+      distractors: ["q3 - q1", "med - mn"]
+    hints:
+      - text: "The range uses the two extreme values, not the quartiles."
+    solution:
+      - text: "Range = {{mx}} - {{mn}} = {{mx - mn}}."

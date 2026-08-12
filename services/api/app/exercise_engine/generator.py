@@ -89,6 +89,18 @@ def _static_choices(
     raw_choices: list[Any], namespace: dict[str, Any], seed: int
 ) -> tuple[list[dict[str, Any]], list[str]]:
     """Normalise author-written choices into ``{id, label}`` plus the list of correct ids."""
+    def _is_correct(raw: Any) -> bool:
+        """Resolve a choice's ``correct`` flag, which may itself be a template.
+
+        Authors write ``correct: "{{ a > b }}"`` so that which option is right depends on the
+        sampled values. Without rendering first, any non-empty string would be truthy and every
+        such choice would be marked correct.
+        """
+        if isinstance(raw, str):
+            rendered = render_template(raw, namespace).strip().lower()
+            return rendered in {"true", "1", "yes"}
+        return bool(raw)
+
     entries: list[dict[str, Any]] = []
     for item in raw_choices:
         if isinstance(item, str):
@@ -97,7 +109,7 @@ def _static_choices(
             entries.append(
                 {
                     "label": render_template(str(item.get("label", "")), namespace),
-                    "is_correct": bool(item.get("correct", item.get("is_correct", False))),
+                    "is_correct": _is_correct(item.get("correct", item.get("is_correct", False))),
                     "explanation": render_template(item.get("explanation"), namespace) or None,
                 }
             )

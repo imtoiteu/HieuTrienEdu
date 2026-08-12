@@ -1,0 +1,315 @@
+# Physics — Grade 6 question templates
+defaults:
+  license: proprietary
+  source: HieuTrienEducation
+  status: published
+
+questions:
+  - slug: p6-si-units-match
+    skill: physics-6-si-units
+    type: matching
+    difficulty: 1
+    prompt: "Match each physical quantity to its SI unit."
+    options:
+      pairs:
+        - {left: "Length", right: "metre (m)"}
+        - {left: "Mass", right: "kilogram (kg)"}
+        - {left: "Time", right: "second (s)"}
+        - {left: "Force", right: "newton (N)"}
+    hints:
+      - text: "The SI base units are the metre, kilogram and second."
+      - text: "Force is a derived unit named after Isaac Newton."
+    solution:
+      - text: "Length is measured in metres, mass in kilograms, time in seconds and force in newtons."
+
+  - slug: p6-si-unit-choice
+    skill: physics-6-si-units
+    type: multiple_choice
+    difficulty: 1
+    prompt: "Which is the SI unit of energy?"
+    options:
+      choices:
+        - {label: "joule (J)", correct: true}
+        - {label: "watt (W)", correct: false}
+        - {label: "newton (N)", correct: false}
+        - {label: "pascal (Pa)", correct: false}
+    hints:
+      - text: "The watt measures power, not energy."
+    solution:
+      - text: "Energy is measured in joules. The watt is joules per second."
+
+  - slug: p6-unit-conversion
+    skill: physics-6-unit-conversion
+    type: numeric
+    difficulty: 2
+    prompt: "Convert {{n}} cm into metres."
+    variables:
+      n: {type: int, min: 20, max: 9000, step: 10}
+    answer: {expression: "n / 100", unit: "m", tolerance: 0.0001}
+    options:
+      distractors: ["n * 100", "n / 1000"]
+    hints:
+      - text: "There are 100 centimetres in one metre."
+      - text: "To go from cm to m, divide by 100."
+    solution:
+      - text: "{{n}} ÷ 100 = {{n/100}} m."
+
+  - slug: p6-unit-conversion-km
+    skill: physics-6-unit-conversion
+    type: numeric
+    difficulty: 2
+    prompt: "Convert {{n}} km into metres."
+    variables:
+      n: {type: float, min: 0.5, max: 45.0, decimals: 1}
+    answer: {expression: "n * 1000", unit: "m", tolerance: 0.0001}
+    options:
+      distractors: ["n / 1000", "n * 100"]
+    hints:
+      - text: "One kilometre is 1000 metres."
+    solution:
+      - text: "{{n}} x 1000 = {{n*1000}} m."
+
+  - slug: p6-precision
+    skill: physics-6-measuring-instruments
+    type: multiple_choice
+    difficulty: 2
+    prompt: >-
+      A ruler is marked in millimetres. Which of these is the most sensible way
+      to record a length measured with it?
+    options:
+      choices:
+        - {label: "14.3 cm", correct: true}
+        - {label: "14.3271 cm", correct: false}
+        - {label: "14 cm", correct: false}
+        - {label: "about 14 and a bit cm", correct: false}
+    hints:
+      - text: "A measurement should not claim more precision than the instrument provides."
+      - text: "Millimetre markings allow one decimal place in centimetres."
+    solution:
+      - text: "A millimetre scale supports 0.1 cm precision, so 14.3 cm is right."
+      - text: "Extra decimal places would be inventing precision the ruler does not have."
+
+  - slug: p6-mass-vs-weight
+    skill: physics-6-mass-volume
+    type: true_false
+    difficulty: 2
+    prompt: "True or false: an astronaut's mass changes when they travel to the Moon."
+    answer: {value: false}
+    hints:
+      - text: "Mass measures the amount of matter; weight measures the pull of gravity."
+    solution:
+      - text: "Mass stays the same everywhere. It is the astronaut's *weight* that changes."
+
+  - slug: p6-density-calc
+    skill: physics-6-density-calc
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A block has a mass of {{m}} g and a volume of {{v}} cm^3.
+      Calculate its density in g/cm^3.
+    variables:
+      d: {type: int, min: 2, max: 12}
+      v: {type: int, min: 5, max: 60, step: 5}
+      m: {type: derived, expression: "d * v"}
+    answer: {expression: "m / v", unit: "g/cm^3"}
+    options:
+      distractors: ["v / m", "m * v"]
+    hints:
+      - text: "Density = mass ÷ volume."
+      - text: "Divide {{m}} by {{v}}."
+    solution:
+      - text: "density = {{m}} ÷ {{v}} = {{m/v}} g/cm^3."
+
+  - slug: p6-density-rearrange
+    skill: physics-6-density-calc
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A liquid has a density of {{d}} g/cm^3. What is the mass, in grams,
+      of {{v}} cm^3 of this liquid?
+    variables:
+      d: {type: float, min: 0.6, max: 13.5, decimals: 1}
+      v: {type: int, min: 10, max: 200, step: 10}
+    answer: {expression: "d * v", unit: "g", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["v / d", "d / v"]
+    hints:
+      - text: "Rearrange density = mass ÷ volume to get mass = density x volume."
+    solution:
+      - text: "mass = {{d}} x {{v}} = {{d*v : 2}} g."
+
+  - slug: p6-particle-model
+    skill: physics-6-particle-model
+    type: multiple_choice
+    difficulty: 2
+    prompt: "In which state of matter are the particles closely packed but able to slide past one another?"
+    options:
+      choices:
+        - {label: "Liquid", correct: true}
+        - {label: "Solid", correct: false}
+        - {label: "Gas", correct: false}
+        - {label: "None of these", correct: false}
+    hints:
+      - text: "Think about which state has a fixed volume but no fixed shape."
+    solution:
+      - text: "In a liquid the particles touch but can move past each other, so it flows."
+
+  - slug: p6-changes-of-state
+    skill: physics-6-changes-of-state
+    type: matching
+    difficulty: 2
+    prompt: "Match each change of state to its name."
+    options:
+      pairs:
+        - {left: "Solid to liquid", right: "melting"}
+        - {left: "Liquid to gas", right: "evaporation"}
+        - {left: "Gas to liquid", right: "condensation"}
+        - {left: "Liquid to solid", right: "freezing"}
+    hints:
+      - text: "Adding energy moves you from solid towards gas."
+    solution:
+      - text: "Melting and evaporation absorb energy; freezing and condensation release it."
+
+  - slug: p6-force-types
+    skill: physics-6-types-of-forces
+    type: multiple_select
+    difficulty: 1
+    prompt: "Select all the forces below that are non-contact forces."
+    options:
+      choices:
+        - {label: "Gravity", correct: true}
+        - {label: "Magnetic force", correct: true}
+        - {label: "Electrostatic force", correct: true}
+        - {label: "Friction", correct: false}
+        - {label: "Air resistance", correct: false}
+    hints:
+      - text: "A non-contact force acts at a distance, without objects touching."
+    solution:
+      - text: "Gravity, magnetism and electrostatic forces act at a distance."
+      - text: "Friction and air resistance require surfaces to be in contact."
+
+  - slug: p6-resultant-force
+    skill: physics-6-force-diagrams
+    type: numeric
+    difficulty: 2
+    prompt: >-
+      A box is pushed to the right with a force of {{a}} N while friction acts to the left
+      with a force of {{b}} N. What is the resultant force, in newtons?
+      Use a positive answer for a resultant to the right.
+    variables:
+      a: {type: int, min: 5, max: 90, step: 5}
+      b: {type: int, min: 5, max: 60, step: 5}
+    constraints: ["a != b"]
+    answer: {expression: "a - b", unit: "N"}
+    options:
+      distractors: ["a + b", "b - a"]
+    hints:
+      - text: "Forces in opposite directions subtract."
+    solution:
+      - text: "{{a}} - {{b}} = {{a - b}} N."
+
+  - slug: p6-friction
+    skill: physics-6-friction
+    type: multiple_choice
+    difficulty: 2
+    prompt: "Which of these would *reduce* the friction between two surfaces?"
+    options:
+      choices:
+        - {label: "Adding oil between them", correct: true}
+        - {label: "Pressing them together harder", correct: false}
+        - {label: "Making the surfaces rougher", correct: false}
+        - {label: "Adding sand between them", correct: false}
+    hints:
+      - text: "A lubricant keeps the surfaces slightly apart."
+    solution:
+      - text: "Oil is a lubricant, so it reduces friction. The other options all increase it."
+
+  - slug: p6-lever-moments
+    skill: physics-6-levers
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A lever is balanced. A force of {{f}} N acts {{d}} m from the pivot on one side.
+      On the other side the force acts {{d2}} m from the pivot.
+      What force, in newtons, is needed to balance it?
+    variables:
+      f: {type: int, min: 10, max: 120, step: 10}
+      d: {type: int, min: 1, max: 6}
+      d2: {type: int, min: 1, max: 6}
+    constraints: ["(f * d) % d2 == 0"]
+    answer: {expression: "f * d / d2", unit: "N"}
+    options:
+      distractors: ["f * d2 / d", "f * d * d2"]
+    hints:
+      - text: "For balance, clockwise moment = anticlockwise moment."
+      - text: "moment = force x distance from pivot."
+    solution:
+      - text: "Moment on the first side = {{f}} x {{d}} = {{f*d}} N m."
+      - text: "Force needed = {{f*d}} ÷ {{d2}} = {{f*d/d2}} N."
+
+  - slug: p6-energy-stores
+    skill: physics-6-energy-forms
+    type: multiple_choice
+    difficulty: 1
+    prompt: "A stretched rubber band stores energy in which store?"
+    options:
+      choices:
+        - {label: "Elastic potential", correct: true}
+        - {label: "Kinetic", correct: false}
+        - {label: "Thermal", correct: false}
+        - {label: "Chemical", correct: false}
+    hints:
+      - text: "The energy is stored because the shape has been changed."
+    solution:
+      - text: "Stretching or compressing an object stores elastic potential energy."
+
+  - slug: p6-energy-transfer
+    skill: physics-6-energy-transfer
+    type: ordering
+    difficulty: 2
+    prompt: "Put the energy transfers in order for a torch being switched on."
+    options:
+      items:
+        - "Chemical energy stored in the battery"
+        - "Electrical energy in the circuit"
+        - "Light and thermal energy from the bulb"
+    hints:
+      - text: "Start with where the energy is stored before the torch is switched on."
+    solution:
+      - text: "Chemical (battery) becomes electrical (circuit), which becomes light and heat."
+
+  - slug: p6-energy-conservation
+    skill: physics-6-energy-transfer
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A lamp is supplied with {{total}} J of electrical energy and produces {{useful}} J of light.
+      How much energy is wasted as heat, in joules?
+    variables:
+      total: {type: int, min: 100, max: 2000, step: 50}
+      useful: {type: int, min: 20, max: 400, step: 10}
+    constraints: ["useful < total"]
+    answer: {expression: "total - useful", unit: "J"}
+    options:
+      distractors: ["total + useful", "useful / total"]
+    hints:
+      - text: "Energy is conserved: input = useful output + wasted energy."
+    solution:
+      - text: "Wasted = {{total}} - {{useful}} = {{total - useful}} J."
+
+  - slug: p6-energy-resources
+    skill: physics-6-energy-resources
+    type: multiple_select
+    difficulty: 2
+    prompt: "Select all the renewable energy resources."
+    options:
+      choices:
+        - {label: "Solar", correct: true}
+        - {label: "Wind", correct: true}
+        - {label: "Hydroelectric", correct: true}
+        - {label: "Coal", correct: false}
+        - {label: "Natural gas", correct: false}
+    hints:
+      - text: "A renewable resource is replenished as fast as it is used."
+    solution:
+      - text: "Solar, wind and hydroelectric are renewable; coal and gas are fossil fuels."

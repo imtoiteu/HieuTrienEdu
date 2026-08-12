@@ -1,0 +1,193 @@
+# Mathematics — Grade 8
+subject:
+  slug: mathematics
+  name: Mathematics
+  icon: sigma
+  color: "#6D4AFF"
+  position: 1
+
+course:
+  slug: math-8
+  title: Mathematics — Grade 8
+  grade: 8
+  summary: Linear functions, Pythagoras, transformations and the first look at real numbers.
+  description: >-
+    Grade 8 is the year the function idea arrives. Students graph and interpret linear
+    relationships, meet irrational numbers through Pythagoras, work with index laws and
+    scientific notation, and describe geometry through transformations.
+  estimated_hours: 80
+
+units:
+  - slug: math-8-real-numbers
+    title: Real Numbers and Indices
+    icon: hash
+    summary: Beyond fractions — roots, irrationals and very large or small numbers.
+    topics:
+      - slug: math-8-number-sets
+        title: Rational and Irrational Numbers
+        summary: Where the number line is more crowded than it looks.
+        skills:
+          - slug: math-8-squares-roots
+            name: Squares and square roots
+            description: Evaluate perfect squares and square roots, and estimate non-perfect roots.
+            difficulty: 2
+            prerequisites: [math-7-exponents-basics]
+            tags: [number, core]
+          - slug: math-8-irrational-numbers
+            name: Rational and irrational numbers
+            description: Classify numbers and approximate irrationals on a number line.
+            difficulty: 3
+            prerequisites: [math-8-squares-roots]
+            tags: [number]
+
+      - slug: math-8-indices
+        title: Index Laws and Scientific Notation
+        summary: Shorthand for repeated multiplication, and for very big and very small numbers.
+        skills:
+          - slug: math-8-index-laws
+            name: Index laws
+            description: Apply the product, quotient and power rules for indices.
+            difficulty: 3
+            prerequisites: [math-7-exponents-basics]
+            tags: [algebra, core]
+          - slug: math-8-negative-indices
+            name: Negative and zero indices
+            description: Interpret a to the power zero and negative indices as reciprocals.
+            difficulty: 3
+            prerequisites: [math-8-index-laws]
+            tags: [algebra]
+          - slug: math-8-scientific-notation
+            name: Scientific notation
+            description: Write and calculate with numbers in standard form.
+            difficulty: 3
+            prerequisites: [math-8-negative-indices]
+            tags: [number, application]
+
+  - slug: math-8-linear-functions
+    title: Linear Functions
+    icon: trending-up
+    summary: The straight line, from equation to graph and back.
+    topics:
+      - slug: math-8-functions
+        title: Introducing Functions
+        summary: A rule that turns each input into exactly one output.
+        skills:
+          - slug: math-8-function-concept
+            name: Understanding functions
+            description: Decide whether a relation is a function and use function notation.
+            difficulty: 2
+            prerequisites: [math-7-constant-proportionality]
+            tags: [functions, core]
+          - slug: math-8-function-tables
+            name: Tables, graphs and rules
+            description: Move between a table of values, a graph and an equation.
+            difficulty: 3
+            prerequisites: [math-8-function-concept, math-6-coordinate-plane]
+            tags: [functions]
+
+      - slug: math-8-linear-graphs
+        title: Graphing Linear Relationships
+        summary: Gradient, intercept, and what they mean in a real context.
+        skills:
+          - slug: math-8-gradient
+            name: Gradient of a line
+            description: Calculate gradient from two points as rise over run.
+            difficulty: 3
+            prerequisites: [math-6-coordinate-plane, math-7-rational-multiply-divide]
+            tags: [functions, core]
+          - slug: math-8-slope-intercept
+            name: Slope-intercept form
+            description: Read and use y = mx + c to graph and describe a line.
+            difficulty: 3
+            prerequisites: [math-8-gradient]
+            tags: [functions, core]
+          - slug: math-8-write-linear-equations
+            name: Writing linear equations
+            description: Find the equation of a line from a graph, a table or two points.
+            difficulty: 4
+            prerequisites: [math-8-slope-intercept]
+            tags: [functions]
+
+      - slug: math-8-systems
+        title: Simultaneous Equations
+        summary: Two conditions at once, and the point where they meet.
+        skills:
+          - slug: math-8-systems-graphing
+            name: Simultaneous equations by graphing
+            description: Solve a pair of linear equations by finding where their graphs intersect.
+            difficulty: 3
+            prerequisites: [math-8-slope-intercept]
+            tags: [algebra]
+          - slug: math-8-systems-substitution
+            name: Simultaneous equations by substitution and elimination
+            description: Solve algebraically using substitution or elimination.
+            difficulty: 4
+            prerequisites: [math-8-systems-graphing, math-7-multi-step-equations]
+            tags: [algebra, core]
+
+  - slug: math-8-geometry
+    title: Geometry and Pythagoras
+    icon: triangle
+    summary: Right-angled triangles, transformations and similarity.
+    topics:
+      - slug: math-8-pythagoras
+        title: Pythagoras' Theorem
+        summary: The relationship that unlocks distance in two dimensions.
+        skills:
+          - slug: math-8-pythagoras-hypotenuse
+            name: Finding the hypotenuse
+            description: Apply a squared plus b squared equals c squared to find the longest side.
+            difficulty: 3
+            prerequisites: [math-8-squares-roots]
+            tags: [geometry, core]
+          - slug: math-8-pythagoras-leg
+            name: Finding a shorter side
+            description: Rearrange Pythagoras' theorem to find a leg of a right-angled triangle.
+            difficulty: 3
+            prerequisites: [math-8-pythagoras-hypotenuse]
+            tags: [geometry]
+          - slug: math-8-distance-formula
+            name: Distance between two points
+            description: Use Pythagoras on the coordinate plane to find a distance.
+            difficulty: 4
+            prerequisites: [math-8-pythagoras-hypotenuse, math-6-coordinate-plane]
+            tags: [geometry, application]
+
+      - slug: math-8-transformations
+        title: Transformations and Similarity
+        summary: Moving and resizing shapes without changing what matters.
+        skills:
+          - slug: math-8-transformations-basic
+            name: Translations, reflections and rotations
+            description: Describe and perform the three rigid transformations on a grid.
+            difficulty: 3
+            prerequisites: [math-6-coordinate-plane]
+            tags: [geometry]
+          - slug: math-8-similar-figures
+            name: Similar figures
+            description: Use scale factors to find missing sides in similar shapes.
+            difficulty: 3
+            prerequisites: [math-7-scale-drawings]
+            tags: [geometry]
+
+  - slug: math-8-statistics
+    title: Statistics
+    icon: chart
+    summary: Looking for a relationship between two variables.
+    topics:
+      - slug: math-8-bivariate
+        title: Bivariate Data
+        summary: Scatter plots and the story they tell.
+        skills:
+          - slug: math-8-scatter-plots
+            name: Scatter plots and association
+            description: Describe the direction, form and strength of an association.
+            difficulty: 3
+            prerequisites: [math-6-coordinate-plane]
+            tags: [statistics]
+          - slug: math-8-line-of-best-fit
+            name: Line of best fit
+            description: Fit a line to data and use it to make a prediction.
+            difficulty: 4
+            prerequisites: [math-8-scatter-plots, math-8-slope-intercept]
+            tags: [statistics, application]

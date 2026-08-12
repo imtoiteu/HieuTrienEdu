@@ -1,0 +1,151 @@
+# Physics — Grade 6
+subject:
+  slug: physics
+  name: Physics
+  description: >-
+    How the physical world works, from measurement and motion to energy, electricity and light.
+    Every idea is anchored to a calculation students can actually do.
+  icon: atom
+  color: "#00B8A9"
+  position: 2
+
+course:
+  slug: physics-6
+  title: Physics — Grade 6
+  grade: 6
+  summary: Measurement, matter and the first ideas about forces and energy.
+  description: >-
+    An introduction to physics as a measuring science. Students learn to measure carefully,
+    use SI units, describe the states of matter, and meet forces, simple machines and energy.
+  estimated_hours: 55
+
+units:
+  - slug: physics-6-measurement
+    title: Measurement
+    icon: ruler
+    summary: Physics starts with being able to measure something reliably.
+    topics:
+      - slug: physics-6-units
+        title: Units and Quantities
+        summary: The SI system, and why everyone uses the same units.
+        skills:
+          - slug: physics-6-si-units
+            name: SI units and quantities
+            description: Match physical quantities to their SI units and symbols.
+            difficulty: 1
+            tags: [measurement, foundation]
+          - slug: physics-6-unit-conversion
+            name: Converting units
+            description: Convert between metric prefixes such as mm, cm, m and km.
+            difficulty: 2
+            prerequisites: [physics-6-si-units, math-6-decimal-place-value]
+            tags: [measurement, core]
+          - slug: physics-6-measuring-instruments
+            name: Measuring instruments and precision
+            description: Read scales correctly and quote a measurement to a sensible precision.
+            difficulty: 2
+            prerequisites: [physics-6-si-units]
+            tags: [measurement, practical]
+
+      - slug: physics-6-density
+        title: Mass, Volume and Density
+        summary: Why a kilogram of feathers takes up more space than a kilogram of lead.
+        skills:
+          - slug: physics-6-mass-volume
+            name: Mass and volume
+            description: Distinguish mass from weight and measure volume by displacement.
+            difficulty: 2
+            prerequisites: [physics-6-unit-conversion]
+            tags: [measurement]
+          - slug: physics-6-density-calc
+            name: Calculating density
+            description: Apply density equals mass divided by volume, and rearrange it.
+            difficulty: 3
+            prerequisites: [physics-6-mass-volume, math-6-decimal-operations]
+            tags: [measurement, core]
+
+  - slug: physics-6-matter
+    title: Matter
+    icon: box
+    summary: Solids, liquids and gases, and what happens in between.
+    topics:
+      - slug: physics-6-states
+        title: States of Matter
+        summary: The particle model, and how it explains everyday behaviour.
+        skills:
+          - slug: physics-6-particle-model
+            name: The particle model
+            description: Use particle arrangement and motion to explain properties of solids, liquids and gases.
+            difficulty: 2
+            tags: [matter, foundation]
+          - slug: physics-6-changes-of-state
+            name: Changes of state
+            description: Name and explain melting, freezing, evaporation and condensation.
+            difficulty: 2
+            prerequisites: [physics-6-particle-model]
+            tags: [matter]
+
+  - slug: physics-6-forces
+    title: Forces and Motion
+    icon: move
+    summary: Pushes and pulls, and what they do.
+    topics:
+      - slug: physics-6-intro-forces
+        title: Introducing Forces
+        summary: Naming forces, drawing them and adding them up.
+        skills:
+          - slug: physics-6-types-of-forces
+            name: Types of forces
+            description: Identify contact and non-contact forces acting in a situation.
+            difficulty: 1
+            tags: [forces, foundation]
+          - slug: physics-6-force-diagrams
+            name: Force diagrams and resultant force
+            description: Draw force arrows and calculate the resultant of forces in a line.
+            difficulty: 2
+            prerequisites: [physics-6-types-of-forces, math-6-add-subtract-integers]
+            tags: [forces, core]
+          - slug: physics-6-friction
+            name: Friction
+            description: Describe friction, its causes and how it can be increased or reduced.
+            difficulty: 2
+            prerequisites: [physics-6-types-of-forces]
+            tags: [forces]
+
+      - slug: physics-6-machines
+        title: Simple Machines
+        summary: Levers and pulleys — trading distance for force.
+        skills:
+          - slug: physics-6-levers
+            name: Levers and moments
+            description: Apply the principle of moments to a balanced lever.
+            difficulty: 3
+            prerequisites: [physics-6-force-diagrams, math-6-one-step-multiply]
+            tags: [forces, machines]
+
+  - slug: physics-6-energy
+    title: Energy
+    icon: zap
+    summary: The one quantity that connects every other topic in physics.
+    topics:
+      - slug: physics-6-energy-basics
+        title: Energy Stores and Transfers
+        summary: Energy is never made or destroyed, only moved.
+        skills:
+          - slug: physics-6-energy-forms
+            name: Energy stores
+            description: Identify kinetic, gravitational, elastic, thermal and chemical energy stores.
+            difficulty: 1
+            tags: [energy, foundation]
+          - slug: physics-6-energy-transfer
+            name: Energy transfers and conservation
+            description: Trace energy through a transfer chain and apply conservation of energy.
+            difficulty: 2
+            prerequisites: [physics-6-energy-forms]
+            tags: [energy, core]
+          - slug: physics-6-energy-resources
+            name: Energy resources
+            description: Compare renewable and non-renewable resources for generating electricity.
+            difficulty: 2
+            prerequisites: [physics-6-energy-forms]
+            tags: [energy, application]

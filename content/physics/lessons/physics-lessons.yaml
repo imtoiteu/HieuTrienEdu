@@ -1,0 +1,454 @@
+# Physics lessons — original content authored for HieuTrienEducation.
+lessons:
+  - slug: lesson-physics-6-density
+    title: Density
+    topic: physics-6-density
+    skill: physics-6-density-calc
+    estimated_minutes: 20
+    summary: Why a kilogram of feathers takes up far more space than a kilogram of lead.
+    objectives:
+      - Define density as mass per unit volume
+      - Calculate density, mass or volume by rearranging the formula
+      - Explain floating and sinking in terms of density
+    blocks:
+      - type: text
+        markdown: |
+          "Which is heavier, a kilogram of feathers or a kilogram of lead?"
+
+          It is a trick question — they have the same mass. What differs is how much **space**
+          that mass takes up. That is what density measures.
+
+          $$\rho = \frac{m}{V}$$
+      - type: callout
+        variant: tip
+        title: Reading the formula
+        text: >-
+          Density is mass *per* volume. Any time you see the word "per", it means divide.
+          Density is measured in kg/m³ or g/cm³.
+      - type: table
+        headers: ["Material", "Density (g/cm³)", "Floats in water?"]
+        rows:
+          - ["Cork", "0.24", "Yes"]
+          - ["Ice", "0.92", "Yes (just)"]
+          - ["Water", "1.00", "—"]
+          - ["Aluminium", "2.70", "No"]
+          - ["Iron", "7.87", "No"]
+          - ["Lead", "11.34", "No"]
+      - type: callout
+        variant: note
+        title: The floating rule
+        text: >-
+          An object floats in a liquid if its density is *less* than the liquid's. Ice floats on
+          water because ice is slightly less dense — which is unusual, and is why lakes freeze
+          from the top down rather than the bottom up.
+      - type: example
+        title: Calculating density
+        steps:
+          - text: "A block has a mass of 240 g and a volume of 30 cm³."
+          - text: "Apply the formula."
+            math: "\\rho = \\frac{240}{30}"
+          - text: "So the density is 8 g/cm³ — denser than water, so it sinks."
+            math: "\\rho = 8\\text{ g/cm}^3"
+      - type: example
+        title: Rearranging for mass
+        steps:
+          - text: "How much does 50 cm³ of aluminium weigh, given a density of 2.7 g/cm³?"
+          - text: "Rearrange the formula."
+            math: "m = \\rho \\times V"
+          - text: "Substitute."
+            math: "m = 2.7 \\times 50 = 135\\text{ g}"
+      - type: callout
+        variant: warning
+        title: Measuring awkward volumes
+        text: >-
+          For an irregular object, use displacement: put it in a measuring cylinder of water and
+          record how far the level rises. The rise *is* the object's volume.
+      - type: practice
+        skill: physics-6-density-calc
+      - type: summary
+        points:
+          - Density = mass ÷ volume
+          - Units are kg/m³ or g/cm³
+          - Objects float when they are less dense than the liquid around them
+          - Use water displacement to measure the volume of irregular shapes
+
+  - slug: lesson-physics-6-energy-transfers
+    title: Energy Stores and Transfers
+    topic: physics-6-energy-basics
+    skill: physics-6-energy-transfer
+    estimated_minutes: 18
+    summary: Energy is never created or destroyed — it only moves between stores.
+    objectives:
+      - Name the main energy stores
+      - Trace energy through a transfer chain
+      - Apply conservation of energy to calculate wasted energy
+    blocks:
+      - type: text
+        markdown: |
+          Energy is not a substance you can hold, but it can always be counted. The total amount
+          in a closed system never changes — this is the **principle of conservation of energy**,
+          and it is one of the most reliable statements in all of science.
+
+          What *does* change is where the energy is stored.
+      - type: table
+        headers: ["Store", "Where you find it", "Example"]
+        rows:
+          - ["Kinetic", "Anything moving", "A rolling ball"]
+          - ["Gravitational potential", "Anything raised up", "A book on a shelf"]
+          - ["Elastic potential", "Anything stretched or squashed", "A drawn bow"]
+          - ["Chemical", "Fuels, food, batteries", "A charged battery"]
+          - ["Thermal", "Anything warm", "A cup of tea"]
+      - type: text
+        markdown: |
+          ### Transfer chains
+
+          A torch being switched on:
+
+          `chemical (battery)` → `electrical (circuit)` → `light + thermal (bulb)`
+
+          Notice that the last step produces **two** outputs. The light is what we wanted; the
+          heat is wasted. That is almost always true — no real device transfers all of its input
+          energy usefully.
+      - type: callout
+        variant: note
+        title: 'Wasted energy is not destroyed'
+        text: >-
+          Energy transferred to the surroundings as heat has not disappeared. It has simply
+          spread out so thinly that we can no longer do anything useful with it.
+      - type: example
+        title: Accounting for the energy
+        steps:
+          - text: "A lamp is supplied with 500 J of electrical energy and emits 60 J as light."
+          - text: "Conservation says input = useful + wasted."
+            math: "500 = 60 + \\text{wasted}"
+          - text: "So 440 J is wasted as heat."
+            math: "\\text{wasted} = 440\\text{ J}"
+          - text: "Efficiency = 60 ÷ 500 = 12%."
+      - type: practice
+        skill: physics-6-energy-transfer
+      - type: summary
+        points:
+          - Energy is conserved — the total never changes
+          - Energy moves between stores rather than being used up
+          - Real devices always waste some energy, usually as heat
+          - Input energy = useful output + wasted output
+
+  - slug: lesson-physics-7-speed
+    title: Speed, Distance and Time
+    topic: physics-7-speed
+    skill: physics-7-average-speed
+    estimated_minutes: 20
+    summary: The first physics formula you will use in almost every later topic.
+    objectives:
+      - Calculate speed, distance or time by rearranging one formula
+      - Convert between m/s and km/h
+      - Interpret a distance-time graph
+    blocks:
+      - type: text
+        markdown: |
+          Speed tells you how much distance is covered in a given time.
+
+          $$v = \frac{d}{t}$$
+
+          The same relationship rearranges two ways, so one formula answers three questions:
+      - type: math
+        latex: "v = \\frac{d}{t} \\qquad d = v \\times t \\qquad t = \\frac{d}{v}"
+        caption: You do not need to memorise three formulas — only one, plus how to rearrange it.
+      - type: example
+        title: Finding average speed
+        steps:
+          - text: "A car travels 240 km in 3 hours."
+          - text: "Apply the formula."
+            math: "v = \\frac{240}{3}"
+          - text: "The average speed is 80 km/h."
+            math: "v = 80\\text{ km/h}"
+      - type: callout
+        variant: note
+        title: Average, not constant
+        text: >-
+          80 km/h is the *average*. The car almost certainly stopped at lights and sped up on
+          open road. Average speed tells you nothing about what happened moment to moment.
+      - type: text
+        markdown: |
+          ### Converting units
+
+          To convert m/s into km/h, multiply by 3.6. To go the other way, divide by 3.6.
+
+          Why 3.6? There are 3600 seconds in an hour and 1000 metres in a kilometre, and
+          3600 ÷ 1000 = 3.6.
+      - type: interactive
+        widget: function-plot
+        config:
+          functions:
+            - {expression: "20*x", label: "Fast — 20 m/s", color: "primary"}
+            - {expression: "8*x", label: "Slow — 8 m/s", color: "accent"}
+          xRange: [0, 10]
+          yRange: [0, 200]
+          axisLabels: {x: "time (s)", y: "distance (m)"}
+          caption: On a distance-time graph, a steeper line means a faster object. The gradient *is* the speed.
+      - type: callout
+        variant: tip
+        title: Reading a distance-time graph
+        text: >-
+          A straight sloping line means constant speed. A horizontal line means the object is
+          stationary. A curve means the speed is changing — the object is accelerating.
+      - type: practice
+        skill: physics-7-average-speed
+      - type: summary
+        points:
+          - v = d ÷ t, and rearrange it as needed
+          - Multiply by 3.6 to convert m/s to km/h
+          - On a distance-time graph, gradient = speed
+          - A horizontal line means stationary, not "constant speed"
+
+  - slug: lesson-physics-7-heat-transfer
+    title: Conduction, Convection and Radiation
+    topic: physics-7-thermal
+    skill: physics-7-heat-transfer
+    estimated_minutes: 18
+    summary: Three ways energy moves from hot to cold, and how to tell which is which.
+    objectives:
+      - Describe conduction, convection and radiation
+      - Identify which mechanism dominates in a given situation
+      - Explain why only radiation works through a vacuum
+    blocks:
+      - type: text
+        markdown: |
+          Energy always flows from hotter to colder. There are exactly three ways it can make
+          that journey, and telling them apart comes down to one question: **what is doing the
+          carrying?**
+      - type: table
+        headers: ["Method", "What carries the energy", "Works in a vacuum?"]
+        rows:
+          - ["Conduction", "Vibrating particles passing energy along, mostly in solids", "No"]
+          - ["Convection", "The bulk movement of a heated fluid", "No"]
+          - ["Radiation", "Infrared electromagnetic waves", "Yes"]
+      - type: text
+        markdown: |
+          ### Conduction
+
+          Particles at the hot end vibrate more and knock into their neighbours. Metals conduct
+          especially well because their free electrons carry energy quickly through the
+          structure. Gases conduct poorly — their particles are too far apart to collide often.
+
+          ### Convection
+
+          Heat a fluid and it expands, becoming less dense, so it rises. Cooler fluid sinks to
+          take its place, and a **convection current** forms. This is why a radiator warms a
+          whole room and why the air above a hot road shimmers.
+
+          ### Radiation
+
+          Every object emits infrared radiation. Unlike the other two, this needs no particles
+          at all — which is exactly why the Sun's energy can cross 150 million kilometres of
+          empty space to reach us.
+      - type: callout
+        variant: tip
+        title: A quick test
+        text: >-
+          Ask what is between the hot thing and the cold thing. Solid contact → conduction.
+          A moving fluid → convection. Nothing, or you can feel it across a gap → radiation.
+      - type: callout
+        variant: note
+        title: Dark and dull versus light and shiny
+        text: >-
+          Matt black surfaces are the best emitters *and* the best absorbers of radiation.
+          Shiny silver surfaces are poor at both, which is why a thermos flask is silvered
+          inside — it reflects radiation back towards the drink.
+      - type: practice
+        skill: physics-7-heat-transfer
+      - type: summary
+        points:
+          - Conduction moves energy through particle collisions, mainly in solids
+          - Convection needs a fluid that can flow and form currents
+          - Radiation is infrared waves and is the only method that crosses a vacuum
+          - Matt black absorbs and emits best; shiny silver does neither well
+
+  - slug: lesson-physics-8-newtons-second-law
+    title: Newton's Second Law
+    topic: physics-8-newtons-laws
+    skill: physics-8-second-law
+    estimated_minutes: 22
+    summary: F = ma — the equation that connects forces to motion.
+    objectives:
+      - Apply F = ma and rearrange it
+      - Explain the relationship between force, mass and acceleration
+      - Use the resultant force, not individual forces
+    blocks:
+      - type: text
+        markdown: |
+          Newton's first law says an object keeps doing what it is doing unless a resultant force
+          acts. The second law tells us **what happens when one does**:
+
+          $$F = ma$$
+
+          where `F` is the **resultant** force in newtons, `m` is mass in kilograms, and `a` is
+          acceleration in m/s².
+      - type: callout
+        variant: warning
+        title: The resultant force, not any force
+        text: >-
+          F in this equation is the *net* force after all forces have been combined. If a
+          100 N push meets 40 N of friction, the resultant is 60 N — and that is the number
+          to use.
+      - type: text
+        markdown: |
+          ### What the equation tells you
+
+          - For a fixed mass, **doubling the force doubles the acceleration**.
+          - For a fixed force, **doubling the mass halves the acceleration**.
+
+          That second point is why a loaded lorry accelerates so much more slowly than an empty
+          one, even with the same engine.
+      - type: example
+        title: Finding acceleration
+        steps:
+          - text: "A resultant force of 60 N acts on a 15 kg trolley."
+          - text: "Rearrange for acceleration."
+            math: "a = \\frac{F}{m}"
+          - text: "Substitute."
+            math: "a = \\frac{60}{15} = 4\\text{ m/s}^2"
+      - type: example
+        title: Working with friction
+        steps:
+          - text: "A 20 kg box is pushed with 90 N. Friction opposes it with 30 N."
+          - text: "First find the resultant force."
+            math: "F = 90 - 30 = 60\\text{ N}"
+          - text: "Then apply the second law."
+            math: "a = \\frac{60}{20} = 3\\text{ m/s}^2"
+      - type: callout
+        variant: tip
+        title: Check your units
+        text: >-
+          F = ma only works with newtons, kilograms and m/s². If a mass is given in grams,
+          convert to kilograms first — this is the single most common source of wrong answers.
+      - type: practice
+        skill: physics-8-second-law
+      - type: summary
+        points:
+          - F = ma, where F is the resultant force
+          - More force means more acceleration; more mass means less
+          - Combine all forces before using the equation
+          - Always use newtons, kilograms and m/s²
+
+  - slug: lesson-physics-8-ohms-law
+    title: Ohm's Law
+    topic: physics-8-circuits
+    skill: physics-8-ohms-law
+    estimated_minutes: 20
+    summary: The relationship between voltage, current and resistance in a circuit.
+    objectives:
+      - Apply V = IR and rearrange it
+      - Describe what current, voltage and resistance each measure
+      - Predict the effect of changing resistance in a circuit
+    blocks:
+      - type: text
+        markdown: |
+          Three quantities describe what is happening in a circuit, and one equation links them:
+
+          $$V = I \times R$$
+
+          - **Current (I)**, in amps, is the *rate of flow* of charge.
+          - **Voltage (V)**, in volts, is the *push* — energy transferred per coulomb.
+          - **Resistance (R)**, in ohms, is how much the component *opposes* the flow.
+      - type: callout
+        variant: tip
+        title: A useful picture
+        text: >-
+          Think of water in a pipe. Voltage is the pump pressure, current is the flow rate, and
+          resistance is how narrow the pipe is. Narrow the pipe (more resistance) and, for the
+          same pressure, less water flows.
+      - type: math
+        latex: "V = IR \\qquad I = \\frac{V}{R} \\qquad R = \\frac{V}{I}"
+        caption: One relationship, three rearrangements.
+      - type: example
+        title: Finding voltage
+        steps:
+          - text: "A current of 0.5 A flows through a 24 Ω resistor."
+          - text: "Apply the formula."
+            math: "V = 0.5 \\times 24"
+          - text: "The potential difference is 12 V."
+            math: "V = 12\\text{ V}"
+      - type: example
+        title: Finding resistance
+        steps:
+          - text: "A lamp has 6 V across it and draws 0.25 A."
+          - text: "Rearrange."
+            math: "R = \\frac{V}{I} = \\frac{6}{0.25}"
+          - text: "So its resistance is 24 Ω."
+            math: "R = 24\\ \\Omega"
+      - type: callout
+        variant: note
+        title: Not everything obeys Ohm's law
+        text: >-
+          A component is *ohmic* if its resistance stays constant, giving a straight-line
+          current-voltage graph. A filament lamp is not ohmic — it heats up as current increases,
+          so its resistance rises and the graph curves.
+      - type: practice
+        skill: physics-8-ohms-law
+      - type: summary
+        points:
+          - V = IR links voltage, current and resistance
+          - Current is flow rate, voltage is the push, resistance is the opposition
+          - For a fixed voltage, more resistance means less current
+          - Filament lamps are non-ohmic because they heat up
+
+  - slug: lesson-physics-9-half-life
+    title: Half-Life
+    topic: physics-9-radioactivity
+    skill: physics-9-half-life
+    estimated_minutes: 22
+    summary: Radioactive decay is random for one nucleus but completely predictable in bulk.
+    objectives:
+      - Define half-life
+      - Calculate remaining activity after a number of half-lives
+      - Explain why decay is random yet predictable
+    blocks:
+      - type: text
+        markdown: |
+          You cannot predict when any individual nucleus will decay. It is genuinely random —
+          nothing about the nucleus tells you it is "due".
+
+          And yet, with enough nuclei, the behaviour of the sample is extremely predictable.
+          This is the same reason a casino cannot predict one spin of the roulette wheel but
+          can forecast its annual profit precisely.
+      - type: callout
+        variant: note
+        title: Definition
+        text: >-
+          The **half-life** is the time taken for half the undecayed nuclei in a sample to
+          decay — equivalently, the time for the activity to fall to half its value.
+      - type: table
+        headers: ["Half-lives elapsed", "Fraction remaining", "Activity from 800 Bq"]
+        rows:
+          - ["0", "1", "800 Bq"]
+          - ["1", "1/2", "400 Bq"]
+          - ["2", "1/4", "200 Bq"]
+          - ["3", "1/8", "100 Bq"]
+          - ["4", "1/16", "50 Bq"]
+      - type: math
+        latex: "A = A_0 \\times \\left(\\frac{1}{2}\\right)^n"
+        caption: Activity after n half-lives, starting from A₀.
+      - type: example
+        title: Working with half-lives
+        steps:
+          - text: "A source has an activity of 960 Bq and a half-life of 6 days. What is its activity after 18 days?"
+          - text: "First find how many half-lives have passed."
+            math: "n = \\frac{18}{6} = 3"
+          - text: "Halve three times: 960 → 480 → 240 → 120."
+            math: "A = 960 \\times \\left(\\tfrac{1}{2}\\right)^3 = 120\\text{ Bq}"
+      - type: callout
+        variant: warning
+        title: It never reaches zero
+        text: >-
+          Each half-life removes half of what is left, not a fixed amount. So the activity gets
+          ever closer to zero without ever quite arriving — which is why long-lived nuclear
+          waste is such a difficult problem.
+      - type: practice
+        skill: physics-9-half-life
+      - type: summary
+        points:
+          - Half-life is the time for activity to halve
+          - Decay is random per nucleus but predictable for large samples
+          - After n half-lives, activity is A₀ × (1/2)ⁿ
+          - Activity approaches but never reaches zero

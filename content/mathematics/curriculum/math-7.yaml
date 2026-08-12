@@ -1,0 +1,248 @@
+# Mathematics — Grade 7
+subject:
+  slug: mathematics
+  name: Mathematics
+  icon: sigma
+  color: "#6D4AFF"
+  position: 1
+
+course:
+  slug: math-7
+  title: Mathematics — Grade 7
+  grade: 7
+  summary: Rational numbers, proportional reasoning and multi-step equations.
+  description: >-
+    Grade 7 extends arithmetic to all rational numbers and makes proportional reasoning the
+    central idea. Students solve multi-step equations, work with angles and circles, and meet
+    probability for the first time.
+  estimated_hours: 75
+
+units:
+  - slug: math-7-rational-numbers
+    title: Rational Numbers
+    icon: hash
+    summary: Every operation, now with negatives and fractions together.
+    topics:
+      - slug: math-7-integer-operations
+        title: Integer Operations
+        summary: Multiplying and dividing with signs, and powers of integers.
+        skills:
+          - slug: math-7-multiply-divide-integers
+            name: Multiplying and dividing integers
+            description: Apply the sign rules for products and quotients of integers.
+            difficulty: 2
+            prerequisites: [math-6-add-subtract-integers]
+            tags: [integers, core]
+          - slug: math-7-exponents-basics
+            name: Exponents and powers
+            description: Evaluate powers with whole-number exponents, including negative bases.
+            difficulty: 2
+            prerequisites: [math-6-order-of-operations]
+            tags: [number]
+          - slug: math-7-absolute-value
+            name: Absolute value
+            description: Interpret absolute value as distance from zero and use it in calculations.
+            difficulty: 2
+            prerequisites: [math-6-negative-numbers]
+            tags: [integers]
+
+      - slug: math-7-rational-operations
+        title: Operations with Rational Numbers
+        summary: Fractions and decimals, positive and negative, all in one system.
+        skills:
+          - slug: math-7-rational-add-subtract
+            name: Adding and subtracting rational numbers
+            description: Combine positive and negative fractions and decimals.
+            difficulty: 3
+            prerequisites: [math-6-add-fractions, math-6-add-subtract-integers]
+            tags: [rational, core]
+          - slug: math-7-rational-multiply-divide
+            name: Multiplying and dividing rational numbers
+            description: Multiply and divide signed fractions and decimals.
+            difficulty: 3
+            prerequisites: [math-6-divide-fractions, math-7-multiply-divide-integers]
+            tags: [rational]
+
+  - slug: math-7-proportions
+    title: Proportional Relationships
+    icon: percent
+    summary: The idea that ties together ratios, percentages, scale and rates of change.
+    topics:
+      - slug: math-7-proportional-reasoning
+        title: Proportions
+        summary: Recognising and using proportional relationships.
+        skills:
+          - slug: math-7-proportion-solve
+            name: Solving proportions
+            description: Solve a/b = c/d for a missing value using cross multiplication.
+            difficulty: 2
+            prerequisites: [math-6-equivalent-ratios]
+            tags: [ratio, core]
+          - slug: math-7-constant-proportionality
+            name: Constant of proportionality
+            description: Identify the unit rate k in y = kx from a table, graph or equation.
+            difficulty: 3
+            prerequisites: [math-7-proportion-solve, math-6-unit-rates]
+            tags: [ratio, algebra]
+          - slug: math-7-scale-drawings
+            name: Scale drawings and maps
+            description: Use a scale factor to convert between drawing and real-world lengths.
+            difficulty: 3
+            prerequisites: [math-7-proportion-solve]
+            tags: [ratio, geometry, application]
+
+      - slug: math-7-percent-applications
+        title: Percentage Applications
+        summary: Discounts, interest, tax and percentage change.
+        skills:
+          - slug: math-7-percent-change
+            name: Percentage increase and decrease
+            description: Calculate the result of a percentage change and the change itself.
+            difficulty: 3
+            prerequisites: [math-6-percent-of-quantity]
+            tags: [percentage, core]
+          - slug: math-7-simple-interest
+            name: Simple interest
+            description: Apply I = P x r x t to savings and borrowing problems.
+            difficulty: 3
+            prerequisites: [math-7-percent-change]
+            tags: [percentage, application]
+
+  - slug: math-7-algebra
+    title: Expressions and Equations
+    icon: variable
+    summary: Multi-step equations, and the algebra that makes them routine.
+    topics:
+      - slug: math-7-manipulating-expressions
+        title: Manipulating Expressions
+        summary: Collecting like terms and expanding brackets.
+        skills:
+          - slug: math-7-like-terms
+            name: Collecting like terms
+            description: Simplify expressions by combining terms with the same variable part.
+            difficulty: 2
+            prerequisites: [math-6-evaluate-expressions]
+            tags: [algebra, core]
+          - slug: math-7-distributive
+            name: Expanding brackets
+            description: Apply the distributive law to expand a(b + c).
+            difficulty: 2
+            prerequisites: [math-7-like-terms]
+            tags: [algebra, core]
+          - slug: math-7-factorise-linear
+            name: Factorising linear expressions
+            description: Take out a common factor from a linear expression.
+            difficulty: 3
+            prerequisites: [math-7-distributive, math-6-gcf-lcm]
+            tags: [algebra]
+
+      - slug: math-7-solving-equations
+        title: Solving Equations and Inequalities
+        summary: Working backwards through several operations at once.
+        skills:
+          - slug: math-7-two-step-equations
+            name: Two-step equations
+            description: Solve equations of the form ax + b = c.
+            difficulty: 2
+            prerequisites: [math-6-one-step-add, math-6-one-step-multiply]
+            tags: [algebra, equations, core]
+          - slug: math-7-multi-step-equations
+            name: Multi-step equations
+            description: Solve equations with brackets and variables on both sides.
+            difficulty: 4
+            prerequisites: [math-7-two-step-equations, math-7-distributive]
+            tags: [algebra, equations]
+          - slug: math-7-solve-inequalities
+            name: Solving inequalities
+            description: Solve linear inequalities, including flipping the sign when dividing by a negative.
+            difficulty: 4
+            prerequisites: [math-7-two-step-equations, math-6-inequalities]
+            tags: [algebra]
+
+  - slug: math-7-geometry
+    title: Geometry
+    icon: shapes
+    summary: Angles, circles and three-dimensional measurement.
+    topics:
+      - slug: math-7-angles
+        title: Angles and Lines
+        summary: The angle relationships that appear in every later geometry problem.
+        skills:
+          - slug: math-7-angle-pairs
+            name: Angle pairs
+            description: Use complementary, supplementary, vertical and adjacent angle relationships.
+            difficulty: 2
+            tags: [geometry, core]
+          - slug: math-7-parallel-lines
+            name: Angles in parallel lines
+            description: Apply corresponding, alternate and co-interior angle rules.
+            difficulty: 3
+            prerequisites: [math-7-angle-pairs]
+            tags: [geometry]
+          - slug: math-7-triangle-angles
+            name: Angles in triangles and quadrilaterals
+            description: Use angle sums to find missing angles in polygons.
+            difficulty: 3
+            prerequisites: [math-7-angle-pairs]
+            tags: [geometry]
+
+      - slug: math-7-circles-volume
+        title: Circles and Volume
+        summary: Measuring round shapes and solids.
+        skills:
+          - slug: math-7-circumference
+            name: Circumference of a circle
+            description: Apply C = 2 pi r and C = pi d.
+            difficulty: 2
+            tags: [geometry, measurement]
+          - slug: math-7-circle-area
+            name: Area of a circle
+            description: Apply A = pi r squared, including semicircles.
+            difficulty: 3
+            prerequisites: [math-7-circumference]
+            tags: [geometry, measurement]
+          - slug: math-7-volume-cylinders
+            name: Volume of cylinders and prisms
+            description: Calculate volume as cross-sectional area times length.
+            difficulty: 3
+            prerequisites: [math-7-circle-area, math-6-volume-prisms]
+            tags: [geometry, measurement]
+
+  - slug: math-7-probability-statistics
+    title: Probability and Statistics
+    icon: chart
+    summary: Chance, and drawing conclusions from samples.
+    topics:
+      - slug: math-7-probability
+        title: Probability
+        summary: Measuring how likely something is.
+        skills:
+          - slug: math-7-simple-probability
+            name: Simple probability
+            description: Calculate the probability of a single event as a fraction, decimal or percentage.
+            difficulty: 2
+            prerequisites: [math-6-fraction-decimal-conversion]
+            tags: [probability, core]
+          - slug: math-7-compound-probability
+            name: Compound events
+            description: Find probabilities for two independent events using lists and tree diagrams.
+            difficulty: 4
+            prerequisites: [math-7-simple-probability, math-6-multiply-fractions]
+            tags: [probability]
+
+      - slug: math-7-data-analysis
+        title: Data Analysis
+        summary: Comparing groups and sampling fairly.
+        skills:
+          - slug: math-7-compare-data-sets
+            name: Comparing data sets
+            description: Compare two distributions using centre and spread.
+            difficulty: 3
+            prerequisites: [math-6-mean-median-mode, math-6-range-spread]
+            tags: [statistics]
+          - slug: math-7-sampling
+            name: Sampling and inference
+            description: Judge whether a sample is representative and use it to estimate a population.
+            difficulty: 3
+            prerequisites: [math-7-compare-data-sets]
+            tags: [statistics]

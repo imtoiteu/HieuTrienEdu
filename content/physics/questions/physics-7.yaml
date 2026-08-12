@@ -1,0 +1,316 @@
+# Physics — Grade 7 question templates
+defaults:
+  license: proprietary
+  source: HieuTrienEducation
+  status: published
+
+questions:
+  - slug: p7-average-speed
+    skill: physics-7-average-speed
+    type: numeric
+    difficulty: 2
+    prompt: >-
+      A car travels {{distance}} km in {{time}} hours.
+      What is its average speed, in km/h?
+    variables:
+      time: {type: int, min: 2, max: 8}
+      distance: {type: int, min: 20, max: 400, step: 10}
+    constraints: ["distance % time == 0"]
+    answer: {expression: "distance / time", unit: "km/h"}
+    options:
+      distractors: ["time / distance", "distance * time"]
+    hints:
+      - text: "Average speed = total distance ÷ total time."
+      - text: "Divide {{distance}} by {{time}}."
+    solution:
+      - text: "speed = {{distance}} ÷ {{time}} = {{distance/time}} km/h."
+
+  - slug: p7-speed-rearrange-distance
+    skill: physics-7-average-speed
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A cyclist rides at a steady {{speed}} m/s for {{time}} s.
+      How far do they travel, in metres?
+    variables:
+      speed: {type: int, min: 2, max: 15}
+      time: {type: int, min: 10, max: 300, step: 10}
+    answer: {expression: "speed * time", unit: "m"}
+    options:
+      distractors: ["time / speed", "speed / time"]
+    hints:
+      - text: "Rearrange speed = distance ÷ time into distance = speed x time."
+    solution:
+      - text: "distance = {{speed}} x {{time}} = {{speed*time}} m."
+
+  - slug: p7-speed-units
+    skill: physics-7-speed-units
+    type: numeric
+    difficulty: 3
+    prompt: "Convert {{v}} m/s into km/h."
+    variables:
+      v: {type: int, min: 2, max: 40}
+    answer: {expression: "v * 3.6", unit: "km/h", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["v / 3.6", "v * 1000"]
+    hints:
+      - text: "1 m/s = 3.6 km/h."
+      - text: "There are 3600 seconds in an hour and 1000 metres in a kilometre."
+    solution:
+      - text: "{{v}} x 3.6 = {{v * 3.6 : 2}} km/h."
+
+  - slug: p7-distance-time-graph
+    skill: physics-7-distance-time-graphs
+    type: multiple_choice
+    difficulty: 3
+    prompt: "On a distance-time graph, what does a horizontal line mean?"
+    options:
+      choices:
+        - {label: "The object is stationary", correct: true}
+        - {label: "The object is moving at constant speed", correct: false}
+        - {label: "The object is accelerating", correct: false}
+        - {label: "The object is moving backwards", correct: false}
+    hints:
+      - text: "The gradient of a distance-time graph is the speed."
+      - text: "A horizontal line has a gradient of zero."
+    solution:
+      - text: "Zero gradient means zero speed, so the object is not moving."
+
+  - slug: p7-dt-graph-speed
+    skill: physics-7-distance-time-graphs
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      On a distance-time graph, a straight line runs from (0 s, 0 m) to ({{t}} s, {{d}} m).
+      What is the speed, in m/s?
+    variables:
+      t: {type: int, min: 2, max: 30}
+      s: {type: int, min: 2, max: 20}
+      d: {type: derived, expression: "s * t"}
+    answer: {expression: "d / t", unit: "m/s"}
+    hints:
+      - text: "Speed is the gradient: rise ÷ run."
+    solution:
+      - text: "speed = {{d}} ÷ {{t}} = {{d/t}} m/s."
+
+  - slug: p7-acceleration
+    skill: physics-7-acceleration-calc
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A car speeds up from {{u}} m/s to {{v}} m/s in {{t}} s.
+      What is its acceleration, in m/s^2?
+    variables:
+      u: {type: int, min: 0, max: 20}
+      dv: {type: int, min: 2, max: 40, step: 2}
+      t: {type: int, min: 2, max: 10}
+      v: {type: derived, expression: "u + dv"}
+    constraints: ["dv % t == 0"]
+    answer: {expression: "(v - u) / t", unit: "m/s^2"}
+    options:
+      distractors: ["(v + u) / t", "t / (v - u)"]
+    hints:
+      - text: "Acceleration = change in velocity ÷ time taken."
+      - text: "The change in velocity is {{v}} - {{u}} = {{v - u}} m/s."
+    solution:
+      - text: "a = ({{v}} - {{u}}) ÷ {{t}} = {{v-u}} ÷ {{t}} = {{(v-u)/t}} m/s^2."
+
+  - slug: p7-vt-graph-distance
+    skill: physics-7-velocity-time-graphs
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      On a velocity-time graph an object moves at a constant {{v}} m/s for {{t}} s.
+      What distance does it travel, in metres?
+    variables:
+      v: {type: int, min: 2, max: 30}
+      t: {type: int, min: 5, max: 60, step: 5}
+    answer: {expression: "v * t", unit: "m"}
+    options:
+      distractors: ["v / t", "v + t"]
+    hints:
+      - text: "Distance is the area under a velocity-time graph."
+      - text: "For a constant speed the area is a rectangle: v x t."
+    solution:
+      - text: "Area = {{v}} x {{t}} = {{v*t}} m."
+
+  - slug: p7-pressure-calc
+    skill: physics-7-pressure-calc
+    type: numeric
+    difficulty: 2
+    prompt: >-
+      A force of {{f}} N acts on an area of {{a}} m^2.
+      What is the pressure, in pascals?
+    variables:
+      p: {type: int, min: 2, max: 50}
+      a: {type: int, min: 2, max: 20}
+      f: {type: derived, expression: "p * a"}
+    answer: {expression: "f / a", unit: "Pa"}
+    options:
+      distractors: ["a / f", "f * a"]
+    hints:
+      - text: "Pressure = force ÷ area."
+    solution:
+      - text: "p = {{f}} ÷ {{a}} = {{f/a}} Pa."
+
+  - slug: p7-pressure-area
+    skill: physics-7-pressure-calc
+    type: multiple_choice
+    difficulty: 3
+    prompt: "Why does a drawing pin pierce a board easily when pushed with a modest force?"
+    options:
+      choices:
+        - {label: "The sharp tip has a very small area, so the pressure is very large", correct: true}
+        - {label: "The sharp tip increases the force applied", correct: false}
+        - {label: "The pin has a low density", correct: false}
+        - {label: "The pin reduces friction with the board", correct: false}
+    hints:
+      - text: "Pressure = force ÷ area. What happens as the area gets very small?"
+    solution:
+      - text: "The same force over a tiny area produces an enormous pressure."
+
+  - slug: p7-liquid-pressure
+    skill: physics-7-liquid-pressure
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      Calculate the pressure at a depth of {{h}} m in water
+      (density {{rho}} kg/m^3, g = 10 N/kg). Give your answer in pascals.
+    variables:
+      h: {type: int, min: 2, max: 50}
+      rho: {type: choice, choices: [1000, 1030]}
+    answer: {expression: "rho * 10 * h", unit: "Pa"}
+    options:
+      distractors: ["rho * h", "rho * 10 / h"]
+    hints:
+      - text: "Use p = rho x g x h."
+    solution:
+      - text: "p = {{rho}} x 10 x {{h}} = {{rho * 10 * h}} Pa."
+
+  - slug: p7-floating
+    skill: physics-7-atmospheric-pressure
+    type: true_false
+    difficulty: 3
+    prompt: >-
+      True or false: an object floats when the upthrust acting on it equals its weight.
+    answer: {value: true}
+    hints:
+      - text: "Think about the forces on a floating object — is it accelerating?"
+    solution:
+      - text: "A floating object is in equilibrium, so upthrust balances weight exactly."
+
+  - slug: p7-temperature-kelvin
+    skill: physics-7-temperature-vs-heat
+    type: numeric
+    difficulty: 2
+    prompt: "Convert {{c}} degrees Celsius into kelvin."
+    variables:
+      c: {type: int, min: -50, max: 120}
+    answer: {expression: "c + 273", unit: "K"}
+    options:
+      distractors: ["c - 273", "c * 273"]
+    hints:
+      - text: "To convert Celsius to kelvin, add 273."
+    solution:
+      - text: "{{c}} + 273 = {{c + 273}} K."
+
+  - slug: p7-heat-transfer
+    skill: physics-7-heat-transfer
+    type: matching
+    difficulty: 2
+    prompt: "Match each situation to the main method of heat transfer involved."
+    options:
+      pairs:
+        - {left: "A metal spoon warming in hot soup", right: "conduction"}
+        - {left: "Warm air rising above a radiator", right: "convection"}
+        - {left: "Feeling the Sun's warmth on your face", right: "radiation"}
+    hints:
+      - text: "Conduction needs direct contact; convection needs a moving fluid."
+      - text: "Radiation is the only one that works through a vacuum."
+    solution:
+      - text: "Conduction transfers through solids, convection through fluid movement, and radiation as infrared waves."
+
+  - slug: p7-thermal-expansion
+    skill: physics-7-thermal-expansion
+    type: multiple_choice
+    difficulty: 3
+    prompt: "Why are small gaps left between sections of a concrete bridge?"
+    options:
+      choices:
+        - {label: "So the concrete can expand in hot weather without buckling", correct: true}
+        - {label: "To let rainwater drain away", correct: false}
+        - {label: "To reduce the total weight of the bridge", correct: false}
+        - {label: "To let the concrete contract when heated", correct: false}
+    hints:
+      - text: "Materials expand when their particles gain energy and vibrate more."
+    solution:
+      - text: "Heating makes the concrete expand; the gaps give it somewhere to go."
+
+  - slug: p7-law-of-reflection
+    skill: physics-7-law-of-reflection
+    type: numeric
+    difficulty: 2
+    prompt: >-
+      A ray of light strikes a plane mirror at an angle of incidence of {{a}} degrees.
+      What is the angle of reflection, in degrees?
+    variables:
+      a: {type: int, min: 5, max: 85, step: 5}
+    answer: {expression: "a", unit: "degrees"}
+    options:
+      distractors: ["90 - a", "180 - a"]
+    hints:
+      - text: "The law of reflection states that the two angles are equal."
+      - text: "Both angles are measured from the normal, not the mirror surface."
+    solution:
+      - text: "Angle of reflection = angle of incidence = {{a}} degrees."
+
+  - slug: p7-mirror-image
+    skill: physics-7-mirrors
+    type: multiple_select
+    difficulty: 3
+    prompt: "Select all the correct statements about the image in a plane mirror."
+    options:
+      choices:
+        - {label: "It is the same size as the object", correct: true}
+        - {label: "It is virtual", correct: true}
+        - {label: "It is laterally inverted", correct: true}
+        - {label: "It can be projected onto a screen", correct: false}
+        - {label: "It is always smaller than the object", correct: false}
+    hints:
+      - text: "A virtual image only appears to be behind the mirror."
+    solution:
+      - text: "A plane mirror gives a same-size, virtual, laterally inverted image that cannot be projected."
+
+  - slug: p7-refraction
+    skill: physics-7-refraction-basics
+    type: multiple_choice
+    difficulty: 3
+    prompt: "Light passes from air into glass. What happens to the ray?"
+    options:
+      choices:
+        - {label: "It slows down and bends towards the normal", correct: true}
+        - {label: "It speeds up and bends away from the normal", correct: false}
+        - {label: "It slows down and bends away from the normal", correct: false}
+        - {label: "It carries on without changing direction", correct: false}
+    hints:
+      - text: "Light travels more slowly in denser media."
+      - text: "Slowing down bends the ray towards the normal."
+    solution:
+      - text: "Glass is optically denser than air, so light slows and bends towards the normal."
+
+  - slug: p7-dispersion
+    skill: physics-7-dispersion
+    type: ordering
+    difficulty: 3
+    prompt: "Order these colours of the visible spectrum from longest wavelength to shortest."
+    options:
+      items:
+        - "Red"
+        - "Yellow"
+        - "Green"
+        - "Blue"
+        - "Violet"
+    hints:
+      - text: "Red light has the longest wavelength of the visible colours."
+    solution:
+      - text: "Wavelength decreases from red through to violet."

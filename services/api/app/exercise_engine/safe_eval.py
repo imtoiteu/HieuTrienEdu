@@ -89,9 +89,25 @@ def _int_sqrt_exact(value: float) -> bool:
     return root * root == int(value) and float(int(value)) == float(value)
 
 
+def _round_half_up(value: float, digits: int = 0) -> float:
+    """Round with .5 always going away from zero.
+
+    Python's built-in ``round`` uses banker's rounding — ``round(2.5)`` is 2, not 3 — which is
+    correct for statistics and flatly wrong for a school maths question. A template asking a
+    student to round 1050 to the nearest 100 must accept 1100.
+    """
+    factor = 10 ** digits
+    scaled = value * factor
+    rounded = math.floor(abs(scaled) + 0.5) * (1 if scaled >= 0 else -1)
+    result = rounded / factor
+    return result if digits > 0 else float(result)
+
+
 ALLOWED_FUNCTIONS: dict[str, Callable[..., Any]] = {
     "abs": abs,
-    "round": round,
+    # Deliberately shadows the builtin — see _round_half_up.
+    "round": _round_half_up,
+    "bankers_round": round,
     "min": min,
     "max": max,
     "sum": lambda values: sum(values),

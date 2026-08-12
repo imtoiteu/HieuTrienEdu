@@ -1,0 +1,174 @@
+# Physics — Grade 8
+subject:
+  slug: physics
+  name: Physics
+  icon: atom
+  color: "#00B8A9"
+  position: 2
+
+course:
+  slug: physics-8
+  title: Physics — Grade 8
+  grade: 8
+  summary: Newton's laws, work and power, electricity and waves.
+  description: >-
+    Grade 8 introduces the laws that govern motion, quantifies work and power, and builds the
+    electric circuit from the ground up. Waves and sound complete the picture.
+  estimated_hours: 70
+
+units:
+  - slug: physics-8-newton
+    title: Forces and Newton's Laws
+    icon: move
+    summary: The three statements that explain almost all everyday motion.
+    topics:
+      - slug: physics-8-newtons-laws
+        title: Newton's Laws of Motion
+        summary: Inertia, F = ma, and action-reaction pairs.
+        skills:
+          - slug: physics-8-first-law
+            name: Newton's first law
+            description: Apply the idea of inertia and balanced forces to constant-velocity motion.
+            difficulty: 2
+            prerequisites: [physics-6-force-diagrams, physics-7-acceleration-calc]
+            tags: [forces, core]
+          - slug: physics-8-second-law
+            name: Newton's second law
+            description: Apply F = ma and rearrange it for force, mass or acceleration.
+            difficulty: 3
+            prerequisites: [physics-8-first-law, math-7-two-step-equations]
+            tags: [forces, core]
+          - slug: physics-8-third-law
+            name: Newton's third law
+            description: Identify action-reaction pairs and explain why they do not cancel.
+            difficulty: 3
+            prerequisites: [physics-8-first-law]
+            tags: [forces]
+          - slug: physics-8-weight-mass
+            name: Weight and gravitational field strength
+            description: Apply W = mg and distinguish weight from mass.
+            difficulty: 2
+            prerequisites: [physics-6-mass-volume]
+            tags: [forces]
+
+  - slug: physics-8-work-energy
+    title: Work, Energy and Power
+    icon: zap
+    summary: Putting numbers on energy transfers.
+    topics:
+      - slug: physics-8-work
+        title: Work and Power
+        summary: Energy transferred by a force, and how quickly.
+        skills:
+          - slug: physics-8-work-done
+            name: Calculating work done
+            description: Apply work equals force times distance moved in the direction of the force.
+            difficulty: 2
+            prerequisites: [physics-8-second-law]
+            tags: [energy, core]
+          - slug: physics-8-power
+            name: Power
+            description: Apply power equals work divided by time.
+            difficulty: 3
+            prerequisites: [physics-8-work-done]
+            tags: [energy, core]
+          - slug: physics-8-efficiency
+            name: Efficiency
+            description: Calculate efficiency as useful output over total input.
+            difficulty: 3
+            prerequisites: [physics-8-power, math-6-percent-of-quantity]
+            tags: [energy]
+
+      - slug: physics-8-kinetic-potential
+        title: Kinetic and Potential Energy
+        summary: The two energy stores that convert into each other constantly.
+        skills:
+          - slug: physics-8-kinetic-energy
+            name: Kinetic energy
+            description: Apply KE = half m v squared.
+            difficulty: 4
+            prerequisites: [physics-8-work-done, math-8-index-laws]
+            tags: [energy]
+          - slug: physics-8-gpe
+            name: Gravitational potential energy
+            description: Apply GPE = mgh and use energy conservation in falling objects.
+            difficulty: 3
+            prerequisites: [physics-8-weight-mass, physics-6-energy-transfer]
+            tags: [energy]
+
+  - slug: physics-8-electricity
+    title: Electricity
+    icon: plug
+    summary: Charge, current, voltage and resistance in a circuit.
+    topics:
+      - slug: physics-8-circuits
+        title: Electric Circuits
+        summary: What flows, what pushes it, and what slows it down.
+        skills:
+          - slug: physics-8-charge-current
+            name: Charge and current
+            description: Apply Q = It and describe current as a flow of charge.
+            difficulty: 2
+            tags: [electricity, foundation]
+          - slug: physics-8-voltage
+            name: Voltage and energy
+            description: Describe potential difference as energy transferred per unit charge.
+            difficulty: 3
+            prerequisites: [physics-8-charge-current, physics-6-energy-transfer]
+            tags: [electricity]
+          - slug: physics-8-ohms-law
+            name: Ohm's law
+            description: Apply V = IR and rearrange it for any variable.
+            difficulty: 3
+            prerequisites: [physics-8-voltage]
+            tags: [electricity, core]
+          - slug: physics-8-series-parallel
+            name: Series and parallel circuits
+            description: Compare current, voltage and resistance in series and parallel arrangements.
+            difficulty: 4
+            prerequisites: [physics-8-ohms-law]
+            tags: [electricity, core]
+          - slug: physics-8-electrical-power
+            name: Electrical power
+            description: Apply P = VI and P = I squared R to appliances.
+            difficulty: 4
+            prerequisites: [physics-8-ohms-law, physics-8-power]
+            tags: [electricity]
+
+  - slug: physics-8-waves
+    title: Waves and Sound
+    icon: audio-waveform
+    summary: Energy that travels without matter travelling with it.
+    topics:
+      - slug: physics-8-wave-properties
+        title: Wave Properties
+        summary: Amplitude, wavelength, frequency and the wave equation.
+        skills:
+          - slug: physics-8-wave-anatomy
+            name: Describing waves
+            description: Identify amplitude, wavelength, frequency and period, and compare wave types.
+            difficulty: 2
+            tags: [waves, foundation]
+          - slug: physics-8-wave-equation
+            name: The wave equation
+            description: Apply v = f lambda and rearrange it.
+            difficulty: 3
+            prerequisites: [physics-8-wave-anatomy, physics-7-average-speed]
+            tags: [waves, core]
+
+      - slug: physics-8-sound
+        title: Sound
+        summary: A longitudinal wave you can hear.
+        skills:
+          - slug: physics-8-sound-properties
+            name: Properties of sound
+            description: Relate pitch to frequency and loudness to amplitude.
+            difficulty: 2
+            prerequisites: [physics-8-wave-anatomy]
+            tags: [waves]
+          - slug: physics-8-echoes
+            name: Echoes and the speed of sound
+            description: Use the echo method to calculate distance or the speed of sound.
+            difficulty: 3
+            prerequisites: [physics-8-wave-equation]
+            tags: [waves, application]

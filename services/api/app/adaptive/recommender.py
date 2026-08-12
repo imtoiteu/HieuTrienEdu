@@ -170,35 +170,53 @@ def recommend_next(
         skill.id: _current_mastery(mastery_records.get(skill.id), skill, now) for skill in skills
     }
 
-    def readiness_of(skill: Skill) -> tuple[float, list[Skill]]:
-        """Lowest prerequisite mastery, plus the prerequisites that are not yet in place."""
+    def readiness_of(skill: Skill) -> tuple[float, list[Skill], list[Skill]]:
+        """Classify a skill's hard prerequisites.
+
+        Returns ``(lowest_prerequisite_mastery, demonstrated_weak, never_assessed)``.
+
+        The distinction is essential. A prerequisite the student has *tried and struggled with*
+        is real evidence that they are not ready. A prerequisite they have simply never touched
+        is not — a grade 8 student has almost certainly met grade 6 place value at school, even
+        though our database has no record of it.
+
+        Treating both cases as blocking was a genuine bug: every skill in the curriculum
+        ultimately depends on some grade 6 foundation, so a new student found *everything*
+        locked and was recommended nothing but the most elementary skills in the platform.
+        Only demonstrated weakness gates; unassessed prerequisites merely reduce the score.
+        """
         links = prerequisites.get(skill.id, [])
         hard = [link for link in links if link.strength >= 0.75]
         if not hard:
-            return 1.0, []
-        weak = [
-            link.prerequisite
-            for link in hard
-            if mastery_of.get(link.prerequisite_id, link.prerequisite.bkt_p_init)
-            < PREREQUISITE_GATE
-        ]
+            return 1.0, [], []
+
+        demonstrated_weak: list[Skill] = []
+        never_assessed: list[Skill] = []
+        for link in hard:
+            record = mastery_records.get(link.prerequisite_id)
+            mastery = mastery_of.get(link.prerequisite_id, link.prerequisite.bkt_p_init)
+            if record is None or record.attempts == 0:
+                never_assessed.append(link.prerequisite)
+            elif mastery < PREREQUISITE_GATE:
+                demonstrated_weak.append(link.prerequisite)
+
         lowest = min(
             mastery_of.get(link.prerequisite_id, link.prerequisite.bkt_p_init) for link in hard
         )
-        return lowest, weak
+        return lowest, demonstrated_weak, never_assessed
 
     candidates: dict[int, Recommendation] = {}
 
     for skill in skills:
         mastery = mastery_of[skill.id]
         record = mastery_records.get(skill.id)
-        readiness, missing = readiness_of(skill)
+        readiness, missing, unassessed = readiness_of(skill)
 
-        # A locked skill is not itself a recommendation — the weakest missing prerequisite is.
+        # A blocked skill is not itself a recommendation — the weakest missing prerequisite is.
         if missing:
             target = min(missing, key=lambda s: mastery_of.get(s.id, s.bkt_p_init))
             target_mastery = mastery_of.get(target.id, target.bkt_p_init)
-            target_readiness, target_missing = readiness_of(target)
+            target_readiness, target_missing, _ = readiness_of(target)
             if target_missing:
                 continue  # the foundation has its own gaps; it will surface on its own pass
             score = 1.0 + (1.0 - target_mastery)  # foundations outrank everything else
@@ -249,6 +267,10 @@ def recommend_next(
         # 5. Nudge toward easier skills when the student is struggling overall.
         if mastery < STRUGGLING_THRESHOLD:
             score += 0.15 * (5 - skill.difficulty) / 4.0
+        # 6. Mild penalty when foundations are unproven — prefer skills we know they are
+        #    ready for, without locking them out of anything.
+        if unassessed:
+            score -= 0.08 * min(len(unassessed), 3)
 
         reason, detail = _classify(record, mastery)
         candidates[skill.id] = Recommendation(
@@ -327,17 +349,29 @@ def build_learning_path(db: Session, student_id: int, *, unit_id: int) -> list[S
             return record.mastery_probability if record else 0.0
         return _current_mastery(record, skill, now)
 
+    unit_skill_ids = {skill.id for skill in skills}
+
     path: list[SkillStatus] = []
     for skill in skills:
         record = records.get(skill.id)
         mastery = _current_mastery(record, skill, now)
 
-        blocked_by = [
-            link.prerequisite.name
-            for link in prerequisites.get(skill.id, [])
-            if link.strength >= 0.75
-            and mastery_for(link.prerequisite_id, link.prerequisite) < PREREQUISITE_GATE
-        ]
+        # Locking rules mirror the recommender, with one addition: an unassessed prerequisite
+        # *inside this unit* still locks, so the path reads as a sequence the student works
+        # through. An unassessed prerequisite from another grade does not, because we have no
+        # evidence the student lacks it and locking it would make a fresh course look broken.
+        blocked_by: list[str] = []
+        for link in prerequisites.get(skill.id, []):
+            if link.strength < 0.75:
+                continue
+            prerequisite_record = records.get(link.prerequisite_id)
+            prerequisite_mastery = mastery_for(link.prerequisite_id, link.prerequisite)
+            attempted = prerequisite_record is not None and prerequisite_record.attempts > 0
+
+            if attempted and prerequisite_mastery < PREREQUISITE_GATE:
+                blocked_by.append(link.prerequisite.name)
+            elif not attempted and link.prerequisite_id in unit_skill_ids:
+                blocked_by.append(link.prerequisite.name)
 
         if mastery >= MASTERY_THRESHOLD:
             status = "mastered"

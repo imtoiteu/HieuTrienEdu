@@ -1,0 +1,159 @@
+# Physics — Grade 7
+subject:
+  slug: physics
+  name: Physics
+  icon: atom
+  color: "#00B8A9"
+  position: 2
+
+course:
+  slug: physics-7
+  title: Physics — Grade 7
+  grade: 7
+  summary: Motion, pressure, heat and the behaviour of light.
+  description: >-
+    Grade 7 turns qualitative physics into calculation. Students describe motion with speed and
+    distance-time graphs, quantify pressure, explain heat transfer, and trace light through
+    mirrors and lenses.
+  estimated_hours: 60
+
+units:
+  - slug: physics-7-motion
+    title: Motion
+    icon: activity
+    summary: Describing how things move, in words, numbers and graphs.
+    topics:
+      - slug: physics-7-speed
+        title: Speed and Velocity
+        summary: The first real physics formula students will use everywhere.
+        skills:
+          - slug: physics-7-average-speed
+            name: Average speed
+            description: Apply speed equals distance divided by time and rearrange for any variable.
+            difficulty: 2
+            prerequisites: [physics-6-unit-conversion, math-6-unit-rates]
+            tags: [motion, core]
+          - slug: physics-7-speed-units
+            name: Converting speed units
+            description: Convert between m/s and km/h.
+            difficulty: 3
+            prerequisites: [physics-7-average-speed]
+            tags: [motion]
+          - slug: physics-7-distance-time-graphs
+            name: Distance-time graphs
+            description: Read and interpret distance-time graphs, including finding speed from gradient.
+            difficulty: 3
+            prerequisites: [physics-7-average-speed, math-6-coordinate-plane]
+            tags: [motion, graphs]
+
+      - slug: physics-7-acceleration
+        title: Acceleration
+        summary: What happens when speed itself changes.
+        skills:
+          - slug: physics-7-acceleration-calc
+            name: Calculating acceleration
+            description: Apply acceleration equals change in velocity divided by time.
+            difficulty: 3
+            prerequisites: [physics-7-average-speed]
+            tags: [motion, core]
+          - slug: physics-7-velocity-time-graphs
+            name: Velocity-time graphs
+            description: Interpret velocity-time graphs and find distance from the area beneath.
+            difficulty: 4
+            prerequisites: [physics-7-acceleration-calc, physics-7-distance-time-graphs]
+            tags: [motion, graphs]
+
+  - slug: physics-7-pressure
+    title: Pressure
+    icon: gauge
+    summary: Force spread over an area — in solids, liquids and the atmosphere.
+    topics:
+      - slug: physics-7-pressure-basics
+        title: Pressure in Solids and Liquids
+        summary: Why a drawing pin hurts and a snowshoe does not.
+        skills:
+          - slug: physics-7-pressure-calc
+            name: Calculating pressure
+            description: Apply pressure equals force divided by area.
+            difficulty: 2
+            prerequisites: [physics-6-force-diagrams, math-6-area-rectangles-triangles]
+            tags: [pressure, core]
+          - slug: physics-7-liquid-pressure
+            name: Pressure in liquids
+            description: Explain how pressure varies with depth and apply p = rho g h.
+            difficulty: 4
+            prerequisites: [physics-7-pressure-calc, physics-6-density-calc]
+            tags: [pressure]
+          - slug: physics-7-atmospheric-pressure
+            name: Atmospheric pressure and floating
+            description: Explain atmospheric pressure, upthrust and why objects float or sink.
+            difficulty: 3
+            prerequisites: [physics-7-liquid-pressure]
+            tags: [pressure, application]
+
+  - slug: physics-7-heat
+    title: Heat and Temperature
+    icon: thermometer
+    summary: The difference between how hot something is and how much energy it holds.
+    topics:
+      - slug: physics-7-thermal
+        title: Thermal Energy
+        summary: Temperature, heat transfer and expansion.
+        skills:
+          - slug: physics-7-temperature-vs-heat
+            name: Temperature and thermal energy
+            description: Distinguish temperature from thermal energy and convert between Celsius and Kelvin.
+            difficulty: 2
+            prerequisites: [physics-6-particle-model]
+            tags: [heat, foundation]
+          - slug: physics-7-heat-transfer
+            name: Conduction, convection and radiation
+            description: Identify and explain the three mechanisms of heat transfer.
+            difficulty: 2
+            prerequisites: [physics-7-temperature-vs-heat]
+            tags: [heat, core]
+          - slug: physics-7-thermal-expansion
+            name: Thermal expansion
+            description: Explain expansion using the particle model and its practical consequences.
+            difficulty: 3
+            prerequisites: [physics-7-temperature-vs-heat]
+            tags: [heat]
+
+  - slug: physics-7-light
+    title: Light
+    icon: sun
+    summary: How light travels, bounces and bends.
+    topics:
+      - slug: physics-7-reflection
+        title: Reflection
+        summary: Mirrors and the law of reflection.
+        skills:
+          - slug: physics-7-law-of-reflection
+            name: The law of reflection
+            description: Apply angle of incidence equals angle of reflection.
+            difficulty: 2
+            prerequisites: [math-7-angle-pairs]
+            tags: [light, core]
+          - slug: physics-7-mirrors
+            name: Images in plane mirrors
+            description: Describe the image formed by a plane mirror and locate it.
+            difficulty: 3
+            prerequisites: [physics-7-law-of-reflection]
+            tags: [light]
+
+      - slug: physics-7-refraction
+        title: Refraction and Colour
+        summary: Why a straw looks bent and a prism makes a rainbow.
+        skills:
+          - slug: physics-7-refraction-basics
+            name: Refraction
+            description: Explain refraction as a change of speed and predict which way light bends.
+            difficulty: 3
+            prerequisites: [physics-7-law-of-reflection]
+            tags: [light]
+          - slug: physics-7-dispersion
+            name: Dispersion and colour
+            description: Explain how white light splits into a spectrum and how filters work.
+            difficulty: 3
+            prerequisites: [physics-7-refraction-basics]
+            tags: [light]

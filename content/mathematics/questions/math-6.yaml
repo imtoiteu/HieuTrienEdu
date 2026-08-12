@@ -1,0 +1,881 @@
+# Mathematics — Grade 6 question templates
+# Original content authored for HieuTrienEducation.
+#
+# Placeholder syntax is {{ expression }}. Prompts are quoted because a YAML scalar starting
+# with '{' would otherwise be parsed as a flow mapping. LaTeX uses single-quoted YAML strings
+# so backslashes are taken literally.
+defaults:
+  license: proprietary
+  source: HieuTrienEducation
+  status: published
+
+questions:
+  # ---------------------------------------------------------------- place value
+  - slug: m6-place-value-write
+    skill: math-6-place-value
+    type: numeric
+    difficulty: 1
+    prompt: "Write this number in digits: {{m}} million, {{t}} thousand, {{u}}."
+    variables:
+      m: {type: int, min: 1, max: 9}
+      t: {type: int, min: 10, max: 999}
+      u: {type: int, min: 10, max: 999}
+    answer: {expression: "m*1000000 + t*1000 + u"}
+    hints:
+      - text: "One million is 1 000 000 and one thousand is 1 000."
+      - text: "Work out {{m}} x 1 000 000, then {{t}} x 1 000, then add {{u}}."
+    solution:
+      - text: "{{m}} million = {{m*1000000}}."
+      - text: "{{t}} thousand = {{t*1000}}."
+      - text: "Adding all three parts gives {{m*1000000 + t*1000 + u}}."
+
+  - slug: m6-place-value-digit
+    skill: math-6-place-value
+    type: multiple_choice
+    difficulty: 2
+    prompt: "In the number {{a}}{{b}}{{c}}{{d}}, what is the *value* of the digit {{b}}?"
+    variables:
+      a: {type: int, min: 1, max: 9}
+      b: {type: int, min: 1, max: 9}
+      c: {type: int, min: 0, max: 9}
+      d: {type: int, min: 0, max: 9}
+    answer: {expression: "b * 100"}
+    options:
+      distractors: ["b", "b * 1000", "b * 10"]
+    hints:
+      - text: "Count the places from the right: ones, tens, hundreds, thousands."
+      - text: "The digit {{b}} sits in the hundreds place."
+    solution:
+      - text: "Reading from the right, {{b}} is in the hundreds place."
+      - text: "So its value is {{b}} x 100 = {{b*100}}."
+
+  # ---------------------------------------------------------------- rounding
+  - slug: m6-rounding-nearest
+    skill: math-6-rounding
+    type: numeric
+    difficulty: 1
+    prompt: "Round {{n}} to the nearest {{p}}."
+    variables:
+      p: {type: choice, choices: [10, 100, 1000]}
+      n: {type: int, min: 1050, max: 98750}
+    constraints: ["n % p != 0"]
+    answer: {expression: "round(n / p) * p"}
+    hints:
+      - text: "Look at the digit immediately to the right of the {{p}}s place."
+      - text: "If that digit is 5 or more, round up; otherwise round down."
+    solution:
+      - text: "{{n}} lies between {{floor(n/p)*p}} and {{floor(n/p)*p + p}}."
+      - text: "The nearer of the two is {{round(n/p)*p}}."
+
+  - slug: m6-rounding-estimate
+    skill: math-6-rounding
+    type: numeric
+    difficulty: 2
+    prompt: >-
+      Estimate {{a}} + {{b}} by first rounding each number to the nearest 100.
+      What is your estimate?
+    variables:
+      a: {type: int, min: 120, max: 4900}
+      b: {type: int, min: 120, max: 4900}
+    answer: {expression: "round(a/100)*100 + round(b/100)*100"}
+    hints:
+      - text: "Round each number separately before adding."
+    solution:
+      - text: "{{a}} rounds to {{round(a/100)*100}}."
+      - text: "{{b}} rounds to {{round(b/100)*100}}."
+      - text: "The estimate is {{round(a/100)*100 + round(b/100)*100}}."
+
+  # ---------------------------------------------------------------- order of operations
+  - slug: m6-order-ops-basic
+    skill: math-6-order-of-operations
+    type: numeric
+    difficulty: 2
+    prompt: "Calculate {{a}} + {{b}} x {{c}}."
+    variables:
+      a: {type: int, min: 2, max: 30}
+      b: {type: int, min: 2, max: 12}
+      c: {type: int, min: 2, max: 12}
+    answer: {expression: "a + b*c"}
+    options:
+      distractors: ["(a + b) * c"]
+    hints:
+      - text: "Multiplication is done before addition."
+      - text: "Work out {{b}} x {{c}} first."
+    solution:
+      - text: "Multiply first: {{b}} x {{c}} = {{b*c}}."
+      - text: "Then add: {{a}} + {{b*c}} = {{a + b*c}}."
+
+  - slug: m6-order-ops-brackets
+    skill: math-6-order-of-operations
+    type: numeric
+    difficulty: 3
+    prompt: "Calculate ({{a}} + {{b}}) x {{c}} - {{d}}."
+    variables:
+      a: {type: int, min: 2, max: 20}
+      b: {type: int, min: 2, max: 20}
+      c: {type: int, min: 2, max: 9}
+      d: {type: int, min: 1, max: 40}
+    answer: {expression: "(a + b)*c - d"}
+    hints:
+      - text: "Brackets first, then multiplication, then subtraction."
+    solution:
+      - text: "Brackets: {{a}} + {{b}} = {{a+b}}."
+      - text: "Multiply: {{a+b}} x {{c}} = {{(a+b)*c}}."
+      - text: "Subtract: {{(a+b)*c}} - {{d}} = {{(a+b)*c - d}}."
+
+  # ---------------------------------------------------------------- factors & multiples
+  - slug: m6-factors-identify
+    skill: math-6-factors-multiples-skill
+    type: multiple_select
+    difficulty: 2
+    prompt: "Select all the numbers that are factors of {{n}}."
+    variables:
+      k: {type: int, min: 3, max: 6}
+      m: {type: int, min: 7, max: 11}
+      n: {type: derived, expression: "k * m * 2"}
+    options:
+      choices:
+        - {label: "{{k}}", correct: true}
+        - {label: "{{m}}", correct: true}
+        - {label: "2", correct: true}
+        - {label: "{{n + 1}}", correct: false}
+        - {label: "{{n + 3}}", correct: false}
+    hints:
+      - text: "A factor divides the number exactly, with no remainder."
+      - text: "Try dividing {{n}} by each option."
+    solution:
+      - text: "{{n}} = 2 x {{k}} x {{m}}, so 2, {{k}} and {{m}} all divide it exactly."
+
+  - slug: m6-multiples-tf
+    skill: math-6-factors-multiples-skill
+    type: true_false
+    difficulty: 1
+    prompt: "True or false: {{n}} is a multiple of {{k}}."
+    variables:
+      k: {type: int, min: 3, max: 12}
+      n: {type: int, min: 20, max: 200}
+    answer: {expression: "n % k == 0"}
+    hints:
+      - text: "A multiple of {{k}} appears in the {{k}} times table."
+    solution:
+      - text: "{{n}} divided by {{k}} leaves a remainder of {{n % k}}."
+
+  - slug: m6-prime-factorisation
+    skill: math-6-primes
+    type: short_answer
+    difficulty: 2
+    prompt: "Write {{n}} as a product of prime factors, in order, using x (for example 2 x 2 x 3)."
+    variables:
+      a: {type: choice, choices: [3, 5, 7]}
+      b: {type: choice, choices: [3, 5, 11]}
+      n: {type: derived, expression: "a * b * 2"}
+      lo: {type: derived, expression: "min(a, b)"}
+      hi: {type: derived, expression: "max(a, b)"}
+    answer:
+      accepted: ["2 x {{lo}} x {{hi}}", "2x{{lo}}x{{hi}}", "2 * {{lo}} * {{hi}}"]
+    hints:
+      - text: "Start by dividing by the smallest prime that goes in exactly."
+      - text: "Keep dividing until every factor left is prime."
+    solution:
+      - text: "{{n}} = 2 x {{lo}} x {{hi}}, and each of those is prime."
+
+  - slug: m6-gcf
+    skill: math-6-gcf-lcm
+    type: numeric
+    difficulty: 3
+    prompt: "What is the greatest common factor (GCF) of {{a}} and {{b}}?"
+    variables:
+      g: {type: int, min: 2, max: 12}
+      p: {type: int, min: 2, max: 9}
+      q: {type: int, min: 2, max: 9}
+      a: {type: derived, expression: "g * p"}
+      b: {type: derived, expression: "g * q"}
+    constraints: ["gcd(p, q) == 1", "a != b"]
+    answer: {expression: "gcd(a, b)"}
+    options:
+      distractors: ["lcm(a, b)", "a * b"]
+    hints:
+      - text: "List the factors of each number and find the largest they share."
+      - text: "Or write both as products of primes and take the common part."
+    solution:
+      - text: "{{a}} = {{g}} x {{p}} and {{b}} = {{g}} x {{q}}."
+      - text: "Since {{p}} and {{q}} share no factors, the GCF is {{gcd(a,b)}}."
+
+  - slug: m6-lcm
+    skill: math-6-gcf-lcm
+    type: numeric
+    difficulty: 3
+    prompt: "What is the lowest common multiple (LCM) of {{a}} and {{b}}?"
+    variables:
+      a: {type: int, min: 3, max: 15}
+      b: {type: int, min: 3, max: 15}
+    constraints: ["a != b"]
+    answer: {expression: "lcm(a, b)"}
+    options:
+      distractors: ["gcd(a, b)", "a * b"]
+    hints:
+      - text: "List multiples of each number until one appears in both lists."
+    solution:
+      - text: "The LCM of {{a}} and {{b}}, is {{lcm(a,b)}}."
+      - text: "Check: {{lcm(a,b)}} / {{a}} = {{lcm(a,b)/a}} and {{lcm(a,b)}} / {{b}} = {{lcm(a,b)/b}}."
+
+  # ---------------------------------------------------------------- integers
+  - slug: m6-negative-context
+    skill: math-6-negative-numbers
+    type: numeric
+    difficulty: 1
+    prompt: >-
+      The temperature in Sa Pa is {{t}} degrees Celsius. Overnight it falls by {{d}} degrees.
+      What is the new temperature, in degrees Celsius?
+    variables:
+      t: {type: int, min: -3, max: 12}
+      d: {type: int, min: 4, max: 18}
+    answer: {expression: "t - d", unit: "degrees C"}
+    hints:
+      - text: "Falling means moving to the left on the number line."
+    solution:
+      - text: "Starting at {{t}} and going down {{d}} gives {{t - d}} degrees Celsius."
+
+  - slug: m6-compare-integers
+    skill: math-6-compare-integers
+    type: multiple_choice
+    difficulty: 2
+    prompt: "Which symbol makes this true?   {{a}}  ?  {{b}}"
+    variables:
+      a: {type: int, min: -20, max: 20}
+      b: {type: int, min: -20, max: 20}
+    constraints: ["a != b"]
+    options:
+      choices:
+        - {label: "<  (less than)", correct: "{{a < b}}"}
+        - {label: ">  (greater than)", correct: "{{a > b}}"}
+        - {label: "=  (equal to)", correct: false}
+    hints:
+      - text: "On a number line, the number further to the right is larger."
+      - text: "Remember that -10 is smaller than -2, because it is further left."
+    solution:
+      - text: "{{a}} and {{b}} sit on the number line with the smaller one further left."
+      - text: "Here the correct symbol makes the statement true."
+
+  - slug: m6-add-integers
+    skill: math-6-add-subtract-integers
+    type: numeric
+    difficulty: 3
+    prompt: "Calculate {{a}} + ({{b}})."
+    variables:
+      a: {type: int, min: -25, max: 25}
+      b: {type: int, min: -25, max: -1}
+    answer: {expression: "a + b"}
+    options:
+      distractors: ["a - b", "abs(a) + abs(b)"]
+    hints:
+      - text: "Adding a negative number is the same as subtracting."
+      - text: "So {{a}} + ({{b}}) is the same as {{a}} - {{abs(b)}}."
+    solution:
+      - text: "{{a}} + ({{b}}) = {{a}} - {{abs(b)}} = {{a + b}}."
+
+  - slug: m6-subtract-negative
+    skill: math-6-add-subtract-integers
+    type: numeric
+    difficulty: 3
+    prompt: "Calculate {{a}} - ({{b}})."
+    variables:
+      a: {type: int, min: -20, max: 20}
+      b: {type: int, min: -15, max: -1}
+    answer: {expression: "a - b"}
+    options:
+      distractors: ["a + b"]
+    hints:
+      - text: "Subtracting a negative is the same as adding a positive."
+    solution:
+      - text: "{{a}} - ({{b}}) = {{a}} + {{abs(b)}} = {{a - b}}."
+
+  # ---------------------------------------------------------------- fractions
+  - slug: m6-equivalent-fraction
+    skill: math-6-equivalent-fractions
+    type: numeric
+    difficulty: 1
+    prompt: 'Fill in the missing number: \frac{ {{a}} }{ {{b}} } = \frac{ ? }{ {{b*k}} }'
+    variables:
+      a: {type: int, min: 1, max: 9}
+      b: {type: int, min: 2, max: 12}
+      k: {type: int, min: 2, max: 6}
+    constraints: ["a < b"]
+    answer: {expression: "a * k"}
+    hints:
+      - text: "The denominator was multiplied by {{k}}."
+      - text: "Do the same to the numerator."
+    solution:
+      - text: "{{b}} x {{k}} = {{b*k}}, so multiply the top by {{k}} too."
+      - text: "{{a}} x {{k}} = {{a*k}}."
+
+  - slug: m6-simplify-fraction
+    skill: math-6-simplify-fractions
+    type: short_answer
+    difficulty: 2
+    prompt: 'Write \frac{ {{n}} }{ {{d}} } in its simplest form, as a fraction like 3/4.'
+    variables:
+      g: {type: int, min: 2, max: 9}
+      p: {type: int, min: 1, max: 9}
+      q: {type: int, min: 2, max: 11}
+      n: {type: derived, expression: "g * p"}
+      d: {type: derived, expression: "g * q"}
+    constraints: ["gcd(p, q) == 1", "p < q"]
+    answer:
+      accepted: ["{{p}}/{{q}}", "{{p}} / {{q}}"]
+    hints:
+      - text: "Find the greatest common factor of {{n}} and {{d}}."
+      - text: "The GCF is {{g}} — divide both parts by it."
+    solution:
+      - text: "GCF({{n}}, {{d}}) = {{g}}."
+      - text: "{{n}} / {{g}} = {{p}} and {{d}} / {{g}} = {{q}}, so the answer is {{p}}/{{q}}."
+
+  - slug: m6-compare-fractions
+    skill: math-6-compare-fractions
+    type: multiple_choice
+    difficulty: 2
+    prompt: 'Which fraction is larger: \frac{ {{a}} }{ {{b}} } or \frac{ {{c}} }{ {{d}} }?'
+    variables:
+      a: {type: int, min: 1, max: 7}
+      b: {type: int, min: 2, max: 9}
+      c: {type: int, min: 1, max: 7}
+      d: {type: int, min: 2, max: 9}
+    constraints: ["a < b", "c < d", "a*d != c*b"]
+    options:
+      choices:
+        - {label: "{{a}}/{{b}}", correct: "{{a*d > c*b}}"}
+        - {label: "{{c}}/{{d}}", correct: "{{c*b > a*d}}"}
+    hints:
+      - text: "Rewrite both over a common denominator, or cross-multiply."
+    solution:
+      - text: "Cross-multiplying: {{a}} x {{d}} = {{a*d}} and {{c}} x {{b}} = {{c*b}}."
+      - text: "The fraction with the larger cross-product is larger."
+
+  - slug: m6-common-denominator
+    skill: math-6-common-denominators
+    type: numeric
+    difficulty: 2
+    prompt: "What is the lowest common denominator of {{a}}/{{b}} and {{c}}/{{d}}?"
+    variables:
+      a: {type: int, min: 1, max: 5}
+      b: {type: int, min: 2, max: 9}
+      c: {type: int, min: 1, max: 5}
+      d: {type: int, min: 2, max: 9}
+    constraints: ["a < b", "c < d", "b != d"]
+    answer: {expression: "lcm(b, d)"}
+    options:
+      distractors: ["b * d", "gcd(b, d)"]
+    hints:
+      - text: "The lowest common denominator is the LCM of the two denominators."
+    solution:
+      - text: "LCM({{b}}, {{d}}) = {{lcm(b,d)}}."
+
+  - slug: m6-add-fractions-same
+    skill: math-6-add-fractions
+    type: short_answer
+    difficulty: 2
+    prompt: 'Work out \frac{ {{a}} }{ {{d}} } + \frac{ {{b}} }{ {{d}} }. Give your answer as a fraction like 3/4.'
+    variables:
+      d: {type: int, min: 5, max: 12}
+      a: {type: int, min: 1, max: 6}
+      b: {type: int, min: 1, max: 6}
+    constraints: ["a + b < d", "gcd(a + b, d) == 1"]
+    answer:
+      accepted: ["{{a+b}}/{{d}}", "{{a+b}} / {{d}}"]
+    hints:
+      - text: "The denominators already match, so just add the numerators."
+    solution:
+      - text: "{{a}} + {{b}} = {{a+b}}, and the denominator stays {{d}}."
+
+  - slug: m6-add-fractions-unlike
+    skill: math-6-add-fractions
+    type: short_answer
+    difficulty: 4
+    prompt: 'Work out \frac{ {{a}} }{ {{b}} } + \frac{ {{c}} }{ {{d}} }. Give your answer as a fraction like 5/6.'
+    variables:
+      b: {type: int, min: 2, max: 6}
+      d: {type: int, min: 2, max: 9}
+      a: {type: int, min: 1, max: 5}
+      c: {type: int, min: 1, max: 5}
+    constraints:
+      - "b != d"
+      - "a < b"
+      - "c < d"
+      - "gcd(a*d + c*b, b*d) == 1"
+      - "a*d + c*b < b*d"
+    answer:
+      accepted: ["{{a*d + c*b}}/{{b*d}}", "{{a*d + c*b}} / {{b*d}}"]
+    hints:
+      - text: "Rewrite both fractions over the common denominator {{b*d}}."
+      - text: "{{a}}/{{b}} becomes {{a*d}}/{{b*d}} and {{c}}/{{d}} becomes {{c*b}}/{{b*d}}."
+    solution:
+      - text: "Common denominator: {{b}} x {{d}} = {{b*d}}."
+      - text: "{{a*d}}/{{b*d}} + {{c*b}}/{{b*d}} = {{a*d + c*b}}/{{b*d}}."
+
+  - slug: m6-multiply-fractions
+    skill: math-6-multiply-fractions
+    type: short_answer
+    difficulty: 2
+    prompt: 'Work out \frac{ {{a}} }{ {{b}} } x \frac{ {{c}} }{ {{d}} }. Give your answer as a fraction in simplest form.'
+    variables:
+      a: {type: int, min: 1, max: 5}
+      b: {type: int, min: 2, max: 7}
+      c: {type: int, min: 1, max: 5}
+      d: {type: int, min: 2, max: 7}
+    constraints: ["gcd(a*c, b*d) == 1", "a < b", "c < d"]
+    answer:
+      accepted: ["{{a*c}}/{{b*d}}", "{{a*c}} / {{b*d}}"]
+    hints:
+      - text: "Multiply the numerators together, then the denominators."
+    solution:
+      - text: "{{a}} x {{c}} = {{a*c}} and {{b}} x {{d}} = {{b*d}}."
+      - text: "The answer {{a*c}}/{{b*d}} is already in simplest form."
+
+  - slug: m6-divide-fractions
+    skill: math-6-divide-fractions
+    type: short_answer
+    difficulty: 3
+    prompt: 'Work out \frac{ {{a}} }{ {{b}} } ÷ \frac{ {{c}} }{ {{d}} }. Give your answer as a fraction.'
+    variables:
+      a: {type: int, min: 1, max: 5}
+      b: {type: int, min: 2, max: 7}
+      c: {type: int, min: 1, max: 5}
+      d: {type: int, min: 2, max: 7}
+    constraints: ["gcd(a*d, b*c) == 1", "a*d != b*c"]
+    answer:
+      accepted: ["{{a*d}}/{{b*c}}", "{{a*d}} / {{b*c}}"]
+    hints:
+      - text: "Dividing by a fraction is the same as multiplying by its reciprocal."
+      - text: "Flip {{c}}/{{d}} to get {{d}}/{{c}}, then multiply."
+    solution:
+      - text: "{{a}}/{{b}} ÷ {{c}}/{{d}} = {{a}}/{{b}} x {{d}}/{{c}}."
+      - text: "= {{a*d}}/{{b*c}}."
+
+  - slug: m6-mixed-number-convert
+    skill: math-6-mixed-numbers
+    type: numeric
+    difficulty: 3
+    prompt: "Convert the mixed number {{w}} and {{n}}/{{d}} into an improper fraction. What is the numerator?"
+    variables:
+      w: {type: int, min: 1, max: 8}
+      d: {type: int, min: 2, max: 9}
+      n: {type: int, min: 1, max: 8}
+    constraints: ["n < d"]
+    answer: {expression: "w*d + n"}
+    hints:
+      - text: "Multiply the whole number by the denominator, then add the numerator."
+    solution:
+      - text: "{{w}} x {{d}} = {{w*d}}."
+      - text: "{{w*d}} + {{n}} = {{w*d + n}}, so the improper fraction is {{w*d+n}}/{{d}}."
+
+  # ---------------------------------------------------------------- decimals
+  - slug: m6-decimal-compare
+    skill: math-6-decimal-place-value
+    type: multiple_choice
+    difficulty: 1
+    prompt: "Which number is larger?"
+    variables:
+      a: {type: float, min: 0.1, max: 9.9, decimals: 2}
+      b: {type: float, min: 0.1, max: 9.9, decimals: 2}
+    constraints: ["a != b"]
+    options:
+      choices:
+        - {label: "{{a}}", correct: "{{a > b}}"}
+        - {label: "{{b}}", correct: "{{b > a}}"}
+    hints:
+      - text: "Compare the whole-number parts first, then the tenths, then the hundredths."
+    solution:
+      - text: "Comparing place by place shows the larger value."
+
+  - slug: m6-decimal-multiply
+    skill: math-6-decimal-operations
+    type: numeric
+    difficulty: 2
+    prompt: "Calculate {{a}} x {{b}}."
+    variables:
+      a: {type: float, min: 0.5, max: 9.9, decimals: 1}
+      b: {type: int, min: 2, max: 12}
+    answer: {expression: "a * b", decimals: 2, tolerance: 0.001}
+    hints:
+      - text: "Ignore the decimal point, multiply, then put it back."
+    solution:
+      - text: "{{a}} x {{b}} = {{a*b : 2}}."
+
+  - slug: m6-fraction-to-decimal
+    skill: math-6-fraction-decimal-conversion
+    type: numeric
+    difficulty: 2
+    prompt: "Write {{a}}/{{b}} as a decimal."
+    variables:
+      b: {type: choice, choices: [2, 4, 5, 8, 10, 20, 25]}
+      a: {type: int, min: 1, max: 19}
+    constraints: ["a < b"]
+    answer: {expression: "a / b", tolerance: 0.0001}
+    hints:
+      - text: "A fraction is just a division: {{a}} divided by {{b}}."
+    solution:
+      - text: "{{a}} ÷ {{b}} = {{a/b}}."
+
+  # ---------------------------------------------------------------- ratios
+  - slug: m6-ratio-simplify
+    skill: math-6-understanding-ratios
+    type: short_answer
+    difficulty: 2
+    prompt: >-
+      A class has {{b}} boys and {{g}} girls. Write the ratio of boys to girls in its simplest
+      form, using a colon (for example 2:3).
+    variables:
+      k: {type: int, min: 2, max: 8}
+      p: {type: int, min: 1, max: 7}
+      q: {type: int, min: 1, max: 7}
+      b: {type: derived, expression: "k * p"}
+      g: {type: derived, expression: "k * q"}
+    constraints: ["gcd(p, q) == 1", "p != q"]
+    answer:
+      accepted: ["{{p}}:{{q}}", "{{p}} : {{q}}"]
+    hints:
+      - text: "Divide both parts of the ratio by their greatest common factor."
+      - text: "The GCF of {{b}} and {{g}} is {{k}}."
+    solution:
+      - text: "{{b}}:{{g}} divided by {{k}} gives {{p}}:{{q}}."
+
+  - slug: m6-equivalent-ratio-missing
+    skill: math-6-equivalent-ratios
+    type: numeric
+    difficulty: 2
+    prompt: "A recipe uses {{a}} cups of flour for every {{b}} cups of milk. How much flour is needed for {{b*k}} cups of milk?"
+    variables:
+      a: {type: int, min: 2, max: 9}
+      b: {type: int, min: 1, max: 6}
+      k: {type: int, min: 2, max: 8}
+    answer: {expression: "a * k", unit: "cups"}
+    options:
+      distractors: ["a + k", "b * k"]
+    hints:
+      - text: "The milk was multiplied by {{k}}, so the flour must be too."
+    solution:
+      - text: "{{b}} x {{k}} = {{b*k}} cups of milk, so flour = {{a}} x {{k}} = {{a*k}} cups."
+
+  - slug: m6-unit-rate
+    skill: math-6-unit-rates
+    type: numeric
+    difficulty: 3
+    prompt: "{{q}} notebooks cost {{c}} thousand dong. What is the cost of one notebook, in thousand dong?"
+    variables:
+      q: {type: int, min: 2, max: 12}
+      u: {type: int, min: 5, max: 40}
+      c: {type: derived, expression: "q * u"}
+    answer: {expression: "c / q", unit: "thousand dong"}
+    options:
+      distractors: ["q / c", "c * q"]
+    hints:
+      - text: "A unit rate is the cost for exactly one item."
+      - text: "Divide the total cost by the number of notebooks."
+    solution:
+      - text: "{{c}} ÷ {{q}} = {{c/q}} thousand dong per notebook."
+
+  # ---------------------------------------------------------------- percentages
+  - slug: m6-percent-to-fraction
+    skill: math-6-understanding-percentages
+    type: numeric
+    difficulty: 2
+    prompt: "Write {{p}}% as a decimal."
+    variables:
+      p: {type: int, min: 5, max: 95, step: 5}
+    answer: {expression: "p / 100", tolerance: 0.0001}
+    hints:
+      - text: "Per cent means 'out of one hundred'."
+    solution:
+      - text: "{{p}}% = {{p}}/100 = {{p/100}}."
+
+  - slug: m6-percent-of-amount
+    skill: math-6-percent-of-quantity
+    type: numeric
+    difficulty: 3
+    prompt: "What is {{p}}% of {{n}}?"
+    variables:
+      p: {type: choice, choices: [10, 15, 20, 25, 40, 50, 60, 75, 80]}
+      n: {type: int, min: 20, max: 800, step: 20}
+    constraints: ["(p * n) % 100 == 0"]
+    answer: {expression: "p * n / 100"}
+    options:
+      distractors: ["n / p", "p * n"]
+    hints:
+      - text: "Convert the percentage to a decimal, then multiply."
+      - text: "{{p}}% = {{p/100}}."
+    solution:
+      - text: "{{p}}% of {{n}} = {{p/100}} x {{n}} = {{p*n/100}}."
+
+  - slug: m6-percent-discount
+    skill: math-6-percent-problems
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A jacket costs {{n}} thousand dong. In a sale it is reduced by {{p}}%.
+      What is the sale price, in thousand dong?
+    variables:
+      p: {type: choice, choices: [10, 20, 25, 50]}
+      n: {type: int, min: 100, max: 900, step: 20}
+    constraints: ["(p * n) % 100 == 0"]
+    answer: {expression: "n - p*n/100", unit: "thousand dong"}
+    options:
+      distractors: ["p * n / 100", "n + p*n/100"]
+    hints:
+      - text: "First find the discount, then subtract it from the original price."
+    solution:
+      - text: "Discount = {{p}}% of {{n}} = {{p*n/100}}."
+      - text: "Sale price = {{n}} - {{p*n/100}} = {{n - p*n/100}} thousand dong."
+
+  # ---------------------------------------------------------------- algebra
+  - slug: m6-variables-meaning
+    skill: math-6-variables
+    type: multiple_choice
+    difficulty: 2
+    prompt: "Which expression means '{{k}} more than a number n'?"
+    variables:
+      k: {type: int, min: 2, max: 15}
+    options:
+      choices:
+        - {label: "n + {{k}}", correct: true}
+        - {label: "{{k}}n", correct: false}
+        - {label: "n - {{k}}", correct: false}
+        - {label: "n ÷ {{k}}", correct: false}
+    hints:
+      - text: "'More than' means addition."
+    solution:
+      - text: "'{{k}} more than n' is written n + {{k}}."
+
+  - slug: m6-evaluate-expression
+    skill: math-6-evaluate-expressions
+    type: numeric
+    difficulty: 2
+    prompt: "Evaluate {{a}}x + {{b}} when x = {{x}}."
+    variables:
+      a: {type: int, min: 2, max: 12}
+      b: {type: int, min: 1, max: 20}
+      x: {type: int, min: 2, max: 12}
+    answer: {expression: "a*x + b"}
+    options:
+      distractors: ["(a + b) * x", "a + b*x"]
+    hints:
+      - text: "Substitute x = {{x}} and remember to multiply before adding."
+    solution:
+      - text: "{{a}} x {{x}} = {{a*x}}."
+      - text: "{{a*x}} + {{b}} = {{a*x + b}}."
+
+  - slug: m6-write-expression
+    skill: math-6-write-expressions
+    type: expression
+    difficulty: 3
+    prompt: >-
+      A taxi charges {{b}} thousand dong to start, plus {{a}} thousand dong per kilometre.
+      Write an expression for the cost of travelling k kilometres.
+    variables:
+      a: {type: int, min: 5, max: 20}
+      b: {type: int, min: 8, max: 30}
+    answer:
+      expression: "{{a}}*k + {{b}}"
+      symbols: [k]
+    options:
+      placeholder: "e.g. 5k + 10"
+    hints:
+      - text: "The per-kilometre charge depends on k; the starting charge does not."
+    solution:
+      - text: "Cost = {{a}}k + {{b}}."
+
+  - slug: m6-one-step-add
+    skill: math-6-one-step-add
+    type: numeric
+    difficulty: 2
+    prompt: "Solve for x:   x + {{a}} = {{b}}"
+    variables:
+      a: {type: int, min: 2, max: 30}
+      x: {type: int, min: 1, max: 40}
+      b: {type: derived, expression: "x + a"}
+    answer: {expression: "b - a"}
+    options:
+      distractors: ["b + a"]
+    hints:
+      - text: "Do the opposite of adding {{a}} — subtract {{a}} from both sides."
+    solution:
+      - text: "x = {{b}} - {{a}} = {{b - a}}."
+
+  - slug: m6-one-step-multiply
+    skill: math-6-one-step-multiply
+    type: numeric
+    difficulty: 2
+    prompt: "Solve for x:   {{a}}x = {{b}}"
+    variables:
+      a: {type: int, min: 2, max: 12}
+      x: {type: int, min: 2, max: 20}
+      b: {type: derived, expression: "a * x"}
+    answer: {expression: "b / a"}
+    options:
+      distractors: ["b * a", "b - a"]
+    hints:
+      - text: "Divide both sides by {{a}}."
+    solution:
+      - text: "x = {{b}} ÷ {{a}} = {{b/a}}."
+
+  - slug: m6-inequality-meaning
+    skill: math-6-inequalities
+    type: multiple_choice
+    difficulty: 3
+    prompt: "Which inequality describes 'x is at least {{a}}'?"
+    variables:
+      a: {type: int, min: 2, max: 30}
+    options:
+      choices:
+        - {label: "x >= {{a}}", correct: true}
+        - {label: "x > {{a}}", correct: false}
+        - {label: "x <= {{a}}", correct: false}
+        - {label: "x < {{a}}", correct: false}
+    hints:
+      - text: "'At least' includes the value itself."
+    solution:
+      - text: "'At least {{a}}' means x can equal {{a}} or be larger, so x >= {{a}}."
+
+  # ---------------------------------------------------------------- geometry
+  - slug: m6-area-rectangle
+    skill: math-6-area-rectangles-triangles
+    type: numeric
+    difficulty: 1
+    prompt: "A rectangle measures {{l}} cm by {{w}} cm. What is its area, in square centimetres?"
+    variables:
+      l: {type: int, min: 3, max: 30}
+      w: {type: int, min: 2, max: 20}
+    answer: {expression: "l * w", unit: "cm^2"}
+    options:
+      distractors: ["2*(l + w)", "l + w"]
+    hints:
+      - text: "Area of a rectangle = length x width."
+    solution:
+      - text: "{{l}} x {{w}} = {{l*w}} square centimetres."
+
+  - slug: m6-area-triangle
+    skill: math-6-area-rectangles-triangles
+    type: numeric
+    difficulty: 2
+    prompt: "A triangle has base {{b}} cm and perpendicular height {{h}} cm. What is its area, in square centimetres?"
+    variables:
+      b: {type: int, min: 4, max: 30, step: 2}
+      h: {type: int, min: 3, max: 20}
+    answer: {expression: "b * h / 2", unit: "cm^2"}
+    options:
+      distractors: ["b * h", "b + h"]
+    hints:
+      - text: "A triangle is half of a rectangle with the same base and height."
+    solution:
+      - text: "Area = 1/2 x {{b}} x {{h}} = {{b*h/2}} square centimetres."
+
+  - slug: m6-area-parallelogram
+    skill: math-6-area-parallelogram-trapezium
+    type: numeric
+    difficulty: 3
+    prompt: "A parallelogram has base {{b}} cm and height {{h}} cm. What is its area, in square centimetres?"
+    variables:
+      b: {type: int, min: 4, max: 25}
+      h: {type: int, min: 3, max: 18}
+    answer: {expression: "b * h", unit: "cm^2"}
+    options:
+      distractors: ["b * h / 2", "2*(b + h)"]
+    hints:
+      - text: "Unlike a triangle, a parallelogram's area is base x height with no halving."
+    solution:
+      - text: "Area = {{b}} x {{h}} = {{b*h}} square centimetres."
+
+  - slug: m6-surface-area-prism
+    skill: math-6-surface-area
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A rectangular box measures {{l}} cm by {{w}} cm by {{h}} cm.
+      What is its total surface area, in square centimetres?
+    variables:
+      l: {type: int, min: 2, max: 12}
+      w: {type: int, min: 2, max: 12}
+      h: {type: int, min: 2, max: 12}
+    answer: {expression: "2*(l*w + l*h + w*h)", unit: "cm^2"}
+    options:
+      distractors: ["l * w * h", "l*w + l*h + w*h"]
+    hints:
+      - text: "A box has three pairs of identical faces."
+      - text: "Find the area of each different face, add them, then double."
+    solution:
+      - text: "Faces: {{l*w}}, {{l*h}} and {{w*h}} square centimetres."
+      - text: "Total = 2 x ({{l*w}} + {{l*h}} + {{w*h}}) = {{2*(l*w + l*h + w*h)}} square centimetres."
+
+  - slug: m6-volume-prism
+    skill: math-6-volume-prisms
+    type: numeric
+    difficulty: 2
+    prompt: "A rectangular tank measures {{l}} cm by {{w}} cm by {{h}} cm. What is its volume, in cubic centimetres?"
+    variables:
+      l: {type: int, min: 2, max: 20}
+      w: {type: int, min: 2, max: 15}
+      h: {type: int, min: 2, max: 15}
+    answer: {expression: "l * w * h", unit: "cm^3"}
+    options:
+      distractors: ["2*(l*w + l*h + w*h)", "l + w + h"]
+    hints:
+      - text: "Volume = length x width x height."
+    solution:
+      - text: "{{l}} x {{w}} x {{h}} = {{l*w*h}} cubic centimetres."
+
+  - slug: m6-coordinate-quadrant
+    skill: math-6-coordinate-plane
+    type: multiple_choice
+    difficulty: 2
+    prompt: "In which quadrant does the point ({{x}}, {{y}}) lie?"
+    variables:
+      x: {type: int, min: -9, max: 9, exclude: [0]}
+      y: {type: int, min: -9, max: 9, exclude: [0]}
+    options:
+      choices:
+        - {label: "First (x positive, y positive)", correct: "{{x > 0 and y > 0}}"}
+        - {label: "Second (x negative, y positive)", correct: "{{x < 0 and y > 0}}"}
+        - {label: "Third (x negative, y negative)", correct: "{{x < 0 and y < 0}}"}
+        - {label: "Fourth (x positive, y negative)", correct: "{{x > 0 and y < 0}}"}
+    hints:
+      - text: "Quadrants are numbered anticlockwise starting from the top right."
+    solution:
+      - text: "x = {{x}} and y = {{y}} determine the quadrant by their signs."
+
+  # ---------------------------------------------------------------- statistics
+  - slug: m6-mean
+    skill: math-6-mean-median-mode
+    type: numeric
+    difficulty: 2
+    prompt: "Find the mean of these test scores: {{a}}, {{b}}, {{c}}, {{d}}."
+    variables:
+      a: {type: int, min: 40, max: 100}
+      b: {type: int, min: 40, max: 100}
+      c: {type: int, min: 40, max: 100}
+      d: {type: int, min: 40, max: 100}
+    constraints: ["(a + b + c + d) % 4 == 0"]
+    answer: {expression: "(a + b + c + d) / 4"}
+    options:
+      distractors: ["a + b + c + d", "(a + b + c + d) / 2"]
+    hints:
+      - text: "Add all the values, then divide by how many there are."
+    solution:
+      - text: "Total = {{a + b + c + d}}."
+      - text: "Mean = {{a + b + c + d}} ÷ 4 = {{(a+b+c+d)/4}}."
+
+  - slug: m6-range
+    skill: math-6-range-spread
+    type: numeric
+    difficulty: 2
+    prompt: "Find the range of this data set: {{a}}, {{b}}, {{c}}, {{d}}, {{e}}."
+    variables:
+      a: {type: int, min: 1, max: 60}
+      b: {type: int, min: 1, max: 60}
+      c: {type: int, min: 1, max: 60}
+      d: {type: int, min: 1, max: 60}
+      e: {type: int, min: 1, max: 60}
+    answer: {expression: "max(a,b,c,d,e) - min(a,b,c,d,e)"}
+    hints:
+      - text: "The range is the largest value minus the smallest."
+    solution:
+      - text: "Largest = {{max(a,b,c,d,e)}}, smallest = {{min(a,b,c,d,e)}}."
+      - text: "Range = {{max(a,b,c,d,e) - min(a,b,c,d,e)}}."

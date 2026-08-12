@@ -1,0 +1,151 @@
+# Physics — Physics 9
+subject:
+  slug: physics
+  name: Physics
+  icon: atom
+  color: "#00B8A9"
+  position: 2
+
+course:
+  slug: physics-9
+  title: Physics — Grade 9
+  grade: 9
+  summary: Momentum, thermal calculations, electromagnetism and the atom.
+  description: >-
+    Grade 9 completes the middle-school physics arc. Students calculate with momentum and the
+    equations of motion, quantify thermal energy, explore magnetism and electromagnetic
+    induction, and meet radioactivity and the structure of the atom.
+  estimated_hours: 80
+
+units:
+  - slug: physics-9-motion-momentum
+    title: Motion and Momentum
+    icon: activity
+    summary: The equations of motion, and what is conserved in a collision.
+    topics:
+      - slug: physics-9-equations-of-motion
+        title: Equations of Motion
+        summary: Predicting motion under constant acceleration.
+        skills:
+          - slug: physics-9-suvat
+            name: Equations of uniform acceleration
+            description: Select and apply the correct equation of motion for constant acceleration.
+            difficulty: 4
+            prerequisites: [physics-7-acceleration-calc, math-9-quadratic-formula]
+            tags: [motion, core]
+          - slug: physics-9-projectiles
+            name: Vertical motion under gravity
+            description: Analyse objects falling or thrown vertically, ignoring air resistance.
+            difficulty: 5
+            prerequisites: [physics-9-suvat]
+            tags: [motion]
+
+      - slug: physics-9-momentum
+        title: Momentum
+        summary: Mass in motion, and why it is conserved.
+        skills:
+          - slug: physics-9-momentum-calc
+            name: Calculating momentum
+            description: Apply p = mv and interpret its direction.
+            difficulty: 3
+            prerequisites: [physics-8-second-law]
+            tags: [motion, core]
+          - slug: physics-9-conservation-momentum
+            name: Conservation of momentum
+            description: Apply conservation of momentum to collisions in one dimension.
+            difficulty: 5
+            prerequisites: [physics-9-momentum-calc, math-7-multi-step-equations]
+            tags: [motion]
+
+  - slug: physics-9-thermal
+    title: Thermal Physics
+    icon: thermometer
+    summary: Putting numbers on heating, cooling and changes of state.
+    topics:
+      - slug: physics-9-heat-calculations
+        title: Thermal Calculations
+        summary: Specific heat capacity and latent heat.
+        skills:
+          - slug: physics-9-specific-heat
+            name: Specific heat capacity
+            description: Apply E = mc delta-theta to heating and cooling problems.
+            difficulty: 4
+            prerequisites: [physics-7-temperature-vs-heat, math-7-multi-step-equations]
+            tags: [heat, core]
+          - slug: physics-9-latent-heat
+            name: Latent heat
+            description: Apply E = mL to melting and boiling, and read heating curves.
+            difficulty: 4
+            prerequisites: [physics-9-specific-heat, physics-6-changes-of-state]
+            tags: [heat]
+          - slug: physics-9-gas-laws
+            name: Gas pressure and volume
+            description: Apply the relationship between pressure, volume and temperature for a fixed mass of gas.
+            difficulty: 4
+            prerequisites: [physics-7-liquid-pressure, physics-7-temperature-vs-heat]
+            tags: [heat, pressure]
+
+  - slug: physics-9-electromagnetism
+    title: Electromagnetism
+    icon: magnet
+    summary: The deep link between electricity and magnetism.
+    topics:
+      - slug: physics-9-magnetism
+        title: Magnetism
+        summary: Magnetic fields, and the field a current produces.
+        skills:
+          - slug: physics-9-magnetic-fields
+            name: Magnetic fields
+            description: Describe magnetic field patterns around magnets and current-carrying wires.
+            difficulty: 2
+            tags: [electromagnetism, foundation]
+          - slug: physics-9-motor-effect
+            name: The motor effect
+            description: Predict the force on a current-carrying conductor using Fleming's left-hand rule.
+            difficulty: 4
+            prerequisites: [physics-9-magnetic-fields, physics-8-charge-current]
+            tags: [electromagnetism]
+          - slug: physics-9-induction
+            name: Electromagnetic induction
+            description: Explain how a changing magnetic field induces a voltage, and how generators work.
+            difficulty: 5
+            prerequisites: [physics-9-motor-effect]
+            tags: [electromagnetism]
+
+  - slug: physics-9-atomic
+    title: Atomic and Nuclear Physics
+    icon: atom
+    summary: Inside the atom, and what makes a nucleus unstable.
+    topics:
+      - slug: physics-9-atomic-structure
+        title: Atomic Structure
+        summary: Protons, neutrons, electrons and isotopes.
+        skills:
+          - slug: physics-9-atom-structure
+            name: Structure of the atom
+            description: Identify protons, neutrons and electrons and interpret nuclide notation.
+            difficulty: 2
+            tags: [atomic, foundation]
+          - slug: physics-9-isotopes
+            name: Isotopes
+            description: Compare isotopes of an element and calculate numbers of subatomic particles.
+            difficulty: 3
+            prerequisites: [physics-9-atom-structure]
+            tags: [atomic]
+
+      - slug: physics-9-radioactivity
+        title: Radioactivity
+        summary: Random decay, and the half-life that makes it predictable in bulk.
+        skills:
+          - slug: physics-9-radiation-types
+            name: Types of nuclear radiation
+            description: Compare alpha, beta and gamma radiation by penetration, ionisation and charge.
+            difficulty: 3
+            prerequisites: [physics-9-isotopes]
+            tags: [atomic, core]
+          - slug: physics-9-half-life
+            name: Half-life
+            description: Use half-life to calculate remaining activity or elapsed time.
+            difficulty: 4
+            prerequisites: [physics-9-radiation-types, math-8-index-laws]
+            tags: [atomic, core]

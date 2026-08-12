@@ -1,0 +1,170 @@
+# Mathematics — Grade 9
+subject:
+  slug: mathematics
+  name: Mathematics
+  icon: sigma
+  color: "#6D4AFF"
+  position: 1
+
+course:
+  slug: math-9
+  title: Mathematics — Grade 9
+  grade: 9
+  summary: Quadratics, surds, trigonometry and the algebra that opens up senior maths.
+  description: >-
+    Grade 9 consolidates algebra into a toolkit: expanding and factorising quadratics, solving
+    them several ways, working exactly with surds, and using trigonometry to solve
+    right-angled triangles.
+  estimated_hours: 85
+
+units:
+  - slug: math-9-algebra
+    title: Algebraic Techniques
+    icon: variable
+    summary: Expanding, factorising and simplifying with confidence.
+    topics:
+      - slug: math-9-expanding
+        title: Expanding and Factorising
+        summary: The two directions every quadratic problem moves in.
+        skills:
+          - slug: math-9-expand-binomials
+            name: Expanding binomials
+            description: Expand products such as (x + a)(x + b) and (x + a) squared.
+            difficulty: 3
+            prerequisites: [math-7-distributive, math-8-index-laws]
+            tags: [algebra, core]
+          - slug: math-9-factorise-quadratics
+            name: Factorising quadratics
+            description: Factorise x squared + bx + c into two brackets.
+            difficulty: 4
+            prerequisites: [math-9-expand-binomials, math-7-factorise-linear]
+            tags: [algebra, core]
+          - slug: math-9-special-products
+            name: Difference of two squares and perfect squares
+            description: Recognise and use the special product patterns.
+            difficulty: 4
+            prerequisites: [math-9-factorise-quadratics]
+            tags: [algebra]
+
+      - slug: math-9-surds-fractions
+        title: Surds and Algebraic Fractions
+        summary: Working exactly rather than with rounded decimals.
+        skills:
+          - slug: math-9-simplify-surds
+            name: Simplifying surds
+            description: Write a surd in its simplest exact form.
+            difficulty: 4
+            prerequisites: [math-8-squares-roots, math-8-irrational-numbers]
+            tags: [number]
+          - slug: math-9-algebraic-fractions
+            name: Algebraic fractions
+            description: Simplify, multiply and divide fractions containing variables.
+            difficulty: 4
+            prerequisites: [math-9-factorise-quadratics, math-6-simplify-fractions]
+            tags: [algebra]
+
+  - slug: math-9-quadratics
+    title: Quadratic Relationships
+    icon: trending-up
+    summary: The parabola, and three ways to solve a quadratic equation.
+    topics:
+      - slug: math-9-solving-quadratics
+        title: Solving Quadratic Equations
+        summary: Factorising, completing the square and the quadratic formula.
+        skills:
+          - slug: math-9-quadratic-by-factorising
+            name: Solving quadratics by factorising
+            description: Use the null factor law after factorising.
+            difficulty: 4
+            prerequisites: [math-9-factorise-quadratics]
+            tags: [algebra, core]
+          - slug: math-9-quadratic-formula
+            name: The quadratic formula
+            description: Apply the formula and interpret the discriminant.
+            difficulty: 5
+            prerequisites: [math-9-quadratic-by-factorising, math-9-simplify-surds]
+            tags: [algebra, core]
+
+      - slug: math-9-parabolas
+        title: Graphing Parabolas
+        summary: Reading a quadratic from its picture.
+        skills:
+          - slug: math-9-parabola-features
+            name: Features of a parabola
+            description: Identify the vertex, axis of symmetry and intercepts.
+            difficulty: 4
+            prerequisites: [math-9-quadratic-by-factorising, math-8-function-tables]
+            tags: [functions]
+          - slug: math-9-sketch-parabola
+            name: Sketching quadratic graphs
+            description: Sketch a parabola from its equation using intercepts and the vertex.
+            difficulty: 5
+            prerequisites: [math-9-parabola-features]
+            tags: [functions]
+
+  - slug: math-9-trigonometry
+    title: Trigonometry
+    icon: triangle
+    summary: Connecting angles to side lengths in right-angled triangles.
+    topics:
+      - slug: math-9-right-triangle-trig
+        title: Right-Angled Triangle Trigonometry
+        summary: Sine, cosine and tangent as ratios.
+        skills:
+          - slug: math-9-trig-ratios
+            name: Trigonometric ratios
+            description: Identify opposite, adjacent and hypotenuse and write the three ratios.
+            difficulty: 3
+            prerequisites: [math-8-pythagoras-hypotenuse, math-8-similar-figures]
+            tags: [trigonometry, core]
+          - slug: math-9-find-side
+            name: Finding an unknown side
+            description: Use a trigonometric ratio to calculate a missing side length.
+            difficulty: 4
+            prerequisites: [math-9-trig-ratios]
+            tags: [trigonometry, core]
+          - slug: math-9-find-angle
+            name: Finding an unknown angle
+            description: Use inverse trigonometric functions to find an angle.
+            difficulty: 4
+            prerequisites: [math-9-find-side]
+            tags: [trigonometry]
+          - slug: math-9-trig-applications
+            name: Angles of elevation and depression
+            description: Solve real problems involving heights and distances.
+            difficulty: 5
+            prerequisites: [math-9-find-angle]
+            tags: [trigonometry, application]
+
+  - slug: math-9-measurement-statistics
+    title: Measurement and Statistics
+    icon: chart
+    summary: Compound solids, and describing data with quartiles.
+    topics:
+      - slug: math-9-measurement
+        title: Advanced Measurement
+        summary: Surface area and volume of curved and compound solids.
+        skills:
+          - slug: math-9-surface-area-volume
+            name: Surface area and volume of solids
+            description: Calculate for cylinders, cones, spheres and compound solids.
+            difficulty: 4
+            prerequisites: [math-7-volume-cylinders]
+            tags: [measurement]
+
+      - slug: math-9-statistics-advanced
+        title: Statistical Measures
+        summary: Quartiles, box plots and standard measures of spread.
+        skills:
+          - slug: math-9-quartiles
+            name: Quartiles and interquartile range
+            description: Find the five-number summary of a data set.
+            difficulty: 3
+            prerequisites: [math-7-compare-data-sets]
+            tags: [statistics, core]
+          - slug: math-9-box-plots
+            name: Box plots
+            description: Construct and interpret box plots to compare distributions.
+            difficulty: 4
+            prerequisites: [math-9-quartiles]
+            tags: [statistics]
