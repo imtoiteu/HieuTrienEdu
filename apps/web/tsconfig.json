@@ -34,5 +34,6 @@
     "../../packages/**/*.ts",
     "../../packages/**/*.tsx"
   ],
-  "exclude": ["node_modules", "e2e"]
+  "//exclude": "Playwright's config and specs are test tooling, not application code. They are excluded so `next build` does not require @playwright/test to be installed — a production image should not carry a browser-automation framework. Playwright typechecks both itself when it runs.",
+  "exclude": ["node_modules", "e2e", "playwright.config.ts"]
 }

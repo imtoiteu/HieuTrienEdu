@@ -1,0 +1,66 @@
+# Keep the build context small and, more importantly, correct.
+#
+# Without this file `COPY . .` in the web builder stage copies the *host's* node_modules over the
+# one just installed inside the image — mixing host-native binaries into a different base image and
+# producing builds that fail in confusing ways. It also ships ~1.2GB to the daemon on every build.
+
+# dependencies and build output — reinstalled/rebuilt inside the image
+node_modules
+**/node_modules
+.next
+**/.next
+out
+**/out
+.turbo
+**/.turbo
+
+# Python virtualenvs and caches — the API image installs its own
+.venv
+**/.venv
+__pycache__
+**/__pycache__
+*.py[cod]
+.pytest_cache
+**/.pytest_cache
+.ruff_cache
+**/.ruff_cache
+
+# local databases and runtime data — never bake developer data into an image
+data
+*.db
+*.sqlite3
+
+# version control and CI
+.git
+.gitignore
+.github
+
+# tests and their artifacts: not needed at runtime, and the browser binaries are huge.
+# playwright.config.ts in particular sits at the app root where the Next tsconfig's `**/*.ts`
+# would otherwise pick it up, failing the build on a missing @playwright/test.
+e2e
+**/e2e
+playwright.config.ts
+**/playwright.config.ts
+test-results
+**/test-results
+playwright-report
+**/playwright-report
+coverage
+**/coverage
+
+# local configuration and secrets — must never enter an image layer
+.env
+.env.*
+!.env.example
+
+# editor and OS noise
+.vscode
+.idea
+.DS_Store
+*.swp
+
+# documentation is not needed at runtime
+docs
+*.md
+!README.md

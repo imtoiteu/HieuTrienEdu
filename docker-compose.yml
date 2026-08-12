@@ -6,12 +6,18 @@
 #
 #   docker compose run --rm seed
 #
-# The web app is on http://localhost:3000 and the API on http://localhost:8000 (docs at /docs).
+# Ports default to 3000 (web) and 8000 (API, docs at /docs), and are overridden per host via
+# WEB_PORT / API_PORT in .env — this machine already had 3000 and 80 taken by other services.
+#
+# Two settings must agree with the address a *browser* will use, or pages render but every
+# authenticated action fails: PUBLIC_API_URL (baked into the bundle at build time, so changing it
+# requires `docker compose build web`) and CORS_ORIGINS (the web app's own origin).
 
 name: hietrieneducation
 
 services:
   db:
+    restart: unless-stopped
     image: postgres:16-alpine
     environment:
       POSTGRES_USER: hietedu
@@ -19,8 +25,12 @@ services:
       POSTGRES_DB: hietedu
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    # Bound to loopback deliberately. The API reaches Postgres over the compose network, so the
+    # only reason to publish it is a developer connecting with psql from the host — and that works
+    # fine on 127.0.0.1. Publishing on 0.0.0.0 would put the database on the public internet, which
+    # on a host without a firewall means it is found and attacked within hours.
     ports:
-      - '${POSTGRES_PORT:-5432}:5432'
+      - '127.0.0.1:${POSTGRES_PORT:-5432}:5432'
     healthcheck:
       # The API waits on this, so it must test that Postgres accepts queries, not merely that
       # the process is up.
@@ -30,10 +40,13 @@ services:
       retries: 10
 
   redis:
+    restart: unless-stopped
     image: redis:7-alpine
     command: ['redis-server', '--save', '', '--appendonly', 'no']
+    # Loopback only — see the note on the database. Redis here runs without a password, so an
+    # internet-reachable port would be trivially abused.
     ports:
-      - '${REDIS_PORT:-6379}:6379'
+      - '127.0.0.1:${REDIS_PORT:-6379}:6379'
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
       interval: 5s
@@ -41,6 +54,7 @@ services:
       retries: 10
 
   api:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: docker/api.Dockerfile
@@ -51,7 +65,10 @@ services:
       ENVIRONMENT: ${ENVIRONMENT:-development}
       DEBUG: ${DEBUG:-true}
       CONTENT_DIR: /srv/content
-      CORS_ORIGINS: 'http://localhost:3000,http://127.0.0.1:3000'
+      # Must list the origin the *browser* uses. Hardcoding localhost here breaks any deployment
+      # reached by IP or domain, and the failure looks like an unreachable API rather than a CORS
+      # rejection, so it is worth the indirection.
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
       AI_PROVIDER: ${AI_PROVIDER:-disabled}
       LIVE_CLASS_PROVIDER: ${LIVE_CLASS_PROVIDER:-manual}
       PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-manual}
@@ -88,6 +105,7 @@ services:
     restart: 'no'
 
   web:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: docker/web.Dockerfile
