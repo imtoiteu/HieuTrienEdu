@@ -2,7 +2,6 @@
   "brand.name": "HieuTrienEducation",
   "brand.tagline": "Mathematics & Physics, mastered",
   "brand.founders": "Thầy Hiếu & Cô Triền",
-
   "common.login": "Log in",
   "common.logout": "Log out",
   "common.register": "Sign up",
@@ -35,7 +34,6 @@
   "common.notFound": "Not found",
   "common.emptyState": "Nothing here yet",
   "common.skipToContent": "Skip to main content",
-
   "nav.home": "Home",
   "nav.about": "About",
   "nav.mathematics": "Mathematics",
@@ -60,7 +58,6 @@
   "nav.menu": "Menu",
   "nav.openMenu": "Open menu",
   "nav.closeMenu": "Close menu",
-
   "home.hero.eyebrow": "Grades 6–9 · Mathematics & Physics",
   "home.hero.title": "Every student can be good at maths.",
   "home.hero.titleAccent": "Ours prove it.",
@@ -68,13 +65,11 @@
   "home.hero.ctaPrimary": "Start practising free",
   "home.hero.ctaSecondary": "Book a free assessment",
   "home.hero.trust": "No card needed · Free forever plan · Cancel any time",
-
   "home.stats.skills": "skills mapped",
   "home.stats.questions": "question templates",
   "home.stats.variants": "unique questions generated",
   "home.stats.grades": "grades covered",
   "home.stats.teachers": "expert teachers",
-
   "home.why.eyebrow": "Why we are different",
   "home.why.title": "Most platforms give more questions. We find the right ones.",
   "home.why.subtitle": "Practice only helps when it targets what a student cannot yet do. Everything here is built around knowing exactly what that is.",
@@ -86,13 +81,11 @@
   "home.why.infinite.body": "Every question is generated fresh from a template. Students cannot memorise answers — they have to learn the method.",
   "home.why.teachers.title": "Real teachers behind it",
   "home.why.teachers.body": "The platform shows teachers exactly where each student is stuck, so lesson time is spent on what actually matters.",
-
   "home.subjects.eyebrow": "What we teach",
   "home.subjects.title": "Two subjects, taught properly",
   "home.subjects.mathematics": "From fractions to quadratics, each skill built on the one before.",
   "home.subjects.physics": "From measurement to electromagnetism, always anchored to a calculation.",
   "home.subjects.explore": "Explore the curriculum",
-
   "home.how.eyebrow": "How it works",
   "home.how.title": "Four steps, then it looks after itself",
   "home.how.step1.title": "Take a short assessment",
@@ -103,24 +96,19 @@
   "home.how.step3.body": "Short sessions with instant feedback, hints when you are stuck, and a worked solution every time.",
   "home.how.step4.title": "Watch mastery grow",
   "home.how.step4.body": "You and your parents see real progress per skill — not a vague grade.",
-
   "home.formats.eyebrow": "Ways to learn",
   "home.formats.title": "Choose how you want to study",
   "home.formats.subtitle": "Every option includes full access to the practice platform.",
-
   "home.results.eyebrow": "Results",
   "home.results.title": "What changes for our students",
-
   "home.cta.title": "Start with a free assessment",
   "home.cta.subtitle": "Fifteen minutes, no cost, no obligation — and you will know exactly where your child stands.",
   "home.cta.button": "Book a free assessment",
-
   "about.title": "About HieuTrienEducation",
   "about.subtitle": "A tutoring centre that got tired of guessing what students needed.",
   "about.story.title": "Why we built this",
   "about.mission.title": "What we believe",
   "about.values.title": "How we teach",
-
   "subject.mathematics.title": "Mathematics",
   "subject.physics.title": "Physics",
   "subject.curriculum": "Curriculum",
@@ -129,7 +117,6 @@
   "subject.skills": "skills",
   "subject.lessons": "lessons",
   "subject.hours": "hours",
-
   "courses.title": "Courses",
   "courses.subtitle": "A complete curriculum for grades 6 to 9, in both subjects.",
   "courses.startLearning": "Start learning",
@@ -137,7 +124,6 @@
   "courses.enroll": "Enrol",
   "courses.enrolled": "Enrolled",
   "courses.continue": "Continue",
-
   "teachers.title": "Our teachers",
   "teachers.subtitle": "Small team, deliberately. Every teacher here is a specialist in the subject and the age group.",
   "teachers.experience": "{years} years teaching",
@@ -148,10 +134,8 @@
   "teachers.bookLesson": "Book a lesson",
   "teachers.availability": "Availability",
   "teachers.rating": "{rating} from {count} reviews",
-
   "methods.title": "Learning methods",
   "methods.subtitle": "The teaching decisions behind the platform, explained openly.",
-
   "tutoring.oneToOne.title": "1-to-1 tutoring",
   "tutoring.oneToOne.subtitle": "A teacher entirely focused on one student.",
   "tutoring.group.title": "Small group classes",
@@ -175,7 +159,6 @@
   "tutoring.anyTeacher": "No preference",
   "tutoring.seatsLeft": "{count} places left",
   "tutoring.classFull": "Class full",
-
   "pricing.title": "Pricing",
   "pricing.subtitle": "Clear prices, no joining fee, cancel any time.",
   "pricing.mostPopular": "Most popular",
@@ -184,15 +167,12 @@
   "pricing.free.title": "Free practice",
   "pricing.free.price": "Free",
   "pricing.free.body": "The full practice platform and every lesson, at no cost.",
-
   "testimonials.title": "What families say",
   "testimonials.subtitle": "Reviews from parents and students at the centre.",
-
   "blog.title": "Resources",
   "blog.subtitle": "Notes on teaching, learning and how the platform works.",
   "blog.readingTime": "{minutes} min read",
   "blog.backToBlog": "All articles",
-
   "contact.title": "Get in touch",
   "contact.subtitle": "Book a free assessment or ask us anything. We reply within one working day.",
   "contact.form.name": "Your name",
@@ -211,7 +191,6 @@
   "contact.interest.group": "Group classes",
   "contact.interest.online": "Online classes",
   "contact.interest.general": "Something else",
-
   "auth.login.title": "Welcome back",
   "auth.login.subtitle": "Log in to carry on where you left off.",
   "auth.login.submit": "Log in",
@@ -233,7 +212,6 @@
   "auth.error.generic": "We could not complete that. Please try again.",
   "auth.demoAccounts": "Demo accounts",
   "auth.demoHint": "This is a demo build — use any account below with the password shown.",
-
   "dashboard.welcome": "Welcome back, {name}",
   "dashboard.welcomeNew": "Welcome, {name}",
   "dashboard.yourProgress": "Your progress",
@@ -263,7 +241,6 @@
   "dashboard.noUpcoming": "No classes scheduled.",
   "dashboard.noAssignments": "No assignments set.",
   "dashboard.noAchievements": "Answer your first question to earn your first badge.",
-
   "path.title": "Learning path",
   "path.mastered": "Mastered",
   "path.inProgress": "In progress",
@@ -273,7 +250,6 @@
   "path.startSkill": "Start",
   "path.practiseAgain": "Practise again",
   "path.review": "Review",
-
   "lesson.objectives": "What you will learn",
   "lesson.summary": "Summary",
   "lesson.example": "Example",
@@ -287,7 +263,6 @@
   "lesson.note": "Note",
   "lesson.attribution": "Source",
   "lesson.interactiveUnavailable": "Interactive content is not available.",
-
   "exercise.submit": "Check answer",
   "exercise.checking": "Checking…",
   "exercise.next": "Next question",
@@ -322,14 +297,12 @@
   "exercise.emptyAnswer": "Enter an answer before checking.",
   "exercise.noQuestions": "There are no questions available for this skill yet.",
   "exercise.askAi": "Ask for a hint",
-
   "progress.title": "Your progress",
   "progress.bySubject": "By subject",
   "progress.bySkill": "By skill",
   "progress.attempts": "attempts",
   "progress.lastPractised": "Last practised {date}",
   "progress.neverPractised": "Not practised yet",
-
   "teacher.title": "Teacher dashboard",
   "teacher.students": "Students",
   "teacher.classes": "Classes",
@@ -349,7 +322,6 @@
   "teacher.scheduleClass": "Schedule a class",
   "teacher.attendance": "Attendance",
   "teacher.noClasses": "No classes assigned yet.",
-
   "admin.title": "Admin",
   "admin.overview": "Overview",
   "admin.users": "People",
@@ -360,7 +332,6 @@
   "admin.markPaid": "Mark as paid",
   "admin.revenue": "Revenue",
   "admin.pendingReview": "Awaiting review",
-
   "parent.title": "Parent dashboard",
   "parent.children": "Your children",
   "parent.childProgress": "Progress",
@@ -371,7 +342,6 @@
   "parent.noChildren": "No students are linked to your account yet.",
   "parent.linkChild": "Link a student",
   "parent.attendanceRate": "{rate}% attendance",
-
   "ai.title": "AI Assist",
   "ai.notEnabled": "AI Assist is not enabled yet",
   "ai.notEnabledBody": "The interfaces, database and interface for AI Assist are built and ready. Connecting a model provider is a later phase of the project.",
@@ -379,7 +349,6 @@
   "ai.explainMistake": "Why is this wrong?",
   "ai.generateQuestions": "Generate draft questions",
   "ai.requiresApproval": "Every AI-generated question must be approved by a teacher before students see it.",
-
   "footer.tagline": "Mathematics and Physics for grades 6–9, taught by Thầy Hiếu & Cô Triền.",
   "footer.learn": "Learn",
   "footer.tutoring": "Tutoring",
@@ -389,18 +358,18 @@
   "footer.terms": "Terms",
   "footer.rights": "All rights reserved.",
   "footer.builtWith": "Built for students who deserve better than more of the same.",
-
   "error.404.title": "We cannot find that page",
   "error.404.body": "The link may be out of date, or the page may have moved.",
   "error.404.home": "Back to the home page",
   "error.500.title": "Something went wrong",
   "error.500.body": "That is our fault, not yours. Try again in a moment.",
   "error.offline": "Cannot reach the server. Check your connection and try again.",
-
   "a11y.progressBar": "Progress: {percent} percent",
   "a11y.masteryLevel": "Mastery {percent} percent",
   "a11y.correctAnswer": "Correct answer",
   "a11y.incorrectAnswer": "Incorrect answer",
   "a11y.locked": "Locked skill",
-  "a11y.languageSwitcher": "Change language"
+  "a11y.languageSwitcher": "Change language",
+  "nav.settings": "Settings",
+  "nav.achievements": "Achievements"
 }

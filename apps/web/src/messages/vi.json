@@ -1,9 +1,7 @@
 {
   "_meta.note": "Vietnamese is the intended primary language. This dictionary covers navigation, authentication, the student experience and the marketing shell. Keys not present here fall back to English automatically — see packages/localization. Remaining sections (teacher, admin, parent, long-form marketing copy) are listed in docs/DEVELOPMENT.md as the outstanding translation work.",
-
   "brand.tagline": "Toán & Vật lý, học đến khi thành thạo",
   "brand.founders": "Thầy Hiếu & Cô Triền",
-
   "common.login": "Đăng nhập",
   "common.logout": "Đăng xuất",
   "common.register": "Đăng ký",
@@ -36,7 +34,6 @@
   "common.notFound": "Không tìm thấy",
   "common.emptyState": "Chưa có dữ liệu",
   "common.skipToContent": "Chuyển tới nội dung chính",
-
   "nav.home": "Trang chủ",
   "nav.about": "Giới thiệu",
   "nav.mathematics": "Toán học",
@@ -61,7 +58,6 @@
   "nav.menu": "Menu",
   "nav.openMenu": "Mở menu",
   "nav.closeMenu": "Đóng menu",
-
   "home.hero.eyebrow": "Lớp 6–9 · Toán & Vật lý",
   "home.hero.title": "Học sinh nào cũng có thể giỏi Toán.",
   "home.hero.titleAccent": "Học sinh của chúng tôi chứng minh điều đó.",
@@ -69,13 +65,11 @@
   "home.hero.ctaPrimary": "Luyện tập miễn phí",
   "home.hero.ctaSecondary": "Đăng ký kiểm tra miễn phí",
   "home.hero.trust": "Không cần thẻ · Gói miễn phí trọn đời · Hủy bất cứ lúc nào",
-
   "home.stats.skills": "kỹ năng",
   "home.stats.questions": "mẫu câu hỏi",
   "home.stats.variants": "câu hỏi khác nhau",
   "home.stats.grades": "khối lớp",
   "home.stats.teachers": "giáo viên",
-
   "home.why.eyebrow": "Điều khác biệt",
   "home.why.title": "Nơi khác cho thêm bài tập. Chúng tôi tìm đúng bài cần làm.",
   "home.why.subtitle": "Luyện tập chỉ hiệu quả khi nhắm đúng vào điều học sinh chưa làm được. Mọi thứ ở đây được xây dựng quanh việc biết chính xác điều đó là gì.",
@@ -87,13 +81,11 @@
   "home.why.infinite.body": "Mỗi câu hỏi được sinh mới từ mẫu. Học sinh không thể học vẹt đáp án — buộc phải hiểu phương pháp.",
   "home.why.teachers.title": "Có giáo viên thật đứng sau",
   "home.why.teachers.body": "Nền tảng cho giáo viên thấy chính xác học sinh đang mắc ở đâu, để giờ học dành cho điều thực sự quan trọng.",
-
   "home.subjects.eyebrow": "Chúng tôi dạy gì",
   "home.subjects.title": "Hai môn học, dạy đến nơi đến chốn",
   "home.subjects.mathematics": "Từ phân số đến phương trình bậc hai, mỗi kỹ năng xây trên kỹ năng trước.",
   "home.subjects.physics": "Từ đo lường đến điện từ, luôn gắn với một phép tính cụ thể.",
   "home.subjects.explore": "Xem chương trình học",
-
   "home.how.eyebrow": "Cách hoạt động",
   "home.how.title": "Bốn bước, sau đó hệ thống tự vận hành",
   "home.how.step1.title": "Làm bài kiểm tra ngắn",
@@ -104,18 +96,14 @@
   "home.how.step3.body": "Buổi học ngắn, phản hồi tức thì, có gợi ý khi bí và luôn có lời giải chi tiết.",
   "home.how.step4.title": "Theo dõi mức thành thạo tăng lên",
   "home.how.step4.body": "Bạn và phụ huynh thấy tiến bộ thật theo từng kỹ năng — không phải một điểm số mơ hồ.",
-
   "home.formats.eyebrow": "Hình thức học",
   "home.formats.title": "Chọn cách học phù hợp với bạn",
   "home.formats.subtitle": "Mọi lựa chọn đều bao gồm quyền truy cập đầy đủ nền tảng luyện tập.",
-
   "home.results.eyebrow": "Kết quả",
   "home.results.title": "Điều thay đổi ở học sinh của chúng tôi",
-
   "home.cta.title": "Bắt đầu với bài kiểm tra miễn phí",
   "home.cta.subtitle": "Mười lăm phút, miễn phí, không ràng buộc — và bạn sẽ biết chính xác con mình đang ở đâu.",
   "home.cta.button": "Đăng ký kiểm tra miễn phí",
-
   "courses.title": "Khóa học",
   "courses.subtitle": "Chương trình đầy đủ cho lớp 6 đến lớp 9, cả hai môn.",
   "courses.startLearning": "Bắt đầu học",
@@ -123,7 +111,6 @@
   "courses.enroll": "Ghi danh",
   "courses.enrolled": "Đã ghi danh",
   "courses.continue": "Tiếp tục",
-
   "subject.mathematics.title": "Toán học",
   "subject.physics.title": "Vật lý",
   "subject.curriculum": "Chương trình học",
@@ -132,7 +119,6 @@
   "subject.skills": "kỹ năng",
   "subject.lessons": "bài học",
   "subject.hours": "giờ",
-
   "teachers.title": "Đội ngũ giáo viên",
   "teachers.subtitle": "Đội ngũ nhỏ, và đó là chủ ý. Mỗi giáo viên đều chuyên sâu về môn học và lứa tuổi.",
   "teachers.experience": "{years} năm giảng dạy",
@@ -142,7 +128,6 @@
   "teachers.qualifications": "Bằng cấp",
   "teachers.bookLesson": "Đặt lịch học",
   "teachers.availability": "Lịch trống",
-
   "pricing.title": "Học phí",
   "pricing.subtitle": "Giá rõ ràng, không phí ghi danh, hủy bất cứ lúc nào.",
   "pricing.mostPopular": "Phổ biến nhất",
@@ -151,7 +136,6 @@
   "pricing.free.title": "Luyện tập miễn phí",
   "pricing.free.price": "Miễn phí",
   "pricing.free.body": "Toàn bộ nền tảng luyện tập và mọi bài học, hoàn toàn miễn phí.",
-
   "tutoring.perSession": "mỗi buổi",
   "tutoring.perCourse": "mỗi khóa",
   "tutoring.perMonth": "mỗi tháng",
@@ -165,15 +149,12 @@
   "tutoring.anyTeacher": "Không yêu cầu cụ thể",
   "tutoring.seatsLeft": "Còn {count} chỗ",
   "tutoring.classFull": "Đã đủ chỗ",
-
   "testimonials.title": "Phụ huynh và học sinh nói gì",
   "testimonials.subtitle": "Cảm nhận từ phụ huynh và học sinh tại trung tâm.",
-
   "blog.title": "Bài viết",
   "blog.subtitle": "Ghi chép về dạy, học và cách nền tảng vận hành.",
   "blog.readingTime": "Đọc {minutes} phút",
   "blog.backToBlog": "Tất cả bài viết",
-
   "contact.title": "Liên hệ",
   "contact.subtitle": "Đăng ký kiểm tra miễn phí hoặc hỏi bất cứ điều gì. Chúng tôi phản hồi trong một ngày làm việc.",
   "contact.form.name": "Họ và tên",
@@ -192,7 +173,6 @@
   "contact.interest.group": "Lớp nhóm",
   "contact.interest.online": "Lớp trực tuyến",
   "contact.interest.general": "Vấn đề khác",
-
   "auth.login.title": "Chào mừng trở lại",
   "auth.login.subtitle": "Đăng nhập để tiếp tục từ chỗ bạn đã dừng.",
   "auth.login.submit": "Đăng nhập",
@@ -214,7 +194,6 @@
   "auth.error.generic": "Chưa thực hiện được. Vui lòng thử lại.",
   "auth.demoAccounts": "Tài khoản dùng thử",
   "auth.demoHint": "Đây là bản demo — dùng bất kỳ tài khoản nào bên dưới với mật khẩu hiển thị.",
-
   "dashboard.welcome": "Chào mừng trở lại, {name}",
   "dashboard.welcomeNew": "Xin chào, {name}",
   "dashboard.yourProgress": "Tiến độ của bạn",
@@ -244,7 +223,6 @@
   "dashboard.noUpcoming": "Chưa có lớp nào được xếp lịch.",
   "dashboard.noAssignments": "Chưa có bài tập nào.",
   "dashboard.noAchievements": "Trả lời câu đầu tiên để nhận huy hiệu đầu tiên.",
-
   "path.title": "Lộ trình học",
   "path.mastered": "Đã thành thạo",
   "path.inProgress": "Đang học",
@@ -254,7 +232,6 @@
   "path.startSkill": "Bắt đầu",
   "path.practiseAgain": "Luyện lại",
   "path.review": "Ôn tập",
-
   "lesson.objectives": "Bạn sẽ học được gì",
   "lesson.summary": "Tóm tắt",
   "lesson.example": "Ví dụ",
@@ -267,7 +244,6 @@
   "lesson.warning": "Lưu ý",
   "lesson.note": "Ghi chú",
   "lesson.attribution": "Nguồn",
-
   "exercise.submit": "Kiểm tra đáp án",
   "exercise.checking": "Đang kiểm tra…",
   "exercise.next": "Câu tiếp theo",
@@ -301,18 +277,15 @@
   "exercise.practiseMore": "Luyện thêm",
   "exercise.emptyAnswer": "Hãy nhập đáp án trước khi kiểm tra.",
   "exercise.noQuestions": "Kỹ năng này chưa có câu hỏi nào.",
-
   "progress.title": "Tiến độ của bạn",
   "progress.bySubject": "Theo môn học",
   "progress.bySkill": "Theo kỹ năng",
   "progress.attempts": "lần làm",
   "progress.lastPractised": "Luyện lần cuối {date}",
   "progress.neverPractised": "Chưa luyện tập",
-
   "ai.title": "Trợ lý AI",
   "ai.notEnabled": "Trợ lý AI chưa được bật",
   "ai.notEnabledBody": "Giao diện, cơ sở dữ liệu và màn hình cho Trợ lý AI đã sẵn sàng. Việc kết nối mô hình AI thuộc giai đoạn sau của dự án.",
-
   "footer.tagline": "Toán và Vật lý cho lớp 6–9, giảng dạy bởi Thầy Hiếu & Cô Triền.",
   "footer.learn": "Học tập",
   "footer.tutoring": "Lớp học",
@@ -321,11 +294,12 @@
   "footer.privacy": "Bảo mật",
   "footer.terms": "Điều khoản",
   "footer.rights": "Bảo lưu mọi quyền.",
-
   "error.404.title": "Không tìm thấy trang này",
   "error.404.body": "Liên kết có thể đã cũ hoặc trang đã được chuyển đi.",
   "error.404.home": "Về trang chủ",
   "error.500.title": "Đã có lỗi xảy ra",
   "error.500.body": "Đây là lỗi của chúng tôi. Vui lòng thử lại sau giây lát.",
-  "error.offline": "Không kết nối được máy chủ. Kiểm tra kết nối và thử lại."
+  "error.offline": "Không kết nối được máy chủ. Kiểm tra kết nối và thử lại.",
+  "nav.settings": "Cài đặt",
+  "nav.achievements": "Thành tích"
 }
