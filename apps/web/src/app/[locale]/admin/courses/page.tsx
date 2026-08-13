@@ -17,6 +17,8 @@ import {
   StatusBadge,
   TextAreaField,
   TextField,
+  TranslationPanel,
+  translationsPayload,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
 import { adminApi, type AdminCourse, type Category } from '@/lib/admin-api';
@@ -56,6 +58,7 @@ export default function CoursesPage() {
     is_featured: false,
     category_ids: [] as number[],
   });
+  const [vi, setVi] = useState<Record<string, string>>({ title: '', summary: '' });
 
   const href = (path: string) => `/${locale}${path}`;
 
@@ -121,6 +124,7 @@ export default function CoursesPage() {
           ...form,
           summary: form.summary || null,
           description: form.description || null,
+          translations: translationsPayload(vi),
         }),
       t('admin.crs.created'),
     );
@@ -374,6 +378,16 @@ export default function CoursesPage() {
               onChange={(event) => setForm({ ...form, summary: event.target.value })}
             />
           </FormRow>
+          <div className="sm:col-span-2">
+            <TranslationPanel
+              fields={[
+                { name: 'title', label: t('admin.a.title') },
+                { name: 'summary', label: t('admin.a.summary'), multiline: true },
+              ]}
+              value={vi}
+              onChange={setVi}
+            />
+          </div>
           <FormRow label={t('admin.a.categories')} className="sm:col-span-2">
             <div className="flex flex-wrap gap-1.5">
               {categories.map((category) => {

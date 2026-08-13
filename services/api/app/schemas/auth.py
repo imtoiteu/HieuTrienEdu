@@ -17,7 +17,9 @@ class RegisterRequest(BaseModel):
     full_name: str = Field(min_length=1, max_length=200)
     role: UserRole = UserRole.STUDENT
     grade: int | None = Field(default=None, ge=1, le=12)
-    locale: str = Field(default="en", max_length=8)
+    # Omitted by the web client: the language the account is created in comes from the
+    # request locale, so signing up on /vi stores "vi" without the form having to say so.
+    locale: str | None = Field(default=None, max_length=8)
     phone: str | None = Field(default=None, max_length=40)
 
     @field_validator("password")

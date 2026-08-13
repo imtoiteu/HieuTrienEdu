@@ -11,17 +11,26 @@ import { getTranslator } from '@/lib/dictionaries';
 import { safe } from '@/lib/server-api';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Resources' };
+/** The tab title is content too: a Vietnamese visitor should not see an English one. */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale: raw } = await params;
+  const t = getTranslator(isLocale(raw) ? raw : 'en');
+  return { title: t('nav.blog') };
+}
 
 export default async function BlogPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = await params;
   const locale = isLocale(raw) ? raw : 'en';
   const t = getTranslator(locale);
 
-  const posts = await safe(api.site.posts(), [] as BlogPostSummary[]);
+  const posts = await safe(api.site.posts(undefined, locale), [] as BlogPostSummary[]);
 
   return (
-    <MarketingShell>
+    <MarketingShell locale={locale}>
       <PageHeader eyebrow={t('nav.blog')} title={t('blog.title')} subtitle={t('blog.subtitle')} />
 
       <Section className="pt-10">
@@ -36,7 +45,7 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
                 <Link key={post.id} href={`/${locale}/blog/${post.slug}`}>
                   <Card interactive className="flex h-full flex-col">
                     <div className="flex flex-wrap items-center gap-2">
-                      <Badge tone="brand">{post.category}</Badge>
+                      <Badge tone="brand">{t(`blog.category.${post.category}`)}</Badge>
                       <span className="flex items-center gap-1 text-xs text-ink-500">
                         <Clock className="h-3.5 w-3.5" aria-hidden="true" />
                         {t('blog.readingTime', { minutes: post.reading_minutes })}

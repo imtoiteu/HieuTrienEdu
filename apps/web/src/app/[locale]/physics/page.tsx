@@ -1,9 +1,19 @@
 import { isLocale } from '@hietedu/localization';
 
 import { SubjectPage } from '@/components/site/subject-page';
+import { getTranslator } from '@/lib/dictionaries';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Physics' };
+/** The tab title is content too: a Vietnamese visitor should not see an English one. */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale: raw } = await params;
+  const t = getTranslator(isLocale(raw) ? raw : 'en');
+  return { title: t('nav.physics') };
+}
 
 export default async function PhysicsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = await params;

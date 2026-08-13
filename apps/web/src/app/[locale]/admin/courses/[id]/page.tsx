@@ -25,6 +25,9 @@ import {
   StatusBadge,
   TextAreaField,
   TextField,
+  TranslationPanel,
+  translationDraft,
+  translationsPayload,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
 import {
@@ -48,6 +51,9 @@ interface NodeDraft {
   summary: string;
   difficulty: number;
   estimated_minutes: number;
+  /** Vietnamese title and summary. Kept flat because a node has exactly two translatable fields. */
+  viTitle: string;
+  viSummary: string;
 }
 
 const BLANK_NODE: NodeDraft = {
@@ -57,7 +63,22 @@ const BLANK_NODE: NodeDraft = {
   summary: '',
   difficulty: 2,
   estimated_minutes: 15,
+  viTitle: '',
+  viSummary: '',
 };
+
+/** Read a node's Vietnamese fields out of the API's `translations` blob. */
+function nodeTranslations(
+  translations: Record<string, Record<string, unknown>> | undefined,
+  titleField: 'title' | 'name',
+): { viTitle: string; viSummary: string } {
+  const bucket = translations?.vi ?? {};
+  const summaryField = titleField === 'name' ? 'description' : 'summary';
+  return {
+    viTitle: typeof bucket[titleField] === 'string' ? (bucket[titleField] as string) : '',
+    viSummary: typeof bucket[summaryField] === 'string' ? (bucket[summaryField] as string) : '',
+  };
+}
 
 export default function CourseStructurePage({
   params,
@@ -90,6 +111,11 @@ export default function CourseStructurePage({
     seo_title: '',
     seo_description: '',
     category_ids: [] as number[],
+  });
+  const [courseVi, setCourseVi] = useState<Record<string, string>>({
+    title: '',
+    summary: '',
+    description: '',
   });
 
   const href = (path: string) => `/${locale}${path}`;
@@ -137,6 +163,13 @@ export default function CourseStructurePage({
       seo_description: course.seo_description ?? '',
       category_ids: course.categories.map((category) => category.id),
     });
+    setCourseVi(
+      translationDraft(course.translations, [
+        { name: 'title', label: '' },
+        { name: 'summary', label: '' },
+        { name: 'description', label: '' },
+      ]),
+    );
     setEditingCourse(true);
   }
 
@@ -151,6 +184,7 @@ export default function CourseStructurePage({
           thumbnail_url: courseForm.thumbnail_url || null,
           seo_title: courseForm.seo_title || null,
           seo_description: courseForm.seo_description || null,
+          translations: translationsPayload(courseVi),
         }),
       t('admin.crs.saved'),
     );
@@ -176,15 +210,26 @@ export default function CourseStructurePage({
     }
     setSaving(true);
 
+    // A skill's translatable fields are `name`/`description`; everything else uses
+    // `title`/`summary`. The dialog shows one pair of inputs either way.
+    const skillTranslations = translationsPayload({
+      name: node.viTitle,
+      description: node.viSummary,
+    });
+    const translations = translationsPayload({
+      title: node.viTitle,
+      summary: node.viSummary,
+    });
+
     const ok = await run(async () => {
       if (node.kind === 'unit') {
-        const body = { title: node.title, summary: node.summary || null };
+        const body = { title: node.title, summary: node.summary || null, translations };
         return node.id
           ? adminApi.units.update(node.id, body)
           : adminApi.units.create({ ...body, course_id: courseId });
       }
       if (node.kind === 'topic') {
-        const body = { title: node.title, summary: node.summary || null };
+        const body = { title: node.title, summary: node.summary || null, translations };
         return node.id
           ? adminApi.topics.update(node.id, body)
           : adminApi.topics.create({ ...body, unit_id: node.parentId });
@@ -194,6 +239,7 @@ export default function CourseStructurePage({
           name: node.title,
           description: node.summary || null,
           difficulty: node.difficulty,
+          translations: skillTranslations,
         };
         return node.id
           ? adminApi.skills.update(node.id, body)
@@ -203,6 +249,7 @@ export default function CourseStructurePage({
         title: node.title,
         summary: node.summary || null,
         estimated_minutes: node.estimated_minutes,
+        translations,
       };
       return node.id
         ? adminApi.lessons.update(node.id, body)
@@ -358,6 +405,7 @@ export default function CourseStructurePage({
                             parentId: courseId,
                             title: unit.title,
                             summary: unit.summary ?? '',
+                            ...nodeTranslations(unit.translations, 'title'),
                           })
                         }
                         onDelete={() =>
@@ -404,6 +452,7 @@ export default function CourseStructurePage({
                                   parentId: unit.id,
                                   title: topic.title,
                                   summary: topic.summary ?? '',
+                                  ...nodeTranslations(topic.translations, 'title'),
                                 })
                               }
                               onDelete={() =>
@@ -423,6 +472,7 @@ export default function CourseStructurePage({
                                   parentId: topic.id,
                                   title: skill.name,
                                   difficulty: skill.difficulty,
+                                  ...nodeTranslations(skill.translations, 'name'),
                                 })
                               }
                               onDeleteSkill={(skill) =>
@@ -542,6 +592,25 @@ export default function CourseStructurePage({
               </FormRow>
             )}
 
+            <TranslationPanel
+              fields={[
+                {
+                  name: 'viTitle',
+                  label: node.kind === 'skill' ? t('admin.crs.skillName') : t('admin.a.title'),
+                },
+                {
+                  name: 'viSummary',
+                  label:
+                    node.kind === 'skill' ? t('admin.a.description') : t('admin.a.summary'),
+                  multiline: true,
+                },
+              ]}
+              value={{ viTitle: node.viTitle, viSummary: node.viSummary }}
+              onChange={(next) =>
+                setNode({ ...node, viTitle: next.viTitle ?? '', viSummary: next.viSummary ?? '' })
+              }
+            />
+
             {node.kind === 'lesson' && !node.id && (
               <p className="rounded-2xl bg-brand-50 p-3 text-xs text-brand-800">
                 The lesson is created as a draft. You will be able to build its content blocks from
@@ -573,6 +642,17 @@ export default function CourseStructurePage({
               onChange={(event) => setCourseForm({ ...courseForm, title: event.target.value })}
             />
           </FormRow>
+          <div className="sm:col-span-2 order-last">
+            <TranslationPanel
+              fields={[
+                { name: 'title', label: t('admin.a.title') },
+                { name: 'summary', label: t('admin.a.summary'), multiline: true },
+                { name: 'description', label: t('admin.a.description'), multiline: true },
+              ]}
+              value={courseVi}
+              onChange={setCourseVi}
+            />
+          </div>
           <FormRow label={t('admin.a.summary')} htmlFor="c-summary" className="sm:col-span-2">
             <TextAreaField
               id="c-summary"

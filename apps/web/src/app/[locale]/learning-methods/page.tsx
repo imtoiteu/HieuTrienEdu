@@ -8,7 +8,16 @@ import { PageHeader } from '@/components/site/page-header';
 import { MarketingShell } from '@/components/site/marketing-shell';
 import { getTranslator } from '@/lib/dictionaries';
 
-export const metadata = { title: 'Learning methods' };
+/** The tab title is content too: a Vietnamese visitor should not see an English one. */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale: raw } = await params;
+  const t = getTranslator(isLocale(raw) ? raw : 'en');
+  return { title: t('nav.methods') };
+}
 
 export default async function LearningMethodsPage({
   params,
@@ -53,7 +62,7 @@ export default async function LearningMethodsPage({
   ];
 
   return (
-    <MarketingShell>
+    <MarketingShell locale={locale}>
       <PageHeader
         eyebrow={t('nav.methods')}
         title={t('methods.title')}

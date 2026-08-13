@@ -8,7 +8,8 @@ from fastapi import APIRouter, HTTPException, status
 from sqlalchemy import func, select
 
 from app.core.config import settings
-from app.core.deps import CurrentUser, DbSession
+from app.core.deps import CurrentUser, DbSession, RequestLocale
+from app.core.i18n import normalise_locale
 from app.core.security import (
     InvalidTokenError,
     create_access_token,
@@ -48,7 +49,7 @@ def _issue_tokens(user: User) -> TokenPair:
 
 
 @router.post("/register", response_model=AuthResponse, status_code=status.HTTP_201_CREATED)
-def register(payload: RegisterRequest, db: DbSession) -> AuthResponse:
+def register(payload: RegisterRequest, db: DbSession, locale: RequestLocale) -> AuthResponse:
     """Create a student or parent account. Teacher/admin accounts are created by an admin."""
     normalised_email = payload.email.strip().lower()
 
@@ -64,7 +65,7 @@ def register(payload: RegisterRequest, db: DbSession) -> AuthResponse:
         password_hash=hash_password(payload.password),
         full_name=payload.full_name.strip(),
         role=payload.role,
-        locale=payload.locale,
+        locale=normalise_locale(payload.locale) if payload.locale else locale,
         phone=payload.phone,
         is_verified=False,
     )

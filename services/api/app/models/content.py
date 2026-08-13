@@ -8,12 +8,12 @@ from typing import Any
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import Base, TimestampMixin
+from app.models.base import Base, TimestampMixin, TranslatableMixin
 from app.models.curriculum import Skill, Topic
 from app.models.enums import ReviewStatus
 
 
-class Lesson(Base, TimestampMixin):
+class Lesson(Base, TimestampMixin, TranslatableMixin):
     """A lesson is an ordered list of typed blocks stored as JSON.
 
     Blocks rather than one HTML blob, because the student UI needs to treat an ``interactive``
@@ -96,7 +96,7 @@ class Video(Base, TimestampMixin):
     attribution: Mapped[str | None] = mapped_column(Text)
 
 
-class Resource(Base, TimestampMixin):
+class Resource(Base, TimestampMixin, TranslatableMixin):
     """Downloadable or linked material attached to a topic (worksheets, formula sheets, links)."""
 
     __tablename__ = "resources"

@@ -5,12 +5,13 @@ from __future__ import annotations
 from collections.abc import Iterable
 from typing import Annotated
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, Header, HTTPException, Query, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
 from app.core.db import get_db
+from app.core.i18n import normalise_locale
 from app.core.security import InvalidTokenError, decode_token
 from app.models import ParentProfile, StudentProfile, TeacherProfile, User, UserRole
 
@@ -78,6 +79,30 @@ def get_optional_user(
         # A malformed or expired token on a public endpoint means "anonymous", not "error".
         return None
 
+
+def get_locale(
+    locale: Annotated[str | None, Query(max_length=10)] = None,
+    x_locale: Annotated[str | None, Header(alias="X-Locale")] = None,
+    accept_language: Annotated[str | None, Header(alias="Accept-Language")] = None,
+) -> str:
+    """Resolve the language this request should be answered in.
+
+    Precedence is ``?locale=`` → ``X-Locale`` → ``Accept-Language`` → English.
+
+    The query parameter comes first, and exists at all, because a header alone makes two different
+    responses share one URL. Anything that caches by URL — a CDN, a browser, or Next.js's
+    build-time fetch cache — will then serve the English response to a Vietnamese page. Putting
+    the locale in the URL makes the two responses genuinely distinct resources.
+
+    The header is kept for the browser client, where every request already carries it, and because
+    the app knows which locale the user is browsing far better than the browser does: a Vietnamese
+    student on an English-configured laptop is still reading ``/vi``. ``Accept-Language`` is the
+    fallback for direct API callers, and anything unrecognised degrades to English.
+    """
+    return normalise_locale(locale or x_locale or accept_language)
+
+
+RequestLocale = Annotated[str, Depends(get_locale)]
 
 CurrentUser = Annotated[User, Depends(get_current_user)]
 OptionalUser = Annotated[User | None, Depends(get_optional_user)]

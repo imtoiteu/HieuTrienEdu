@@ -46,17 +46,44 @@ class QuestionTemplate:
     difficulty: int = 2
 
     @classmethod
-    def from_model(cls, question: Any) -> QuestionTemplate:
+    def from_model(cls, question: Any, locale: str = "en") -> QuestionTemplate:
+        """Build a template from a ``Question`` row, in the requested language.
+
+        Localising here rather than after generation is the whole point: the prompt, hints and
+        solution are *templates* containing ``{{ placeholders }}``, so a Vietnamese question has
+        to be chosen before the renderer substitutes the sampled values. Translating the rendered
+        output instead would mean translating "What is 7 + 12?" for every draw.
+
+        ``answer_spec`` is deliberately never localised — it is the machine-checkable answer, and
+        a translated copy could silently disagree with the original. The one exception is
+        ``unit``, which is a *label* shown next to the answer box ("thousand dong", "degrees")
+        rather than part of the check, so a translation may override it.
+        """
+        from app.core.i18n import localise
+
+        options = dict(question.options or {})
+        localised_options = localise(question, "options", locale, default=None)
+        if isinstance(localised_options, dict):
+            # Merge so a translation supplying only ``choices`` keeps units, tolerances and the
+            # rest of the machinery from the base row.
+            options = {**options, **localised_options}
+
+        answer_spec = dict(question.answer_spec or {})
+        if isinstance(localised_options, dict) and localised_options.get("unit"):
+            # The renderer reads ``answer_spec["unit"]`` first, so a translated unit has to be
+            # copied here to take effect. Nothing else from the spec is touched.
+            answer_spec["unit"] = localised_options["unit"]
+
         return cls(
             slug=question.slug,
             question_type=question.question_type,
-            prompt=question.prompt,
+            prompt=localise(question, "prompt", locale, default=""),
             variables=question.variables or {},
             constraints=question.constraints or [],
-            answer_spec=question.answer_spec or {},
-            options=question.options or {},
-            hints=question.hints or [],
-            solution=question.solution or [],
+            answer_spec=answer_spec,
+            options=options,
+            hints=localise(question, "hints", locale, default=[]) or [],
+            solution=localise(question, "solution", locale, default=[]) or [],
             difficulty=question.difficulty,
         )
 

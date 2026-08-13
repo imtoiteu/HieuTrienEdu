@@ -15,6 +15,7 @@ import {
   StringListField,
   TextAreaField,
   TextField,
+  TranslationPanel,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
 import { adminApi, type LessonBlock, type LessonDetail } from '@/lib/admin-api';
@@ -41,6 +42,12 @@ export default function LessonEditorPage({
     estimated_minutes: 15,
     teacher_notes: '',
   });
+  // The lesson body is edited one language at a time in the same editor: `blocks` is the
+  // English draft, `viBlocks` the Vietnamese one. They are separate arrays rather than a diff,
+  // because a translator needs to see the whole Vietnamese lesson as a lesson.
+  const [viBlocks, setViBlocks] = useState<LessonBlock[]>([]);
+  const [bodyLocale, setBodyLocale] = useState<'en' | 'vi'>('en');
+  const [vi, setVi] = useState({ title: '', summary: '', objectives: [] as string[] });
   const [dirty, setDirty] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -58,6 +65,16 @@ export default function LessonEditorPage({
       const result = await adminApi.lessons.get(lessonId);
       setLesson(result);
       setBlocks(result.draft_blocks ?? []);
+      const bucket = (result.translations?.vi ?? {}) as Record<string, unknown>;
+      // Fall back to the live translated body when there is no translated draft yet — that is
+      // the case for content imported from the YAML sidecars.
+      const viDraft = (bucket.draft_blocks ?? bucket.blocks) as LessonBlock[] | undefined;
+      setViBlocks(Array.isArray(viDraft) ? viDraft : []);
+      setVi({
+        title: typeof bucket.title === 'string' ? bucket.title : '',
+        summary: typeof bucket.summary === 'string' ? bucket.summary : '',
+        objectives: Array.isArray(bucket.objectives) ? (bucket.objectives as string[]) : [],
+      });
       setMeta({
         title: result.title,
         summary: result.summary ?? '',
@@ -104,6 +121,23 @@ export default function LessonEditorPage({
     return () => window.removeEventListener('beforeunload', handler);
   }, [dirty]);
 
+  /**
+   * The Vietnamese half of the save payload.
+   *
+   * Empty values are sent as `null` so the API drops them: an empty Vietnamese title should make
+   * the site fall back to English, not display nothing.
+   */
+  function viPayload() {
+    return {
+      vi: {
+        title: vi.title.trim() || null,
+        summary: vi.summary.trim() || null,
+        objectives: vi.objectives.length ? vi.objectives : null,
+        blocks: viBlocks.length ? viBlocks : null,
+      },
+    };
+  }
+
   async function save() {
     setSaving(true);
     const ok = await run(
@@ -113,6 +147,7 @@ export default function LessonEditorPage({
           summary: meta.summary || null,
           teacher_notes: meta.teacher_notes || null,
           blocks,
+          translations: viPayload(),
         }),
       t('admin.les.draftSaved'),
     );
@@ -133,6 +168,7 @@ export default function LessonEditorPage({
         summary: meta.summary || null,
         teacher_notes: meta.teacher_notes || null,
         blocks,
+        translations: viPayload(),
       }),
     );
     if (!saved) {
@@ -246,11 +282,51 @@ export default function LessonEditorPage({
 
           <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">
             <div className="min-w-0">
+              <div className="mb-3 flex flex-wrap items-center gap-2">
+                <span className="text-xs font-bold text-ink-600">{t('admin.les.bodyLanguage')}</span>
+                <div className="inline-flex overflow-hidden rounded-full border-2 border-ink-200">
+                  {(['en', 'vi'] as const).map((code) => (
+                    <button
+                      key={code}
+                      type="button"
+                      onClick={() => setBodyLocale(code)}
+                      aria-pressed={bodyLocale === code}
+                      className={`px-3 py-1 text-xs font-bold ${
+                        bodyLocale === code ? 'bg-brand-500 text-white' : 'text-ink-700'
+                      }`}
+                    >
+                      {code === 'en' ? t('admin.les.english') : t('admin.les.vietnamese')}
+                    </button>
+                  ))}
+                </div>
+                {bodyLocale === 'vi' && (
+                  <span className="text-xs text-ink-500">{t('admin.i18n.blocksNote')}</span>
+                )}
+              </div>
+              {bodyLocale === 'vi' && viBlocks.length === 0 && blocks.length > 0 && (
+                <div className="mb-3 flex flex-wrap items-center gap-3 rounded-2xl bg-brand-50 p-3">
+                  <p className="text-xs text-brand-900">{t('admin.les.startFromEnglish')}</p>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => {
+                      // Copy the English blocks as a starting point, so the translator edits prose
+                      // in place rather than rebuilding the lesson structure from scratch.
+                      setViBlocks(blocks.map((block) => ({ ...block })));
+                      setDirty(true);
+                    }}
+                  >
+                    {t('admin.les.copyEnglishBlocks')}
+                  </Button>
+                </div>
+              )}
               <BlockEditor
-                blocks={blocks}
+                key={bodyLocale}
+                blocks={bodyLocale === 'en' ? blocks : viBlocks}
                 skills={skills}
                 onChange={(next) => {
-                  setBlocks(next);
+                  if (bodyLocale === 'en') setBlocks(next);
+                  else setViBlocks(next);
                   setDirty(true);
                 }}
               />
@@ -314,6 +390,32 @@ export default function LessonEditorPage({
                         setMeta({ ...meta, teacher_notes: event.target.value });
                         setDirty(true);
                       }}
+                    />
+                  </FormRow>
+                </div>
+              </Card>
+
+              <Card>
+                <TranslationPanel
+                  fields={[
+                    { name: 'title', label: t('admin.a.title') },
+                    { name: 'summary', label: t('admin.a.summary'), multiline: true },
+                  ]}
+                  value={{ title: vi.title, summary: vi.summary }}
+                  onChange={(next) => {
+                    setVi({ ...vi, title: next.title ?? '', summary: next.summary ?? '' });
+                    setDirty(true);
+                  }}
+                />
+                <div className="mt-3">
+                  <FormRow label={`${t('admin.les.objectives')} (VI)`}>
+                    <StringListField
+                      values={vi.objectives}
+                      onChange={(objectives) => {
+                        setVi({ ...vi, objectives });
+                        setDirty(true);
+                      }}
+                      placeholder={t('admin.les.objectivePlaceholder')}
                     />
                   </FormRow>
                 </div>

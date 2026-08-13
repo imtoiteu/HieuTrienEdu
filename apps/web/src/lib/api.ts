@@ -68,6 +68,26 @@ interface RequestOptions extends Omit<RequestInit, 'body'> {
   token?: string | null;
   /** Skip the automatic Authorization header (used for public endpoints). */
   anonymous?: boolean;
+  /**
+   * Language to render content in.
+   *
+   * Server components must pass this explicitly — they handle many users' requests in one
+   * process, so a module-level default would leak one visitor's language into another's page.
+   * Client components can omit it and rely on `setClientLocale`, which is safe because a browser
+   * only ever has one active locale.
+   */
+  locale?: string;
+}
+
+/**
+ * The locale used for client-side requests, set once by the i18n provider.
+ *
+ * Deliberately not read on the server: see the `locale` option above.
+ */
+let clientLocale = 'en';
+
+export function setClientLocale(locale: string): void {
+  if (typeof window !== 'undefined') clientLocale = locale;
 }
 
 function extractDetail(payload: unknown): string | null {
@@ -83,12 +103,27 @@ function extractDetail(payload: unknown): string | null {
 }
 
 export async function apiFetch<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const { body, token, anonymous, headers, ...rest } = options;
+  const { body, token, anonymous, headers, locale, ...rest } = options;
 
   const authToken = anonymous ? null : (token ?? readStoredTokens()?.access_token ?? null);
 
+  // The API answers in whatever language this names, falling back to English. Content
+  // (course titles, question prompts, hints) is translated server-side, so this is what makes
+  // /vi show Vietnamese curriculum rather than Vietnamese chrome around English content.
+  const activeLocale = locale ?? (typeof window !== 'undefined' ? clientLocale : 'en');
+
+  // The locale goes in the URL as well as the header, and the URL is the one that matters.
+  // A header alone leaves both languages sharing a single URL, and anything that caches by URL
+  // then serves one language's response to the other: Next.js's build-time fetch cache did
+  // exactly that, baking the English footer into the prerendered Vietnamese pages. Two languages
+  // are two resources, so they get two URLs.
+  const localisedPath = path.includes('?')
+    ? `${path}&locale=${activeLocale}`
+    : `${path}?locale=${activeLocale}`;
+
   const requestHeaders: Record<string, string> = {
     Accept: 'application/json',
+    'X-Locale': activeLocale,
     ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
     ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
     ...((headers as Record<string, string>) ?? {}),
@@ -96,7 +131,7 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
 
   let response: Response;
   try {
-    response = await fetch(`${API_BASE}${API_PREFIX}${path}`, {
+    response = await fetch(`${API_BASE}${API_PREFIX}${localisedPath}`, {
       ...rest,
       headers: requestHeaders,
       body: body !== undefined ? JSON.stringify(body) : undefined,
@@ -705,23 +740,36 @@ export const api = {
   },
 
   curriculum: {
-    subjects: () => apiFetch<Subject[]>('/curriculum/subjects', { anonymous: true }),
-    courses: (params?: { subject?: string; grade?: number }) => {
+    /* Every method takes an optional `locale`. Server components must pass it — see the
+       `locale` option on RequestOptions for why it cannot be inferred there. */
+    subjects: (locale?: string) =>
+      apiFetch<Subject[]>('/curriculum/subjects', { anonymous: true, locale }),
+    courses: (params?: { subject?: string; grade?: number }, locale?: string) => {
       const query = new URLSearchParams();
       if (params?.subject) query.set('subject', params.subject);
       if (params?.grade) query.set('grade', String(params.grade));
       const suffix = query.toString() ? `?${query}` : '';
-      return apiFetch<CourseSummary[]>(`/curriculum/courses${suffix}`, { anonymous: true });
+      return apiFetch<CourseSummary[]>(`/curriculum/courses${suffix}`, {
+        anonymous: true,
+        locale,
+      });
     },
-    course: (slug: string) =>
-      apiFetch<CourseDetail>(`/curriculum/courses/${slug}`, { anonymous: true }),
-    unit: (slug: string) => apiFetch<Unit>(`/curriculum/units/${slug}`, { anonymous: true }),
-    skill: (slug: string) => apiFetch<Record<string, unknown>>(`/curriculum/skills/${slug}`, {
-      anonymous: true,
-    }),
-    topicLessons: (slug: string) =>
-      apiFetch<LessonSummary[]>(`/curriculum/topics/${slug}/lessons`, { anonymous: true }),
-    lesson: (slug: string) => apiFetch<LessonDetail>(`/curriculum/lessons/${slug}`),
+    course: (slug: string, locale?: string) =>
+      apiFetch<CourseDetail>(`/curriculum/courses/${slug}`, { anonymous: true, locale }),
+    unit: (slug: string, locale?: string) =>
+      apiFetch<Unit>(`/curriculum/units/${slug}`, { anonymous: true, locale }),
+    skill: (slug: string, locale?: string) =>
+      apiFetch<Record<string, unknown>>(`/curriculum/skills/${slug}`, {
+        anonymous: true,
+        locale,
+      }),
+    topicLessons: (slug: string, locale?: string) =>
+      apiFetch<LessonSummary[]>(`/curriculum/topics/${slug}/lessons`, {
+        anonymous: true,
+        locale,
+      }),
+    lesson: (slug: string, locale?: string) =>
+      apiFetch<LessonDetail>(`/curriculum/lessons/${slug}`, { locale }),
     updateLessonProgress: (
       slug: string,
       body: { progress_percent: number; video_position_seconds?: number; completed?: boolean },
@@ -768,43 +816,68 @@ export const api = {
       ),
   },
 
+  // Every public-content method takes an optional `locale`. Server components run in one shared
+  // process serving both languages, so they must pass it explicitly — the module-level
+  // `clientLocale` is only correct in the browser.
   tutoring: {
-    products: (params?: { format?: string; subject?: string; grade?: number }) => {
+    products: (params?: { format?: string; subject?: string; grade?: number; locale?: string }) => {
       const query = new URLSearchParams();
       if (params?.format) query.set('format', params.format);
       if (params?.subject) query.set('subject', params.subject);
       if (params?.grade) query.set('grade', String(params.grade));
       const suffix = query.toString() ? `?${query}` : '';
-      return apiFetch<TutoringProduct[]>(`/tutoring/products${suffix}`, { anonymous: true });
+      return apiFetch<TutoringProduct[]>(`/tutoring/products${suffix}`, {
+        anonymous: true,
+        locale: params?.locale,
+      });
     },
-    product: (slug: string) =>
-      apiFetch<TutoringProduct>(`/tutoring/products/${slug}`, { anonymous: true }),
-    teachers: (params?: { subject?: string; grade?: number; featured?: boolean }) => {
+    product: (slug: string, locale?: string) =>
+      apiFetch<TutoringProduct>(`/tutoring/products/${slug}`, { anonymous: true, locale }),
+    teachers: (params?: {
+      subject?: string;
+      grade?: number;
+      featured?: boolean;
+      locale?: string;
+    }) => {
       const query = new URLSearchParams();
       if (params?.subject) query.set('subject', params.subject);
       if (params?.grade) query.set('grade', String(params.grade));
       if (params?.featured !== undefined) query.set('featured', String(params.featured));
       const suffix = query.toString() ? `?${query}` : '';
-      return apiFetch<TeacherCard[]>(`/tutoring/teachers${suffix}`, { anonymous: true });
+      return apiFetch<TeacherCard[]>(`/tutoring/teachers${suffix}`, {
+        anonymous: true,
+        locale: params?.locale,
+      });
     },
-    teacher: (id: number) =>
-      apiFetch<TeacherCard>(`/tutoring/teachers/${id}`, { anonymous: true }),
-    profiles: (params?: { subject?: string; featured?: boolean }) => {
+    teacher: (id: number, locale?: string) =>
+      apiFetch<TeacherCard>(`/tutoring/teachers/${id}`, { anonymous: true, locale }),
+    profiles: (params?: { subject?: string; featured?: boolean; locale?: string }) => {
       const query = new URLSearchParams();
       if (params?.subject) query.set('subject', params.subject);
       if (params?.featured !== undefined) query.set('featured', String(params.featured));
       const suffix = query.toString() ? `?${query}` : '';
-      return apiFetch<TeacherProfileSummary[]>(`/tutoring/profiles${suffix}`, { anonymous: true });
+      return apiFetch<TeacherProfileSummary[]>(`/tutoring/profiles${suffix}`, {
+        anonymous: true,
+        locale: params?.locale,
+      });
     },
-    profile: (slug: string) =>
-      apiFetch<TeacherProfileDetail>(`/tutoring/profiles/${slug}`, { anonymous: true }),
-    classes: (params?: { subject?: string; grade?: number; format?: string }) => {
+    profile: (slug: string, locale?: string) =>
+      apiFetch<TeacherProfileDetail>(`/tutoring/profiles/${slug}`, { anonymous: true, locale }),
+    classes: (params?: {
+      subject?: string;
+      grade?: number;
+      format?: string;
+      locale?: string;
+    }) => {
       const query = new URLSearchParams();
       if (params?.subject) query.set('subject', params.subject);
       if (params?.grade) query.set('grade', String(params.grade));
       if (params?.format) query.set('format', params.format);
       const suffix = query.toString() ? `?${query}` : '';
-      return apiFetch<ClassGroup[]>(`/tutoring/classes${suffix}`, { anonymous: true });
+      return apiFetch<ClassGroup[]>(`/tutoring/classes${suffix}`, {
+        anonymous: true,
+        locale: params?.locale,
+      });
     },
     createRequest: (body: Record<string, unknown>) =>
       apiFetch<{ id: number; status: string }>('/tutoring/requests', {
@@ -817,16 +890,18 @@ export const api = {
   },
 
   site: {
-    testimonials: (featured?: boolean) =>
+    testimonials: (featured?: boolean, locale?: string) =>
       apiFetch<Testimonial[]>(
         `/site/testimonials${featured !== undefined ? `?featured=${featured}` : ''}`,
-        { anonymous: true },
+        { anonymous: true, locale },
       ),
-    posts: (category?: string) =>
+    posts: (category?: string, locale?: string) =>
       apiFetch<BlogPostSummary[]>(`/site/posts${category ? `?category=${category}` : ''}`, {
         anonymous: true,
+        locale,
       }),
-    post: (slug: string) => apiFetch<BlogPostDetail>(`/site/posts/${slug}`, { anonymous: true }),
+    post: (slug: string, locale?: string) =>
+      apiFetch<BlogPostDetail>(`/site/posts/${slug}`, { anonymous: true, locale }),
     stats: () => apiFetch<SiteStats>('/site/stats', { anonymous: true }),
     contact: (body: Record<string, unknown>) =>
       apiFetch<{ id: number; received: boolean; message: string }>('/site/contact', {
@@ -836,20 +911,27 @@ export const api = {
       }),
 
     /* ---- admin-managed website content ---- */
-    settings: () =>
-      apiFetch<Record<string, Record<string, string>>>('/site/settings', { anonymous: true }),
+    settings: (locale?: string) =>
+      apiFetch<Record<string, Record<string, string>>>('/site/settings', {
+        anonymous: true,
+        locale,
+      }),
     sections: (page: string, locale?: string) =>
-      apiFetch<Record<string, SiteSectionContent>>(
-        `/site/sections?page=${page}${locale ? `&locale=${locale}` : ''}`,
-        { anonymous: true },
-      ),
-    faqs: (category?: string) =>
+      // The locale goes through the request option, not the path: apiFetch adds `locale` to every
+      // URL itself, and a second copy in the path would be overridden by it.
+      apiFetch<Record<string, SiteSectionContent>>(`/site/sections?page=${page}`, {
+        anonymous: true,
+        locale,
+      }),
+    faqs: (category?: string, locale?: string) =>
       apiFetch<PublicFaq[]>(`/site/faqs${category ? `?category=${category}` : ''}`, {
         anonymous: true,
+        locale,
       }),
-    announcements: (kind?: string) =>
+    announcements: (kind?: string, locale?: string) =>
       apiFetch<PublicAnnouncement[]>(`/site/announcements${kind ? `?kind=${kind}` : ''}`, {
         anonymous: true,
+        locale,
       }),
     categories: (params?: { kind?: string; nav_only?: boolean }) => {
       const query = new URLSearchParams();

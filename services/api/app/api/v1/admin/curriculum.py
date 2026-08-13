@@ -27,6 +27,11 @@ from app.api.v1.admin._common import (
     record_audit,
     snapshot,
 )
+from app.api.v1.admin._translations import (
+    TranslationsPayload,
+    apply_translations,
+    read_translations,
+)
 from app.core.text import unique_slug
 from app.models import (
     ContentCategory,
@@ -80,7 +85,7 @@ def _sync_publish_flag(course: Course) -> None:
 # --------------------------------------------------------------------------------------
 
 
-class SubjectIn(BaseModel):
+class SubjectIn(TranslationsPayload):
     name: str = Field(min_length=1, max_length=120)
     slug: str | None = Field(default=None, max_length=60)
     description: str | None = None
@@ -98,46 +103,62 @@ class SubjectRead(BaseModel):
     icon: str | None = None
     color: str | None = None
     position: int
+    translations: dict[str, dict[str, Any]] = Field(default_factory=dict)
+
+
+def _subject_row(subject: Subject) -> dict[str, Any]:
+    return {
+        **{
+            key: getattr(subject, key)
+            for key in ("id", "slug", "name", "description", "icon", "color", "position")
+        },
+        "translations": read_translations(subject),
+    }
 
 
 @router.get("/subjects", response_model=list[SubjectRead])
-def list_subjects(db: DbSession, admin: CurrentAdmin) -> list[Subject]:
-    return list(db.scalars(select(Subject).order_by(Subject.position, Subject.id)))
+def list_subjects(db: DbSession, admin: CurrentAdmin) -> list[dict[str, Any]]:
+    return [
+        _subject_row(subject)
+        for subject in db.scalars(select(Subject).order_by(Subject.position, Subject.id))
+    ]
 
 
 @router.post("/subjects", response_model=SubjectRead, status_code=status.HTTP_201_CREATED)
-def create_subject(payload: SubjectIn, db: DbSession, admin: CurrentAdmin) -> Subject:
+def create_subject(payload: SubjectIn, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
     subject = Subject(
-        **payload.model_dump(exclude={"slug"}),
+        **payload.model_dump(exclude={"slug", "translations"}),
         slug=_make_slug(db, Subject, payload.slug or payload.name, 60),
         position=next_position(db, Subject),
     )
+    apply_translations(subject, payload.translations)
     db.add(subject)
     db.flush()
     record_audit(db, admin, "create", "subject", subject.id, f"Created subject “{subject.name}”")
     db.commit()
     db.refresh(subject)
-    return subject
+    return _subject_row(subject)
 
 
 @router.patch("/subjects/{subject_id}", response_model=SubjectRead)
 def update_subject(
     subject_id: int, payload: SubjectIn, db: DbSession, admin: CurrentAdmin
-) -> Subject:
+) -> dict[str, Any]:
     subject = get_or_404(db, Subject, subject_id, "Subject")
-    fields = payload.model_dump(exclude_unset=True, exclude={"slug"})
+    fields = payload.model_dump(exclude_unset=True, exclude={"slug", "translations"})
     before = {key: getattr(subject, key) for key in fields}
     for key, value in fields.items():
         setattr(subject, key, value)
     if payload.slug:
         subject.slug = _make_slug(db, Subject, payload.slug, 60, exclude_id=subject.id)
+    apply_translations(subject, payload.translations)
     record_audit(
         db, admin, "update", "subject", subject.id, f"Updated subject “{subject.name}”",
         diff_fields(before, fields),
     )
     db.commit()
     db.refresh(subject)
-    return subject
+    return _subject_row(subject)
 
 
 @router.delete("/subjects/{subject_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -165,7 +186,7 @@ def delete_subject(subject_id: int, db: DbSession, admin: CurrentAdmin) -> None:
 # --------------------------------------------------------------------------------------
 
 
-class CourseIn(BaseModel):
+class CourseIn(TranslationsPayload):
     subject_id: int
     title: str = Field(min_length=1, max_length=200)
     grade: int = Field(ge=1, le=12)
@@ -182,7 +203,7 @@ class CourseIn(BaseModel):
     category_ids: list[int] = Field(default_factory=list)
 
 
-class CourseUpdate(BaseModel):
+class CourseUpdate(TranslationsPayload):
     subject_id: int | None = None
     title: str | None = Field(default=None, min_length=1, max_length=200)
     grade: int | None = Field(default=None, ge=1, le=12)
@@ -219,6 +240,7 @@ def _course_row(db, course: Course, category_map: dict[int, list[dict[str, Any]]
         "seo_title": course.seo_title,
         "seo_description": course.seo_description,
         "categories": category_map.get(course.id, []),
+        "translations": read_translations(course),
         "created_at": course.created_at,
         "updated_at": course.updated_at,
     }
@@ -389,10 +411,11 @@ def create_course(payload: CourseIn, db: DbSession, admin: CurrentAdmin) -> dict
         )
 
     course = Course(
-        **payload.model_dump(exclude={"slug", "category_ids"}),
+        **payload.model_dump(exclude={"slug", "category_ids", "translations"}),
         slug=_make_slug(db, Course, payload.slug or f"{payload.title}", 80),
         position=next_position(db, Course, Course.subject_id == payload.subject_id),
     )
+    apply_translations(course, payload.translations)
     _sync_publish_flag(course)
     db.add(course)
     db.flush()
@@ -456,6 +479,7 @@ def get_course(course_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, 
             "summary": unit.summary,
             "icon": unit.icon,
             "position": unit.position,
+            "translations": read_translations(unit),
             "topics": [
                 {
                     "id": topic.id,
@@ -463,6 +487,7 @@ def get_course(course_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, 
                     "title": topic.title,
                     "summary": topic.summary,
                     "position": topic.position,
+                    "translations": read_translations(topic),
                     "skills": [
                         {
                             "id": skill.id,
@@ -471,6 +496,7 @@ def get_course(course_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, 
                             "difficulty": skill.difficulty,
                             "position": skill.position,
                             "question_count": question_counts.get(skill.id, 0),
+                            "translations": read_translations(skill),
                         }
                         for skill in topic.skills
                     ],
@@ -484,6 +510,7 @@ def get_course(course_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, 
                             "estimated_minutes": lesson.estimated_minutes,
                             "block_count": len(lesson.blocks or []),
                             "has_draft": lesson.has_draft,
+                            "translations": read_translations(lesson),
                         }
                         for lesson in lessons_by_topic.get(topic.id, [])
                     ],
@@ -501,7 +528,9 @@ def update_course(
     course_id: int, payload: CourseUpdate, db: DbSession, admin: CurrentAdmin
 ) -> dict[str, Any]:
     course = get_or_404(db, Course, course_id, "Course")
-    fields = payload.model_dump(exclude_unset=True, exclude={"category_ids", "slug"})
+    fields = payload.model_dump(
+        exclude_unset=True, exclude={"category_ids", "slug", "translations"}
+    )
 
     if "subject_id" in fields and fields["subject_id"] is not None:
         get_or_404(db, Subject, fields["subject_id"], "Subject")
@@ -542,6 +571,7 @@ def update_course(
         course.slug = _make_slug(db, Course, payload.slug, 80, exclude_id=course.id)
     if "status" in fields:
         _sync_publish_flag(course)
+    apply_translations(course, payload.translations)
     if payload.category_ids is not None:
         _set_course_categories(db, course, payload.category_ids)
 
@@ -752,7 +782,7 @@ def delete_course(course_id: int, db: DbSession, admin: CurrentAdmin) -> None:
 # --------------------------------------------------------------------------------------
 
 
-class UnitIn(BaseModel):
+class UnitIn(TranslationsPayload):
     course_id: int
     title: str = Field(min_length=1, max_length=200)
     slug: str | None = Field(default=None, max_length=120)
@@ -760,7 +790,7 @@ class UnitIn(BaseModel):
     icon: str | None = Field(default=None, max_length=60)
 
 
-class UnitUpdate(BaseModel):
+class UnitUpdate(TranslationsPayload):
     title: str | None = Field(default=None, min_length=1, max_length=200)
     slug: str | None = Field(default=None, max_length=120)
     summary: str | None = None
@@ -779,12 +809,14 @@ def create_unit(payload: UnitIn, db: DbSession, admin: CurrentAdmin) -> dict[str
         icon=payload.icon,
         position=next_position(db, Unit, Unit.course_id == payload.course_id),
     )
+    apply_translations(unit, payload.translations)
     db.add(unit)
     db.flush()
     record_audit(db, admin, "create", "unit", unit.id, f"Created module “{unit.title}”")
     db.commit()
     db.refresh(unit)
-    return {"id": unit.id, "slug": unit.slug, "title": unit.title, "position": unit.position}
+    return {"id": unit.id, "slug": unit.slug, "title": unit.title, "position": unit.position,
+            "translations": read_translations(unit)}
 
 
 @router.patch("/units/{unit_id}")
@@ -792,7 +824,7 @@ def update_unit(
     unit_id: int, payload: UnitUpdate, db: DbSession, admin: CurrentAdmin
 ) -> dict[str, Any]:
     unit = get_or_404(db, Unit, unit_id, "Module")
-    fields = payload.model_dump(exclude_unset=True, exclude={"slug"})
+    fields = payload.model_dump(exclude_unset=True, exclude={"slug", "translations"})
     if fields.get("course_id") is not None:
         get_or_404(db, Course, fields["course_id"], "Course")
     before = {key: getattr(unit, key) for key in fields}
@@ -800,13 +832,15 @@ def update_unit(
         setattr(unit, key, value)
     if payload.slug:
         unit.slug = _make_slug(db, Unit, payload.slug, 120, exclude_id=unit.id)
+    apply_translations(unit, payload.translations)
     record_audit(
         db, admin, "update", "unit", unit.id, f"Updated module “{unit.title}”",
         diff_fields(before, fields),
     )
     db.commit()
     db.refresh(unit)
-    return {"id": unit.id, "slug": unit.slug, "title": unit.title, "position": unit.position}
+    return {"id": unit.id, "slug": unit.slug, "title": unit.title, "position": unit.position,
+            "translations": read_translations(unit)}
 
 
 @router.delete("/units/{unit_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -823,14 +857,14 @@ def delete_unit(unit_id: int, db: DbSession, admin: CurrentAdmin) -> None:
 # --------------------------------------------------------------------------------------
 
 
-class TopicIn(BaseModel):
+class TopicIn(TranslationsPayload):
     unit_id: int
     title: str = Field(min_length=1, max_length=200)
     slug: str | None = Field(default=None, max_length=140)
     summary: str | None = None
 
 
-class TopicUpdate(BaseModel):
+class TopicUpdate(TranslationsPayload):
     title: str | None = Field(default=None, min_length=1, max_length=200)
     slug: str | None = Field(default=None, max_length=140)
     summary: str | None = None
@@ -847,12 +881,14 @@ def create_topic(payload: TopicIn, db: DbSession, admin: CurrentAdmin) -> dict[s
         summary=payload.summary,
         position=next_position(db, Topic, Topic.unit_id == payload.unit_id),
     )
+    apply_translations(topic, payload.translations)
     db.add(topic)
     db.flush()
     record_audit(db, admin, "create", "topic", topic.id, f"Created topic “{topic.title}”")
     db.commit()
     db.refresh(topic)
-    return {"id": topic.id, "slug": topic.slug, "title": topic.title, "position": topic.position}
+    return {"id": topic.id, "slug": topic.slug, "title": topic.title,
+            "position": topic.position, "translations": read_translations(topic)}
 
 
 @router.patch("/topics/{topic_id}")
@@ -860,7 +896,7 @@ def update_topic(
     topic_id: int, payload: TopicUpdate, db: DbSession, admin: CurrentAdmin
 ) -> dict[str, Any]:
     topic = get_or_404(db, Topic, topic_id, "Topic")
-    fields = payload.model_dump(exclude_unset=True, exclude={"slug"})
+    fields = payload.model_dump(exclude_unset=True, exclude={"slug", "translations"})
     if fields.get("unit_id") is not None:
         get_or_404(db, Unit, fields["unit_id"], "Module")
     before = {key: getattr(topic, key) for key in fields}
@@ -868,13 +904,15 @@ def update_topic(
         setattr(topic, key, value)
     if payload.slug:
         topic.slug = _make_slug(db, Topic, payload.slug, 140, exclude_id=topic.id)
+    apply_translations(topic, payload.translations)
     record_audit(
         db, admin, "update", "topic", topic.id, f"Updated topic “{topic.title}”",
         diff_fields(before, fields),
     )
     db.commit()
     db.refresh(topic)
-    return {"id": topic.id, "slug": topic.slug, "title": topic.title, "position": topic.position}
+    return {"id": topic.id, "slug": topic.slug, "title": topic.title,
+            "position": topic.position, "translations": read_translations(topic)}
 
 
 @router.delete("/topics/{topic_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -891,7 +929,7 @@ def delete_topic(topic_id: int, db: DbSession, admin: CurrentAdmin) -> None:
 # --------------------------------------------------------------------------------------
 
 
-class SkillIn(BaseModel):
+class SkillIn(TranslationsPayload):
     topic_id: int
     name: str = Field(min_length=1, max_length=200)
     slug: str | None = Field(default=None, max_length=160)
@@ -900,7 +938,7 @@ class SkillIn(BaseModel):
     tags: list[str] = Field(default_factory=list)
 
 
-class SkillUpdate(BaseModel):
+class SkillUpdate(TranslationsPayload):
     name: str | None = Field(default=None, min_length=1, max_length=200)
     slug: str | None = Field(default=None, max_length=160)
     description: str | None = None
@@ -921,13 +959,15 @@ def create_skill(payload: SkillIn, db: DbSession, admin: CurrentAdmin) -> dict[s
         tags=payload.tags,
         position=next_position(db, Skill, Skill.topic_id == payload.topic_id),
     )
+    apply_translations(skill, payload.translations)
     db.add(skill)
     db.flush()
     record_audit(db, admin, "create", "skill", skill.id, f"Created skill “{skill.name}”")
     db.commit()
     db.refresh(skill)
     return {"id": skill.id, "slug": skill.slug, "name": skill.name,
-            "difficulty": skill.difficulty, "position": skill.position}
+            "difficulty": skill.difficulty, "position": skill.position,
+            "translations": read_translations(skill)}
 
 
 @router.patch("/skills/{skill_id}")
@@ -935,7 +975,7 @@ def update_skill(
     skill_id: int, payload: SkillUpdate, db: DbSession, admin: CurrentAdmin
 ) -> dict[str, Any]:
     skill = get_or_404(db, Skill, skill_id, "Skill")
-    fields = payload.model_dump(exclude_unset=True, exclude={"slug"})
+    fields = payload.model_dump(exclude_unset=True, exclude={"slug", "translations"})
     if fields.get("topic_id") is not None:
         get_or_404(db, Topic, fields["topic_id"], "Topic")
     before = {key: getattr(skill, key) for key in fields}
@@ -943,6 +983,7 @@ def update_skill(
         setattr(skill, key, value)
     if payload.slug:
         skill.slug = _make_slug(db, Skill, payload.slug, 160, exclude_id=skill.id)
+    apply_translations(skill, payload.translations)
     record_audit(
         db, admin, "update", "skill", skill.id, f"Updated skill “{skill.name}”",
         diff_fields(before, fields),
@@ -950,7 +991,8 @@ def update_skill(
     db.commit()
     db.refresh(skill)
     return {"id": skill.id, "slug": skill.slug, "name": skill.name,
-            "difficulty": skill.difficulty, "position": skill.position}
+            "difficulty": skill.difficulty, "position": skill.position,
+            "translations": read_translations(skill)}
 
 
 @router.delete("/skills/{skill_id}", status_code=status.HTTP_204_NO_CONTENT)

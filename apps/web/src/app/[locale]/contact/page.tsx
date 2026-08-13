@@ -11,7 +11,7 @@ import { ApiError, api } from '@/lib/api';
 import { useI18n } from '@/lib/i18n';
 
 export default function ContactPage() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   const [form, setForm] = useState({
     name: '',
@@ -55,7 +55,7 @@ export default function ContactPage() {
   }
 
   return (
-    <MarketingShell>
+    <MarketingShell locale={locale}>
       <PageHeader
         eyebrow={t('nav.contact')}
         title={t('contact.title')}
@@ -200,17 +200,12 @@ export default function ContactPage() {
               <Card className="bg-brand-50">
                 <h2 className="font-display text-xl">{t('contact.assessmentTitle')}</h2>
                 <ol className="mt-3 space-y-2.5 text-sm text-ink-700">
-                  {[
-                    'A 15-minute adaptive test, taken online at home.',
-                    'A written report showing exactly which skills are secure and which are not.',
-                    'A 20-minute conversation with the teacher who would take the lessons.',
-                    'No obligation, and no charge.',
-                  ].map((step, index) => (
+                  {(['test', 'report', 'conversation', 'free'] as const).map((step, index) => (
                     <li key={step} className="flex items-start gap-2.5">
                       <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-brand-200 text-xs font-extrabold text-brand-800">
                         {index + 1}
                       </span>
-                      {step}
+                      {t(`contact.assessment.${step}`)}
                     </li>
                   ))}
                 </ol>

@@ -1,0 +1,1214 @@
+# Vietnamese translations for the physics curriculum.
+#
+# Same mechanism as the mathematics file: keyed by entity kind then slug, merged into each row's
+# `i18n` column by the loader and served when a request carries `X-Locale: vi`.
+#
+# Terminology follows the Vietnamese lower-secondary science curriculum (Khoa học tự nhiên /
+# Vật lí THCS): khối lượng riêng, lực ma sát, công suất, hiệu điện thế, định luật Ôm, chu kì.
+
+subjects:
+  physics:
+    name: Vật lý
+    description: >-
+      Thế giới vật chất vận hành như thế nào, từ phép đo và chuyển động đến năng lượng, điện và
+      ánh sáng. Mỗi ý tưởng đều gắn với một đại lượng đo được và một công thức mà học sinh có
+      thể tự kiểm chứng.
+
+courses:
+  physics-6:
+    title: Vật lý — Lớp 6
+    summary: Phép đo, chất và những ý niệm đầu tiên về lực và năng lượng.
+    description: >-
+      Lớp 6 bắt đầu từ điều cơ bản nhất của vật lý: đo được một đại lượng một cách tin cậy. Từ
+      đó học sinh tìm hiểu khối lượng riêng, mô hình hạt của chất, các loại lực và những dạng
+      năng lượng cơ bản.
+  physics-7:
+    title: Vật lý — Lớp 7
+    summary: Chuyển động, áp suất, nhiệt và sự truyền ánh sáng.
+    description: >-
+      Lớp 7 mô tả chuyển động bằng lời, bằng số và bằng đồ thị, đồng thời nghiên cứu áp suất
+      trong chất rắn và chất lỏng, sự truyền nhiệt và các hiện tượng phản xạ, khúc xạ ánh sáng.
+  physics-8:
+    title: Vật lý — Lớp 8
+    summary: Các định luật Newton, công và công suất, điện học và sóng.
+    description: >-
+      Lớp 8 giới thiệu ba định luật Newton, cách tính công, công suất và hiệu suất, mạch điện
+      với định luật Ôm, cùng các tính chất của sóng và âm thanh.
+  physics-9:
+    title: Vật lý — Lớp 9
+    summary: Động lượng, tính toán nhiệt, điện từ học và cấu tạo nguyên tử.
+    description: >-
+      Lớp 9 hoàn thiện chương trình THCS với các công thức chuyển động biến đổi đều, định luật
+      bảo toàn động lượng, nhiệt lượng và nhiệt nóng chảy, hiện tượng cảm ứng điện từ và vật lý
+      hạt nhân.
+
+units:
+  physics-6-measurement:
+    title: Phép đo
+    summary: Vật lý bắt đầu từ việc đo được một đại lượng một cách tin cậy.
+  physics-6-matter:
+    title: Chất
+    summary: Chất rắn, chất lỏng, chất khí và những gì xảy ra khi chuyển thể.
+  physics-6-forces:
+    title: Lực và chuyển động
+    summary: Lực đẩy và lực kéo, cùng những tác dụng của chúng.
+  physics-6-energy:
+    title: Năng lượng
+    summary: Đại lượng duy nhất kết nối mọi chủ đề khác trong vật lý.
+  physics-7-motion:
+    title: Chuyển động
+    summary: Mô tả chuyển động bằng lời, bằng số và bằng đồ thị.
+  physics-7-pressure:
+    title: Áp suất
+    summary: Lực phân bố trên một diện tích — trong chất rắn, chất lỏng và khí quyển.
+  physics-7-heat:
+    title: Nhiệt và nhiệt độ
+    summary: Phân biệt một vật nóng đến mức nào với lượng năng lượng nó chứa.
+  physics-7-light:
+    title: Ánh sáng
+    summary: Ánh sáng truyền đi, phản xạ và bị bẻ cong như thế nào.
+  physics-8-newton:
+    title: Lực và các định luật Newton
+    summary: Ba phát biểu giải thích gần như toàn bộ chuyển động thường ngày.
+  physics-8-work-energy:
+    title: Công, năng lượng và công suất
+    summary: Định lượng hoá các quá trình truyền năng lượng.
+  physics-8-electricity:
+    title: Điện học
+    summary: Điện tích, cường độ dòng điện, hiệu điện thế và điện trở trong mạch.
+  physics-8-waves:
+    title: Sóng và âm thanh
+    summary: Năng lượng lan truyền mà vật chất không chuyển dời theo.
+  physics-9-motion-momentum:
+    title: Chuyển động và động lượng
+    summary: Các công thức chuyển động, và đại lượng được bảo toàn trong va chạm.
+  physics-9-thermal:
+    title: Nhiệt học
+    summary: Tính toán quá trình nung nóng, làm nguội và chuyển thể.
+  physics-9-electromagnetism:
+    title: Điện từ học
+    summary: Mối liên hệ sâu sắc giữa điện và từ.
+  physics-9-atomic:
+    title: Vật lý nguyên tử và hạt nhân
+    summary: Bên trong nguyên tử, và điều gì khiến một hạt nhân không bền.
+
+topics:
+  physics-6-units: {title: Đơn vị và đại lượng}
+  physics-6-density: {title: Khối lượng, thể tích và khối lượng riêng}
+  physics-6-states: {title: Các thể của chất}
+  physics-6-intro-forces: {title: Làm quen với lực}
+  physics-6-machines: {title: Máy cơ đơn giản}
+  physics-6-energy-basics: {title: Các dạng năng lượng và sự truyền năng lượng}
+  physics-7-speed: {title: Tốc độ và vận tốc}
+  physics-7-acceleration: {title: Gia tốc}
+  physics-7-pressure-basics: {title: Áp suất trong chất rắn và chất lỏng}
+  physics-7-thermal: {title: Nhiệt năng}
+  physics-7-reflection: {title: Phản xạ ánh sáng}
+  physics-7-refraction: {title: Khúc xạ ánh sáng và màu sắc}
+  physics-8-newtons-laws: {title: Các định luật chuyển động của Newton}
+  physics-8-work: {title: Công và công suất}
+  physics-8-kinetic-potential: {title: Động năng và thế năng}
+  physics-8-circuits: {title: Mạch điện}
+  physics-8-wave-properties: {title: Tính chất của sóng}
+  physics-8-sound: {title: Âm thanh}
+  physics-9-equations-of-motion: {title: Các công thức chuyển động}
+  physics-9-momentum: {title: Động lượng}
+  physics-9-heat-calculations: {title: Tính toán nhiệt lượng}
+  physics-9-magnetism: {title: Từ học}
+  physics-9-atomic-structure: {title: Cấu tạo nguyên tử}
+  physics-9-radioactivity: {title: Hiện tượng phóng xạ}
+
+skills:
+  physics-6-si-units: {name: Đơn vị SI và các đại lượng vật lý}
+  physics-6-unit-conversion: {name: Đổi đơn vị đo}
+  physics-6-measuring-instruments: {name: Dụng cụ đo và độ chính xác}
+  physics-6-mass-volume: {name: Khối lượng và thể tích}
+  physics-6-density-calc: {name: Tính khối lượng riêng}
+  physics-6-particle-model: {name: Mô hình hạt của chất}
+  physics-6-changes-of-state: {name: Sự chuyển thể của chất}
+  physics-6-types-of-forces: {name: Các loại lực}
+  physics-6-force-diagrams: {name: Biểu diễn lực và hợp lực}
+  physics-6-friction: {name: Lực ma sát}
+  physics-6-levers: {name: Đòn bẩy và momen lực}
+  physics-6-energy-forms: {name: Các dạng năng lượng}
+  physics-6-energy-transfer: {name: Sự truyền năng lượng và định luật bảo toàn}
+  physics-6-energy-resources: {name: Các nguồn năng lượng}
+  physics-7-average-speed: {name: Tốc độ trung bình}
+  physics-7-speed-units: {name: Đổi đơn vị tốc độ}
+  physics-7-distance-time-graphs: {name: Đồ thị quãng đường — thời gian}
+  physics-7-acceleration-calc: {name: Tính gia tốc}
+  physics-7-velocity-time-graphs: {name: Đồ thị vận tốc — thời gian}
+  physics-7-pressure-calc: {name: Tính áp suất}
+  physics-7-liquid-pressure: {name: Áp suất trong lòng chất lỏng}
+  physics-7-atmospheric-pressure: {name: Áp suất khí quyển và sự nổi}
+  physics-7-temperature-vs-heat: {name: Nhiệt độ và nhiệt năng}
+  physics-7-heat-transfer: {name: Dẫn nhiệt, đối lưu và bức xạ nhiệt}
+  physics-7-thermal-expansion: {name: Sự nở vì nhiệt}
+  physics-7-law-of-reflection: {name: Định luật phản xạ ánh sáng}
+  physics-7-mirrors: {name: Ảnh tạo bởi gương phẳng}
+  physics-7-refraction-basics: {name: Hiện tượng khúc xạ ánh sáng}
+  physics-7-dispersion: {name: Sự tán sắc ánh sáng và màu sắc}
+  physics-8-first-law: {name: Định luật I Newton}
+  physics-8-second-law: {name: Định luật II Newton}
+  physics-8-third-law: {name: Định luật III Newton}
+  physics-8-weight-mass: {name: Trọng lượng và gia tốc trọng trường}
+  physics-8-work-done: {name: Tính công cơ học}
+  physics-8-power: {name: Công suất}
+  physics-8-efficiency: {name: Hiệu suất}
+  physics-8-kinetic-energy: {name: Động năng}
+  physics-8-gpe: {name: Thế năng trọng trường}
+  physics-8-charge-current: {name: Điện tích và cường độ dòng điện}
+  physics-8-voltage: {name: Hiệu điện thế và năng lượng}
+  physics-8-ohms-law: {name: Định luật Ôm}
+  physics-8-series-parallel: {name: Đoạn mạch nối tiếp và song song}
+  physics-8-electrical-power: {name: Công suất điện}
+  physics-8-wave-anatomy: {name: Mô tả một sóng}
+  physics-8-wave-equation: {name: Công thức liên hệ tốc độ, tần số và bước sóng}
+  physics-8-sound-properties: {name: Đặc trưng của âm}
+  physics-8-echoes: {name: Tiếng vang và tốc độ truyền âm}
+  physics-9-suvat: {name: Công thức chuyển động biến đổi đều}
+  physics-9-projectiles: {name: Chuyển động thẳng đứng dưới tác dụng của trọng lực}
+  physics-9-momentum-calc: {name: Tính động lượng}
+  physics-9-conservation-momentum: {name: Định luật bảo toàn động lượng}
+  physics-9-specific-heat: {name: Nhiệt dung riêng}
+  physics-9-latent-heat: {name: Nhiệt nóng chảy và nhiệt hoá hơi}
+  physics-9-gas-laws: {name: Áp suất và thể tích chất khí}
+  physics-9-magnetic-fields: {name: Từ trường}
+  physics-9-motor-effect: {name: Tác dụng từ lên dây dẫn mang dòng điện}
+  physics-9-induction: {name: Hiện tượng cảm ứng điện từ}
+  physics-9-atom-structure: {name: Cấu tạo của nguyên tử}
+  physics-9-isotopes: {name: Đồng vị}
+  physics-9-radiation-types: {name: Các loại tia phóng xạ}
+  physics-9-half-life: {name: Chu kì bán rã}
+
+# ----------------------------------------------------------------------------------------
+# Question templates. See the mathematics file for how the {{ … }} placeholders work; they must
+# be copied across exactly, and the loader validates every translation by generating variants
+# from it before it is stored.
+# ----------------------------------------------------------------------------------------
+questions:
+  p6-si-units-match:
+    prompt: Hãy nối mỗi đại lượng vật lý với đơn vị SI tương ứng.
+    hints:
+      - text: "Các đơn vị SI cơ bản gồm mét, ki-lô-gam và giây."
+      - text: Đơn vị của lực là đơn vị dẫn xuất, được đặt theo tên Isaac Newton.
+    solution:
+      - text: >-
+          Độ dài đo bằng mét, khối lượng đo bằng ki-lô-gam, thời gian đo bằng giây và lực đo
+          bằng niutơn.
+  p6-si-unit-choice:
+    prompt: Đơn vị SI của năng lượng là gì?
+    hints:
+      - text: Oát là đơn vị của công suất, không phải của năng lượng.
+    solution:
+      - text: Năng lượng đo bằng jun. Oát là jun trên giây.
+    choices:
+      - jun (J)
+      - oát (W)
+      - niutơn (N)
+      - pascal (Pa)
+  p6-unit-conversion:
+    prompt: Đổi {{n}} cm sang mét.
+    hints:
+      - text: Một mét bằng 100 xăng-ti-mét.
+      - text: Để đổi từ cm sang m, ta chia cho 100.
+    solution:
+      - text: "{{n}} ÷ 100 = {{n/100}} m."
+  p6-unit-conversion-km:
+    prompt: Đổi {{n}} km sang mét.
+    hints:
+      - text: Một ki-lô-mét bằng 1000 mét.
+    solution:
+      - text: "{{n}} x 1000 = {{n*1000}} m."
+  p6-precision:
+    prompt: >-
+      Một chiếc thước có vạch chia đến mi-li-mét. Cách ghi kết quả đo độ dài nào sau đây là
+      hợp lí nhất?
+    hints:
+      - text: Kết quả đo không được thể hiện độ chính xác cao hơn khả năng của dụng cụ.
+      - text: Vạch chia mi-li-mét cho phép ghi một chữ số thập phân khi tính theo xăng-ti-mét.
+    solution:
+      - text: "Thang chia mi-li-mét cho độ chính xác 0,1 cm, nên 14,3 cm là hợp lí."
+      - text: Thêm chữ số thập phân nữa là tự tạo ra độ chính xác mà thước không có.
+    choices:
+      - 14,3 cm
+      - 14,3271 cm
+      - 14 cm
+      - khoảng 14 cm hơn một chút
+  p6-mass-vs-weight:
+    prompt: "Đúng hay sai: khối lượng của một phi hành gia thay đổi khi người đó bay lên Mặt Trăng."
+    hints:
+      - text: Khối lượng đo lượng chất; trọng lượng đo lực hút của trọng trường.
+    solution:
+      - text: "Khối lượng không đổi ở mọi nơi. Chính *trọng lượng* của phi hành gia mới thay đổi."
+  p6-density-calc:
+    prompt: >-
+      Một khối vật chất có khối lượng {{m}} g và thể tích {{v}} cm^3. Tính khối lượng riêng của
+      nó theo g/cm^3.
+    hints:
+      - text: "Khối lượng riêng = khối lượng ÷ thể tích."
+      - text: Hãy chia {{m}} cho {{v}}.
+    solution:
+      - text: "khối lượng riêng = {{m}} ÷ {{v}} = {{m/v}} g/cm^3."
+  p6-density-rearrange:
+    prompt: >-
+      Một chất lỏng có khối lượng riêng {{d}} g/cm^3. Khối lượng của {{v}} cm^3 chất lỏng này
+      là bao nhiêu gam?
+    hints:
+      - text: "Biến đổi công thức khối lượng riêng = khối lượng ÷ thể tích thành khối lượng = khối lượng riêng x thể tích."
+    solution:
+      - text: "khối lượng = {{d}} x {{v}} = {{d*v : 2}} g."
+  p6-particle-model:
+    prompt: >-
+      Ở thể nào của chất, các hạt nằm sát nhau nhưng vẫn có thể trượt lên nhau?
+    hints:
+      - text: Hãy nghĩ xem thể nào có thể tích xác định nhưng không có hình dạng xác định.
+    solution:
+      - text: Ở thể lỏng, các hạt tiếp xúc nhau nhưng vẫn di chuyển được, nên chất lỏng chảy được.
+    choices:
+      - Thể lỏng
+      - Thể rắn
+      - Thể khí
+      - Không thể nào
+  p6-changes-of-state:
+    prompt: Hãy nối mỗi sự chuyển thể với tên gọi của nó.
+    hints:
+      - text: Cung cấp năng lượng sẽ đưa chất từ thể rắn dần sang thể khí.
+    solution:
+      - text: "Nóng chảy và bay hơi thu năng lượng; đông đặc và ngưng tụ toả năng lượng."
+  p6-force-types:
+    prompt: Chọn tất cả các lực không tiếp xúc trong các lực dưới đây.
+    hints:
+      - text: Lực không tiếp xúc tác dụng từ xa, các vật không cần chạm vào nhau.
+    solution:
+      - text: Lực hấp dẫn, lực từ và lực tĩnh điện đều tác dụng từ xa.
+      - text: Lực ma sát và lực cản không khí đòi hỏi các bề mặt phải tiếp xúc nhau.
+    choices:
+      - Lực hấp dẫn
+      - Lực từ
+      - Lực tĩnh điện
+      - Lực ma sát
+      - Lực cản không khí
+  p6-resultant-force:
+    prompt: >-
+      Một chiếc thùng được đẩy sang phải bằng lực {{a}} N, trong khi lực ma sát {{b}} N tác
+      dụng sang trái. Hợp lực bằng bao nhiêu niutơn? Ghi giá trị dương nếu hợp lực hướng sang phải.
+    hints:
+      - text: Hai lực ngược chiều thì trừ độ lớn cho nhau.
+    solution:
+      - text: "{{a}} - {{b}} = {{a - b}} N."
+  p6-friction:
+    prompt: "Cách nào sau đây *làm giảm* lực ma sát giữa hai bề mặt?"
+    hints:
+      - text: Chất bôi trơn giữ cho hai bề mặt hơi tách rời nhau.
+    solution:
+      - text: Dầu là chất bôi trơn nên làm giảm ma sát. Các phương án còn lại đều làm tăng ma sát.
+    choices:
+      - Tra dầu vào giữa hai bề mặt
+      - Ép hai bề mặt sát vào nhau hơn
+      - Làm cho bề mặt nhám hơn
+      - Rắc cát vào giữa hai bề mặt
+  p6-lever-moments:
+    prompt: >-
+      Một đòn bẩy đang cân bằng. Một lực {{f}} N tác dụng cách điểm tựa {{d}} m ở một bên. Ở
+      bên kia, lực tác dụng cách điểm tựa {{d2}} m. Cần một lực bao nhiêu niutơn để đòn bẩy
+      cân bằng?
+    hints:
+      - text: "Để cân bằng, momen quay theo chiều kim đồng hồ bằng momen ngược chiều kim đồng hồ."
+      - text: "momen = lực x khoảng cách đến điểm tựa."
+    solution:
+      - text: "Momen ở bên thứ nhất = {{f}} x {{d}} = {{f*d}} N m."
+      - text: "Lực cần tìm = {{f*d}} ÷ {{d2}} = {{f*d/d2}} N."
+  p6-energy-stores:
+    prompt: Một sợi dây chun bị kéo giãn tích trữ năng lượng ở dạng nào?
+    hints:
+      - text: Năng lượng được tích trữ là do hình dạng của vật đã bị thay đổi.
+    solution:
+      - text: Kéo giãn hoặc nén một vật sẽ tích trữ thế năng đàn hồi.
+    choices:
+      - Thế năng đàn hồi
+      - Động năng
+      - Nhiệt năng
+      - Hoá năng
+  p6-energy-transfer:
+    prompt: Hãy sắp xếp các quá trình truyền năng lượng theo thứ tự khi bật một chiếc đèn pin.
+    hints:
+      - text: Bắt đầu từ nơi năng lượng được tích trữ trước khi bật đèn.
+    solution:
+      - text: >-
+          Hoá năng (trong pin) chuyển thành điện năng (trong mạch), rồi chuyển thành quang năng
+          và nhiệt năng.
+  p6-energy-conservation:
+    prompt: >-
+      Một bóng đèn được cung cấp {{total}} J điện năng và phát ra {{useful}} J quang năng. Phần
+      năng lượng hao phí dưới dạng nhiệt là bao nhiêu jun?
+    hints:
+      - text: "Năng lượng được bảo toàn: năng lượng vào = năng lượng có ích + năng lượng hao phí."
+    solution:
+      - text: "Hao phí = {{total}} - {{useful}} = {{total - useful}} J."
+  p6-energy-resources:
+    prompt: Chọn tất cả các nguồn năng lượng tái tạo.
+    hints:
+      - text: Nguồn năng lượng tái tạo được bù lại nhanh bằng tốc độ sử dụng.
+    solution:
+      - text: >-
+          Năng lượng mặt trời, năng lượng gió và thuỷ điện là tái tạo; than đá và khí đốt là
+          nhiên liệu hoá thạch.
+    choices:
+      - Năng lượng mặt trời
+      - Năng lượng gió
+      - Thuỷ điện
+      - Than đá
+      - Khí thiên nhiên
+  p7-average-speed:
+    prompt: >-
+      Một ô tô đi được {{distance}} km trong {{time}} giờ. Tốc độ trung bình của nó là bao nhiêu
+      km/h?
+    hints:
+      - text: "Tốc độ trung bình = tổng quãng đường ÷ tổng thời gian."
+      - text: Hãy chia {{distance}} cho {{time}}.
+    solution:
+      - text: "tốc độ = {{distance}} ÷ {{time}} = {{distance/time}} km/h."
+  p7-speed-rearrange-distance:
+    prompt: >-
+      Một người đi xe đạp với tốc độ không đổi {{speed}} m/s trong {{time}} s. Người đó đi được
+      quãng đường bao nhiêu mét?
+    hints:
+      - text: "Biến đổi công thức tốc độ = quãng đường ÷ thời gian thành quãng đường = tốc độ x thời gian."
+    solution:
+      - text: "quãng đường = {{speed}} x {{time}} = {{speed*time}} m."
+  p7-speed-units:
+    prompt: Đổi {{v}} m/s sang km/h.
+    hints:
+      - text: "1 m/s = 3,6 km/h."
+      - text: Một giờ có 3600 giây và một ki-lô-mét có 1000 mét.
+    solution:
+      - text: "{{v}} x 3,6 = {{v * 3.6 : 2}} km/h."
+  p7-distance-time-graph:
+    prompt: "Trên đồ thị quãng đường — thời gian, một đoạn nằm ngang có ý nghĩa gì?"
+    hints:
+      - text: "Độ dốc của đồ thị quãng đường — thời gian chính là tốc độ."
+      - text: Một đoạn nằm ngang có độ dốc bằng không.
+    solution:
+      - text: Độ dốc bằng không nghĩa là tốc độ bằng không, vật đang đứng yên.
+    choices:
+      - Vật đang đứng yên
+      - Vật chuyển động với tốc độ không đổi
+      - Vật đang tăng tốc
+      - Vật đang chuyển động ngược lại
+  p7-dt-graph-speed:
+    prompt: >-
+      Trên đồ thị quãng đường — thời gian, một đường thẳng đi từ (0 s, 0 m) đến ({{t}} s,
+      {{d}} m). Tốc độ bằng bao nhiêu m/s?
+    hints:
+      - text: "Tốc độ chính là độ dốc: độ tăng quãng đường ÷ độ tăng thời gian."
+    solution:
+      - text: "tốc độ = {{d}} ÷ {{t}} = {{d/t}} m/s."
+  p7-acceleration:
+    prompt: >-
+      Một ô tô tăng tốc từ {{u}} m/s lên {{v}} m/s trong {{t}} s. Gia tốc của nó là bao nhiêu
+      m/s^2?
+    hints:
+      - text: "Gia tốc = độ biến thiên vận tốc ÷ thời gian."
+      - text: "Độ biến thiên vận tốc là {{v}} - {{u}} = {{v - u}} m/s."
+    solution:
+      - text: "a = ({{v}} - {{u}}) ÷ {{t}} = {{v-u}} ÷ {{t}} = {{(v-u)/t}} m/s^2."
+  p7-vt-graph-distance:
+    prompt: >-
+      Trên đồ thị vận tốc — thời gian, một vật chuyển động với vận tốc không đổi {{v}} m/s
+      trong {{t}} s. Vật đi được quãng đường bao nhiêu mét?
+    hints:
+      - text: "Quãng đường chính là diện tích phần dưới đồ thị vận tốc — thời gian."
+      - text: "Với vận tốc không đổi, diện tích đó là một hình chữ nhật: v x t."
+    solution:
+      - text: "Diện tích = {{v}} x {{t}} = {{v*t}} m."
+  p7-pressure-calc:
+    prompt: >-
+      Một lực {{f}} N tác dụng lên diện tích {{a}} m^2. Áp suất bằng bao nhiêu pascal?
+    hints:
+      - text: "Áp suất = lực ÷ diện tích."
+    solution:
+      - text: "p = {{f}} ÷ {{a}} = {{f/a}} Pa."
+  p7-pressure-area:
+    prompt: >-
+      Vì sao một chiếc đinh ghim có thể xuyên qua tấm bảng dễ dàng dù chỉ ấn bằng một lực nhỏ?
+    hints:
+      - text: "Áp suất = lực ÷ diện tích. Điều gì xảy ra khi diện tích rất nhỏ?"
+    solution:
+      - text: Cùng một lực nhưng tác dụng lên diện tích rất nhỏ sẽ tạo ra áp suất rất lớn.
+    choices:
+      - Đầu nhọn có diện tích rất nhỏ nên áp suất rất lớn
+      - Đầu nhọn làm tăng độ lớn của lực tác dụng
+      - Đinh ghim có khối lượng riêng nhỏ
+      - Đinh ghim làm giảm ma sát với tấm bảng
+  p7-liquid-pressure:
+    prompt: >-
+      Tính áp suất tại độ sâu {{h}} m trong nước (khối lượng riêng {{rho}} kg/m^3, g = 10 N/kg).
+      Ghi đáp án theo pascal.
+    hints:
+      - text: "Dùng công thức p = rho x g x h."
+    solution:
+      - text: "p = {{rho}} x 10 x {{h}} = {{rho * 10 * h}} Pa."
+  p7-floating:
+    prompt: "Đúng hay sai: một vật nổi khi lực đẩy Ác-si-mét tác dụng lên nó bằng trọng lượng của nó."
+    hints:
+      - text: "Hãy xét các lực tác dụng lên vật đang nổi — vật có đang tăng tốc không?"
+    solution:
+      - text: Vật nổi ở trạng thái cân bằng, nên lực đẩy Ác-si-mét cân bằng đúng bằng trọng lượng.
+  p7-temperature-kelvin:
+    prompt: Đổi {{c}} độ C sang kelvin.
+    hints:
+      - text: Để đổi từ độ C sang kelvin, ta cộng thêm 273.
+    solution:
+      - text: "{{c}} + 273 = {{c + 273}} K."
+  p7-heat-transfer:
+    prompt: Hãy nối mỗi tình huống với hình thức truyền nhiệt chủ yếu tương ứng.
+    hints:
+      - text: "Dẫn nhiệt cần tiếp xúc trực tiếp; đối lưu cần chất lỏng hoặc chất khí chuyển động."
+      - text: Bức xạ nhiệt là hình thức duy nhất truyền được trong chân không.
+    solution:
+      - text: >-
+          Dẫn nhiệt truyền qua chất rắn, đối lưu truyền nhờ dòng chất lưu chuyển động, còn bức
+          xạ truyền dưới dạng tia hồng ngoại.
+  p7-thermal-expansion:
+    prompt: Vì sao người ta để những khe hở nhỏ giữa các đoạn của cầu bê tông?
+    hints:
+      - text: Vật liệu nở ra khi các hạt nhận thêm năng lượng và dao động mạnh hơn.
+    solution:
+      - text: Khi nóng lên bê tông nở ra; các khe hở tạo chỗ cho phần nở đó.
+    choices:
+      - Để bê tông nở ra khi trời nóng mà không bị cong vênh
+      - Để nước mưa thoát đi
+      - Để giảm tổng khối lượng của cầu
+      - Để bê tông co lại khi bị nung nóng
+  p7-law-of-reflection:
+    prompt: >-
+      Một tia sáng chiếu tới gương phẳng với góc tới {{a}} độ. Góc phản xạ bằng bao nhiêu độ?
+    hints:
+      - text: Định luật phản xạ ánh sáng nói rằng góc phản xạ bằng góc tới.
+      - text: Cả hai góc đều được đo so với pháp tuyến, không phải so với mặt gương.
+    solution:
+      - text: "Góc phản xạ = góc tới = {{a}} độ."
+    options:
+      unit: độ
+  p7-mirror-image:
+    prompt: Chọn tất cả các nhận định đúng về ảnh tạo bởi gương phẳng.
+    hints:
+      - text: Ảnh ảo chỉ có vẻ như nằm phía sau gương.
+    solution:
+      - text: >-
+          Gương phẳng cho ảnh ảo, lớn bằng vật, đối xứng trái phải và không hứng được trên màn.
+    choices:
+      - Ảnh lớn bằng vật
+      - Đó là ảnh ảo
+      - Ảnh bị đảo ngược trái phải
+      - Có thể hứng ảnh trên màn chắn
+      - Ảnh luôn nhỏ hơn vật
+  p7-refraction:
+    prompt: Ánh sáng truyền từ không khí vào thuỷ tinh. Tia sáng sẽ như thế nào?
+    hints:
+      - text: Ánh sáng truyền chậm hơn trong môi trường chiết quang hơn.
+      - text: Khi chậm lại, tia sáng bị gãy về phía pháp tuyến.
+    solution:
+      - text: >-
+          Thuỷ tinh chiết quang hơn không khí, nên ánh sáng chậm lại và bị gãy về phía pháp tuyến.
+    choices:
+      - Chậm lại và gãy về phía pháp tuyến
+      - Nhanh lên và gãy ra xa pháp tuyến
+      - Chậm lại và gãy ra xa pháp tuyến
+      - Truyền thẳng, không đổi hướng
+  p7-dispersion:
+    prompt: >-
+      Hãy sắp xếp các màu sau của quang phổ nhìn thấy theo thứ tự bước sóng giảm dần.
+    hints:
+      - text: Ánh sáng đỏ có bước sóng dài nhất trong các màu nhìn thấy được.
+    solution:
+      - text: Bước sóng giảm dần từ màu đỏ đến màu tím.
+  p8-first-law:
+    prompt: >-
+      Một ô tô chuyển động với vận tốc không đổi trên đường thẳng. Em có thể nói gì về các lực
+      tác dụng lên nó?
+    hints:
+      - text: Định luật I Newton liên hệ vận tốc không đổi với hợp lực bằng không.
+    solution:
+      - text: Vận tốc không đổi nghĩa là không có gia tốc, tức là hợp lực bằng không.
+      - text: "Các lực vẫn tác dụng — chúng chỉ triệt tiêu lẫn nhau."
+    choices:
+      - Các lực cân bằng nhau nên hợp lực bằng không
+      - Lực kéo phải lớn hơn các lực cản
+      - Hoàn toàn không có lực nào tác dụng
+      - Hợp lực không đổi nhưng khác không
+  p8-second-law:
+    prompt: >-
+      Một hợp lực {{f}} N tác dụng lên vật có khối lượng {{m}} kg. Gia tốc của vật là bao nhiêu
+      m/s^2?
+    hints:
+      - text: "F = ma, nên a = F ÷ m."
+    solution:
+      - text: "a = {{f}} ÷ {{m}} = {{f/m}} m/s^2."
+  p8-second-law-force:
+    prompt: >-
+      Cần một hợp lực bao nhiêu niutơn để một chiếc xe đẩy {{m}} kg có gia tốc {{a}} m/s^2?
+    hints:
+      - text: "Dùng công thức F = m x a."
+    solution:
+      - text: "F = {{m}} x {{a}} = {{m*a : 2}} N."
+  p8-third-law:
+    prompt: >-
+      Một quyển sách nằm yên trên bàn. Quyển sách ép xuống mặt bàn bằng lực A. Lực nào là lực
+      trực đối với lực A theo định luật III Newton?
+    hints:
+      - text: "Cặp lực trực đối tác dụng lên hai vật *khác nhau* và cùng loại lực."
+      - text: "Nếu A là 'sách tác dụng lên bàn' thì lực trực đối phải là 'bàn tác dụng lên sách'."
+    solution:
+      - text: >-
+          Lực trực đối với 'sách ép xuống bàn' là 'bàn đẩy lên sách' — cùng độ lớn, ngược chiều,
+          tác dụng lên hai vật khác nhau.
+    choices:
+      - Bàn đẩy quyển sách lên trên
+      - Trọng lượng của quyển sách
+      - Phản lực của sàn tác dụng lên bàn
+      - Lực ma sát giữa sách và bàn
+  p8-weight:
+    prompt: >-
+      Tính trọng lượng theo niutơn của một vật {{m}} kg trên Trái Đất, với g = 10 N/kg.
+    hints:
+      - text: "Trọng lượng W = m x g."
+    solution:
+      - text: "W = {{m}} x 10 = {{m*10}} N."
+  p8-work-done:
+    prompt: >-
+      Một lực {{f}} N làm vật dịch chuyển {{d}} m theo phương của lực. Công thực hiện là bao
+      nhiêu jun?
+    hints:
+      - text: "Công = lực x quãng đường dịch chuyển theo phương của lực."
+    solution:
+      - text: "A = {{f}} x {{d}} = {{f*d}} J."
+  p8-power:
+    prompt: "Thực hiện được {{w}} J công trong {{t}} s. Công suất bằng bao nhiêu oát?"
+    hints:
+      - text: "Công suất = công ÷ thời gian."
+    solution:
+      - text: "P = {{w}} ÷ {{t}} = {{w/t}} W."
+  p8-efficiency:
+    prompt: >-
+      Một động cơ được cung cấp {{total}} J và thực hiện được {{useful}} J công có ích. Hiệu
+      suất của nó là bao nhiêu phần trăm?
+    hints:
+      - text: "Hiệu suất = (năng lượng có ích ÷ năng lượng toàn phần) x 100%."
+    solution:
+      - text: "({{useful}} ÷ {{total}}) x 100 = {{useful/total*100}}%."
+  p8-kinetic-energy:
+    prompt: >-
+      Tính động năng theo jun của một vật {{m}} kg chuyển động với vận tốc {{v}} m/s.
+    hints:
+      - text: "Wđ = 1/2 m v^2 — nhớ bình phương vận tốc."
+      - text: "{{v}}^2 = {{v*v}}."
+    solution:
+      - text: "Wđ = 0,5 x {{m}} x {{v*v}} = {{0.5*m*v*v}} J."
+  p8-gpe:
+    prompt: >-
+      Tính thế năng trọng trường tăng thêm theo jun khi nâng một vật {{m}} kg lên độ cao {{h}} m.
+      Lấy g = 10 N/kg.
+    hints:
+      - text: "Wt = m x g x h."
+    solution:
+      - text: "Wt = {{m}} x 10 x {{h}} = {{m*10*h}} J."
+  p8-charge-current:
+    prompt: >-
+      Một dòng điện cường độ {{i}} A chạy trong {{t}} s. Điện lượng chuyển qua là bao nhiêu culông?
+    hints:
+      - text: "Q = I x t."
+    solution:
+      - text: "Q = {{i}} x {{t}} = {{i*t}} C."
+  p8-voltage-meaning:
+    prompt: Hiệu điện thế 1 vôn có ý nghĩa gì?
+    hints:
+      - text: Hiệu điện thế là năng lượng trên một đơn vị điện tích.
+    solution:
+      - text: "U = W ÷ q, nên 1 vôn là 1 jun trên mỗi culông."
+    choices:
+      - Mỗi culông điện tích chuyển hoá 1 jun năng lượng
+      - Mỗi giây có 1 culông điện tích chạy qua
+      - Mỗi giây chuyển hoá 1 jun năng lượng
+      - Dòng điện 1 ampe chạy qua điện trở 1 ôm
+  p8-ohms-law:
+    prompt: >-
+      Một điện trở {{r}} ôm có dòng điện cường độ {{i}} A chạy qua. Hiệu điện thế giữa hai đầu
+      điện trở là bao nhiêu vôn?
+    hints:
+      - text: "Dùng công thức U = I x R."
+    solution:
+      - text: "U = {{i}} x {{r}} = {{i*r : 2}} V."
+  p8-ohms-law-resistance:
+    prompt: >-
+      Một linh kiện có hiệu điện thế {{v}} V giữa hai đầu và dòng điện {{i}} A chạy qua. Điện
+      trở của nó là bao nhiêu ôm?
+    hints:
+      - text: "Biến đổi U = IR thành R = U ÷ I."
+    solution:
+      - text: "R = {{v}} ÷ {{i}} = {{v/i}} ôm."
+    options:
+      unit: ôm
+  p8-series-resistance:
+    prompt: >-
+      Hai điện trở {{r1}} ôm và {{r2}} ôm mắc nối tiếp. Điện trở tương đương là bao nhiêu ôm?
+    hints:
+      - text: Trong đoạn mạch nối tiếp, các điện trở cộng lại với nhau.
+    solution:
+      - text: "R = {{r1}} + {{r2}} = {{r1 + r2}} ôm."
+    options:
+      unit: ôm
+  p8-parallel-current:
+    prompt: Trong đoạn mạch song song, khẳng định nào sau đây là đúng?
+    hints:
+      - text: "Hãy nghĩ xem các nhánh song song dùng chung đại lượng nào: cường độ dòng điện hay hiệu điện thế?"
+    solution:
+      - text: >-
+          Các nhánh song song có cùng hiệu điện thế; cường độ dòng điện được chia cho các nhánh.
+      - text: "Thêm nhánh song song sẽ *làm giảm* điện trở tương đương."
+    choices:
+      - Mỗi nhánh có cùng hiệu điện thế giữa hai đầu
+      - Mỗi nhánh có cùng cường độ dòng điện
+      - Điện trở tương đương lớn hơn điện trở của bất kỳ nhánh nào
+      - Tháo một nhánh ra thì cả mạch ngừng hoạt động
+  p8-electrical-power:
+    prompt: >-
+      Một thiết bị hoạt động ở hiệu điện thế {{v}} V và có dòng điện {{i}} A chạy qua. Công
+      suất của nó là bao nhiêu oát?
+    hints:
+      - text: "Công suất điện P = U x I."
+    solution:
+      - text: "P = {{v}} x {{i}} = {{v*i : 2}} W."
+  p8-wave-anatomy:
+    prompt: Hãy nối mỗi đại lượng đặc trưng của sóng với định nghĩa tương ứng.
+    hints:
+      - text: Tần số và chu kì là nghịch đảo của nhau.
+    solution:
+      - text: "Biên độ và bước sóng là các độ dài; tần số và chu kì mô tả mặt thời gian."
+  p8-wave-equation:
+    prompt: >-
+      Một sóng có tần số {{f}} Hz và bước sóng {{w}} m. Tốc độ truyền sóng là bao nhiêu m/s?
+    hints:
+      - text: "Dùng công thức v = f x lambda."
+    solution:
+      - text: "v = {{f}} x {{w}} = {{f*w : 2}} m/s."
+  p8-sound-pitch:
+    prompt: Tăng tần số của sóng âm sẽ làm thay đổi đặc trưng nào của âm?
+    hints:
+      - text: "Độ cao của âm phụ thuộc tần số; độ to phụ thuộc biên độ."
+    solution:
+      - text: Tần số cao hơn thì âm cao hơn. Độ to do biên độ quyết định.
+    choices:
+      - Âm trở nên cao hơn
+      - Âm trở nên to hơn
+      - Âm truyền đi nhanh hơn
+      - Biên độ của âm tăng lên
+  p8-echo:
+    prompt: >-
+      Một âm thanh phát ra và tiếng vang trở lại sau {{t}} s. Nếu tốc độ truyền âm là {{v}} m/s
+      thì bức tường phản xạ cách đó bao nhiêu mét?
+    hints:
+      - text: "Âm truyền tới tường *rồi quay lại*, nên quãng đường đi được gấp đôi khoảng cách."
+    solution:
+      - text: "Tổng quãng đường = {{v}} x {{t}} = {{v*t : 2}} m."
+      - text: "Bức tường cách một nửa quãng đường đó: {{v*t/2 : 2}} m."
+  p9-suvat-final-velocity:
+    prompt: >-
+      Một vật bắt đầu với vận tốc {{u}} m/s và có gia tốc {{a}} m/s^2 trong {{t}} s. Vận tốc
+      cuối của nó là bao nhiêu m/s?
+    hints:
+      - text: "Dùng công thức v = u + at."
+    solution:
+      - text: "v = {{u}} + {{a}} x {{t}} = {{u + a*t}} m/s."
+  p9-suvat-distance:
+    prompt: >-
+      Một vật bắt đầu chuyển động từ trạng thái nghỉ với gia tốc {{a}} m/s^2 trong {{t}} s. Vật
+      đi được quãng đường bao nhiêu mét?
+    hints:
+      - text: "Xuất phát từ trạng thái nghỉ, s = 1/2 a t^2."
+      - text: "{{t}}^2 = {{t*t}}."
+    solution:
+      - text: "s = 0,5 x {{a}} x {{t*t}} = {{0.5*a*t*t}} m."
+  p9-free-fall:
+    prompt: >-
+      Một vật được thả rơi tự do từ trạng thái nghỉ trong {{t}} s. Vận tốc của nó khi đó là bao
+      nhiêu m/s? Lấy g = 10 m/s^2 và bỏ qua sức cản không khí.
+    hints:
+      - text: "Xuất phát từ trạng thái nghỉ, v = g x t."
+    solution:
+      - text: "v = 10 x {{t}} = {{10*t : 2}} m/s."
+  p9-momentum:
+    prompt: >-
+      Tính động lượng theo kg m/s của một vật {{m}} kg chuyển động với vận tốc {{v}} m/s.
+    hints:
+      - text: "Động lượng p = m x v."
+    solution:
+      - text: "p = {{m}} x {{v}} = {{m*v}} kg m/s."
+  p9-conservation-momentum:
+    prompt: >-
+      Một xe đẩy {{m1}} kg chuyển động với vận tốc {{v1}} m/s va chạm với một xe đẩy {{m2}} kg
+      đang đứng yên. Hai xe dính vào nhau. Vận tốc chung của chúng sau va chạm là bao nhiêu m/s?
+    hints:
+      - text: Tổng động lượng trước va chạm bằng tổng động lượng sau va chạm.
+      - text: "Động lượng trước va chạm = {{m1}} x {{v1}} = {{m1*v1}} kg m/s."
+    solution:
+      - text: "Trước va chạm: p = {{m1}} x {{v1}} = {{m1*v1}} kg m/s."
+      - text: "Sau va chạm: khối lượng chung là {{m1 + m2}} kg."
+      - text: "v = {{m1*v1}} ÷ {{m1+m2}} = {{m1*v1/(m1+m2) : 3}} m/s."
+  p9-specific-heat:
+    prompt: >-
+      Cần bao nhiêu jun năng lượng để làm tăng nhiệt độ của {{m}} kg một chất lên {{dt}} độ C?
+      Nhiệt dung riêng của chất đó là {{c}} J/kg/độC.
+    hints:
+      - text: "Dùng công thức Q = m c delta-t."
+    solution:
+      - text: "Q = {{m}} x {{c}} x {{dt}} = {{m*c*dt}} J."
+  p9-latent-heat:
+    prompt: >-
+      Cần bao nhiêu jun năng lượng để làm nóng chảy hoàn toàn {{m}} kg nước đá? Nhiệt nóng chảy
+      riêng là {{l}} J/kg.
+    hints:
+      - text: "Dùng công thức Q = m x lambda."
+      - text: Trong quá trình nóng chảy, nhiệt độ không thay đổi.
+    solution:
+      - text: "Q = {{m}} x {{l}} = {{m*l}} J."
+  p9-gas-pressure:
+    prompt: >-
+      Một lượng khí xác định bị nén còn một nửa thể tích ban đầu ở nhiệt độ không đổi. Áp suất
+      của nó thay đổi như thế nào?
+    hints:
+      - text: Ở nhiệt độ không đổi, áp suất và thể tích tỉ lệ nghịch với nhau.
+      - text: "Tích p x V không đổi."
+    solution:
+      - text: Giảm V còn một nửa thì p phải tăng gấp đôi để tích pV không đổi.
+    choices:
+      - Tăng gấp đôi
+      - Giảm còn một nửa
+      - Không thay đổi
+      - Tăng gấp bốn lần
+  p9-magnetic-field:
+    prompt: Bên ngoài một thanh nam châm, các đường sức từ có chiều như thế nào?
+    hints:
+      - text: Đường sức từ chỉ chiều mà một cực bắc tự do sẽ dịch chuyển.
+    solution:
+      - text: Bên ngoài nam châm, các đường sức từ đi từ cực bắc sang cực nam.
+    choices:
+      - Đi từ cực bắc sang cực nam
+      - Đi từ cực nam sang cực bắc
+      - Luôn hướng thẳng xuống dưới
+      - Theo những hướng ngẫu nhiên
+  p9-motor-effect:
+    prompt: >-
+      Một dây dẫn có dòng điện chạy qua được đặt trong từ trường. Thay đổi nào sau đây sẽ
+      *đổi chiều* lực tác dụng lên dây dẫn?
+    hints:
+      - text: Quy tắc bàn tay trái liên hệ chiều của từ trường, dòng điện và lực.
+      - text: Các phương án còn lại chỉ làm thay đổi độ lớn của lực, không đổi chiều.
+    solution:
+      - text: Đổi chiều dòng điện hoặc đổi chiều từ trường sẽ làm lực đổi chiều.
+    choices:
+      - Đổi chiều dòng điện
+      - Tăng cường độ dòng điện
+      - Dùng nam châm mạnh hơn
+      - Làm dây dẫn dài hơn
+  p9-induction:
+    prompt: >-
+      Đúng hay sai: có suất điện động cảm ứng xuất hiện trong cuộn dây khi giữ một nam châm
+      đứng yên bên trong nó.
+    hints:
+      - text: "Hiện tượng cảm ứng đòi hỏi từ trường phải *biến thiên*."
+    solution:
+      - text: Nam châm đứng yên tạo ra từ trường không đổi, nên không có suất điện động cảm ứng.
+      - text: Nam châm phải chuyển động, hoặc từ trường phải biến thiên bằng cách nào đó.
+  p9-atom-particles:
+    prompt: >-
+      Một nguyên tử có số hiệu nguyên tử {{z}} và số khối {{a}}. Nguyên tử đó có bao nhiêu nơtron?
+    hints:
+      - text: "Số khối = số proton + số nơtron."
+      - text: "Số hiệu nguyên tử chính là số proton."
+    solution:
+      - text: "số nơtron = {{a}} - {{z}} = {{a - z}}."
+  p9-isotopes:
+    prompt: Hai đồng vị của cùng một nguyên tố luôn khác nhau ở đại lượng nào?
+    hints:
+      - text: Nếu số proton thay đổi thì đó đã là một nguyên tố khác.
+    solution:
+      - text: Các đồng vị có cùng số proton nhưng khác số nơtron.
+    choices:
+      - Số nơtron
+      - Số proton
+      - Số electron khi trung hoà điện
+      - Kí hiệu hoá học
+  p9-radiation-types:
+    prompt: Hãy nối mỗi loại tia phóng xạ với vật liệu chặn được nó.
+    hints:
+      - text: Loại tia ion hoá mạnh nhất cũng là loại có khả năng đâm xuyên yếu nhất.
+    solution:
+      - text: >-
+          Tia alpha ion hoá rất mạnh nhưng bị chặn bởi tờ giấy; tia gamma ion hoá yếu nhưng đâm
+          xuyên rất mạnh.
+  p9-half-life:
+    prompt: >-
+      Một mẫu chất phóng xạ có độ phóng xạ {{a0}} Bq và chu kì bán rã {{h}} ngày. Sau {{n}} chu
+      kì bán rã, độ phóng xạ của nó là bao nhiêu Bq?
+    hints:
+      - text: Sau mỗi chu kì bán rã, độ phóng xạ giảm đi một nửa.
+      - text: "Sau {{n}} chu kì bán rã, độ phóng xạ được chia cho 2^{{n}} = {{2 ** n}}."
+    solution:
+      - text: "{{a0}} ÷ {{2 ** n}} = {{a0 / (2 ** n)}} Bq."
+
+# ----------------------------------------------------------------------------------------
+# Lessons. `blocks` is a positional overlay — see the mathematics file for the details.
+# ----------------------------------------------------------------------------------------
+lessons:
+  lesson-physics-6-density:
+    title: Khối lượng riêng
+    summary: Vì sao một ki-lô-gam lông vũ chiếm nhiều chỗ hơn hẳn một ki-lô-gam chì.
+    objectives:
+      - Định nghĩa được khối lượng riêng là khối lượng trên một đơn vị thể tích
+      - Tính được khối lượng riêng, khối lượng hoặc thể tích bằng cách biến đổi công thức
+      - Giải thích được hiện tượng nổi và chìm dựa vào khối lượng riêng
+    blocks:
+      - markdown: |
+          "Cái nào nặng hơn, một ki-lô-gam lông vũ hay một ki-lô-gam chì?"
+
+          Đó là một câu hỏi mẹo — chúng có cùng khối lượng. Điều khác nhau là khối lượng đó
+          chiếm bao nhiêu **không gian**. Đó chính là điều mà khối lượng riêng đo được.
+
+          $$\rho = \frac{m}{V}$$
+      - title: Cách đọc công thức
+        text: >-
+          Khối lượng riêng là khối lượng *trên mỗi* đơn vị thể tích. Hễ thấy chữ "trên mỗi" thì
+          đó là phép chia. Khối lượng riêng đo bằng kg/m³ hoặc g/cm³.
+      - headers: [Vật liệu, "Khối lượng riêng (g/cm³)", "Có nổi trong nước không?"]
+        rows:
+          - [Bần, "0,24", Có]
+          - [Nước đá, "0,92", "Có (vừa đủ)"]
+          - [Nước, "1,00", "—"]
+          - [Nhôm, "2,70", Không]
+          - [Sắt, "7,87", Không]
+          - [Chì, "11,34", Không]
+      - title: Quy tắc về sự nổi
+        text: >-
+          Một vật nổi trong chất lỏng nếu khối lượng riêng của nó *nhỏ hơn* khối lượng riêng của
+          chất lỏng. Nước đá nổi trên nước vì nó nhẹ hơn nước một chút — điều này khá đặc biệt,
+          và là lí do hồ nước đóng băng từ trên xuống chứ không phải từ dưới lên.
+      - title: Tính khối lượng riêng
+        steps:
+          - text: Một khối vật chất có khối lượng 240 g và thể tích 30 cm³.
+          - text: Áp dụng công thức.
+            math: '\rho = \frac{240}{30}'
+          - text: "Vậy khối lượng riêng là 8 g/cm³ — lớn hơn của nước, nên vật chìm."
+            math: '\rho = 8\text{ g/cm}^3'
+      - title: Biến đổi công thức để tìm khối lượng
+        steps:
+          - text: "50 cm³ nhôm có khối lượng bao nhiêu, biết khối lượng riêng của nhôm là 2,7 g/cm³?"
+          - text: Biến đổi công thức.
+            math: 'm = \rho \times V'
+          - text: Thay số.
+            math: 'm = 2.7 \times 50 = 135\text{ g}'
+      - title: Đo thể tích của vật có hình dạng bất kì
+        text: >-
+          Với vật không có hình dạng đều đặn, hãy dùng phương pháp dời chỗ: thả vật vào bình chia
+          độ có nước và ghi lại mức nước dâng lên. Phần dâng lên *chính là* thể tích của vật.
+      - {}
+      - points:
+          - "Khối lượng riêng = khối lượng ÷ thể tích"
+          - Đơn vị là kg/m³ hoặc g/cm³
+          - Vật nổi khi khối lượng riêng của nó nhỏ hơn của chất lỏng xung quanh
+          - Dùng phương pháp dời chỗ nước để đo thể tích của vật có hình dạng bất kì
+  lesson-physics-6-energy-transfers:
+    title: Các dạng năng lượng và sự truyền năng lượng
+    summary: Năng lượng không tự sinh ra và không tự mất đi — nó chỉ chuyển từ dạng này sang dạng khác.
+    objectives:
+      - Kể tên được các dạng năng lượng chính
+      - Mô tả được chuỗi truyền năng lượng
+      - Vận dụng định luật bảo toàn năng lượng để tính phần năng lượng hao phí
+    blocks:
+      - markdown: |
+          Năng lượng không phải là một chất mà em cầm nắm được, nhưng luôn có thể tính đếm được.
+          Tổng năng lượng trong một hệ kín không bao giờ thay đổi — đó là **định luật bảo toàn
+          năng lượng**, một trong những phát biểu đáng tin cậy nhất của khoa học.
+
+          Thứ *thực sự* thay đổi là nơi năng lượng được tích trữ.
+      - headers: [Dạng năng lượng, Tìm thấy ở đâu, Ví dụ]
+        rows:
+          - [Động năng, Mọi vật đang chuyển động, Một quả bóng đang lăn]
+          - [Thế năng trọng trường, Mọi vật được nâng lên cao, Quyển sách trên giá]
+          - [Thế năng đàn hồi, Vật bị kéo giãn hoặc bị nén, Cây cung đang giương]
+          - [Hoá năng, "Nhiên liệu, thức ăn, pin", Một viên pin đã sạc]
+          - [Nhiệt năng, Mọi vật đang nóng, Một cốc trà nóng]
+      - markdown: |
+          ### Chuỗi truyền năng lượng
+
+          Khi bật một chiếc đèn pin:
+
+          `hoá năng (pin)` → `điện năng (mạch điện)` → `quang năng + nhiệt năng (bóng đèn)`
+
+          Hãy để ý bước cuối tạo ra **hai** dạng năng lượng. Ánh sáng là thứ ta cần; nhiệt là
+          phần hao phí. Điều này gần như luôn đúng — không thiết bị thực tế nào chuyển hoá toàn
+          bộ năng lượng đầu vào thành năng lượng có ích.
+      - title: Năng lượng hao phí không bị mất đi
+        text: >-
+          Năng lượng truyền ra môi trường dưới dạng nhiệt không hề biến mất. Nó chỉ lan toả ra
+          quá loãng đến mức ta không còn dùng nó vào việc gì có ích được nữa.
+      - title: Tính toán cân bằng năng lượng
+        steps:
+          - text: Một bóng đèn được cung cấp 500 J điện năng và phát ra 60 J quang năng.
+          - text: "Định luật bảo toàn cho biết: năng lượng vào = có ích + hao phí."
+            math: '500 = 60 + \text{hao phí}'
+          - text: Vậy 440 J bị hao phí dưới dạng nhiệt.
+            math: '\text{hao phí} = 440\text{ J}'
+          - text: "Hiệu suất = 60 ÷ 500 = 12%."
+      - {}
+      - points:
+          - Năng lượng được bảo toàn — tổng năng lượng không bao giờ thay đổi
+          - Năng lượng chuyển từ dạng này sang dạng khác chứ không bị tiêu hao mất
+          - "Thiết bị thực tế luôn hao phí một phần năng lượng, thường là dưới dạng nhiệt"
+          - "Năng lượng vào = năng lượng có ích + năng lượng hao phí"
+  lesson-physics-7-speed:
+    title: Tốc độ, quãng đường và thời gian
+    summary: Công thức vật lý đầu tiên mà em sẽ dùng lại trong hầu hết các chủ đề về sau.
+    objectives:
+      - Tính được tốc độ, quãng đường hoặc thời gian bằng cách biến đổi một công thức
+      - Đổi được giữa m/s và km/h
+      - Đọc được đồ thị quãng đường — thời gian
+    blocks:
+      - markdown: |
+          Tốc độ cho biết vật đi được bao nhiêu quãng đường trong một khoảng thời gian.
+
+          $$v = \frac{d}{t}$$
+
+          Cùng một hệ thức có thể biến đổi theo hai cách, nên một công thức trả lời được ba
+          câu hỏi:
+      - caption: >-
+          Em không cần học thuộc ba công thức — chỉ cần một, cộng với cách biến đổi nó.
+      - title: Tính tốc độ trung bình
+        steps:
+          - text: Một ô tô đi 240 km trong 3 giờ.
+          - text: Áp dụng công thức.
+            math: 'v = \frac{240}{3}'
+          - text: Tốc độ trung bình là 80 km/h.
+            math: 'v = 80\text{ km/h}'
+      - title: Trung bình, không phải không đổi
+        text: >-
+          80 km/h là giá trị *trung bình*. Chiếc xe gần như chắc chắn đã dừng ở đèn đỏ và chạy
+          nhanh hơn trên đường trống. Tốc độ trung bình không cho biết gì về điều đã xảy ra ở
+          từng thời điểm.
+      - markdown: |
+          ### Đổi đơn vị
+
+          Để đổi m/s sang km/h, hãy nhân với 3,6. Để đổi ngược lại, hãy chia cho 3,6.
+
+          Vì sao lại là 3,6? Vì một giờ có 3600 giây và một ki-lô-mét có 1000 mét, mà
+          3600 ÷ 1000 = 3,6.
+      - {}
+      - title: Đọc đồ thị quãng đường — thời gian
+        text: >-
+          Một đoạn thẳng dốc nghĩa là tốc độ không đổi. Một đoạn nằm ngang nghĩa là vật đứng yên.
+          Một đường cong nghĩa là tốc độ đang thay đổi — vật đang có gia tốc.
+      - {}
+      - points:
+          - "v = d ÷ t, và biến đổi công thức khi cần"
+          - Nhân với 3,6 để đổi từ m/s sang km/h
+          - "Trên đồ thị quãng đường — thời gian, độ dốc chính là tốc độ"
+          - 'Đoạn nằm ngang nghĩa là đứng yên, không phải "tốc độ không đổi"'
+  lesson-physics-7-heat-transfer:
+    title: Dẫn nhiệt, đối lưu và bức xạ nhiệt
+    summary: Ba cách năng lượng truyền từ vật nóng sang vật lạnh, và cách phân biệt chúng.
+    objectives:
+      - Mô tả được sự dẫn nhiệt, đối lưu và bức xạ nhiệt
+      - Nhận ra hình thức truyền nhiệt chủ yếu trong một tình huống cụ thể
+      - Giải thích được vì sao chỉ bức xạ mới truyền được trong chân không
+    blocks:
+      - markdown: |
+          Năng lượng luôn truyền từ nơi nóng hơn sang nơi lạnh hơn. Có đúng ba cách để nó thực
+          hiện hành trình đó, và việc phân biệt chúng chỉ gói gọn trong một câu hỏi: **cái gì
+          mang năng lượng đi?**
+      - headers: [Hình thức, Cái gì mang năng lượng, "Truyền được trong chân không?"]
+        rows:
+          - [Dẫn nhiệt, "Các hạt dao động truyền năng lượng cho nhau, chủ yếu trong chất rắn", Không]
+          - [Đối lưu, Dòng chất lưu nóng chuyển động thành khối, Không]
+          - [Bức xạ nhiệt, Sóng điện từ hồng ngoại, Có]
+      - markdown: |
+          ### Dẫn nhiệt
+
+          Các hạt ở đầu nóng dao động mạnh hơn và va chạm với các hạt bên cạnh. Kim loại dẫn
+          nhiệt đặc biệt tốt vì các electron tự do mang năng lượng đi rất nhanh trong mạng tinh
+          thể. Chất khí dẫn nhiệt kém — các hạt của nó ở quá xa nhau nên ít va chạm.
+
+          ### Đối lưu
+
+          Khi được nung nóng, chất lưu nở ra, khối lượng riêng giảm nên nó bay lên. Phần chất
+          lưu lạnh hơn chìm xuống thế chỗ, và một **dòng đối lưu** hình thành. Đó là lí do một
+          chiếc lò sưởi làm ấm được cả căn phòng, và vì sao không khí phía trên mặt đường nóng
+          lại lung linh.
+
+          ### Bức xạ nhiệt
+
+          Mọi vật đều phát ra tia hồng ngoại. Khác với hai hình thức kia, bức xạ hoàn toàn không
+          cần đến các hạt — chính vì thế mà năng lượng Mặt Trời có thể vượt qua 150 triệu
+          ki-lô-mét không gian trống rỗng để đến với chúng ta.
+      - title: Một cách kiểm tra nhanh
+        text: >-
+          Hãy tự hỏi giữa vật nóng và vật lạnh có gì. Tiếp xúc rắn → dẫn nhiệt. Chất lưu chuyển
+          động → đối lưu. Không có gì cả, hoặc em cảm nhận được qua một khoảng trống → bức xạ.
+      - title: Sẫm và xỉn so với sáng và bóng
+        text: >-
+          Bề mặt đen xỉn vừa phát xạ tốt nhất *vừa* hấp thụ tốt nhất. Bề mặt bạc bóng thì kém ở
+          cả hai mặt, và đó là lí do bên trong phích giữ nhiệt được tráng bạc — nó phản xạ bức
+          xạ trở lại phía đồ uống.
+      - {}
+      - points:
+          - "Dẫn nhiệt truyền năng lượng qua va chạm giữa các hạt, chủ yếu trong chất rắn"
+          - Đối lưu cần một chất lưu có thể chảy và tạo thành dòng
+          - Bức xạ là sóng hồng ngoại và là hình thức duy nhất truyền được qua chân không
+          - "Đen xỉn hấp thụ và phát xạ tốt nhất; bạc bóng thì kém ở cả hai"
+  lesson-physics-8-newtons-second-law:
+    title: Định luật II Newton
+    summary: "F = ma — phương trình nối liền lực với chuyển động."
+    objectives:
+      - Vận dụng và biến đổi được công thức F = ma
+      - Giải thích được mối liên hệ giữa lực, khối lượng và gia tốc
+      - Sử dụng hợp lực chứ không phải từng lực riêng lẻ
+    blocks:
+      - markdown: |
+          Định luật I Newton nói rằng một vật giữ nguyên trạng thái chuyển động nếu không có hợp
+          lực tác dụng. Định luật II cho biết **điều gì xảy ra khi có hợp lực**:
+
+          $$F = ma$$
+
+          trong đó `F` là **hợp lực** tính bằng niutơn, `m` là khối lượng tính bằng ki-lô-gam và
+          `a` là gia tốc tính bằng m/s².
+      - title: Hợp lực, không phải một lực bất kì
+        text: >-
+          F trong công thức này là lực *tổng hợp* sau khi đã cộng tất cả các lực lại. Nếu một lực
+          đẩy 100 N gặp lực ma sát 40 N thì hợp lực là 60 N — và đó mới là số cần dùng.
+      - markdown: |
+          ### Công thức cho ta biết điều gì
+
+          - Với khối lượng không đổi, **lực tăng gấp đôi thì gia tốc tăng gấp đôi**.
+          - Với lực không đổi, **khối lượng tăng gấp đôi thì gia tốc giảm một nửa**.
+
+          Ý thứ hai giải thích vì sao một chiếc xe tải chở đầy hàng tăng tốc chậm hơn hẳn khi nó
+          chạy không tải, dù cùng một động cơ.
+      - title: Tính gia tốc
+        steps:
+          - text: Một hợp lực 60 N tác dụng lên chiếc xe đẩy 15 kg.
+          - text: Biến đổi công thức để tìm gia tốc.
+            math: 'a = \frac{F}{m}'
+          - text: Thay số.
+            math: 'a = \frac{60}{15} = 4\text{ m/s}^2'
+      - title: Bài toán có lực ma sát
+        steps:
+          - text: Một chiếc thùng 20 kg được đẩy bằng lực 90 N. Lực ma sát cản lại 30 N.
+          - text: Trước hết tìm hợp lực.
+            math: 'F = 90 - 30 = 60\text{ N}'
+          - text: Sau đó áp dụng định luật II.
+            math: 'a = \frac{60}{20} = 3\text{ m/s}^2'
+      - title: Kiểm tra đơn vị
+        text: >-
+          Công thức F = ma chỉ đúng với niutơn, ki-lô-gam và m/s². Nếu đề cho khối lượng bằng
+          gam, hãy đổi sang ki-lô-gam trước — đây là nguyên nhân sai sót phổ biến nhất.
+      - {}
+      - points:
+          - "F = ma, trong đó F là hợp lực"
+          - Lực càng lớn thì gia tốc càng lớn; khối lượng càng lớn thì gia tốc càng nhỏ
+          - Hãy tổng hợp tất cả các lực trước khi dùng công thức
+          - Luôn dùng niutơn, ki-lô-gam và m/s²
+  lesson-physics-8-ohms-law:
+    title: Định luật Ôm
+    summary: Mối liên hệ giữa hiệu điện thế, cường độ dòng điện và điện trở trong mạch.
+    objectives:
+      - Vận dụng và biến đổi được công thức U = IR
+      - Mô tả được ý nghĩa của cường độ dòng điện, hiệu điện thế và điện trở
+      - Dự đoán được ảnh hưởng khi thay đổi điện trở trong mạch
+    blocks:
+      - markdown: |
+          Ba đại lượng mô tả những gì đang diễn ra trong một mạch điện, và một công thức nối
+          chúng lại:
+
+          $$U = I \times R$$
+
+          - **Cường độ dòng điện (I)**, đo bằng ampe, là *tốc độ dịch chuyển* của điện tích.
+          - **Hiệu điện thế (U)**, đo bằng vôn, là *lực đẩy* — năng lượng chuyển hoá trên mỗi culông.
+          - **Điện trở (R)**, đo bằng ôm, cho biết linh kiện *cản trở* dòng điện đến mức nào.
+      - title: Một hình ảnh dễ hình dung
+        text: >-
+          Hãy nghĩ đến nước chảy trong ống. Hiệu điện thế là áp lực của máy bơm, cường độ dòng
+          điện là lưu lượng nước, còn điện trở là độ hẹp của ống. Ống càng hẹp (điện trở càng
+          lớn) thì với cùng áp lực, nước chảy càng ít.
+      - caption: Một hệ thức, ba cách biến đổi.
+      - title: Tính hiệu điện thế
+        steps:
+          - text: Dòng điện 0,5 A chạy qua điện trở 24 Ω.
+          - text: Áp dụng công thức.
+            math: 'V = 0.5 \times 24'
+          - text: Hiệu điện thế là 12 V.
+            math: 'V = 12\text{ V}'
+      - title: Tính điện trở
+        steps:
+          - text: Một bóng đèn có hiệu điện thế 6 V giữa hai đầu và dòng điện 0,25 A chạy qua.
+          - text: Biến đổi công thức.
+            math: 'R = \frac{V}{I} = \frac{6}{0.25}'
+          - text: Vậy điện trở của nó là 24 Ω.
+            math: 'R = 24\ \Omega'
+      - title: Không phải vật nào cũng tuân theo định luật Ôm
+        text: >-
+          Một linh kiện được gọi là *thuần trở* nếu điện trở của nó không đổi, cho đồ thị
+          cường độ — hiệu điện thế là một đường thẳng. Bóng đèn dây tóc thì không như vậy — nó
+          nóng lên khi dòng điện tăng, nên điện trở tăng và đồ thị bị cong.
+      - {}
+      - points:
+          - "U = IR nối liền hiệu điện thế, cường độ dòng điện và điện trở"
+          - "Cường độ dòng điện là tốc độ dịch chuyển điện tích, hiệu điện thế là lực đẩy, điện trở là sự cản trở"
+          - Với hiệu điện thế không đổi, điện trở càng lớn thì dòng điện càng nhỏ
+          - Bóng đèn dây tóc không thuần trở vì nó nóng lên
+  lesson-physics-9-half-life:
+    title: Chu kì bán rã
+    summary: Phân rã phóng xạ là ngẫu nhiên với một hạt nhân, nhưng hoàn toàn dự đoán được với số lượng lớn.
+    objectives:
+      - Định nghĩa được chu kì bán rã
+      - Tính được độ phóng xạ còn lại sau một số chu kì bán rã
+      - Giải thích được vì sao phân rã vừa ngẫu nhiên vừa dự đoán được
+    blocks:
+      - markdown: |
+          Em không thể dự đoán khi nào một hạt nhân cụ thể sẽ phân rã. Điều đó thực sự ngẫu
+          nhiên — không có dấu hiệu nào cho biết hạt nhân đó "sắp đến lượt".
+
+          Vậy mà với đủ nhiều hạt nhân, hành vi của cả mẫu chất lại cực kỳ dễ dự đoán. Đây cũng
+          chính là lí do một sòng bạc không đoán được kết quả một vòng quay, nhưng lại dự báo
+          được lợi nhuận cả năm rất chính xác.
+      - title: Định nghĩa
+        text: >-
+          **Chu kì bán rã** là khoảng thời gian để một nửa số hạt nhân chưa phân rã trong mẫu bị
+          phân rã — hay tương đương, là thời gian để độ phóng xạ giảm còn một nửa.
+      - headers: [Số chu kì bán rã đã qua, Phần còn lại, Độ phóng xạ từ 800 Bq]
+        rows:
+          - ["0", "1", "800 Bq"]
+          - ["1", "1/2", "400 Bq"]
+          - ["2", "1/4", "200 Bq"]
+          - ["3", "1/8", "100 Bq"]
+          - ["4", "1/16", "50 Bq"]
+      - caption: Độ phóng xạ sau n chu kì bán rã, xuất phát từ A₀.
+      - title: Bài toán về chu kì bán rã
+        steps:
+          - text: >-
+              Một nguồn phóng xạ có độ phóng xạ 960 Bq và chu kì bán rã 6 ngày. Sau 18 ngày, độ
+              phóng xạ của nó là bao nhiêu?
+          - text: Trước hết tìm xem đã trải qua bao nhiêu chu kì bán rã.
+            math: 'n = \frac{18}{6} = 3'
+          - text: "Giảm một nửa ba lần: 960 → 480 → 240 → 120."
+            math: 'A = 960 \times \left(\tfrac{1}{2}\right)^3 = 120\text{ Bq}'
+      - title: Không bao giờ bằng không
+        text: >-
+          Mỗi chu kì bán rã lấy đi một nửa phần còn lại, chứ không phải một lượng cố định. Vì thế
+          độ phóng xạ ngày càng gần 0 mà không bao giờ đạt tới 0 — đó là lí do chất thải hạt
+          nhân sống lâu là một vấn đề rất khó giải quyết.
+      - {}
+      - points:
+          - Chu kì bán rã là thời gian để độ phóng xạ giảm còn một nửa
+          - "Phân rã là ngẫu nhiên với từng hạt nhân nhưng dự đoán được với mẫu lớn"
+          - "Sau n chu kì bán rã, độ phóng xạ bằng A₀ × (1/2)ⁿ"
+          - Độ phóng xạ tiến dần tới 0 nhưng không bao giờ bằng 0

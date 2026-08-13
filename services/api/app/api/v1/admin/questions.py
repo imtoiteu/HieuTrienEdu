@@ -13,7 +13,7 @@ import json
 from typing import Annotated, Any
 
 from fastapi import APIRouter, HTTPException, Query, UploadFile, status
-from pydantic import BaseModel, Field
+from pydantic import Field
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import selectinload
 
@@ -28,6 +28,12 @@ from app.api.v1.admin._common import (
     paginate,
     record_audit,
 )
+from app.api.v1.admin._translations import (
+    TranslationsPayload,
+    apply_translations,
+    read_translations,
+)
+from app.core.i18n import DEFAULT_LOCALE, SUPPORTED_LOCALES, localise, normalise_locale
 from app.core.text import unique_slug
 from app.exercise_engine.generator import (
     GenerationError,
@@ -50,7 +56,7 @@ MAX_IMPORT_BYTES = 5 * 1024 * 1024
 MAX_IMPORT_ROWS = 2000
 
 
-class QuestionIn(BaseModel):
+class QuestionIn(TranslationsPayload):
     skill_id: int
     question_type: QuestionType
     prompt: str = Field(min_length=1)
@@ -70,7 +76,7 @@ class QuestionIn(BaseModel):
     attribution: str | None = None
 
 
-class QuestionUpdate(BaseModel):
+class QuestionUpdate(TranslationsPayload):
     skill_id: int | None = None
     question_type: QuestionType | None = None
     prompt: str | None = Field(default=None, min_length=1)
@@ -110,6 +116,31 @@ def _question_row(question: Question, skill: Skill | None = None) -> dict[str, A
         "created_at": question.created_at,
         "updated_at": question.updated_at,
     }
+
+
+def _check_generates(question: Question) -> None:
+    """Prove the question renders in every language it claims to be available in.
+
+    A question is a template, so a translation is a template too — a Vietnamese prompt with a
+    mistyped ``{{ }}`` placeholder fails only for Vietnamese students, and only once one of them
+    hits that exercise. Generating a variant per locale here turns that into a save-time error.
+
+    Several seeds are tried because a placeholder can be valid for one draw of the variables and
+    not another (a division that only sometimes lands on a whole number, say).
+    """
+    for locale in SUPPORTED_LOCALES:
+        if locale != DEFAULT_LOCALE and locale not in (question.i18n or {}):
+            continue
+        template = QuestionTemplate.from_model(question, locale)
+        for seed in (1, 7, 23, 101):
+            try:
+                generate_variant(template, seed=seed)
+            except GenerationError as exc:
+                label = "" if locale == DEFAULT_LOCALE else f" [{locale}]"
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    detail=f"This question could not be generated{label}: {exc}",
+                ) from exc
 
 
 def _resolve_taxonomy(db, skill_id: int) -> tuple[Skill, str, int, str]:
@@ -262,7 +293,7 @@ def create_question(payload: QuestionIn, db: DbSession, admin: CurrentAdmin) -> 
     _validate_answerable(payload.question_type, payload.answer_spec, payload.options)
 
     question = Question(
-        **payload.model_dump(exclude={"slug"}),
+        **payload.model_dump(exclude={"slug", "translations"}),
         slug=unique_slug(
             payload.slug or f"{skill.slug}-{payload.prompt[:40]}",
             lambda candidate: db.scalar(select(Question.id).where(Question.slug == candidate))
@@ -275,19 +306,17 @@ def create_question(payload: QuestionIn, db: DbSession, admin: CurrentAdmin) -> 
         is_parametric=bool(payload.variables),
         created_by_id=admin.id,
     )
+    apply_translations(question, payload.translations)
     db.add(question)
     db.flush()
 
     # Prove the question can actually be rendered and graded before it is saved. A template that
     # throws at generation time is a broken exercise; better to reject it here than to serve it.
     try:
-        generate_variant(QuestionTemplate.from_model(question), seed=1)
-    except GenerationError as exc:
+        _check_generates(question)
+    except HTTPException:
         db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=f"This question could not be generated: {exc}",
-        ) from exc
+        raise
 
     record_audit(
         db, admin, "create", "question", question.id, f"Created exercise “{question.slug}”"
@@ -315,6 +344,7 @@ def get_question(question_id: int, db: DbSession, admin: CurrentAdmin) -> dict[s
             "solution": question.solution or [],
             "license": question.license,
             "attribution": question.attribution,
+            "translations": read_translations(question),
         }
     )
     return data
@@ -325,7 +355,7 @@ def update_question(
     question_id: int, payload: QuestionUpdate, db: DbSession, admin: CurrentAdmin
 ) -> dict[str, Any]:
     question = get_or_404(db, Question, question_id, "Exercise")
-    fields = payload.model_dump(exclude_unset=True)
+    fields = payload.model_dump(exclude_unset=True, exclude={"translations"})
 
     if fields.get("skill_id") is not None:
         _, subject_slug, grade, topic_slug = _resolve_taxonomy(db, fields["skill_id"])
@@ -339,18 +369,16 @@ def update_question(
     if "variables" in fields:
         question.is_parametric = bool(question.variables)
 
+    apply_translations(question, payload.translations)
     _validate_answerable(
         question.question_type, question.answer_spec or {}, question.options or {}
     )
     db.flush()
     try:
-        generate_variant(QuestionTemplate.from_model(question), seed=1)
-    except GenerationError as exc:
+        _check_generates(question)
+    except HTTPException:
         db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=f"This question could not be generated: {exc}",
-        ) from exc
+        raise
 
     record_audit(
         db, admin, "update", "question", question.id, f"Updated exercise “{question.slug}”",
@@ -368,13 +396,18 @@ def preview_question(
     admin: CurrentAdmin,
     seed: Annotated[int | None, Query(ge=0, le=2**31 - 1)] = None,
     reveal: Annotated[bool, Query()] = True,
+    preview_locale: Annotated[str, Query(alias="locale", max_length=10)] = DEFAULT_LOCALE,
 ) -> dict[str, Any]:
     """Render one concrete variant exactly as a student would receive it.
 
     ``reveal=false`` returns the student's view *without* the answer, which is what the "preview
     as student" toggle uses — it is the only honest way to check a question reads correctly
     without the answer being visible on the same screen.
+
+    ``locale`` picks the language, so an editor can check that the Vietnamese prompt reads well
+    with real numbers substituted in — the thing a side-by-side translation form cannot show.
     """
+    preview_locale = normalise_locale(preview_locale)
     question = db.scalar(
         select(Question).where(Question.id == question_id).options(selectinload(Question.skill))
     )
@@ -385,7 +418,9 @@ def preview_question(
 
     chosen_seed = seed if seed is not None else random.randint(1, 10**6)
     try:
-        variant = generate_variant(QuestionTemplate.from_model(question), seed=chosen_seed)
+        variant = generate_variant(
+            QuestionTemplate.from_model(question, preview_locale), seed=chosen_seed
+        )
     except GenerationError as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -400,8 +435,13 @@ def preview_question(
         "difficulty": question.difficulty,
         "estimated_seconds": question.estimated_seconds,
         "seed": chosen_seed,
+        "locale": preview_locale,
         "skill": (
-            {"id": question.skill.id, "slug": question.skill.slug, "name": question.skill.name}
+            {
+                "id": question.skill.id,
+                "slug": question.skill.slug,
+                "name": localise(question.skill, "name", preview_locale),
+            }
             if question.skill
             else None
         ),

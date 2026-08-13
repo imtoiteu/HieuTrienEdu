@@ -22,7 +22,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import Base, TimestampMixin
+from app.models.base import Base, TimestampMixin, TranslatableMixin
 from app.models.enums import ReviewStatus
 
 if TYPE_CHECKING:
@@ -30,7 +30,7 @@ if TYPE_CHECKING:
     from app.models.question import Question
 
 
-class Subject(Base, TimestampMixin):
+class Subject(Base, TimestampMixin, TranslatableMixin):
     __tablename__ = "subjects"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -46,7 +46,7 @@ class Subject(Base, TimestampMixin):
     )
 
 
-class Course(Base, TimestampMixin):
+class Course(Base, TimestampMixin, TranslatableMixin):
     """A subject at one grade, e.g. "Mathematics — Grade 7"."""
 
     __tablename__ = "courses"
@@ -86,7 +86,7 @@ class Course(Base, TimestampMixin):
     )
 
 
-class Unit(Base, TimestampMixin):
+class Unit(Base, TimestampMixin, TranslatableMixin):
     __tablename__ = "units"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -105,7 +105,7 @@ class Unit(Base, TimestampMixin):
     )
 
 
-class Topic(Base, TimestampMixin):
+class Topic(Base, TimestampMixin, TranslatableMixin):
     __tablename__ = "topics"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -121,7 +121,7 @@ class Topic(Base, TimestampMixin):
     )
 
 
-class Skill(Base, TimestampMixin):
+class Skill(Base, TimestampMixin, TranslatableMixin):
     """The atomic unit of learning and of mastery tracking.
 
     ``bkt_*`` columns hold the per-skill Bayesian Knowledge Tracing parameters. Keeping them on the

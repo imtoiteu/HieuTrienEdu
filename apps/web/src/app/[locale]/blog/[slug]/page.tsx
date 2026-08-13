@@ -17,9 +17,9 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   try {
-    const post = await api.site.post(slug);
+    const post = await api.site.post(slug, locale);
     return { title: post.title, description: post.excerpt };
   } catch {
     return { title: 'Article' };
@@ -37,13 +37,13 @@ export default async function BlogPostPage({
 
   let post;
   try {
-    post = await api.site.post(slug);
+    post = await api.site.post(slug, locale);
   } catch {
     notFound();
   }
 
   return (
-    <MarketingShell>
+    <MarketingShell locale={locale}>
       <Section className="pb-6 pt-10">
         <div className="mx-auto w-full max-w-3xl px-5 sm:px-8">
           <Link

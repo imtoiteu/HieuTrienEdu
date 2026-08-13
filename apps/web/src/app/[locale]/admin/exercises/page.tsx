@@ -17,6 +17,7 @@ import {
   StringListField,
   TextAreaField,
   TextField,
+  TranslationPanel,
   humanise,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
@@ -40,6 +41,8 @@ interface Choice {
   id: string;
   label: string;
   is_correct: boolean;
+  /** Vietnamese label. `is_correct` is deliberately not per-language — see the API's whitelist. */
+  vi_label?: string;
 }
 
 const BLANK_FORM = {
@@ -57,6 +60,8 @@ const BLANK_FORM = {
   true_false_value: 'true',
   explanation: '',
   status: 'draft',
+  vi_prompt: '',
+  vi_explanation: '',
 };
 
 export default function ExercisesPage() {
@@ -81,9 +86,11 @@ export default function ExercisesPage() {
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ ...BLANK_FORM });
   const [deleting, setDeleting] = useState<AdminQuestion | null>(null);
-  const [preview, setPreview] = useState<{ data: Record<string, unknown>; reveal: boolean } | null>(
-    null,
-  );
+  const [preview, setPreview] = useState<{
+    data: Record<string, unknown>;
+    reveal: boolean;
+    locale: string;
+  } | null>(null);
   const [importing, setImporting] = useState(false);
   const [importResult, setImportResult] = useState<Record<string, unknown> | null>(null);
   const [importFile, setImportFile] = useState<File | null>(null);
@@ -167,6 +174,24 @@ export default function ExercisesPage() {
       solution: form.explanation ? [{ text: form.explanation }] : [],
     };
 
+    // Vietnamese content. Blank fields are sent as null so the API removes them and the site
+    // falls back to English, rather than storing an empty Vietnamese prompt.
+    const viChoiceLabels = form.choices
+      .filter((choice) => choice.label.trim())
+      .map((choice) => choice.vi_label?.trim() ?? '');
+    base.translations = {
+      vi: {
+        prompt: form.vi_prompt.trim() || null,
+        solution: form.vi_explanation.trim() ? [{ text: form.vi_explanation.trim() }] : null,
+        // Only send choice labels once every one of them has been translated: a partial list
+        // would be rejected, since labels are merged onto the English choices by position.
+        options:
+          viChoiceLabels.length && viChoiceLabels.every(Boolean)
+            ? { choices: viChoiceLabels }
+            : null,
+      },
+    };
+
     if (form.question_type === 'multiple_choice' || form.question_type === 'multiple_select') {
       base.options = { choices: form.choices.filter((choice) => choice.label.trim()) };
       base.answer_spec = {
@@ -199,9 +224,16 @@ export default function ExercisesPage() {
     }
   }
 
-  async function showPreview(questionId: number, reveal: boolean, seed?: number) {
-    const data = await run(() => adminApi.questions.preview(questionId, { reveal, seed }));
-    if (data) setPreview({ data, reveal });
+  async function showPreview(
+    questionId: number,
+    reveal: boolean,
+    seed?: number,
+    previewLocale = 'vi',
+  ) {
+    const data = await run(() =>
+      adminApi.questions.preview(questionId, { reveal, seed, locale: previewLocale }),
+    );
+    if (data) setPreview({ data, reveal, locale: previewLocale });
   }
 
   const columns: Column<AdminQuestion>[] = [
@@ -614,6 +646,53 @@ export default function ExercisesPage() {
             />
           </FormRow>
 
+          <div className="sm:col-span-2">
+            <TranslationPanel
+              fields={[
+                { name: 'prompt', label: t('admin.ex.viPrompt'), multiline: true },
+                { name: 'explanation', label: t('admin.ex.viExplanation'), multiline: true },
+              ]}
+              value={{ prompt: form.vi_prompt, explanation: form.vi_explanation }}
+              onChange={(next) =>
+                setForm({
+                  ...form,
+                  vi_prompt: next.prompt ?? '',
+                  vi_explanation: next.explanation ?? '',
+                })
+              }
+            />
+            {isChoice && (
+              <div className="mt-3 rounded-2xl border-2 border-dashed border-brand-200 bg-brand-50/40 p-4">
+                <p className="text-xs font-black uppercase tracking-wide text-brand-700">
+                  {t('admin.ex.viChoices')}
+                </p>
+                <p className="mt-1 text-xs text-ink-600">{t('admin.ex.viChoicesHint')}</p>
+                <ul className="mt-3 space-y-2">
+                  {form.choices.map((choice, index) => (
+                    <li key={choice.id} className="flex items-center gap-2">
+                      <span className="w-6 shrink-0 text-xs font-bold text-ink-500">
+                        {choice.id.toUpperCase()}
+                      </span>
+                      <TextField
+                        lang="vi"
+                        value={choice.vi_label ?? ''}
+                        placeholder={choice.label || undefined}
+                        onChange={(event) =>
+                          setForm({
+                            ...form,
+                            choices: form.choices.map((entry, i) =>
+                              i === index ? { ...entry, vi_label: event.target.value } : entry,
+                            ),
+                          })
+                        }
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
           <FormRow label={t('admin.ex.tags')} className="sm:col-span-2">
             <StringListField
               values={form.tags}
@@ -646,7 +725,12 @@ export default function ExercisesPage() {
               <Button
                 variant="outline"
                 onClick={() =>
-                  showPreview(Number(preview.data.question_id), preview.reveal)
+                  showPreview(
+                    Number(preview.data.question_id),
+                    preview.reveal,
+                    undefined,
+                    preview.locale,
+                  )
                 }
               >
                 <RefreshCw className="h-4 w-4" aria-hidden="true" />{t('admin.ex.newVariant')}</Button>
@@ -657,10 +741,25 @@ export default function ExercisesPage() {
                     Number(preview.data.question_id),
                     !preview.reveal,
                     Number(preview.data.seed),
+                    preview.locale,
                   )
                 }
               >
-                {preview.reveal ? 'Hide answer' : 'Show answer'}
+                {preview.reveal ? t('admin.ex.hideAnswer') : t('admin.ex.showAnswer')}
+              </Button>
+              {/* Same seed, other language: the point is to compare, not to reroll. */}
+              <Button
+                variant="outline"
+                onClick={() =>
+                  showPreview(
+                    Number(preview.data.question_id),
+                    preview.reveal,
+                    Number(preview.data.seed),
+                    preview.locale === 'vi' ? 'en' : 'vi',
+                  )
+                }
+              >
+                {preview.locale === 'vi' ? 'English' : 'Tiếng Việt'}
               </Button>
             </>
           )

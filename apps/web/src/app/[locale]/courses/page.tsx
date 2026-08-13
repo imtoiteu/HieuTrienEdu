@@ -17,10 +17,10 @@ export default async function CoursesPage({ params }: { params: Promise<{ locale
   const t = getTranslator(locale);
   const href = (path: string) => `/${locale}${path}`;
 
-  const subjects = await safe(api.curriculum.subjects(), [] as Subject[]);
+  const subjects = await safe(api.curriculum.subjects(locale), [] as Subject[]);
 
   return (
-    <MarketingShell>
+    <MarketingShell locale={locale}>
       <Section className="bg-lavender pb-10 pt-14">
         <Container>
           <Eyebrow>{t('subject.curriculum')}</Eyebrow>

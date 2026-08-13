@@ -9,7 +9,8 @@ from fastapi import APIRouter, HTTPException, Query, status
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from sqlalchemy import func, select
 
-from app.core.deps import DbSession, OptionalUser
+from app.core.deps import DbSession, OptionalUser, RequestLocale
+from app.core.i18n import DEFAULT_LOCALE, localise
 from app.models import (
     Announcement,
     BlogPost,
@@ -114,6 +115,7 @@ class SiteStats(BaseModel):
 @router.get("/testimonials", response_model=list[TestimonialRead])
 def list_testimonials(
     db: DbSession,
+    locale: RequestLocale,
     featured: Annotated[bool | None, Query()] = None,
     limit: Annotated[int, Query(ge=1, le=50)] = 12,
 ) -> list[TestimonialRead]:
@@ -121,12 +123,42 @@ def list_testimonials(
     if featured is not None:
         query = query.where(Testimonial.is_featured.is_(featured))
     rows = db.scalars(query.order_by(Testimonial.position, Testimonial.id).limit(limit))
-    return [TestimonialRead.model_validate(t) for t in rows]
+    # The author's *name* is never translated — it is a real person's name.
+    return [
+        TestimonialRead(
+            id=t.id,
+            author_name=t.author_name,
+            author_role=localise(t, "author_role", locale),
+            quote=localise(t, "quote", locale),
+            rating=t.rating,
+            subject_slug=t.subject_slug,
+            grade=t.grade,
+            avatar_url=t.avatar_url,
+            is_featured=t.is_featured,
+        )
+        for t in rows
+    ]
+
+
+def _post_summary_fields(post: BlogPost, locale: str) -> dict[str, Any]:
+    return {
+        "id": post.id,
+        "slug": post.slug,
+        "title": localise(post, "title", locale),
+        "excerpt": localise(post, "excerpt", locale),
+        "category": post.category,
+        "tags": localise(post, "tags", locale) or [],
+        "cover_image_url": post.cover_image_url,
+        "reading_minutes": post.reading_minutes,
+        "author_name": post.author_name,
+        "published_at": post.published_at,
+    }
 
 
 @router.get("/posts", response_model=list[BlogPostSummary])
 def list_posts(
     db: DbSession,
+    locale: RequestLocale,
     category: Annotated[str | None, Query()] = None,
     limit: Annotated[int, Query(ge=1, le=50)] = 20,
 ) -> list[BlogPostSummary]:
@@ -136,11 +168,11 @@ def list_posts(
     rows = db.scalars(
         query.order_by(BlogPost.published_at.desc(), BlogPost.id.desc()).limit(limit)
     )
-    return [BlogPostSummary.model_validate(p) for p in rows]
+    return [BlogPostSummary(**_post_summary_fields(p, locale)) for p in rows]
 
 
 @router.get("/posts/{slug}", response_model=BlogPostDetail)
-def get_post(slug: str, db: DbSession) -> BlogPostDetail:
+def get_post(slug: str, db: DbSession, locale: RequestLocale) -> BlogPostDetail:
     post = db.scalar(
         select(BlogPost).where(
             BlogPost.slug == slug, BlogPost.status == ReviewStatus.PUBLISHED
@@ -148,7 +180,10 @@ def get_post(slug: str, db: DbSession) -> BlogPostDetail:
     )
     if post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
-    return BlogPostDetail.model_validate(post)
+    return BlogPostDetail(
+        **_post_summary_fields(post, locale),
+        body_markdown=localise(post, "body_markdown", locale),
+    )
 
 
 @router.get("/stats", response_model=SiteStats)
@@ -245,23 +280,28 @@ def submit_contact(
 
 
 @router.get("/settings")
-def public_settings(db: DbSession) -> dict[str, Any]:
-    """Contact details, social links and footer copy, keyed for direct lookup."""
+def public_settings(db: DbSession, locale: RequestLocale) -> dict[str, Any]:
+    """Contact details, social links and footer copy, keyed for direct lookup.
+
+    A setting's whole value blob is translated, not individual keys inside it — a phone number is
+    the same in both languages, but the footer tagline and the policy text are not.
+    """
     rows = db.scalars(select(SiteSetting).order_by(SiteSetting.group, SiteSetting.position))
-    return {row.key: row.value for row in rows}
+    return {row.key: localise(row, "value", locale) for row in rows}
 
 
 @router.get("/sections")
 def public_sections(
     db: DbSession,
+    locale: RequestLocale,
     page: Annotated[str | None, Query(max_length=60)] = None,
-    locale: Annotated[str, Query(max_length=8)] = "en",
 ) -> dict[str, Any]:
     """Published page sections, keyed by section key so a template can look one up directly.
 
     Falls back to the English row when a locale has no translation: a missing Vietnamese
     translation should show the English copy, not an empty page.
     """
+    wanted = locale
     query = select(SiteSection).where(SiteSection.status == ReviewStatus.PUBLISHED)
     if page:
         query = query.where(SiteSection.page == page)
@@ -273,7 +313,7 @@ def public_sections(
             continue
         existing = by_key.get(row.key)
         # Prefer the requested locale; otherwise keep whatever was found first.
-        if existing is None or row.locale == locale:
+        if existing is None or row.locale == wanted:
             by_key[row.key] = {
                 "key": row.key,
                 "page": row.page,
@@ -288,14 +328,25 @@ def public_sections(
 @router.get("/faqs")
 def public_faqs(
     db: DbSession,
+    locale: RequestLocale,
     category: Annotated[str | None, Query(max_length=60)] = None,
-    locale: Annotated[str | None, Query(max_length=8)] = None,
 ) -> list[dict[str, Any]]:
+    wanted = locale
     query = select(FaqItem).where(FaqItem.is_published.is_(True))
     if category:
         query = query.where(FaqItem.category == category)
-    if locale:
-        query = query.where(FaqItem.locale == locale)
+    # FAQs are per-locale rows rather than a translation blob, so filter rather than fall back —
+    # and only fall back to English when this locale has no FAQs at all.
+    localised = list(
+        db.scalars(query.where(FaqItem.locale == wanted).order_by(FaqItem.position, FaqItem.id))
+    )
+    if not localised and wanted != DEFAULT_LOCALE:
+        localised = list(
+            db.scalars(
+                query.where(FaqItem.locale == DEFAULT_LOCALE)
+                .order_by(FaqItem.position, FaqItem.id)
+            )
+        )
     return [
         {
             "id": item.id,
@@ -303,8 +354,9 @@ def public_faqs(
             "answer": item.answer,
             "category": item.category,
         }
-        for item in db.scalars(query.order_by(FaqItem.position, FaqItem.id))
+        for item in localised
     ]
+
 
 
 @router.get("/announcements")

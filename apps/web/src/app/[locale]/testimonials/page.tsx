@@ -10,7 +10,16 @@ import { getTranslator } from '@/lib/dictionaries';
 import { safe } from '@/lib/server-api';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Testimonials' };
+/** The tab title is content too: a Vietnamese visitor should not see an English one. */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale: raw } = await params;
+  const t = getTranslator(isLocale(raw) ? raw : 'en');
+  return { title: t('nav.testimonials') };
+}
 
 export default async function TestimonialsPage({
   params,
@@ -21,14 +30,14 @@ export default async function TestimonialsPage({
   const locale = isLocale(raw) ? raw : 'en';
   const t = getTranslator(locale);
 
-  const testimonials = await safe(api.site.testimonials(), [] as Testimonial[]);
+  const testimonials = await safe(api.site.testimonials(undefined, locale), [] as Testimonial[]);
   const average =
     testimonials.length > 0
       ? testimonials.reduce((total, item) => total + item.rating, 0) / testimonials.length
       : 0;
 
   return (
-    <MarketingShell>
+    <MarketingShell locale={locale}>
       <PageHeader
         eyebrow={t('nav.testimonials')}
         title={t('testimonials.title')}

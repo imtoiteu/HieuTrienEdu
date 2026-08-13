@@ -24,7 +24,8 @@ from pydantic import BaseModel, Field
 from sqlalchemy import select
 
 from app.core.config import settings
-from app.core.deps import CurrentUser, DbSession, require_roles
+from app.core.deps import CurrentUser, DbSession, RequestLocale, require_roles
+from app.core.i18n import localise
 from app.models import AIGenerationBatch, Question, QuestionVariant, ReviewStatus, Skill, UserRole
 from app.services.ai_provider import AI_FEATURES, get_ai_provider, log_interaction
 
@@ -95,7 +96,7 @@ def _load_variant(db: DbSession, variant_id: int) -> QuestionVariant:
 
 @router.post("/tutor-hint", response_model=AIResponse)
 def tutor_hint(
-    payload: TutorHintRequest, db: DbSession, user: CurrentUser
+    payload: TutorHintRequest, db: DbSession, user: CurrentUser, locale: RequestLocale
 ) -> AIResponse:
     """Ask for a Socratic nudge that guides without giving the answer away."""
     variant = _load_variant(db, payload.variant_id)
@@ -104,7 +105,10 @@ def tutor_hint(
     result = provider.tutor_hint(
         question_prompt=variant.rendered.get("prompt", ""),
         student_answer=payload.student_answer,
-        skill_name=variant.question.skill.name if variant.question.skill else "",
+        skill_name=(
+            localise(variant.question.skill, "name", locale) if variant.question.skill else ""
+        ),
+        locale=locale,
     )
     interaction = log_interaction(
         db,
@@ -124,7 +128,7 @@ def tutor_hint(
 
 @router.post("/explain-mistake", response_model=AIResponse)
 def explain_mistake(
-    payload: ExplainMistakeRequest, db: DbSession, user: CurrentUser
+    payload: ExplainMistakeRequest, db: DbSession, user: CurrentUser, locale: RequestLocale
 ) -> AIResponse:
     variant = _load_variant(db, payload.variant_id)
     provider = get_ai_provider()
@@ -133,6 +137,7 @@ def explain_mistake(
         question_prompt=variant.rendered.get("prompt", ""),
         student_answer=payload.student_answer,
         correct_answer=str(variant.answer),
+        locale=locale,
     )
     interaction = log_interaction(
         db,

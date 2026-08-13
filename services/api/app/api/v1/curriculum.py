@@ -8,7 +8,8 @@ from fastapi import APIRouter, HTTPException, Query, status
 from sqlalchemy import func, select
 from sqlalchemy.orm import selectinload
 
-from app.core.deps import CurrentUser, DbSession, OptionalUser
+from app.core.deps import CurrentUser, DbSession, OptionalUser, RequestLocale
+from app.core.i18n import localise
 from app.models import (
     Course,
     Lesson,
@@ -39,6 +40,19 @@ from app.schemas.curriculum import (
 from app.services.storage import playback_url
 
 router = APIRouter(prefix="/curriculum", tags=["curriculum"])
+
+
+def _skill_read(skill: Skill, locale: str) -> SkillRead:
+    """Serialise a skill with its name and description in the requested language."""
+    return SkillRead(
+        id=skill.id,
+        slug=skill.slug,
+        name=localise(skill, "name", locale),
+        description=localise(skill, "description", locale),
+        difficulty=skill.difficulty,
+        position=skill.position,
+        tags=skill.tags or [],
+    )
 
 
 def _course_counts(db, course_ids: list[int]) -> dict[int, dict[str, int]]:
@@ -79,7 +93,7 @@ def _course_counts(db, course_ids: list[int]) -> dict[int, dict[str, int]]:
 
 
 @router.get("/subjects", response_model=list[SubjectRead])
-def list_subjects(db: DbSession) -> list[SubjectRead]:
+def list_subjects(db: DbSession, locale: RequestLocale) -> list[SubjectRead]:
     subjects = list(
         db.scalars(
             select(Subject)
@@ -94,7 +108,8 @@ def list_subjects(db: DbSession) -> list[SubjectRead]:
     for subject in subjects:
         courses = [
             CourseSummary(
-                id=c.id, slug=c.slug, title=c.title, grade=c.grade, summary=c.summary,
+                id=c.id, slug=c.slug, title=localise(c, 'title', locale), grade=c.grade,
+                summary=localise(c, 'summary', locale),
                 estimated_hours=c.estimated_hours, **counts.get(c.id, {})
             )
             for c in sorted(subject.courses, key=lambda c: c.grade)
@@ -102,8 +117,9 @@ def list_subjects(db: DbSession) -> list[SubjectRead]:
         ]
         result.append(
             SubjectRead(
-                id=subject.id, slug=subject.slug, name=subject.name,
-                description=subject.description, icon=subject.icon, color=subject.color,
+                id=subject.id, slug=subject.slug, name=localise(subject, 'name', locale),
+                description=localise(subject, 'description', locale),
+                icon=subject.icon, color=subject.color,
                 courses=courses,
             )
         )
@@ -113,6 +129,7 @@ def list_subjects(db: DbSession) -> list[SubjectRead]:
 @router.get("/courses", response_model=list[CourseSummary])
 def list_courses(
     db: DbSession,
+    locale: RequestLocale,
     subject: Annotated[str | None, Query(description="Subject slug")] = None,
     grade: Annotated[int | None, Query(ge=1, le=12)] = None,
 ) -> list[CourseSummary]:
@@ -126,7 +143,8 @@ def list_courses(
     counts = _course_counts(db, [c.id for c in courses])
     return [
         CourseSummary(
-            id=c.id, slug=c.slug, title=c.title, grade=c.grade, summary=c.summary,
+            id=c.id, slug=c.slug, title=localise(c, 'title', locale), grade=c.grade,
+                summary=localise(c, 'summary', locale),
             estimated_hours=c.estimated_hours, **counts.get(c.id, {})
         )
         for c in courses
@@ -134,7 +152,7 @@ def list_courses(
 
 
 @router.get("/courses/{course_slug}", response_model=CourseDetail)
-def get_course(course_slug: str, db: DbSession) -> CourseDetail:
+def get_course(course_slug: str, db: DbSession, locale: RequestLocale) -> CourseDetail:
     course = db.scalar(
         select(Course)
         .where(Course.slug == course_slug)
@@ -150,20 +168,23 @@ def get_course(course_slug: str, db: DbSession) -> CourseDetail:
 
     counts = _course_counts(db, [course.id]).get(course.id, {})
     return CourseDetail(
-        id=course.id, slug=course.slug, title=course.title, grade=course.grade,
-        summary=course.summary, description=course.description,
+        id=course.id, slug=course.slug, title=localise(course, 'title', locale), grade=course.grade,
+        summary=localise(course, 'summary', locale),
+        description=localise(course, 'description', locale),
         estimated_hours=course.estimated_hours,
         subject_slug=course.subject.slug if course.subject else None,
-        subject_name=course.subject.name if course.subject else None,
+        subject_name=localise(course.subject, 'name', locale) if course.subject else None,
         units=[
             UnitRead(
-                id=u.id, slug=u.slug, title=u.title, summary=u.summary, icon=u.icon,
+                id=u.id, slug=u.slug, title=localise(u, 'title', locale),
+                summary=localise(u, 'summary', locale), icon=u.icon,
                 position=u.position,
                 topics=[
                     TopicRead(
-                        id=t.id, slug=t.slug, title=t.title, summary=t.summary,
+                        id=t.id, slug=t.slug, title=localise(t, 'title', locale),
+                        summary=localise(t, 'summary', locale),
                         position=t.position,
-                        skills=[SkillRead.model_validate(s)
+                        skills=[_skill_read(s, locale)
                                 for s in sorted(t.skills, key=lambda s: (s.position, s.id))],
                     )
                     for t in sorted(u.topics, key=lambda t: (t.position, t.id))
@@ -176,7 +197,7 @@ def get_course(course_slug: str, db: DbSession) -> CourseDetail:
 
 
 @router.get("/units/{unit_slug}", response_model=UnitRead)
-def get_unit(unit_slug: str, db: DbSession) -> UnitRead:
+def get_unit(unit_slug: str, db: DbSession, locale: RequestLocale) -> UnitRead:
     unit = db.scalar(
         select(Unit)
         .where(Unit.slug == unit_slug)
@@ -185,12 +206,14 @@ def get_unit(unit_slug: str, db: DbSession) -> UnitRead:
     if unit is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Unit not found")
     return UnitRead(
-        id=unit.id, slug=unit.slug, title=unit.title, summary=unit.summary, icon=unit.icon,
+        id=unit.id, slug=unit.slug, title=localise(unit, 'title', locale),
+        summary=localise(unit, 'summary', locale), icon=unit.icon,
         position=unit.position,
         topics=[
             TopicRead(
-                id=t.id, slug=t.slug, title=t.title, summary=t.summary, position=t.position,
-                skills=[SkillRead.model_validate(s)
+                id=t.id, slug=t.slug, title=localise(t, 'title', locale),
+                summary=localise(t, 'summary', locale), position=t.position,
+                skills=[_skill_read(s, locale)
                         for s in sorted(t.skills, key=lambda s: (s.position, s.id))],
             )
             for t in sorted(unit.topics, key=lambda t: (t.position, t.id))
@@ -199,7 +222,7 @@ def get_unit(unit_slug: str, db: DbSession) -> UnitRead:
 
 
 @router.get("/skills/{skill_slug}", response_model=SkillDetail)
-def get_skill(skill_slug: str, db: DbSession) -> SkillDetail:
+def get_skill(skill_slug: str, db: DbSession, locale: RequestLocale) -> SkillDetail:
     skill = db.scalar(
         select(Skill)
         .where(Skill.slug == skill_slug)
@@ -244,23 +267,25 @@ def get_skill(skill_slug: str, db: DbSession) -> SkillDetail:
     course = unit.course if unit else None
 
     return SkillDetail(
-        **SkillRead.model_validate(skill).model_dump(),
+        **_skill_read(skill, locale).model_dump(),
         topic_slug=topic.slug if topic else None,
-        topic_title=topic.title if topic else None,
-        unit_title=unit.title if unit else None,
-        course_title=course.title if course else None,
+        topic_title=localise(topic, 'title', locale) if topic else None,
+        unit_title=localise(unit, 'title', locale) if unit else None,
+        course_title=localise(course, 'title', locale) if course else None,
         subject_slug=course.subject.slug if course and course.subject else None,
         grade=course.grade if course else None,
-        prerequisites=[SkillRead.model_validate(s) for s in prerequisites],
-        unlocks=[SkillRead.model_validate(s) for s in unlocks],
-        related=[SkillRead.model_validate(s) for s in related],
+        prerequisites=[_skill_read(s, locale) for s in prerequisites],
+        unlocks=[_skill_read(s, locale) for s in unlocks],
+        related=[_skill_read(s, locale) for s in related],
         question_count=question_count,
         lesson_count=lesson_count,
     )
 
 
 @router.get("/topics/{topic_slug}/lessons", response_model=list[LessonSummary])
-def list_topic_lessons(topic_slug: str, db: DbSession) -> list[LessonSummary]:
+def list_topic_lessons(
+    topic_slug: str, db: DbSession, locale: RequestLocale
+) -> list[LessonSummary]:
     topic = db.scalar(select(Topic).where(Topic.slug == topic_slug))
     if topic is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Topic not found")
@@ -269,13 +294,22 @@ def list_topic_lessons(topic_slug: str, db: DbSession) -> list[LessonSummary]:
         .where(Lesson.topic_id == topic.id, Lesson.status == ReviewStatus.PUBLISHED)
         .order_by(Lesson.position, Lesson.id)
     )
-    return [LessonSummary.model_validate(lesson) for lesson in lessons]
+    return [
+        LessonSummary(
+            id=lesson.id, slug=lesson.slug, title=localise(lesson, 'title', locale),
+            summary=localise(lesson, 'summary', locale),
+            estimated_minutes=lesson.estimated_minutes, position=lesson.position,
+            objectives=localise(lesson, 'objectives', locale) or [],
+        )
+        for lesson in lessons
+    ]
 
 
 @router.get("/lessons/{lesson_slug}", response_model=LessonDetail)
 def get_lesson(
     lesson_slug: str,
     db: DbSession,
+    locale: RequestLocale,
     user: OptionalUser = None,
 ) -> LessonDetail:
     lesson = db.scalar(
@@ -302,13 +336,15 @@ def get_lesson(
         )
 
     detail = LessonDetail(
-        id=lesson.id, slug=lesson.slug, title=lesson.title, summary=lesson.summary,
+        id=lesson.id, slug=lesson.slug, title=localise(lesson, 'title', locale),
+        summary=localise(lesson, 'summary', locale),
         estimated_minutes=lesson.estimated_minutes, position=lesson.position,
-        objectives=lesson.objectives or [], blocks=lesson.blocks or [],
+        objectives=localise(lesson, 'objectives', locale) or [],
+        blocks=localise(lesson, 'blocks', locale) or [],
         topic_slug=lesson.topic.slug if lesson.topic else None,
-        topic_title=lesson.topic.title if lesson.topic else None,
+        topic_title=localise(lesson.topic, 'title', locale) if lesson.topic else None,
         skill_slug=lesson.skill.slug if lesson.skill else None,
-        skill_name=lesson.skill.name if lesson.skill else None,
+        skill_name=localise(lesson.skill, 'name', locale) if lesson.skill else None,
         video=video, attribution=lesson.attribution, license=lesson.license,
     )
 

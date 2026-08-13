@@ -23,7 +23,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import Base, TimestampMixin
+from app.models.base import Base, TimestampMixin, TranslatableMixin
 from app.models.curriculum import Course
 from app.models.enums import (
     AssignmentStatus,
@@ -41,7 +41,7 @@ if TYPE_CHECKING:
     from app.models.ops import LeadNote
 
 
-class TutoringProduct(Base, TimestampMixin):
+class TutoringProduct(Base, TimestampMixin, TranslatableMixin):
     """A sellable learning package: 1-to-1, group, online live, recorded or hybrid."""
 
     __tablename__ = "tutoring_products"
@@ -87,7 +87,7 @@ class TutoringProduct(Base, TimestampMixin):
     teacher: Mapped[TeacherProfile | None] = relationship()
 
 
-class ClassGroup(Base, TimestampMixin):
+class ClassGroup(Base, TimestampMixin, TranslatableMixin):
     """A concrete cohort with a teacher, a schedule and a roster."""
 
     __tablename__ = "class_groups"

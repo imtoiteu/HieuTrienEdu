@@ -22,6 +22,7 @@ from sqlalchemy.orm import Session
 from app.content_io.loader import load_all
 from app.core.config import settings
 from app.core.db import SessionLocal, engine
+from app.core.i18n import merge_translation
 from app.core.security import hash_password
 from app.models import (
     Achievement,
@@ -42,6 +43,7 @@ from app.models import (
     ReviewStatus,
     ScheduleSlot,
     SessionStatus,
+    SiteSetting,
     Skill,
     StudentProfile,
     TeacherProfile,
@@ -51,6 +53,14 @@ from app.models import (
     UserRole,
 )
 from app.seed.cms_defaults import seed_cms
+from app.seed.marketing_vi import (
+    BLOG_VI,
+    CLASSES_VI,
+    PRODUCTS_VI,
+    SETTINGS_VI,
+    TEACHERS_VI,
+    TESTIMONIALS_VI,
+)
 from app.services.practice import record_attempt, serve_question
 
 DEMO_PASSWORD = "HietEdu2026!"
@@ -627,6 +637,47 @@ def seed_site_content(db: Session) -> None:
     db.flush()
 
 
+def apply_marketing_vi(db: Session) -> int:
+    """Attach the Vietnamese translations in ``marketing_vi`` to the seeded marketing content.
+
+    Runs after every seeding step so it can translate rows the earlier steps have just created.
+    Writes only into ``i18n`` — the English columns are never touched, which is what keeps ``/en``
+    identical before and after this function exists.
+
+    Rows are matched by their natural key (slug, email, author name). A key with no matching row
+    is skipped rather than raising: the translation file may legitimately run ahead of the seed.
+    """
+    translated = 0
+
+    def apply(instance: object | None, values: dict) -> None:
+        nonlocal translated
+        if instance is None:
+            return
+        instance.i18n = merge_translation(getattr(instance, "i18n", None), "vi", values)
+        translated += 1
+
+    for slug, values in PRODUCTS_VI.items():
+        apply(db.scalar(select(TutoringProduct).where(TutoringProduct.slug == slug)), values)
+
+    for slug, values in CLASSES_VI.items():
+        apply(db.scalar(select(ClassGroup).where(ClassGroup.slug == slug)), values)
+
+    for email, values in TEACHERS_VI.items():
+        user = db.scalar(select(User).where(User.email == email))
+        apply(user.teacher_profile if user else None, values)
+
+    for author, values in TESTIMONIALS_VI.items():
+        apply(db.scalar(select(Testimonial).where(Testimonial.author_name == author)), values)
+
+    for slug, values in BLOG_VI.items():
+        apply(db.scalar(select(BlogPost).where(BlogPost.slug == slug)), values)
+
+    for key, values in SETTINGS_VI.items():
+        apply(db.scalar(select(SiteSetting).where(SiteSetting.key == key)), values)
+
+    return translated
+
+
 def seed_demo_family(db: Session, groups: list[ClassGroup]) -> StudentProfile | None:
     """Create the demo student, a sibling, and a parent linked to both."""
     student_user, created = _get_or_create_user(
@@ -890,6 +941,10 @@ def run(*, reset: bool = False, simulate: bool = True) -> int:
         cms_counts = seed_cms(db)
         db.commit()
         print("  " + ", ".join(f"{v} {k}" for k, v in cms_counts.items() if v))
+
+        print("Translating marketing content ...")
+        print(f"  {apply_marketing_vi(db)} records given Vietnamese")
+        db.commit()
 
         print("Seeding demo family ...")
         student = seed_demo_family(db, groups)

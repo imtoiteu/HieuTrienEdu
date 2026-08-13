@@ -194,11 +194,11 @@ method to `apps/web/src/lib/api.ts`, write a test.
 
 Known gaps, in rough priority order:
 
-1. **Content translation.** The interface is fully internationalised, but skill names, lessons and
-   question prompts are single strings. Needs a `locale` column or a parallel content tree.
-2. **Vietnamese coverage.** Navigation, auth, the student experience and the marketing shell are
-   translated. Teacher, admin and long-form marketing copy fall back to English per key.
-3. **Rate limiting.** Redis is wired up but unused for throttling. Login and registration first.
-4. **Parent-child link confirmation.** Currently anyone knowing a student's email can link to them.
-5. **Refresh token revocation.** No denylist, so logout is client-side only.
-6. **Background jobs.** Anything slow would block a request today.
+1. **A third language.** Both the interface and the content are fully localised for English and
+   Vietnamese — see [LOCALISATION.md](LOCALISATION.md). Adding a third means adding a locale to
+   `SUPPORTED_LOCALES`, a dictionary under `apps/web/src/messages/`, and translations in the
+   `i18n` columns; no schema change.
+2. **Rate limiting.** Redis is wired up but unused for throttling. Login and registration first.
+3. **Parent-child link confirmation.** Currently anyone knowing a student's email can link to them.
+4. **Refresh token revocation.** No denylist, so logout is client-side only.
+5. **Background jobs.** Anything slow would block a request today.

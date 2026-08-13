@@ -10,7 +10,8 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
-from app.core.deps import CurrentUser, DbSession, OptionalUser
+from app.core.deps import CurrentUser, DbSession, OptionalUser, RequestLocale
+from app.core.i18n import DEFAULT_LOCALE, localise
 from app.models import (
     ClassEnrollment,
     ClassGroup,
@@ -170,19 +171,21 @@ class OrderRead(BaseModel):
 # --------------------------------------------------------------------------------------
 
 
-def _teacher_card(profile: TeacherProfile) -> TeacherCard:
+def _teacher_card(profile: TeacherProfile, locale: str = DEFAULT_LOCALE) -> TeacherCard:
+    # ``full_name`` is a person's name and is never translated. ``subjects``/``grades`` are slugs
+    # and numbers the frontend labels itself.
     return TeacherCard(
         id=profile.id,
         user_id=profile.user_id,
         full_name=profile.user.full_name if profile.user else "",
-        headline=profile.headline,
-        bio=profile.bio,
+        headline=localise(profile, "headline", locale),
+        bio=localise(profile, "bio", locale),
         avatar_url=profile.user.avatar_url if profile.user else None,
         subjects=profile.subjects or [],
         grades=profile.grades or [],
-        qualifications=profile.qualifications or [],
+        qualifications=localise(profile, "qualifications", locale) or [],
         years_experience=profile.years_experience,
-        languages=profile.languages or [],
+        languages=localise(profile, "languages", locale) or [],
         rating=profile.rating,
         rating_count=profile.rating_count,
         is_featured=profile.is_featured,
@@ -192,12 +195,12 @@ def _teacher_card(profile: TeacherProfile) -> TeacherCard:
     )
 
 
-def _class_read(group: ClassGroup) -> ClassGroupRead:
+def _class_read(group: ClassGroup, locale: str = DEFAULT_LOCALE) -> ClassGroupRead:
     taken = group.seats_taken
     return ClassGroupRead(
         id=group.id,
         slug=group.slug,
-        name=group.name,
+        name=localise(group, "name", locale),
         format=group.format,
         delivery_mode=group.delivery_mode,
         capacity=group.capacity,
@@ -208,10 +211,10 @@ def _class_read(group: ClassGroup) -> ClassGroupRead:
         location=group.location,
         timezone=group.timezone,
         is_open_for_enrollment=group.is_open_for_enrollment,
-        course_title=group.course.title if group.course else None,
+        course_title=localise(group.course, 'title', locale) if group.course else None,
         course_slug=group.course.slug if group.course else None,
         grade=group.course.grade if group.course else None,
-        teacher=_teacher_card(group.teacher) if group.teacher else None,
+        teacher=_teacher_card(group.teacher, locale) if group.teacher else None,
         schedule=[
             ScheduleSlotRead(
                 weekday=slot.weekday,
@@ -229,9 +232,28 @@ def _class_read(group: ClassGroup) -> ClassGroupRead:
 # --------------------------------------------------------------------------------------
 
 
+def _product_read(product: TutoringProduct, locale: str) -> ProductRead:
+    """Prose fields come from the translation; prices, capacities and formats do not."""
+    return ProductRead(
+        **{
+            key: getattr(product, key)
+            for key in (
+                "id", "slug", "format", "delivery_mode", "subject_slug", "grade_min",
+                "grade_max", "price_vnd", "price_unit", "sessions_included",
+                "session_minutes", "capacity", "is_featured",
+            )
+        },
+        name=localise(product, "name", locale),
+        tagline=localise(product, "tagline", locale),
+        description=localise(product, "description", locale),
+        features=localise(product, "features", locale) or [],
+    )
+
+
 @router.get("/products", response_model=list[ProductRead])
 def list_products(
     db: DbSession,
+    locale: RequestLocale,
     format: Annotated[LearningFormat | None, Query()] = None,
     subject: Annotated[str | None, Query()] = None,
     grade: Annotated[int | None, Query(ge=1, le=12)] = None,
@@ -246,20 +268,21 @@ def list_products(
             TutoringProduct.grade_min <= grade, TutoringProduct.grade_max >= grade
         )
     products = db.scalars(query.order_by(TutoringProduct.position, TutoringProduct.id))
-    return [ProductRead.model_validate(p) for p in products]
+    return [_product_read(p, locale) for p in products]
 
 
 @router.get("/products/{slug}", response_model=ProductRead)
-def get_product(slug: str, db: DbSession) -> ProductRead:
+def get_product(slug: str, db: DbSession, locale: RequestLocale) -> ProductRead:
     product = db.scalar(select(TutoringProduct).where(TutoringProduct.slug == slug))
     if product is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
-    return ProductRead.model_validate(product)
+    return _product_read(product, locale)
 
 
 @router.get("/teachers", response_model=list[TeacherCard])
 def list_teachers(
     db: DbSession,
+    locale: RequestLocale,
     subject: Annotated[str | None, Query()] = None,
     grade: Annotated[int | None, Query(ge=1, le=12)] = None,
     featured: Annotated[bool | None, Query()] = None,
@@ -284,11 +307,11 @@ def list_teachers(
     if grade:
         teachers = [t for t in teachers if grade in (t.grades or [])]
 
-    return [_teacher_card(t) for t in teachers]
+    return [_teacher_card(t, locale) for t in teachers]
 
 
 @router.get("/teachers/{teacher_id}", response_model=TeacherCard)
-def get_teacher(teacher_id: int, db: DbSession) -> TeacherCard:
+def get_teacher(teacher_id: int, db: DbSession, locale: RequestLocale) -> TeacherCard:
     teacher = db.scalar(
         select(TeacherProfile)
         .where(TeacherProfile.id == teacher_id)
@@ -296,12 +319,13 @@ def get_teacher(teacher_id: int, db: DbSession) -> TeacherCard:
     )
     if teacher is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Teacher not found")
-    return _teacher_card(teacher)
+    return _teacher_card(teacher, locale)
 
 
 @router.get("/classes", response_model=list[ClassGroupRead])
 def list_classes(
     db: DbSession,
+    locale: RequestLocale,
     subject: Annotated[str | None, Query()] = None,
     grade: Annotated[int | None, Query(ge=1, le=12)] = None,
     format: Annotated[LearningFormat | None, Query()] = None,
@@ -330,11 +354,11 @@ def list_classes(
             g for g in groups
             if g.course and g.course.subject and g.course.subject.slug == subject
         ]
-    return [_class_read(g) for g in groups]
+    return [_class_read(g, locale) for g in groups]
 
 
 @router.get("/classes/{slug}", response_model=ClassGroupRead)
-def get_class(slug: str, db: DbSession) -> ClassGroupRead:
+def get_class(slug: str, db: DbSession, locale: RequestLocale) -> ClassGroupRead:
     group = db.scalar(
         select(ClassGroup)
         .where(ClassGroup.slug == slug)
@@ -347,7 +371,7 @@ def get_class(slug: str, db: DbSession) -> ClassGroupRead:
     )
     if group is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Class not found")
-    return _class_read(group)
+    return _class_read(group, locale)
 
 
 @router.post("/requests", response_model=TutoringRequestRead, status_code=status.HTTP_201_CREATED)
@@ -574,6 +598,7 @@ def _grouped_credentials(profile: TeacherProfile) -> dict[str, list[dict[str, An
 @router.get("/profiles")
 def list_teacher_profiles(
     db: DbSession,
+    locale: RequestLocale,
     subject: Annotated[str | None, Query(max_length=60)] = None,
     featured: Annotated[bool | None, Query()] = None,
 ) -> list[dict[str, Any]]:
@@ -599,12 +624,12 @@ def list_teacher_profiles(
             "id": row.id,
             "slug": row.slug,
             "full_name": row.user.full_name if row.user else "",
-            "headline": row.headline,
+            "headline": localise(row, "headline", locale),
             "photo_url": row.photo_url or (row.user.avatar_url if row.user else None),
             "subjects": row.subjects or [],
             "grades": row.grades or [],
             "years_experience": row.years_experience,
-            "specializations": row.specializations or [],
+            "specializations": localise(row, "specializations", locale) or [],
             "learning_formats": row.learning_formats or [],
             "is_featured": row.is_featured,
             "rating": row.rating,
@@ -615,7 +640,7 @@ def list_teacher_profiles(
 
 
 @router.get("/profiles/{slug}")
-def get_teacher_profile(slug: str, db: DbSession) -> dict[str, Any]:
+def get_teacher_profile(slug: str, db: DbSession, locale: RequestLocale) -> dict[str, Any]:
     """One teacher's full public page, assembled from admin-managed content."""
     profile = db.scalar(
         select(TeacherProfile)
@@ -653,17 +678,17 @@ def get_teacher_profile(slug: str, db: DbSession) -> dict[str, Any]:
         "id": profile.id,
         "slug": profile.slug,
         "full_name": profile.user.full_name if profile.user else "",
-        "headline": profile.headline,
-        "bio": profile.bio,
+        "headline": localise(profile, "headline", locale),
+        "bio": localise(profile, "bio", locale),
         "photo_url": profile.photo_url or (profile.user.avatar_url if profile.user else None),
         "subjects": profile.subjects or [],
         "grades": profile.grades or [],
-        "specializations": profile.specializations or [],
+        "specializations": localise(profile, "specializations", locale) or [],
         "years_experience": profile.years_experience,
-        "languages": profile.languages or [],
-        "qualifications": profile.qualifications or [],
-        "teaching_philosophy": profile.teaching_philosophy,
-        "teaching_style": profile.teaching_style,
+        "languages": localise(profile, "languages", locale) or [],
+        "qualifications": localise(profile, "qualifications", locale) or [],
+        "teaching_philosophy": localise(profile, "teaching_philosophy", locale),
+        "teaching_style": localise(profile, "teaching_style", locale),
         "learning_formats": profile.learning_formats or [],
         "accepts_one_to_one": profile.accepts_one_to_one,
         "hourly_rate_vnd": profile.hourly_rate_vnd,
@@ -680,18 +705,18 @@ def get_teacher_profile(slug: str, db: DbSession) -> dict[str, Any]:
         "availability": profile.availability or [],
         "credentials": _grouped_credentials(profile),
         "courses": [
-            {"id": c.id, "slug": c.slug, "title": c.title, "grade": c.grade,
-             "thumbnail_url": c.thumbnail_url}
+            {"id": c.id, "slug": c.slug, "title": localise(c, "title", locale),
+             "grade": c.grade, "thumbnail_url": c.thumbnail_url}
             for c in courses
         ],
         "programs": [
-            {"id": p.id, "slug": p.slug, "name": p.name, "format": p.format,
+            {"id": p.id, "slug": p.slug, "name": localise(p, "name", locale), "format": p.format,
              "price_vnd": p.price_vnd, "price_unit": p.price_unit,
              "delivery_mode": p.delivery_mode}
             for p in products
         ],
         "classes": [
-            {"id": g.id, "slug": g.slug, "name": g.name, "format": g.format,
+            {"id": g.id, "slug": g.slug, "name": localise(g, "name", locale), "format": g.format,
              "start_date": g.start_date, "delivery_mode": g.delivery_mode}
             for g in classes
         ],

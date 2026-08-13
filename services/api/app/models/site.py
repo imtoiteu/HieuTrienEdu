@@ -12,14 +12,14 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import Base, TimestampMixin
+from app.models.base import Base, TimestampMixin, TranslatableMixin
 from app.models.enums import LeadStatus, ReviewStatus
 
 if TYPE_CHECKING:
     from app.models.ops import LeadNote
 
 
-class Testimonial(Base, TimestampMixin):
+class Testimonial(Base, TimestampMixin, TranslatableMixin):
     __tablename__ = "testimonials"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -35,7 +35,7 @@ class Testimonial(Base, TimestampMixin):
     position: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
 
-class BlogPost(Base, TimestampMixin):
+class BlogPost(Base, TimestampMixin, TranslatableMixin):
     __tablename__ = "blog_posts"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)

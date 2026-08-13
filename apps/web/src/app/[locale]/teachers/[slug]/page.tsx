@@ -37,9 +37,9 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   try {
-    const teacher = await api.tutoring.profile(slug);
+    const teacher = await api.tutoring.profile(slug, locale);
     return {
       title: teacher.full_name,
       description: teacher.headline ?? undefined,
@@ -61,7 +61,7 @@ export default async function TeacherProfilePage({
 
   let teacher: TeacherProfileDetail;
   try {
-    teacher = await api.tutoring.profile(slug);
+    teacher = await api.tutoring.profile(slug, locale);
   } catch {
     // A missing or unpublished profile is a 404, not an error page: unpublishing a teacher must
     // not leave a broken-looking page behind.
@@ -78,7 +78,7 @@ export default async function TeacherProfilePage({
   ];
 
   return (
-    <MarketingShell>
+    <MarketingShell locale={locale}>
       {/* ---------------------------------------------------------------- header */}
       <Section className="bg-gradient-to-b from-lavender via-cream to-cream pt-12">
         <Container>

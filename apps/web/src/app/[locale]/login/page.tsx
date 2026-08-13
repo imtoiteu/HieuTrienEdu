@@ -10,11 +10,13 @@ import { ApiError } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { useI18n } from '@/lib/i18n';
 
+// The role is a value, not a label: it is resolved through `admin.st.<role>`, the same
+// dictionary lookup every other role badge in the app uses.
 const DEMO_ACCOUNTS = [
-  { role: 'Student', email: 'student@hietrieneducation.vn' },
-  { role: 'Parent', email: 'parent@hietrieneducation.vn' },
-  { role: 'Teacher', email: 'hieu@hietrieneducation.vn' },
-  { role: 'Admin', email: 'admin@hietrieneducation.vn' },
+  { role: 'student', email: 'student@hietrieneducation.vn' },
+  { role: 'parent', email: 'parent@hietrieneducation.vn' },
+  { role: 'teacher', email: 'hieu@hietrieneducation.vn' },
+  { role: 'admin', email: 'admin@hietrieneducation.vn' },
 ];
 const DEMO_PASSWORD = 'HietEdu2026!';
 
@@ -119,7 +121,7 @@ export default function LoginPage() {
           <ul className="mt-3 space-y-1.5">
             {DEMO_ACCOUNTS.map((account) => (
               <li key={account.email} className="flex items-center justify-between gap-3 text-xs">
-                <span className="font-semibold text-ink-700">{account.role}</span>
+                <span className="font-semibold text-ink-700">{t(`admin.st.${account.role}`)}</span>
                 <button
                   type="button"
                   onClick={() => {

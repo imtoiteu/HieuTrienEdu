@@ -36,6 +36,7 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
+from app.core.i18n import DEFAULT_LOCALE
 from app.models import AIInteraction
 
 __all__ = [
@@ -105,8 +106,12 @@ class AIProvider(ABC):
     # --- the four planned features -------------------------------------------------
     # Each delegates to complete() so a future provider implements one method, not five.
 
+    # ``locale`` is carried on every student-facing feature. The student sees the question in
+    # Vietnamese, so a hint or explanation that comes back in English would be useless to them —
+    # a future provider must know which language to answer in, not guess from the prompt.
+
     def tutor_hint(self, *, question_prompt: str, student_answer: str,
-                   skill_name: str) -> AIResult:
+                   skill_name: str, locale: str = DEFAULT_LOCALE) -> AIResult:
         return self.complete(
             AIRequest(
                 feature="tutor_hint",
@@ -114,12 +119,13 @@ class AIProvider(ABC):
                     "question": question_prompt,
                     "student_answer": student_answer,
                     "skill": skill_name,
+                    "locale": locale,
                 },
             )
         )
 
     def explain_mistake(self, *, question_prompt: str, student_answer: str,
-                        correct_answer: str) -> AIResult:
+                        correct_answer: str, locale: str = DEFAULT_LOCALE) -> AIResult:
         return self.complete(
             AIRequest(
                 feature="explain_mistake",
@@ -127,6 +133,7 @@ class AIProvider(ABC):
                     "question": question_prompt,
                     "student_answer": student_answer,
                     "correct_answer": correct_answer,
+                    "locale": locale,
                 },
             )
         )

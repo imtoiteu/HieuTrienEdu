@@ -10,6 +10,13 @@ File layout::
     content/<subject>/curriculum/<course>.yaml   subject, course, units, topics, skills
     content/<subject>/lessons/<course>.yaml      lessons (reference topic/skill slugs)
     content/<subject>/questions/<course>.yaml    question templates (reference skill slugs)
+    content/<subject>/i18n/<locale>.yaml         translations, keyed by entity kind and slug
+
+Translations live in their own files rather than as ``vi:`` blocks inside the authored English,
+for three reasons: the English files carry explanatory comments that a YAML round-trip would
+destroy, a translator can work on one file without touching content authoring, and adding a third
+language is a new file rather than an edit to every existing one. An entity may still declare an
+inline per-locale block; the sidecar wins where both exist.
 
 Every question is validated by generating a variant before it is written. A template that cannot
 generate is reported and skipped rather than being stored, because a broken template in the bank
@@ -18,7 +25,7 @@ becomes a 500 in front of a student mid-practice.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any
 
@@ -26,6 +33,7 @@ import yaml
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.core.i18n import DEFAULT_LOCALE, SUPPORTED_LOCALES
 from app.exercise_engine import GenerationError, QuestionTemplate, generate_variant
 from app.models import (
     Course,
@@ -82,6 +90,32 @@ class ContentLoader:
         self.db = db
         self.content_dir = content_dir
         self.report = LoadReport()
+        # {kind: {slug: {locale: {field: value}}}}, populated per subject before its content
+        # files are read.
+        self._sidecar: dict[str, dict[str, dict[str, Any]]] = {}
+
+    def _load_sidecar(self, subject_dir: Path) -> None:
+        """Read ``<subject>/i18n/<locale>.yaml`` into the translation lookup."""
+        self._sidecar = {}
+        i18n_dir = subject_dir / "i18n"
+        if not i18n_dir.is_dir():
+            return
+        for path in sorted(i18n_dir.glob("*.yaml")):
+            locale = path.stem
+            if locale not in SUPPORTED_LOCALES or locale == DEFAULT_LOCALE:
+                continue
+            data = _read_yaml(path) or {}
+            for kind, entries in data.items():
+                if not isinstance(entries, dict):
+                    continue
+                bucket = self._sidecar.setdefault(kind, {})
+                for slug, values in entries.items():
+                    if isinstance(values, dict):
+                        bucket.setdefault(slug, {})[locale] = values
+
+    def _sidecar_for(self, kind: str, slug: str) -> dict[str, Any]:
+        """Translations declared for one entity, as ``{locale: {field: value}}``."""
+        return self._sidecar.get(kind, {}).get(slug, {})
 
     # ---- helpers -------------------------------------------------------------------
 
@@ -97,6 +131,113 @@ class ContentLoader:
             setattr(instance, key, value)
         return instance, False
 
+    def _translations(
+        self,
+        data: dict[str, Any],
+        fields: tuple[str, ...],
+        kind: str | None = None,
+        slug: str | None = None,
+    ) -> dict[str, Any] | None:
+        """Collect per-locale overrides declared on a YAML entity.
+
+        An entity may carry a block per non-default locale::
+
+            title: Mathematics — Grade 6
+            vi:
+              title: Toán học — Lớp 6
+              summary: …
+
+        Returns ``None`` when nothing is translated, so the caller can leave an existing ``i18n``
+        blob alone rather than wiping translations an administrator entered through the CMS.
+        """
+        sidecar = self._sidecar_for(kind, slug) if kind and slug else {}
+
+        blob: dict[str, Any] = {}
+        for locale in SUPPORTED_LOCALES:
+            if locale == DEFAULT_LOCALE:
+                continue
+            inline = data.get(locale)
+            merged: dict[str, Any] = {}
+            if isinstance(inline, dict):
+                merged.update(inline)
+            # Sidecar wins: it is the file a translator maintains.
+            merged.update(sidecar.get(locale) or {})
+
+            values = {
+                field: merged[field]
+                for field in fields
+                if merged.get(field) not in (None, "", [], {})
+            }
+            if values:
+                blob[locale] = values
+        return blob or None
+
+    @staticmethod
+    def _merge_block_overlays(
+        translations: dict[str, Any] | None, base_blocks: list[dict[str, Any]]
+    ) -> dict[str, Any] | None:
+        """Overlay translated text onto lesson blocks, position by position.
+
+        A translation supplies only the prose fields of each block — ``markdown``, ``title``,
+        ``text``, ``points``, ``steps``, table ``headers``/``rows`` — as a list matching the
+        original order. Everything else (block ``type``, interactive widget ``config``, the
+        ``skill`` a practice block points at) is copied from the English block untouched, so a
+        translation cannot accidentally detach a lesson from the skill it practises or break a
+        plot.
+        """
+        if not translations or not base_blocks:
+            return translations
+
+        for bucket in translations.values():
+            overlays = bucket.get("blocks")
+            if not overlays:
+                continue
+            merged = []
+            for index, block in enumerate(base_blocks):
+                copy = dict(block)
+                if index < len(overlays) and isinstance(overlays[index], dict):
+                    copy.update(overlays[index])
+                merged.append(copy)
+            bucket["blocks"] = merged
+        return translations
+
+    @staticmethod
+    def _merge_choice_labels(
+        translations: dict[str, Any] | None, base_options: dict[str, Any]
+    ) -> dict[str, Any] | None:
+        """Fold a ``choices: [label, …]`` list into a full translated ``options`` blob.
+
+        A translation supplies only the visible labels, in the original order. It deliberately
+        cannot restate ``correct`` — duplicating the answer key in a second file is how a
+        translated question ends up marking a different option right from the English one. The
+        base choice objects are copied and only their ``label`` replaced.
+        """
+        if not translations:
+            return translations
+
+        base_choices = base_options.get("choices") or []
+        for bucket in translations.values():
+            labels = bucket.pop("choices", None)
+            if not labels or not base_choices:
+                continue
+            merged_choices = []
+            for index, choice in enumerate(base_choices):
+                copy = dict(choice) if isinstance(choice, dict) else {"label": choice}
+                if index < len(labels):
+                    copy["label"] = labels[index]
+                merged_choices.append(copy)
+            options = dict(bucket.get("options") or {})
+            options["choices"] = merged_choices
+            bucket["options"] = options
+        # Drop any locale left with nothing after the pop.
+        return {locale: values for locale, values in translations.items() if values} or None
+
+    @staticmethod
+    def _with_i18n(fields: dict[str, Any], translations: dict[str, Any] | None) -> dict[str, Any]:
+        if translations is not None:
+            fields["i18n"] = translations
+        return fields
+
     # ---- curriculum ----------------------------------------------------------------
 
     def load_curriculum_file(self, path: Path) -> None:
@@ -110,11 +251,18 @@ class ContentLoader:
         subject, created = self._upsert(
             Subject,
             subject_data["slug"],
-            name=subject_data.get("name", subject_data["slug"].title()),
-            description=subject_data.get("description"),
-            icon=subject_data.get("icon"),
-            color=subject_data.get("color"),
-            position=subject_data.get("position", 0),
+            **self._with_i18n(
+                {
+                    "name": subject_data.get("name", subject_data["slug"].title()),
+                    "description": subject_data.get("description"),
+                    "icon": subject_data.get("icon"),
+                    "color": subject_data.get("color"),
+                    "position": subject_data.get("position", 0),
+                },
+                self._translations(
+                    subject_data, ("name", "description"), "subjects", subject_data["slug"]
+                ),
+            ),
         )
         if created:
             self.report.subjects += 1
@@ -127,14 +275,24 @@ class ContentLoader:
         course, created = self._upsert(
             Course,
             course_data["slug"],
-            subject_id=subject.id,
-            title=course_data.get("title", course_data["slug"]),
-            grade=course_data.get("grade", 6),
-            summary=course_data.get("summary"),
-            description=course_data.get("description"),
-            estimated_hours=course_data.get("estimated_hours", 0),
-            is_published=course_data.get("is_published", True),
-            position=course_data.get("position", course_data.get("grade", 0)),
+            **self._with_i18n(
+                {
+                    "subject_id": subject.id,
+                    "title": course_data.get("title", course_data["slug"]),
+                    "grade": course_data.get("grade", 6),
+                    "summary": course_data.get("summary"),
+                    "description": course_data.get("description"),
+                    "estimated_hours": course_data.get("estimated_hours", 0),
+                    "is_published": course_data.get("is_published", True),
+                    "position": course_data.get("position", course_data.get("grade", 0)),
+                },
+                self._translations(
+                    course_data,
+                    ("title", "summary", "description"),
+                    "courses",
+                    course_data["slug"],
+                ),
+            ),
         )
         if created:
             self.report.courses += 1
@@ -148,11 +306,18 @@ class ContentLoader:
             unit, created = self._upsert(
                 Unit,
                 unit_data["slug"],
-                course_id=course.id,
-                title=unit_data.get("title", unit_data["slug"]),
-                summary=unit_data.get("summary"),
-                icon=unit_data.get("icon"),
-                position=unit_data.get("position", unit_index),
+                **self._with_i18n(
+                    {
+                        "course_id": course.id,
+                        "title": unit_data.get("title", unit_data["slug"]),
+                        "summary": unit_data.get("summary"),
+                        "icon": unit_data.get("icon"),
+                        "position": unit_data.get("position", unit_index),
+                    },
+                    self._translations(
+                        unit_data, ("title", "summary"), "units", unit_data["slug"]
+                    ),
+                ),
             )
             if created:
                 self.report.units += 1
@@ -161,10 +326,17 @@ class ContentLoader:
                 topic, created = self._upsert(
                     Topic,
                     topic_data["slug"],
-                    unit_id=unit.id,
-                    title=topic_data.get("title", topic_data["slug"]),
-                    summary=topic_data.get("summary"),
-                    position=topic_data.get("position", topic_index),
+                    **self._with_i18n(
+                        {
+                            "unit_id": unit.id,
+                            "title": topic_data.get("title", topic_data["slug"]),
+                            "summary": topic_data.get("summary"),
+                            "position": topic_data.get("position", topic_index),
+                        },
+                        self._translations(
+                            topic_data, ("title", "summary"), "topics", topic_data["slug"]
+                        ),
+                    ),
                 )
                 if created:
                     self.report.topics += 1
@@ -182,6 +354,12 @@ class ContentLoader:
                         if param in skill_data:
                             fields[param] = skill_data[param]
 
+                    self._with_i18n(
+                        fields,
+                        self._translations(
+                            skill_data, ("name", "description"), "skills", skill_data["slug"]
+                        ),
+                    )
                     skill, created = self._upsert(Skill, skill_data["slug"], **fields)
                     if created:
                         self.report.skills += 1
@@ -303,19 +481,35 @@ class ContentLoader:
             _, created = self._upsert(
                 Lesson,
                 lesson_data["slug"],
-                title=lesson_data.get("title", lesson_data["slug"]),
-                topic_id=topic.id,
-                skill_id=skill.id if skill else None,
-                summary=lesson_data.get("summary"),
-                objectives=lesson_data.get("objectives", []),
-                estimated_minutes=lesson_data.get("estimated_minutes", 15),
-                position=lesson_data.get("position", index),
-                blocks=lesson_data.get("blocks", []),
-                video_id=video_id,
-                status=lesson_data.get("status", ReviewStatus.PUBLISHED),
-                source=lesson_data.get("source"),
-                license=lesson_data.get("license"),
-                attribution=lesson_data.get("attribution"),
+                **self._with_i18n(
+                    {
+                        "title": lesson_data.get("title", lesson_data["slug"]),
+                        "topic_id": topic.id,
+                        "skill_id": skill.id if skill else None,
+                        "summary": lesson_data.get("summary"),
+                        "objectives": lesson_data.get("objectives", []),
+                        "estimated_minutes": lesson_data.get("estimated_minutes", 15),
+                        "position": lesson_data.get("position", index),
+                        "blocks": lesson_data.get("blocks", []),
+                        # A freshly loaded lesson has no unpublished edits; the draft mirrors the
+                        # live body so opening the admin editor shows the real lesson.
+                        "draft_blocks": lesson_data.get("blocks", []),
+                        "video_id": video_id,
+                        "status": lesson_data.get("status", ReviewStatus.PUBLISHED),
+                        "source": lesson_data.get("source"),
+                        "license": lesson_data.get("license"),
+                        "attribution": lesson_data.get("attribution"),
+                    },
+                    self._merge_block_overlays(
+                        self._translations(
+                            lesson_data,
+                            ("title", "summary", "objectives", "blocks"),
+                            "lessons",
+                            lesson_data["slug"],
+                        ),
+                        lesson_data.get("blocks", []),
+                    ),
+                ),
             )
             if created:
                 self.report.lessons += 1
@@ -362,6 +556,34 @@ class ContentLoader:
                 self.report.errors.append(f"{path.name}: question '{slug}' is invalid — {exc}")
                 continue
 
+            # Translations are templates too — they carry the same {{ placeholders }} and go
+            # through the same renderer. Validating them here is what stops a mistyped Vietnamese
+            # prompt from failing mid-practice for a student instead of at load time.
+            translations = self._translations(
+                merged, ("prompt", "hints", "solution", "options", "choices"), "questions", slug
+            )
+            translations = self._merge_choice_labels(translations, template.options)
+            if translations:
+                bad = False
+                for locale, bucket in translations.items():
+                    localised = replace(
+                        template,
+                        prompt=bucket.get("prompt", template.prompt),
+                        hints=bucket.get("hints", template.hints),
+                        solution=bucket.get("solution", template.solution),
+                        options={**template.options, **(bucket.get("options") or {})},
+                    )
+                    try:
+                        for seed in (1, 2, 17, 999):
+                            generate_variant(localised, seed)
+                    except GenerationError as exc:
+                        self.report.errors.append(
+                            f"{path.name}: question '{slug}' [{locale}] is invalid — {exc}"
+                        )
+                        bad = True
+                if bad:
+                    continue
+
             topic = skill.topic
             course = topic.unit.course
             subject = course.subject
@@ -369,6 +591,7 @@ class ContentLoader:
             _, created = self._upsert(
                 Question,
                 slug,
+                i18n=translations if translations is not None else {},
                 skill_id=skill.id,
                 subject_slug=subject.slug if subject else "",
                 grade=course.grade,
@@ -407,10 +630,13 @@ class ContentLoader:
         # reference them. Curriculum is loaded for *all* subjects before questions so that a
         # cross-subject prerequisite (physics leaning on a maths skill) resolves.
         for subject_dir in subject_dirs:
+            # Translations are per subject, so they are reloaded as each subject's turn comes up.
+            self._load_sidecar(subject_dir)
             for path in sorted((subject_dir / "curriculum").glob("*.yaml")):
                 self.load_curriculum_file(path)
 
         for subject_dir in subject_dirs:
+            self._load_sidecar(subject_dir)
             for path in sorted((subject_dir / "lessons").glob("*.yaml")):
                 self.load_lessons_file(path)
             for path in sorted((subject_dir / "questions").glob("*.yaml")):

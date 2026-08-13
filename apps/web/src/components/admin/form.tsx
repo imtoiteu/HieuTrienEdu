@@ -279,3 +279,109 @@ export function StatusBadge({
           : REVIEW_TONES;
   return <Badge tone={map[value] ?? 'neutral'}>{label(String(value))}</Badge>;
 }
+
+/* --------------------------------------------------------------------------------------
+ * bilingual authoring
+ * ------------------------------------------------------------------------------------ */
+
+/** One translatable field inside a {@link TranslationPanel}. */
+export type TranslatableField = {
+  /** Must match a field name the API's `translations` whitelist accepts. */
+  name: string;
+  label: string;
+  multiline?: boolean;
+  placeholder?: string;
+};
+
+/**
+ * Vietnamese fields for a record whose base columns are English.
+ *
+ * The administrator types Vietnamese here and it is saved as-is — nothing is machine-translated,
+ * at save time or at request time. A field left blank is not an empty Vietnamese value; the API
+ * drops it and the public site falls back to the English column, which is why the panel says so
+ * rather than leaving the author to guess.
+ */
+export function TranslationPanel({
+  fields,
+  value,
+  onChange,
+  disabled,
+}: {
+  fields: TranslatableField[];
+  value: Record<string, string>;
+  onChange: (next: Record<string, string>) => void;
+  disabled?: boolean;
+}) {
+  const { t } = useI18n();
+
+  function set(name: string, next: string) {
+    onChange({ ...value, [name]: next });
+  }
+
+  return (
+    <section className="rounded-2xl border-2 border-dashed border-brand-200 bg-brand-50/40 p-4">
+      <h3 className="text-xs font-black uppercase tracking-wide text-brand-700">
+        {t('admin.i18n.heading')}
+      </h3>
+      <p className="mt-1 text-xs text-ink-600">{t('admin.i18n.hint')}</p>
+      <div className="mt-3 space-y-3">
+        {fields.map((field) => (
+          <FormRow key={field.name} label={field.label} htmlFor={`vi-${field.name}`}>
+            {field.multiline ? (
+              <TextAreaField
+                id={`vi-${field.name}`}
+                lang="vi"
+                disabled={disabled}
+                value={value[field.name] ?? ''}
+                placeholder={field.placeholder}
+                onChange={(event) => set(field.name, event.target.value)}
+              />
+            ) : (
+              <TextField
+                id={`vi-${field.name}`}
+                lang="vi"
+                disabled={disabled}
+                value={value[field.name] ?? ''}
+                placeholder={field.placeholder}
+                onChange={(event) => set(field.name, event.target.value)}
+              />
+            )}
+          </FormRow>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Turn the panel's draft into the `translations` payload the API expects.
+ *
+ * Blank fields become `null`, which is how the API is told to *remove* a translation rather than
+ * store an empty string — an empty string would otherwise sit in the blob forever, and `localise`
+ * treats it as untranslated anyway.
+ */
+export function translationsPayload(
+  draft: Record<string, string>,
+  locale = 'vi',
+): Record<string, Record<string, string | null>> {
+  const bucket: Record<string, string | null> = {};
+  for (const [name, text] of Object.entries(draft)) {
+    bucket[name] = text.trim() ? text.trim() : null;
+  }
+  return { [locale]: bucket };
+}
+
+/** Read the Vietnamese bucket off an API record into panel state. */
+export function translationDraft(
+  translations: Record<string, Record<string, unknown>> | undefined,
+  fields: TranslatableField[],
+  locale = 'vi',
+): Record<string, string> {
+  const bucket = translations?.[locale] ?? {};
+  const draft: Record<string, string> = {};
+  for (const field of fields) {
+    const raw = bucket[field.name];
+    draft[field.name] = typeof raw === 'string' ? raw : '';
+  }
+  return draft;
+}

@@ -58,7 +58,7 @@ export default function LessonPage({
   }
 
   return (
-    <MarketingShell>
+    <MarketingShell locale={locale}>
       <div className="mx-auto w-full max-w-3xl px-5 py-8 sm:px-8 sm:py-12">
         <Link
           href={`/${locale}/courses`}

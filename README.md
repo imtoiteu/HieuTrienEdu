@@ -194,6 +194,7 @@ Being straight about this matters more than a longer feature list.
 | [QUESTION_ENGINE.md](docs/QUESTION_ENGINE.md) | Template format, sampling, grading, security model |
 | [ADAPTIVE_LEARNING.md](docs/ADAPTIVE_LEARNING.md) | The BKT model, its parameters, and our deviations from it |
 | [AI.md](docs/AI.md) | The AI abstraction, and exactly what is and is not implemented |
+| [LOCALISATION.md](docs/LOCALISATION.md) | How interface *and* content are translated, and what must never be |
 | [DEVELOPMENT.md](docs/DEVELOPMENT.md) | Local setup, workflows, testing, troubleshooting |
 | [DEPLOYMENT.md](docs/DEPLOYMENT.md) | Production checklist, scaling notes, open risks |
 

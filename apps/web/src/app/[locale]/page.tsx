@@ -41,6 +41,25 @@ import {
 import { getTranslator } from '@/lib/dictionaries';
 import { safeAll } from '@/lib/server-api';
 
+// The topic teasers on the two subject cards. Keys rather than copy, so /vi reads as Vietnamese;
+// the order is the order they appear on the card.
+const MATHS_TOPIC_KEYS = [
+  'fractions',
+  'ratios',
+  'algebra',
+  'functions',
+  'pythagoras',
+  'quadratics',
+] as const;
+const PHYSICS_TOPIC_KEYS = [
+  'measurement',
+  'motion',
+  'forces',
+  'energy',
+  'electricity',
+  'waves',
+] as const;
+
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
@@ -52,8 +71,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const { stats, testimonials, products, sections } = await safeAll(
     {
       stats: api.site.stats(),
-      testimonials: api.site.testimonials(true),
-      products: api.tutoring.products(),
+      testimonials: api.site.testimonials(true, locale),
+      products: api.tutoring.products({ locale }),
       sections: api.site.sections('home', locale),
     },
     {
@@ -81,7 +100,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const variantEstimate = stats ? stats.questions * 1000 : 0;
 
   return (
-    <MarketingShell>
+    <MarketingShell locale={locale}>
       {/* ---------------------------------------------------------------- hero */}
       <section className="relative overflow-hidden bg-gradient-to-b from-lavender via-cream to-cream">
         <BlobField />
@@ -264,14 +283,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               body={t('home.subjects.mathematics')}
               cta={t('home.subjects.explore')}
               accent="brand"
-              topics={[
-                'Fractions & decimals',
-                'Ratios & percentages',
-                'Algebra & equations',
-                'Linear functions',
-                'Pythagoras',
-                'Quadratics & trigonometry',
-              ]}
+              topics={MATHS_TOPIC_KEYS.map((key) => t(`home.subjects.maths.${key}`))}
             />
             <SubjectCard
               href={href('/physics')}
@@ -280,14 +292,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               body={t('home.subjects.physics')}
               cta={t('home.subjects.explore')}
               accent="teal"
-              topics={[
-                'Measurement & density',
-                'Motion & graphs',
-                'Forces & Newton’s laws',
-                'Energy, work & power',
-                'Electricity & circuits',
-                'Waves, heat & the atom',
-              ]}
+              topics={PHYSICS_TOPIC_KEYS.map((key) => t(`home.subjects.physics.${key}`))}
             />
           </div>
         </Container>

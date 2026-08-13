@@ -26,12 +26,7 @@ const FORMATS = {
     subtitleKey: 'tutoring.oneToOne.subtitle',
     tone: 'lavender' as const,
     icon: Users,
-    points: [
-      'The teacher works only with your child, at their pace.',
-      'Lesson content is chosen from their actual mastery data, not a fixed syllabus.',
-      'You choose the teacher and the times that suit your family.',
-      'Available online or in person at the centre.',
-    ],
+    pointKeys: ['focus', 'data', 'choice', 'mode'],
   },
   group: {
     apiFormat: 'group',
@@ -39,12 +34,7 @@ const FORMATS = {
     subtitleKey: 'tutoring.group.subtitle',
     tone: 'teal' as const,
     icon: Users,
-    points: [
-      'Capped at six students so nobody can hide at the back.',
-      'Students are grouped by ability rather than only by age.',
-      'Explaining to a peer is one of the most reliable ways to consolidate a method.',
-      'Term-long programme with a written report at the end.',
-    ],
+    pointKeys: ['capped', 'ability', 'peer', 'report'],
   },
   online: {
     apiFormat: 'online_live',
@@ -52,12 +42,7 @@ const FORMATS = {
     subtitleKey: 'tutoring.online.subtitle',
     tone: 'coral' as const,
     icon: Video,
-    points: [
-      'Live, taught by the same teachers as the in-person classes.',
-      'Every session is recorded, so a missed week is not a lost week.',
-      'A shared digital whiteboard and the practice platform in the same session.',
-      'Join from anywhere in Vietnam.',
-    ],
+    pointKeys: ['live', 'recorded', 'whiteboard', 'anywhere'],
   },
   live: {
     apiFormat: 'online_live',
@@ -65,12 +50,7 @@ const FORMATS = {
     subtitleKey: 'tutoring.live.subtitle',
     tone: 'sun' as const,
     icon: CalendarClock,
-    points: [
-      'Scheduled classes with a real teacher, not pre-recorded video.',
-      'Ask a question and get an answer in the moment.',
-      'Recordings and lesson notes published afterwards.',
-      'Attendance tracked and visible to parents.',
-    ],
+    pointKeys: ['scheduled', 'questions', 'notes', 'attendance'],
   },
   recorded: {
     apiFormat: 'recorded',
@@ -78,12 +58,7 @@ const FORMATS = {
     subtitleKey: 'tutoring.recorded.subtitle',
     tone: 'lavender' as const,
     icon: Video,
-    points: [
-      'Work at your own pace, with no fixed schedule.',
-      'Full access to the adaptive practice platform.',
-      'Every lesson in both subjects across grades 6 to 9.',
-      'The most affordable way to use the platform.',
-    ],
+    pointKeys: ['pace', 'platform', 'lessons', 'price'],
   },
 } as const;
 
@@ -106,9 +81,9 @@ export default async function TutoringFormatPage({
 
   const { products, classes, teachers } = await safeAll(
     {
-      products: api.tutoring.products({ format: config.apiFormat }),
-      classes: api.tutoring.classes({ format: config.apiFormat }),
-      teachers: api.tutoring.teachers(),
+      products: api.tutoring.products({ format: config.apiFormat, locale }),
+      classes: api.tutoring.classes({ format: config.apiFormat, locale }),
+      teachers: api.tutoring.teachers({ locale }),
     },
     {
       products: [] as TutoringProduct[],
@@ -118,7 +93,7 @@ export default async function TutoringFormatPage({
   );
 
   return (
-    <MarketingShell>
+    <MarketingShell locale={locale}>
       <PageHeader
         eyebrow={t('nav.tutoring')}
         title={t(config.titleKey)}
@@ -136,13 +111,13 @@ export default async function TutoringFormatPage({
                 </span>
                 <h2 className="mt-4 font-display text-2xl">{t('tutoring.whatYouGet')}</h2>
                 <ul className="mt-4 space-y-3">
-                  {config.points.map((point) => (
+                  {config.pointKeys.map((point) => (
                     <li key={point} className="flex items-start gap-3 text-ink-700">
                       <CheckCircle2
                         className="mt-0.5 h-5 w-5 shrink-0 text-teal-600"
                         aria-hidden="true"
                       />
-                      {point}
+                      {t(`tutoring.point.${format}.${point}`)}
                     </li>
                   ))}
                 </ul>

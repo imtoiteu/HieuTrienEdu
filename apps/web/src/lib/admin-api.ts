@@ -127,6 +127,18 @@ export interface DashboardFeed {
   attempts_this_week: number;
 }
 
+/**
+ * Per-locale field overrides on a content record.
+ *
+ * The English columns stay the source of truth; this is what the Vietnamese site reads instead
+ * where a field is present. Values are `unknown` because a translatable field can be a string
+ * (`title`), a list (`objectives`) or a block array (`blocks`) depending on the model.
+ */
+export type Translations = Record<string, Record<string, unknown>>;
+
+/** What the admin forms send back. `null` clears a field's translation. */
+export type TranslationsInput = Record<string, Record<string, string | null>>;
+
 export interface Category {
   id: number;
   slug: string;
@@ -166,6 +178,7 @@ export interface AdminCourse {
   seo_title: string | null;
   seo_description: string | null;
   categories: { id: number; slug: string; name: string; kind: string }[];
+  translations?: Translations;
   /** Structure totals, present on list rows only. The detail endpoint returns the tree instead. */
   unit_count?: number;
   topic_count?: number;
@@ -182,6 +195,7 @@ export interface StructureUnit {
   summary: string | null;
   icon: string | null;
   position: number;
+  translations?: Translations;
   topics: StructureTopic[];
 }
 
@@ -191,7 +205,16 @@ export interface StructureTopic {
   title: string;
   summary: string | null;
   position: number;
-  skills: { id: number; slug: string; name: string; difficulty: number; position: number; question_count: number }[];
+  translations?: Translations;
+  skills: {
+    id: number;
+    slug: string;
+    name: string;
+    difficulty: number;
+    position: number;
+    question_count: number;
+    translations?: Translations;
+  }[];
   lessons: {
     id: number;
     slug: string;
@@ -201,6 +224,7 @@ export interface StructureTopic {
     estimated_minutes: number;
     block_count: number;
     has_draft: boolean;
+    translations?: Translations;
   }[];
 }
 
@@ -224,6 +248,7 @@ export interface AdminLesson {
   published_at: string | null;
   updated_at: string;
   created_at: string;
+  translations?: Translations;
 }
 
 export interface LessonBlock {
@@ -790,7 +815,8 @@ export const adminApi = {
       apiFetch<AdminQuestion>(`${ADMIN}/questions`, { method: 'POST', body }),
     update: (id: number, body: Record<string, unknown>) =>
       apiFetch<AdminQuestion>(`${ADMIN}/questions/${id}`, { method: 'PATCH', body }),
-    preview: (id: number, params?: { seed?: number; reveal?: boolean }) =>
+    /** `locale` renders the question as a student of that language would receive it. */
+    preview: (id: number, params?: { seed?: number; reveal?: boolean; locale?: string }) =>
       apiFetch<Record<string, unknown>>(`${ADMIN}/questions/${id}/preview${qs(params)}`),
     publish: (id: number) =>
       apiFetch<AdminQuestion>(`${ADMIN}/questions/${id}/publish`, { method: 'POST' }),

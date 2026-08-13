@@ -11,7 +11,16 @@ import { getTranslator } from '@/lib/dictionaries';
 import { safe } from '@/lib/server-api';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Teachers' };
+/** The tab title is content too: a Vietnamese visitor should not see an English one. */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale: raw } = await params;
+  const t = getTranslator(isLocale(raw) ? raw : 'en');
+  return { title: t('nav.teachers') };
+}
 
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -22,14 +31,14 @@ export default async function TeachersPage({ params }: { params: Promise<{ local
 
   // Published profiles are the source of truth for the public roster. Fall back to the older
   // endpoint so the page still lists teachers on a database where nobody has been published yet.
-  const profiles = await safe(api.tutoring.profiles(), [] as TeacherProfileSummary[]);
+  const profiles = await safe(api.tutoring.profiles({ locale }), [] as TeacherProfileSummary[]);
   const slugById = new Map(profiles.map((profile) => [profile.id, profile.slug]));
-  const teachers = await safe(api.tutoring.teachers(), [] as TeacherCard[]);
+  const teachers = await safe(api.tutoring.teachers({ locale }), [] as TeacherCard[]);
   const featured = teachers.filter((teacher) => teacher.is_featured);
   const others = teachers.filter((teacher) => !teacher.is_featured);
 
   return (
-    <MarketingShell>
+    <MarketingShell locale={locale}>
       <PageHeader
         eyebrow={t('nav.teachers')}
         title={t('teachers.title')}

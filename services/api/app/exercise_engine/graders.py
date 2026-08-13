@@ -20,7 +20,9 @@ import unicodedata
 from dataclasses import dataclass, field
 from typing import Any
 
+from app.core.i18n import DEFAULT_LOCALE
 from app.exercise_engine.algebra import AlgebraError, expressions_equivalent, format_number
+from app.exercise_engine.feedback import render_feedback, render_format_error
 from app.models.enums import QuestionType
 
 __all__ = ["GradeResult", "grade_answer", "parse_number"]
@@ -32,6 +34,13 @@ CORRECTNESS_THRESHOLD = 0.999
 
 @dataclass
 class GradeResult:
+    """The outcome of grading one answer.
+
+    ``message_key`` and ``message_params`` are what the grader actually decides; ``message`` is
+    the English rendering, filled in automatically so every existing caller keeps working. Call
+    :meth:`localised_message` to render it in the student's language.
+    """
+
     is_correct: bool
     score: float
     message: str = ""
@@ -39,19 +48,43 @@ class GradeResult:
     details: list[dict[str, Any]] = field(default_factory=list)
     # Human-readable correct answer, attached only after grading.
     correct_answer: str | None = None
+    # Language-free description of the feedback, resolved to prose by ``feedback.py``.
+    message_key: str | None = None
+    message_params: dict[str, Any] = field(default_factory=dict)
 
-    def as_dict(self) -> dict[str, Any]:
+    def __post_init__(self) -> None:
+        if self.message_key and not self.message:
+            self.message = render_feedback(self.message_key, DEFAULT_LOCALE, self.message_params)
+
+    def localised_message(self, locale: str) -> str:
+        if not self.message_key:
+            return self.message
+        return render_feedback(self.message_key, locale, self.message_params)
+
+    def as_dict(self, locale: str = DEFAULT_LOCALE) -> dict[str, Any]:
+        # ``message_key``/``message_params`` ride along so a stored attempt can be re-rendered in
+        # whichever language the reader wants, years after it was graded.
         return {
             "is_correct": self.is_correct,
             "score": round(self.score, 4),
-            "message": self.message,
+            "message": self.localised_message(locale),
+            "message_key": self.message_key,
+            "message_params": self.message_params,
             "details": self.details,
             "correct_answer": self.correct_answer,
         }
 
 
 class AnswerFormatError(ValueError):
-    """Raised when the submitted payload is not shaped the way the question type expects."""
+    """Raised when the submitted payload is not shaped the way the question type expects.
+
+    Carries a ``key`` so the API layer can show the student the message in their own language;
+    the ``str()`` form stays English for logs and for callers that predate localisation.
+    """
+
+    def __init__(self, key: str) -> None:
+        self.key = key
+        super().__init__(render_format_error(key, DEFAULT_LOCALE))
 
 
 # --------------------------------------------------------------------------------------
@@ -73,15 +106,15 @@ def parse_number(raw: Any) -> float:
     * a single comma otherwise -> decimal separator
     """
     if isinstance(raw, bool):
-        raise AnswerFormatError("Expected a number")
+        raise AnswerFormatError("expected_a_number")
     if isinstance(raw, (int, float)):
         return float(raw)
     if not isinstance(raw, str):
-        raise AnswerFormatError("Expected a number")
+        raise AnswerFormatError("expected_a_number")
 
     text = _NUMBER_CLEAN.sub("", raw.strip())
     if not text:
-        raise AnswerFormatError("Answer is empty")
+        raise AnswerFormatError("answer_is_empty")
 
     text = text.replace("−", "-").replace("−", "-").replace("–", "-")
 
@@ -103,7 +136,7 @@ def parse_number(raw: Any) -> float:
         try:
             denominator_value = float(denominator)
             if denominator_value == 0:
-                raise AnswerFormatError("Division by zero")
+                raise AnswerFormatError("division_by_zero")
             return float(numerator) / denominator_value
         except ValueError as exc:
             raise AnswerFormatError(f"Could not read {raw!r} as a number") from exc
@@ -137,13 +170,13 @@ def _within_tolerance(actual: float, expected: float, tolerance: float, mode: st
 def _grade_multiple_choice(answer, user, _rendered) -> GradeResult:
     chosen = user.get("choice_id")
     if not chosen:
-        raise AnswerFormatError("Select an option before submitting")
+        raise AnswerFormatError("select_an_option")
     correct = answer.get("choice_id")
     is_correct = str(chosen) == str(correct)
     return GradeResult(
         is_correct=is_correct,
         score=1.0 if is_correct else 0.0,
-        message="Correct!" if is_correct else "Not quite — review the worked solution.",
+        message_key="correct" if is_correct else "wrong_review_solution",
         correct_answer=str(correct),
     )
 
@@ -151,9 +184,9 @@ def _grade_multiple_choice(answer, user, _rendered) -> GradeResult:
 def _grade_multiple_select(answer, user, _rendered) -> GradeResult:
     selected = user.get("choice_ids")
     if selected is None:
-        raise AnswerFormatError("Select at least one option before submitting")
+        raise AnswerFormatError("select_at_least_one")
     if not isinstance(selected, list):
-        raise AnswerFormatError("Expected a list of selected options")
+        raise AnswerFormatError("expected_option_list")
 
     chosen = {str(c) for c in selected}
     expected = {str(c) for c in answer.get("choice_ids", [])}
@@ -168,11 +201,12 @@ def _grade_multiple_select(answer, user, _rendered) -> GradeResult:
     return GradeResult(
         is_correct=is_correct,
         score=1.0 if is_correct else min(score, 0.99),
-        message=(
-            "Correct!" if is_correct
-            else f"You found {hits} of {len(expected)}"
-                 + (f", with {false_positives} incorrect." if false_positives else ".")
+        message_key=(
+            "correct" if is_correct
+            else "found_some_with_errors" if false_positives
+            else "found_some"
         ),
+        message_params={"hits": hits, "total": len(expected), "wrong": false_positives},
         correct_answer=", ".join(sorted(expected)),
     )
 
@@ -189,29 +223,23 @@ def _grade_numeric(answer, user, _rendered) -> GradeResult:
     if answer.get("unit"):
         display = f"{display} {answer['unit']}"
 
-    message = "Correct!"
+    message_key = "correct"
     if not is_correct:
         # A factor-of-ten error is the single most common numeric mistake; naming it is more
         # useful than a generic "incorrect".
         if expected != 0 and abs(value / expected - 10) < 0.01:
-            message = (
-                "Close — your answer is ten times too large. "
-                "Check your units or decimal point."
-            )
+            message_key = "ten_times_too_large"
         elif expected != 0 and abs(value / expected - 0.1) < 0.001:
-            message = (
-                "Close — your answer is ten times too small. "
-                "Check your units or decimal point."
-            )
+            message_key = "ten_times_too_small"
         elif expected != 0 and abs(value + expected) < max(1e-9, tolerance * abs(expected)):
-            message = "You have the right magnitude but the wrong sign."
+            message_key = "wrong_sign"
         else:
-            message = "Not quite — work through the solution steps."
+            message_key = "wrong_work_through_steps"
 
     return GradeResult(
         is_correct=is_correct,
         score=1.0 if is_correct else 0.0,
-        message=message,
+        message_key=message_key,
         correct_answer=display,
     )
 
@@ -219,7 +247,7 @@ def _grade_numeric(answer, user, _rendered) -> GradeResult:
 def _grade_expression(answer, user, _rendered) -> GradeResult:
     raw = user.get("value")
     if raw is None or str(raw).strip() == "":
-        raise AnswerFormatError("Enter an expression before submitting")
+        raise AnswerFormatError("enter_an_expression")
     expected = answer["expression"]
     try:
         is_correct = expressions_equivalent(str(raw), expected, symbols=answer.get("symbols"))
@@ -227,14 +255,14 @@ def _grade_expression(answer, user, _rendered) -> GradeResult:
         return GradeResult(
             is_correct=False,
             score=0.0,
-            message=f"We could not read that expression: {exc}",
+            message_key="unreadable_expression",
+            message_params={"error": str(exc)},
             correct_answer=expected,
         )
     return GradeResult(
         is_correct=is_correct,
         score=1.0 if is_correct else 0.0,
-        message="Correct — that is equivalent." if is_correct
-        else "That expression is not equivalent to the answer.",
+        message_key="correct_equivalent" if is_correct else "not_equivalent",
         correct_answer=expected,
     )
 
@@ -261,7 +289,7 @@ def _grade_one_blank(spec: dict[str, Any], raw: Any) -> bool:
 def _grade_fill_blank(answer, user, _rendered) -> GradeResult:
     submitted = user.get("blanks")
     if not isinstance(submitted, dict):
-        raise AnswerFormatError("Expected an object mapping blank ids to answers")
+        raise AnswerFormatError("expected_blank_map")
 
     specs = answer.get("blanks", [])
     details = []
@@ -280,7 +308,8 @@ def _grade_fill_blank(answer, user, _rendered) -> GradeResult:
     return GradeResult(
         is_correct=is_correct,
         score=score,
-        message="Correct!" if is_correct else f"{correct_count} of {len(specs)} blanks correct.",
+        message_key="correct" if is_correct else "blanks_correct",
+        message_params={"correct": correct_count, "total": len(specs)},
         details=details,
         correct_answer="; ".join(f"{d['id']}: {d['correct_answer']}" for d in details),
     )
@@ -291,12 +320,12 @@ def _grade_true_false(answer, user, _rendered) -> GradeResult:
     if isinstance(raw, str):
         raw = raw.strip().lower() in {"true", "yes", "1", "t"}
     if raw is None:
-        raise AnswerFormatError("Choose True or False")
+        raise AnswerFormatError("choose_true_or_false")
     is_correct = bool(raw) is bool(answer["value"])
     return GradeResult(
         is_correct=is_correct,
         score=1.0 if is_correct else 0.0,
-        message="Correct!" if is_correct else "Not quite.",
+        message_key="correct" if is_correct else "wrong_generic",
         correct_answer="True" if answer["value"] else "False",
     )
 
@@ -304,7 +333,7 @@ def _grade_true_false(answer, user, _rendered) -> GradeResult:
 def _grade_matching(answer, user, _rendered) -> GradeResult:
     submitted = user.get("mapping")
     if not isinstance(submitted, dict):
-        raise AnswerFormatError("Expected an object mapping left ids to right ids")
+        raise AnswerFormatError("expected_matching_map")
 
     expected: dict[str, str] = answer.get("mapping", {})
     details = []
@@ -319,7 +348,8 @@ def _grade_matching(answer, user, _rendered) -> GradeResult:
     return GradeResult(
         is_correct=is_correct,
         score=correct_count / total,
-        message="Correct!" if is_correct else f"{correct_count} of {len(expected)} pairs matched.",
+        message_key="correct" if is_correct else "pairs_matched",
+        message_params={"correct": correct_count, "total": len(expected)},
         details=details,
     )
 
@@ -327,7 +357,7 @@ def _grade_matching(answer, user, _rendered) -> GradeResult:
 def _grade_ordering(answer, user, _rendered) -> GradeResult:
     submitted = user.get("order")
     if not isinstance(submitted, list):
-        raise AnswerFormatError("Expected a list of item ids in order")
+        raise AnswerFormatError("expected_order_list")
 
     expected: list[str] = [str(i) for i in answer.get("order", [])]
     given = [str(i) for i in submitted]
@@ -346,7 +376,7 @@ def _grade_ordering(answer, user, _rendered) -> GradeResult:
     return GradeResult(
         is_correct=is_correct,
         score=1.0 if is_correct else min(score, 0.99),
-        message="Correct order!" if is_correct else "Not the right order yet.",
+        message_key="correct_order" if is_correct else "wrong_order",
         correct_answer=" → ".join(expected),
     )
 
@@ -354,13 +384,15 @@ def _grade_ordering(answer, user, _rendered) -> GradeResult:
 def _grade_short_answer(answer, user, _rendered) -> GradeResult:
     raw = user.get("value")
     if raw is None or str(raw).strip() == "":
-        raise AnswerFormatError("Enter an answer before submitting")
+        raise AnswerFormatError("enter_an_answer")
 
     normalised = normalise_text(raw)
     accepted = {normalise_text(a) for a in answer.get("accepted", [])}
     if normalised in accepted:
-        return GradeResult(True, 1.0, "Correct!",
-                           correct_answer=next(iter(answer.get("accepted", [])), None))
+        return GradeResult(
+            True, 1.0, message_key="correct",
+            correct_answer=next(iter(answer.get("accepted", [])), None),
+        )
 
     # Keyword mode: for explanation-style answers, award credit when the required ideas appear.
     keywords = [normalise_text(k) for k in answer.get("keywords", [])]
@@ -372,13 +404,13 @@ def _grade_short_answer(answer, user, _rendered) -> GradeResult:
         return GradeResult(
             is_correct=is_correct,
             score=1.0 if is_correct else score * 0.99,
-            message="Correct!" if is_correct
-            else f"Mentioned {hits} of the {minimum} key ideas we were looking for.",
+            message_key="correct" if is_correct else "key_ideas_mentioned",
+            message_params={"hits": hits, "total": minimum},
             correct_answer=next(iter(answer.get("accepted", [])), None),
         )
 
     return GradeResult(
-        False, 0.0, "Not quite.",
+        False, 0.0, message_key="wrong_generic",
         correct_answer=next(iter(answer.get("accepted", [])), None),
     )
 
@@ -409,7 +441,7 @@ def grade_answer(
         raise AnswerFormatError(f"Unknown question type: {question_type!r}") from exc
 
     if not isinstance(user_answer, dict):
-        raise AnswerFormatError("Answer payload must be an object")
+        raise AnswerFormatError("answer_must_be_object")
 
     try:
         result = _GRADERS[resolved_type](answer, user_answer, rendered or {})

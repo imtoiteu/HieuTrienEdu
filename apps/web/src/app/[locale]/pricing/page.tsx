@@ -11,7 +11,16 @@ import { getTranslator } from '@/lib/dictionaries';
 import { safe } from '@/lib/server-api';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Pricing' };
+/** The tab title is content too: a Vietnamese visitor should not see an English one. */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale: raw } = await params;
+  const t = getTranslator(isLocale(raw) ? raw : 'en');
+  return { title: t('nav.pricing') };
+}
 
 export default async function PricingPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = await params;
@@ -19,7 +28,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
   const t = getTranslator(locale);
   const href = (path: string) => `/${locale}${path}`;
 
-  const products = await safe(api.tutoring.products(), [] as TutoringProduct[]);
+  const products = await safe(api.tutoring.products({ locale }), [] as TutoringProduct[]);
 
   const unitLabel = (unit: string) =>
     unit === 'session'
@@ -29,7 +38,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
         : t('tutoring.perCourse');
 
   return (
-    <MarketingShell>
+    <MarketingShell locale={locale}>
       <PageHeader
         eyebrow={t('nav.pricing')}
         title={t('pricing.title')}
@@ -50,18 +59,13 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
                 <h2 className="mt-3 font-display text-3xl">{t('pricing.free.title')}</h2>
                 <p className="mt-2 text-ink-700">{t('pricing.free.body')}</p>
                 <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-                  {[
-                    'Unlimited adaptive practice',
-                    'All lessons in both subjects',
-                    'Mastery tracking and learning path',
-                    'No card, no trial period',
-                  ].map((feature) => (
+                  {(['practice', 'lessons', 'mastery', 'noCard'] as const).map((feature) => (
                     <li key={feature} className="flex items-start gap-2 text-sm text-ink-700">
                       <CheckCircle2
                         className="mt-0.5 h-4 w-4 shrink-0 text-teal-600"
                         aria-hidden="true"
                       />
-                      {feature}
+                      {t(`pricing.free.feature.${feature}`)}
                     </li>
                   ))}
                 </ul>
@@ -146,11 +150,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
           <Card className="mt-12 bg-white">
             <h2 className="font-display text-xl">{t('pricing.paymentTitle')}</h2>
             <p className="mt-2 text-sm leading-relaxed text-ink-600">
-              We currently settle by bank transfer or in person at the centre. When you register
-              for a class we hold your place for 48 hours and send you a reference to quote with
-              your payment; the place is confirmed as soon as we receive it. Online card payment
-              through Vietnamese providers is planned but not yet available — we would rather say
-              so than show a checkout button that does not work.
+              {t('pricing.paymentBody')}
             </p>
           </Card>
         </Container>

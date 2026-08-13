@@ -1,0 +1,1535 @@
+# Vietnamese translations for the mathematics curriculum.
+#
+# Keyed by entity kind then slug; the loader merges these into each row's `i18n` column and the
+# API serves them whenever a request carries `X-Locale: vi`. Anything missing here falls back to
+# the English in ../curriculum/*.yaml, so a partial translation degrades to readable English
+# rather than to blank fields.
+#
+# Terminology follows the Vietnamese lower-secondary maths curriculum (chương trình Toán THCS):
+# ước/bội, phân số, tỉ số, luỹ thừa, hàm số, phương trình bậc hai, tỉ số lượng giác.
+
+subjects:
+  mathematics:
+    name: Toán học
+    description: >-
+      Số học, đại số, hình học và thống kê cho học sinh THCS. Mỗi kỹ năng đều được luyện tập
+      bằng hệ thống bài tập sinh tự động không lặp lại và theo dõi bằng mô hình đo mức độ
+      thành thạo.
+
+courses:
+  math-6:
+    title: Toán học — Lớp 6
+    summary: Thành thạo phân số, số thập phân, tỉ số và những bước đầu tiên vào đại số.
+    description: >-
+      Lớp 6 là năm học mà số học bắt đầu trở thành tư duy lập luận. Học sinh củng cố hệ thống
+      số, thành thạo phân số và số thập phân, làm quen với tỉ số và tỉ số phần trăm, đồng thời
+      viết những biểu thức và phương trình đại số đầu tiên.
+  math-7:
+    title: Toán học — Lớp 7
+    summary: Số hữu tỉ, tư duy tỉ lệ và phương trình nhiều bước.
+    description: >-
+      Lớp 7 mở rộng mọi phép tính sang số hữu tỉ, xây dựng tư duy tỉ lệ và rèn kỹ năng giải
+      phương trình nhiều bước một cách thành thục.
+  math-8:
+    title: Toán học — Lớp 8
+    summary: Hàm số bậc nhất, định lí Pythagore, phép biến hình và bước đầu về số thực.
+    description: >-
+      Lớp 8 giới thiệu hàm số và đồ thị đường thẳng, định lí Pythagore, các phép biến hình và
+      hệ thống số thực với căn bậc hai cùng số vô tỉ.
+  math-9:
+    title: Toán học — Lớp 9
+    summary: Phương trình bậc hai, căn thức, lượng giác và nền tảng cho toán THPT.
+    description: >-
+      Lớp 9 hoàn thiện chương trình THCS với phương trình bậc hai và parabol, căn thức, tỉ số
+      lượng giác trong tam giác vuông và các đại lượng thống kê nâng cao.
+
+units:
+  math-6-number-system:
+    title: Hệ thống số
+    summary: Giá trị theo hàng, ước và bội, và sự xuất hiện của số âm.
+  math-6-fractions-decimals:
+    title: Phân số và số thập phân
+    summary: Nội dung quan trọng bậc nhất của số học THCS.
+  math-6-ratios-percentages:
+    title: Tỉ số, tỉ lệ và phần trăm
+    summary: So sánh các đại lượng — toán học đằng sau công thức nấu ăn, bản đồ, khuyến mãi và vận tốc.
+  math-6-expressions-equations:
+    title: Biểu thức và phương trình
+    summary: Chữ thay cho số — khởi đầu của đại số.
+  math-6-geometry-data:
+    title: Hình học, đo lường và thống kê
+    summary: Diện tích, thể tích, toạ độ và cách hiểu một bộ số liệu.
+  math-7-rational-numbers:
+    title: Số hữu tỉ
+    summary: Mọi phép tính, nay với cả số âm và phân số cùng lúc.
+  math-7-proportions:
+    title: Đại lượng tỉ lệ thuận
+    summary: Ý tưởng nối liền tỉ số, phần trăm, tỉ lệ bản đồ và tốc độ thay đổi.
+  math-7-algebra:
+    title: Biểu thức và phương trình
+    summary: Phương trình nhiều bước, và kỹ thuật đại số giúp việc giải trở nên thành thục.
+  math-7-geometry:
+    title: Hình học
+    summary: Góc, đường tròn và phép đo trong không gian ba chiều.
+  math-7-probability-statistics:
+    title: Xác suất và thống kê
+    summary: Khả năng xảy ra, và cách rút ra kết luận từ một mẫu số liệu.
+  math-8-real-numbers:
+    title: Số thực và luỹ thừa
+    summary: Vượt ra ngoài phân số — căn bậc hai, số vô tỉ và những số rất lớn hoặc rất nhỏ.
+  math-8-linear-functions:
+    title: Hàm số bậc nhất
+    summary: Đường thẳng, từ phương trình đến đồ thị và ngược lại.
+  math-8-geometry:
+    title: Hình học và định lí Pythagore
+    summary: Tam giác vuông, phép biến hình và hình đồng dạng.
+  math-8-statistics:
+    title: Thống kê
+    summary: Tìm mối liên hệ giữa hai đại lượng.
+  math-9-algebra:
+    title: Kỹ thuật đại số
+    summary: Khai triển, phân tích thành nhân tử và rút gọn một cách thành thạo.
+  math-9-quadratics:
+    title: Hàm số và phương trình bậc hai
+    summary: Parabol, và ba cách giải một phương trình bậc hai.
+  math-9-trigonometry:
+    title: Lượng giác
+    summary: Nối liền số đo góc với độ dài cạnh trong tam giác vuông.
+  math-9-measurement-statistics:
+    title: Đo lường và thống kê
+    summary: Hình khối ghép, và mô tả số liệu bằng tứ phân vị.
+
+topics:
+  math-6-whole-numbers: {title: Số tự nhiên và các phép tính}
+  math-6-factors-multiples: {title: Ước, bội và số nguyên tố}
+  math-6-integers: {title: Số nguyên}
+  math-6-understanding-fractions: {title: Hiểu về phân số}
+  math-6-fraction-operations: {title: Các phép tính với phân số}
+  math-6-decimals: {title: Số thập phân}
+  math-6-ratios: {title: Tỉ số và tỉ lệ}
+  math-6-percentages: {title: Tỉ số phần trăm}
+  math-6-expressions: {title: Biểu thức đại số}
+  math-6-equations: {title: Phương trình một bước}
+  math-6-area: {title: Diện tích và diện tích toàn phần}
+  math-6-volume-coordinates: {title: Thể tích và mặt phẳng toạ độ}
+  math-6-statistics: {title: Thống kê}
+  math-7-integer-operations: {title: Các phép tính với số nguyên}
+  math-7-rational-operations: {title: Các phép tính với số hữu tỉ}
+  math-7-proportional-reasoning: {title: Tỉ lệ thức}
+  math-7-percent-applications: {title: Ứng dụng của tỉ số phần trăm}
+  math-7-manipulating-expressions: {title: Biến đổi biểu thức}
+  math-7-solving-equations: {title: Giải phương trình và bất phương trình}
+  math-7-angles: {title: Góc và đường thẳng}
+  math-7-circles-volume: {title: Đường tròn và thể tích}
+  math-7-probability: {title: Xác suất}
+  math-7-data-analysis: {title: Phân tích số liệu}
+  math-8-number-sets: {title: Số hữu tỉ và số vô tỉ}
+  math-8-indices: {title: Quy tắc luỹ thừa và kí hiệu khoa học}
+  math-8-functions: {title: Làm quen với hàm số}
+  math-8-linear-graphs: {title: Đồ thị hàm số bậc nhất}
+  math-8-systems: {title: Hệ phương trình bậc nhất hai ẩn}
+  math-8-pythagoras: {title: Định lí Pythagore}
+  math-8-transformations: {title: Phép biến hình và hình đồng dạng}
+  math-8-bivariate: {title: Số liệu hai biến}
+  math-9-expanding: {title: Khai triển và phân tích thành nhân tử}
+  math-9-surds-fractions: {title: Căn thức và phân thức đại số}
+  math-9-solving-quadratics: {title: Giải phương trình bậc hai}
+  math-9-parabolas: {title: Vẽ đồ thị parabol}
+  math-9-right-triangle-trig: {title: Lượng giác trong tam giác vuông}
+  math-9-measurement: {title: Đo lường nâng cao}
+  math-9-statistics-advanced: {title: Các đại lượng thống kê}
+
+skills:
+  math-6-place-value: {name: Giá trị theo hàng đến hàng triệu}
+  math-6-rounding: {name: Làm tròn số tự nhiên}
+  math-6-order-of-operations: {name: Thứ tự thực hiện các phép tính}
+  math-6-factors-multiples-skill: {name: Ước và bội}
+  math-6-primes: {name: Phân tích một số ra thừa số nguyên tố}
+  math-6-gcf-lcm: {name: Ước chung lớn nhất và bội chung nhỏ nhất}
+  math-6-negative-numbers: {name: Hiểu về số âm}
+  math-6-compare-integers: {name: So sánh và sắp thứ tự số nguyên}
+  math-6-add-subtract-integers: {name: Cộng và trừ số nguyên}
+  math-6-equivalent-fractions: {name: Phân số bằng nhau}
+  math-6-simplify-fractions: {name: Rút gọn phân số}
+  math-6-compare-fractions: {name: So sánh phân số}
+  math-6-common-denominators: {name: Quy đồng mẫu số}
+  math-6-add-fractions: {name: Cộng và trừ phân số}
+  math-6-multiply-fractions: {name: Nhân phân số}
+  math-6-divide-fractions: {name: Chia phân số}
+  math-6-mixed-numbers: {name: Hỗn số}
+  math-6-decimal-place-value: {name: Giá trị theo hàng của số thập phân}
+  math-6-decimal-operations: {name: Các phép tính với số thập phân}
+  math-6-fraction-decimal-conversion: {name: Chuyển đổi giữa phân số và số thập phân}
+  math-6-understanding-ratios: {name: Hiểu về tỉ số}
+  math-6-equivalent-ratios: {name: Tỉ số bằng nhau}
+  math-6-unit-rates: {name: Đơn giá và tỉ lệ đơn vị}
+  math-6-understanding-percentages: {name: Hiểu về tỉ số phần trăm}
+  math-6-percent-of-quantity: {name: Tính phần trăm của một đại lượng}
+  math-6-percent-problems: {name: Bài toán có lời văn về phần trăm}
+  math-6-variables: {name: Biến số và biểu thức}
+  math-6-evaluate-expressions: {name: Tính giá trị của biểu thức}
+  math-6-write-expressions: {name: Viết biểu thức từ lời văn}
+  math-6-one-step-add: {name: Phương trình một bước (cộng và trừ)}
+  math-6-one-step-multiply: {name: Phương trình một bước (nhân và chia)}
+  math-6-inequalities: {name: Bất phương trình trên trục số}
+  math-6-area-rectangles-triangles: {name: Diện tích hình chữ nhật và hình tam giác}
+  math-6-area-parallelogram-trapezium: {name: Diện tích hình bình hành và hình thang}
+  math-6-surface-area: {name: Diện tích toàn phần của hình lăng trụ}
+  math-6-volume-prisms: {name: Thể tích hình hộp chữ nhật}
+  math-6-coordinate-plane: {name: Mặt phẳng toạ độ}
+  math-6-mean-median-mode: {name: Số trung bình, trung vị và mốt}
+  math-6-range-spread: {name: Khoảng biến thiên và giá trị ngoại lai}
+  math-7-multiply-divide-integers: {name: Nhân và chia số nguyên}
+  math-7-exponents-basics: {name: Luỹ thừa với số mũ tự nhiên}
+  math-7-absolute-value: {name: Giá trị tuyệt đối}
+  math-7-rational-add-subtract: {name: Cộng và trừ số hữu tỉ}
+  math-7-rational-multiply-divide: {name: Nhân và chia số hữu tỉ}
+  math-7-proportion-solve: {name: Giải tỉ lệ thức}
+  math-7-constant-proportionality: {name: Hệ số tỉ lệ}
+  math-7-scale-drawings: {name: Bản vẽ theo tỉ lệ và bản đồ}
+  math-7-percent-change: {name: Tăng và giảm theo phần trăm}
+  math-7-simple-interest: {name: Lãi đơn}
+  math-7-like-terms: {name: Thu gọn các hạng tử đồng dạng}
+  math-7-distributive: {name: Khai triển biểu thức có dấu ngoặc}
+  math-7-factorise-linear: {name: Phân tích biểu thức bậc nhất thành nhân tử}
+  math-7-two-step-equations: {name: Phương trình hai bước}
+  math-7-multi-step-equations: {name: Phương trình nhiều bước}
+  math-7-solve-inequalities: {name: Giải bất phương trình}
+  math-7-angle-pairs: {name: Các cặp góc}
+  math-7-parallel-lines: {name: Góc tạo bởi hai đường thẳng song song}
+  math-7-triangle-angles: {name: Góc trong tam giác và tứ giác}
+  math-7-circumference: {name: Chu vi đường tròn}
+  math-7-circle-area: {name: Diện tích hình tròn}
+  math-7-volume-cylinders: {name: Thể tích hình trụ và hình lăng trụ}
+  math-7-simple-probability: {name: Xác suất của biến cố đơn giản}
+  math-7-compound-probability: {name: Xác suất của biến cố phức hợp}
+  math-7-compare-data-sets: {name: So sánh hai bộ số liệu}
+  math-7-sampling: {name: Lấy mẫu và suy luận thống kê}
+  math-8-squares-roots: {name: Bình phương và căn bậc hai}
+  math-8-irrational-numbers: {name: Số hữu tỉ và số vô tỉ}
+  math-8-index-laws: {name: Các quy tắc luỹ thừa}
+  math-8-negative-indices: {name: Luỹ thừa với số mũ âm và số mũ không}
+  math-8-scientific-notation: {name: Kí hiệu khoa học}
+  math-8-function-concept: {name: Khái niệm hàm số}
+  math-8-function-tables: {name: Bảng giá trị, đồ thị và công thức}
+  math-8-gradient: {name: Hệ số góc của đường thẳng}
+  math-8-slope-intercept: {name: Dạng y = ax + b}
+  math-8-write-linear-equations: {name: Viết phương trình đường thẳng}
+  math-8-systems-graphing: {name: Giải hệ phương trình bằng đồ thị}
+  math-8-systems-substitution: {name: Giải hệ phương trình bằng phương pháp thế và cộng đại số}
+  math-8-pythagoras-hypotenuse: {name: Tính cạnh huyền}
+  math-8-pythagoras-leg: {name: Tính một cạnh góc vuông}
+  math-8-distance-formula: {name: Khoảng cách giữa hai điểm}
+  math-8-transformations-basic: {name: Phép tịnh tiến, phép đối xứng và phép quay}
+  math-8-similar-figures: {name: Hình đồng dạng}
+  math-8-scatter-plots: {name: Biểu đồ tán xạ và mối tương quan}
+  math-8-line-of-best-fit: {name: Đường thẳng phù hợp nhất}
+  math-9-expand-binomials: {name: Khai triển tích hai nhị thức}
+  math-9-factorise-quadratics: {name: Phân tích tam thức bậc hai thành nhân tử}
+  math-9-special-products: {name: Hiệu hai bình phương và bình phương của một tổng}
+  math-9-simplify-surds: {name: Rút gọn căn thức}
+  math-9-algebraic-fractions: {name: Phân thức đại số}
+  math-9-quadratic-by-factorising: {name: Giải phương trình bậc hai bằng cách phân tích thành nhân tử}
+  math-9-quadratic-formula: {name: Công thức nghiệm của phương trình bậc hai}
+  math-9-parabola-features: {name: Các đặc điểm của parabol}
+  math-9-sketch-parabola: {name: Vẽ đồ thị hàm số bậc hai}
+  math-9-trig-ratios: {name: Tỉ số lượng giác của góc nhọn}
+  math-9-find-side: {name: Tính độ dài cạnh chưa biết}
+  math-9-find-angle: {name: Tính số đo góc chưa biết}
+  math-9-trig-applications: {name: Góc nâng và góc hạ}
+  math-9-surface-area-volume: {name: Diện tích và thể tích của các hình khối}
+  math-9-quartiles: {name: Tứ phân vị và khoảng tứ phân vị}
+  math-9-box-plots: {name: Biểu đồ hộp}
+
+# ----------------------------------------------------------------------------------------
+# Question templates.
+#
+# These are *templates*, not rendered questions: the {{ … }} placeholders are substituted with
+# the sampled values at serve time, so they must be copied across exactly. The loader validates
+# every translation by generating four variants from it, which is what stops a mistyped
+# placeholder reaching a student.
+#
+# `hints` and `solution` are lists whose order matches the English; `choices` are the answer
+# option labels in their original order.
+# ----------------------------------------------------------------------------------------
+questions:
+  m6-place-value-write:
+    prompt: "Viết số sau bằng chữ số: {{m}} triệu, {{t}} nghìn, {{u}} đơn vị."
+    hints:
+      - text: Một triệu là 1 000 000 và một nghìn là 1 000.
+      - text: Hãy tính {{m}} x 1 000 000, rồi {{t}} x 1 000, sau đó cộng thêm {{u}}.
+    solution:
+      - text: "{{m}} triệu = {{m*1000000}}."
+      - text: "{{t}} nghìn = {{t*1000}}."
+      - text: Cộng cả ba phần lại ta được {{m*1000000 + t*1000 + u}}.
+  m6-place-value-digit:
+    prompt: "Trong số {{a}}{{b}}{{c}}{{d}}, *giá trị* của chữ số {{b}} là bao nhiêu?"
+    hints:
+      - text: "Đếm các hàng từ phải sang trái: hàng đơn vị, hàng chục, hàng trăm, hàng nghìn."
+      - text: Chữ số {{b}} nằm ở hàng trăm.
+    solution:
+      - text: Đọc từ phải sang trái, chữ số {{b}} nằm ở hàng trăm.
+      - text: Vậy giá trị của nó là {{b}} x 100 = {{b*100}}.
+  m6-rounding-nearest:
+    prompt: Làm tròn số {{n}} đến hàng {{p}} gần nhất.
+    hints:
+      - text: Xét chữ số đứng ngay bên phải hàng {{p}}.
+      - text: Nếu chữ số đó từ 5 trở lên thì làm tròn lên, ngược lại thì làm tròn xuống.
+    solution:
+      - text: "{{n}} nằm giữa {{floor(n/p)*p}} và {{floor(n/p)*p + p}}."
+      - text: Giá trị gần hơn trong hai số đó là {{round(n/p)*p}}.
+  m6-rounding-estimate:
+    prompt: >-
+      Ước lượng {{a}} + {{b}} bằng cách làm tròn mỗi số đến hàng trăm gần nhất trước. Kết quả
+      ước lượng của em là bao nhiêu?
+    hints:
+      - text: Hãy làm tròn từng số riêng rẽ trước khi cộng.
+    solution:
+      - text: "{{a}} làm tròn thành {{round(a/100)*100}}."
+      - text: "{{b}} làm tròn thành {{round(b/100)*100}}."
+      - text: Kết quả ước lượng là {{round(a/100)*100 + round(b/100)*100}}.
+  m6-order-ops-basic:
+    prompt: Tính {{a}} + {{b}} x {{c}}.
+    hints:
+      - text: Phép nhân được thực hiện trước phép cộng.
+      - text: Hãy tính {{b}} x {{c}} trước.
+    solution:
+      - text: "Nhân trước: {{b}} x {{c}} = {{b*c}}."
+      - text: "Sau đó cộng: {{a}} + {{b*c}} = {{a + b*c}}."
+  m6-order-ops-brackets:
+    prompt: Tính ({{a}} + {{b}}) x {{c}} - {{d}}.
+    hints:
+      - text: Thực hiện trong ngoặc trước, rồi đến phép nhân, cuối cùng là phép trừ.
+    solution:
+      - text: "Trong ngoặc: {{a}} + {{b}} = {{a+b}}."
+      - text: "Nhân: {{a+b}} x {{c}} = {{(a+b)*c}}."
+      - text: "Trừ: {{(a+b)*c}} - {{d}} = {{(a+b)*c - d}}."
+  m6-factors-identify:
+    prompt: Chọn tất cả các số là ước của {{n}}.
+    hints:
+      - text: Một ước chia hết cho số đó, không để lại số dư.
+      - text: Hãy thử chia {{n}} cho từng đáp án.
+    solution:
+      - text: "{{n}} = 2 x {{k}} x {{m}}, nên 2, {{k}} và {{m}} đều chia hết {{n}}."
+  m6-multiples-tf:
+    prompt: "Đúng hay sai: {{n}} là bội của {{k}}."
+    hints:
+      - text: Một bội của {{k}} xuất hiện trong bảng nhân {{k}}.
+    solution:
+      - text: "{{n}} chia cho {{k}} có số dư là {{n % k}}."
+  m6-prime-factorisation:
+    prompt: >-
+      Phân tích {{n}} thành tích các thừa số nguyên tố theo thứ tự tăng dần, dùng dấu x
+      (ví dụ 2 x 2 x 3).
+    hints:
+      - text: Hãy bắt đầu chia cho số nguyên tố nhỏ nhất mà chia hết.
+      - text: Tiếp tục chia cho đến khi mọi thừa số còn lại đều là số nguyên tố.
+    solution:
+      - text: "{{n}} = 2 x {{lo}} x {{hi}}, và mỗi thừa số đó đều là số nguyên tố."
+  m6-gcf:
+    prompt: Ước chung lớn nhất (ƯCLN) của {{a}} và {{b}} là bao nhiêu?
+    hints:
+      - text: Hãy liệt kê các ước của mỗi số rồi tìm ước chung lớn nhất.
+      - text: Hoặc phân tích cả hai số ra thừa số nguyên tố rồi lấy phần chung.
+    solution:
+      - text: "{{a}} = {{g}} x {{p}} và {{b}} = {{g}} x {{q}}."
+      - text: Vì {{p}} và {{q}} không có ước chung nên ƯCLN là {{gcd(a,b)}}.
+  m6-lcm:
+    prompt: Bội chung nhỏ nhất (BCNN) của {{a}} và {{b}} là bao nhiêu?
+    hints:
+      - text: Hãy liệt kê các bội của mỗi số cho đến khi gặp một số xuất hiện ở cả hai dãy.
+    solution:
+      - text: BCNN của {{a}} và {{b}} là {{lcm(a,b)}}.
+      - text: "Kiểm tra lại: {{lcm(a,b)}} / {{a}} = {{lcm(a,b)/a}} và {{lcm(a,b)}} / {{b}} = {{lcm(a,b)/b}}."
+  m6-negative-context:
+    prompt: >-
+      Nhiệt độ ở Sa Pa là {{t}} độ C. Qua đêm, nhiệt độ giảm {{d}} độ. Nhiệt độ mới là bao
+      nhiêu độ C?
+    hints:
+      - text: Giảm nhiệt độ nghĩa là di chuyển sang trái trên trục số.
+    solution:
+      - text: Bắt đầu từ {{t}} và giảm {{d}} độ ta được {{t - d}} độ C.
+    options:
+      unit: độ C
+  m6-compare-integers:
+    prompt: "Dấu nào điền vào chỗ trống là đúng?   {{a}}  ?  {{b}}"
+    hints:
+      - text: Trên trục số, số nằm bên phải là số lớn hơn.
+      - text: Nhớ rằng -10 nhỏ hơn -2, vì nó nằm xa hơn về bên trái.
+    solution:
+      - text: "{{a}} và {{b}} nằm trên trục số, số nhỏ hơn ở bên trái."
+      - text: Vậy dấu đúng là dấu làm cho khẳng định trở nên đúng.
+    choices:
+      - "<  (bé hơn)"
+      - ">  (lớn hơn)"
+      - "=  (bằng)"
+  m6-add-integers:
+    prompt: Tính {{a}} + ({{b}}).
+    hints:
+      - text: Cộng với một số âm chính là trừ đi số đối của nó.
+      - text: Vậy {{a}} + ({{b}}) cũng chính là {{a}} - {{abs(b)}}.
+    solution:
+      - text: "{{a}} + ({{b}}) = {{a}} - {{abs(b)}} = {{a + b}}."
+  m6-subtract-negative:
+    prompt: Tính {{a}} - ({{b}}).
+    hints:
+      - text: Trừ đi một số âm chính là cộng thêm số dương tương ứng.
+    solution:
+      - text: "{{a}} - ({{b}}) = {{a}} + {{abs(b)}} = {{a - b}}."
+  m6-equivalent-fraction:
+    prompt: "Điền số còn thiếu: \\frac{ {{a}} }{ {{b}} } = \\frac{ ? }{ {{b*k}} }"
+    hints:
+      - text: Mẫu số đã được nhân với {{k}}.
+      - text: Hãy nhân tử số với cùng số đó.
+    solution:
+      - text: "{{b}} x {{k}} = {{b*k}}, nên tử số cũng phải nhân với {{k}}."
+      - text: "{{a}} x {{k}} = {{a*k}}."
+  m6-simplify-fraction:
+    prompt: "Rút gọn \\frac{ {{n}} }{ {{d}} } về phân số tối giản, viết dạng ví dụ 3/4."
+    hints:
+      - text: Hãy tìm ước chung lớn nhất của {{n}} và {{d}}.
+      - text: ƯCLN là {{g}} — hãy chia cả tử và mẫu cho số đó.
+    solution:
+      - text: "ƯCLN({{n}}, {{d}}) = {{g}}."
+      - text: "{{n}} / {{g}} = {{p}} và {{d}} / {{g}} = {{q}}, vậy đáp án là {{p}}/{{q}}."
+  m6-compare-fractions:
+    prompt: "Phân số nào lớn hơn: \\frac{ {{a}} }{ {{b}} } hay \\frac{ {{c}} }{ {{d}} }?"
+    hints:
+      - text: Hãy quy đồng mẫu số hai phân số, hoặc nhân chéo.
+    solution:
+      - text: "Nhân chéo: {{a}} x {{d}} = {{a*d}} và {{c}} x {{b}} = {{c*b}}."
+      - text: Phân số có tích chéo lớn hơn là phân số lớn hơn.
+  m6-common-denominator:
+    prompt: Mẫu số chung nhỏ nhất của {{a}}/{{b}} và {{c}}/{{d}} là bao nhiêu?
+    hints:
+      - text: Mẫu số chung nhỏ nhất chính là BCNN của hai mẫu số.
+    solution:
+      - text: "BCNN({{b}}, {{d}}) = {{lcm(b,d)}}."
+  m6-add-fractions-same:
+    prompt: "Tính \\frac{ {{a}} }{ {{d}} } + \\frac{ {{b}} }{ {{d}} }. Viết đáp án dạng phân số, ví dụ 3/4."
+    hints:
+      - text: Hai mẫu số đã bằng nhau nên chỉ cần cộng hai tử số.
+    solution:
+      - text: "{{a}} + {{b}} = {{a+b}}, mẫu số vẫn giữ nguyên là {{d}}."
+  m6-add-fractions-unlike:
+    prompt: "Tính \\frac{ {{a}} }{ {{b}} } + \\frac{ {{c}} }{ {{d}} }. Viết đáp án dạng phân số, ví dụ 5/6."
+    hints:
+      - text: Hãy quy đồng hai phân số về mẫu số chung {{b*d}}.
+      - text: "{{a}}/{{b}} trở thành {{a*d}}/{{b*d}} và {{c}}/{{d}} trở thành {{c*b}}/{{b*d}}."
+    solution:
+      - text: "Mẫu số chung: {{b}} x {{d}} = {{b*d}}."
+      - text: "{{a*d}}/{{b*d}} + {{c*b}}/{{b*d}} = {{a*d + c*b}}/{{b*d}}."
+  m6-multiply-fractions:
+    prompt: "Tính \\frac{ {{a}} }{ {{b}} } x \\frac{ {{c}} }{ {{d}} }. Viết đáp án dạng phân số tối giản."
+    hints:
+      - text: Nhân các tử số với nhau, rồi nhân các mẫu số với nhau.
+    solution:
+      - text: "{{a}} x {{c}} = {{a*c}} và {{b}} x {{d}} = {{b*d}}."
+      - text: Kết quả {{a*c}}/{{b*d}} đã ở dạng tối giản.
+  m6-divide-fractions:
+    prompt: "Tính \\frac{ {{a}} }{ {{b}} } ÷ \\frac{ {{c}} }{ {{d}} }. Viết đáp án dạng phân số."
+    hints:
+      - text: Chia cho một phân số chính là nhân với phân số nghịch đảo của nó.
+      - text: Đảo ngược {{c}}/{{d}} thành {{d}}/{{c}}, rồi nhân.
+    solution:
+      - text: "{{a}}/{{b}} ÷ {{c}}/{{d}} = {{a}}/{{b}} x {{d}}/{{c}}."
+      - text: "= {{a*d}}/{{b*c}}."
+  m6-mixed-number-convert:
+    prompt: >-
+      Đổi hỗn số {{w}} và {{n}}/{{d}} thành phân số. Tử số của phân số đó là bao nhiêu?
+    hints:
+      - text: Nhân phần nguyên với mẫu số, rồi cộng với tử số.
+    solution:
+      - text: "{{w}} x {{d}} = {{w*d}}."
+      - text: "{{w*d}} + {{n}} = {{w*d + n}}, vậy phân số là {{w*d+n}}/{{d}}."
+  m6-decimal-compare:
+    prompt: Số nào lớn hơn?
+    hints:
+      - text: So sánh phần nguyên trước, rồi đến hàng phần mười, sau đó hàng phần trăm.
+    solution:
+      - text: So sánh lần lượt theo từng hàng sẽ cho biết số nào lớn hơn.
+  m6-decimal-multiply:
+    prompt: Tính {{a}} x {{b}}.
+    hints:
+      - text: Bỏ qua dấu phẩy thập phân, nhân như số tự nhiên rồi đặt lại dấu phẩy.
+    solution:
+      - text: "{{a}} x {{b}} = {{a*b : 2}}."
+  m6-fraction-to-decimal:
+    prompt: Viết {{a}}/{{b}} dưới dạng số thập phân.
+    hints:
+      - text: "Một phân số chính là một phép chia: {{a}} chia cho {{b}}."
+    solution:
+      - text: "{{a}} ÷ {{b}} = {{a/b}}."
+  m6-ratio-simplify:
+    prompt: >-
+      Một lớp có {{b}} bạn nam và {{g}} bạn nữ. Hãy viết tỉ số giữa số bạn nam và số bạn nữ ở
+      dạng tối giản, dùng dấu hai chấm (ví dụ 2:3).
+    hints:
+      - text: Chia cả hai số hạng của tỉ số cho ước chung lớn nhất của chúng.
+      - text: ƯCLN của {{b}} và {{g}} là {{k}}.
+    solution:
+      - text: "{{b}}:{{g}} chia cho {{k}} ta được {{p}}:{{q}}."
+  m6-equivalent-ratio-missing:
+    prompt: >-
+      Một công thức nấu ăn dùng {{a}} cốc bột cho mỗi {{b}} cốc sữa. Cần bao nhiêu cốc bột cho
+      {{b*k}} cốc sữa?
+    hints:
+      - text: Lượng sữa đã được nhân với {{k}}, nên lượng bột cũng phải nhân với {{k}}.
+    solution:
+      - text: "{{b}} x {{k}} = {{b*k}} cốc sữa, nên lượng bột = {{a}} x {{k}} = {{a*k}} cốc."
+    options:
+      unit: cốc
+  m6-unit-rate:
+    prompt: "{{q}} quyển vở giá {{c}} nghìn đồng. Vậy một quyển vở giá bao nhiêu nghìn đồng?"
+    hints:
+      - text: Đơn giá là giá tiền của đúng một sản phẩm.
+      - text: Hãy chia tổng số tiền cho số quyển vở.
+    solution:
+      - text: "{{c}} ÷ {{q}} = {{c/q}} nghìn đồng mỗi quyển."
+    options:
+      unit: nghìn đồng
+  m6-percent-to-fraction:
+    prompt: Viết {{p}}% dưới dạng số thập phân.
+    hints:
+      - text: Phần trăm nghĩa là 'trên một trăm'.
+    solution:
+      - text: "{{p}}% = {{p}}/100 = {{p/100}}."
+  m6-percent-of-amount:
+    prompt: "{{p}}% của {{n}} bằng bao nhiêu?"
+    hints:
+      - text: Đổi tỉ số phần trăm sang số thập phân, rồi nhân.
+      - text: "{{p}}% = {{p/100}}."
+    solution:
+      - text: "{{p}}% của {{n}} = {{p/100}} x {{n}} = {{p*n/100}}."
+  m6-percent-discount:
+    prompt: >-
+      Một chiếc áo khoác giá {{n}} nghìn đồng. Khi giảm giá, áo được bớt {{p}}%. Giá sau khi
+      giảm là bao nhiêu nghìn đồng?
+    hints:
+      - text: Trước hết tính số tiền được giảm, sau đó trừ khỏi giá gốc.
+    solution:
+      - text: "Số tiền giảm = {{p}}% của {{n}} = {{p*n/100}}."
+      - text: "Giá sau giảm = {{n}} - {{p*n/100}} = {{n - p*n/100}} nghìn đồng."
+    options:
+      unit: nghìn đồng
+  m6-variables-meaning:
+    prompt: "Biểu thức nào có nghĩa là 'lớn hơn số n là {{k}} đơn vị'?"
+    hints:
+      - text: "'Lớn hơn ... đơn vị' ứng với phép cộng."
+    solution:
+      - text: "'Lớn hơn n là {{k}} đơn vị' được viết là n + {{k}}."
+    choices:
+      - "n + {{k}}"
+      - "{{k}}n"
+      - "n - {{k}}"
+      - "n ÷ {{k}}"
+  m6-evaluate-expression:
+    prompt: Tính giá trị của biểu thức {{a}}x + {{b}} khi x = {{x}}.
+    hints:
+      - text: Thay x = {{x}} vào biểu thức và nhớ thực hiện phép nhân trước phép cộng.
+    solution:
+      - text: "{{a}} x {{x}} = {{a*x}}."
+      - text: "{{a*x}} + {{b}} = {{a*x + b}}."
+  m6-write-expression:
+    prompt: >-
+      Một hãng taxi tính {{b}} nghìn đồng phí mở cửa, cộng thêm {{a}} nghìn đồng mỗi ki-lô-mét.
+      Hãy viết biểu thức biểu thị số tiền phải trả khi đi k ki-lô-mét.
+    hints:
+      - text: Phần tiền theo ki-lô-mét phụ thuộc vào k; phí mở cửa thì không.
+    solution:
+      - text: "Số tiền = {{a}}k + {{b}}."
+    options:
+      placeholder: ví dụ 5k + 10
+  m6-one-step-add:
+    prompt: "Giải phương trình:   x + {{a}} = {{b}}"
+    hints:
+      - text: Làm ngược lại phép cộng {{a}} — trừ {{a}} ở cả hai vế.
+    solution:
+      - text: "x = {{b}} - {{a}} = {{b - a}}."
+  m6-one-step-multiply:
+    prompt: "Giải phương trình:   {{a}}x = {{b}}"
+    hints:
+      - text: Chia cả hai vế cho {{a}}.
+    solution:
+      - text: "x = {{b}} ÷ {{a}} = {{b/a}}."
+  m6-inequality-meaning:
+    prompt: "Bất phương trình nào diễn tả 'x ít nhất bằng {{a}}'?"
+    hints:
+      - text: "'Ít nhất' bao gồm cả chính giá trị đó."
+    solution:
+      - text: "'Ít nhất bằng {{a}}' nghĩa là x có thể bằng {{a}} hoặc lớn hơn, nên x >= {{a}}."
+    choices:
+      - "x >= {{a}}"
+      - "x > {{a}}"
+      - "x <= {{a}}"
+      - "x < {{a}}"
+  m6-area-rectangle:
+    prompt: Một hình chữ nhật có kích thước {{l}} cm và {{w}} cm. Diện tích của nó là bao nhiêu xăng-ti-mét vuông?
+    hints:
+      - text: Diện tích hình chữ nhật = chiều dài x chiều rộng.
+    solution:
+      - text: "{{l}} x {{w}} = {{l*w}} xăng-ti-mét vuông."
+  m6-area-triangle:
+    prompt: >-
+      Một tam giác có đáy {{b}} cm và chiều cao tương ứng {{h}} cm. Diện tích của nó là bao
+      nhiêu xăng-ti-mét vuông?
+    hints:
+      - text: Tam giác bằng một nửa hình chữ nhật có cùng đáy và cùng chiều cao.
+    solution:
+      - text: "Diện tích = 1/2 x {{b}} x {{h}} = {{b*h/2}} xăng-ti-mét vuông."
+  m6-area-parallelogram:
+    prompt: >-
+      Một hình bình hành có đáy {{b}} cm và chiều cao {{h}} cm. Diện tích của nó là bao nhiêu
+      xăng-ti-mét vuông?
+    hints:
+      - text: Khác với tam giác, diện tích hình bình hành bằng đáy nhân chiều cao, không chia đôi.
+    solution:
+      - text: "Diện tích = {{b}} x {{h}} = {{b*h}} xăng-ti-mét vuông."
+  m6-surface-area-prism:
+    prompt: >-
+      Một chiếc hộp chữ nhật có kích thước {{l}} cm x {{w}} cm x {{h}} cm. Diện tích toàn phần
+      của nó là bao nhiêu xăng-ti-mét vuông?
+    hints:
+      - text: Hình hộp chữ nhật có ba cặp mặt bằng nhau.
+      - text: Tính diện tích mỗi mặt khác nhau, cộng lại, rồi nhân đôi.
+    solution:
+      - text: "Các mặt: {{l*w}}, {{l*h}} và {{w*h}} xăng-ti-mét vuông."
+      - text: "Tổng = 2 x ({{l*w}} + {{l*h}} + {{w*h}}) = {{2*(l*w + l*h + w*h)}} xăng-ti-mét vuông."
+  m6-volume-prism:
+    prompt: >-
+      Một bể nước hình hộp chữ nhật có kích thước {{l}} cm x {{w}} cm x {{h}} cm. Thể tích của
+      nó là bao nhiêu xăng-ti-mét khối?
+    hints:
+      - text: Thể tích = chiều dài x chiều rộng x chiều cao.
+    solution:
+      - text: "{{l}} x {{w}} x {{h}} = {{l*w*h}} xăng-ti-mét khối."
+  m6-coordinate-quadrant:
+    prompt: Điểm ({{x}}, {{y}}) nằm ở góc phần tư thứ mấy?
+    hints:
+      - text: Các góc phần tư được đánh số ngược chiều kim đồng hồ, bắt đầu từ góc trên bên phải.
+    solution:
+      - text: Dấu của x = {{x}} và y = {{y}} quyết định góc phần tư.
+    choices:
+      - Thứ nhất (x dương, y dương)
+      - Thứ hai (x âm, y dương)
+      - Thứ ba (x âm, y âm)
+      - Thứ tư (x dương, y âm)
+  m6-mean:
+    prompt: "Tính số trung bình của các điểm kiểm tra sau: {{a}}, {{b}}, {{c}}, {{d}}."
+    hints:
+      - text: Cộng tất cả các giá trị, rồi chia cho số lượng giá trị.
+    solution:
+      - text: "Tổng = {{a + b + c + d}}."
+      - text: "Số trung bình = {{a + b + c + d}} ÷ 4 = {{(a+b+c+d)/4}}."
+  m6-range:
+    prompt: "Tính khoảng biến thiên của dãy số liệu sau: {{a}}, {{b}}, {{c}}, {{d}}, {{e}}."
+    hints:
+      - text: Khoảng biến thiên bằng giá trị lớn nhất trừ giá trị nhỏ nhất.
+    solution:
+      - text: "Lớn nhất = {{max(a,b,c,d,e)}}, nhỏ nhất = {{min(a,b,c,d,e)}}."
+      - text: "Khoảng biến thiên = {{max(a,b,c,d,e) - min(a,b,c,d,e)}}."
+  m7-multiply-integers:
+    prompt: Tính ({{a}}) x ({{b}}).
+    hints:
+      - text: Tích của hai số âm là số dương; tích của một số âm và một số dương là số âm.
+    solution:
+      - text: "{{abs(a)}} x {{abs(b)}} = {{abs(a)*abs(b)}}."
+      - text: Xét dấu, kết quả cuối cùng là {{a*b}}.
+  m7-divide-integers:
+    prompt: Tính ({{p}}) ÷ ({{b}}).
+    hints:
+      - text: Quy tắc dấu của phép chia giống hệt phép nhân.
+    solution:
+      - text: "{{p}} ÷ {{b}} = {{p/b}}."
+  m7-exponents-evaluate:
+    prompt: Tính {{b}} mũ {{e}}.
+    hints:
+      - text: Số mũ cho biết cơ số được nhân với chính nó bao nhiêu lần.
+      - text: "{{b}} mũ {{e}} nghĩa là nhân {{b}} với chính nó {{e}} lần."
+    solution:
+      - text: "{{b}}^{{e}} = {{b ** e}}."
+  m7-absolute-value:
+    prompt: Tính |{{a}}| + |{{b}}|.
+    hints:
+      - text: Giá trị tuyệt đối là khoảng cách đến số 0, nên luôn không âm.
+    solution:
+      - text: "|{{a}}| = {{abs(a)}} và |{{b}}| = {{abs(b)}}."
+      - text: "Tổng = {{abs(a) + abs(b)}}."
+  m7-rational-add:
+    prompt: Tính {{a}} + ({{b}}). Viết đáp án dưới dạng số thập phân.
+    hints:
+      - text: Cộng với một số âm nghĩa là di chuyển sang trái trên trục số.
+    solution:
+      - text: "{{a}} + ({{b}}) = {{a + b : 2}}."
+  m7-rational-multiply:
+    prompt: Tính ({{a}}) x ({{b}}). Viết đáp án dưới dạng số thập phân.
+    hints:
+      - text: Một số âm nhân một số dương cho kết quả âm.
+    solution:
+      - text: "{{a}} x {{b}} = {{a * b : 2}}."
+  m7-proportion-solve:
+    prompt: "Tìm x:   {{a}}/{{b}} = x/{{b*k}}"
+    hints:
+      - text: Mẫu số đã được nhân với {{k}}.
+      - text: "Nhân chéo: {{a}} x {{b*k}} = x x {{b}}."
+    solution:
+      - text: "x = {{a}} x {{k}} = {{a*k}}."
+  m7-constant-of-proportionality:
+    prompt: Trong tương quan tỉ lệ thuận y = {{k}}x, khi x = {{x}} thì y bằng bao nhiêu?
+    hints:
+      - text: Hệ số tỉ lệ k được nhân với mọi giá trị của x.
+    solution:
+      - text: "y = {{k}} x {{x}} = {{k*x}}."
+  m7-scale-drawing:
+    prompt: >-
+      Một bản đồ có tỉ lệ 1 cm ứng với {{s}} km. Hai thị trấn cách nhau {{d}} cm trên bản đồ.
+      Khoảng cách thực tế giữa chúng là bao nhiêu km?
+    hints:
+      - text: Mỗi xăng-ti-mét trên bản đồ ứng với {{s}} km ngoài thực tế.
+    solution:
+      - text: "{{d}} cm x {{s}} km/cm = {{s*d}} km."
+  m7-percent-increase:
+    prompt: >-
+      Một mặt hàng giá {{n}} nghìn đồng tăng thêm {{p}}%. Giá mới là bao nhiêu nghìn đồng?
+    hints:
+      - text: Tính phần tăng thêm trước, rồi cộng vào giá ban đầu.
+    solution:
+      - text: "Phần tăng = {{p}}% của {{n}} = {{p*n/100}}."
+      - text: "Giá mới = {{n}} + {{p*n/100}} = {{n + p*n/100}}."
+    options:
+      unit: nghìn đồng
+  m7-percent-change-find:
+    prompt: Một giá trị tăng từ {{a}} lên {{b}}. Tỉ lệ phần trăm tăng là bao nhiêu?
+    hints:
+      - text: Tỉ lệ phần trăm thay đổi = (phần thay đổi ÷ giá trị ban đầu) x 100.
+      - text: Phần thay đổi là {{b - a}}.
+    solution:
+      - text: "Phần thay đổi = {{b}} - {{a}} = {{b - a}}."
+      - text: "({{b-a}} ÷ {{a}}) x 100 = {{(b-a)/a*100}}%."
+  m7-simple-interest:
+    prompt: >-
+      Gửi {{p}} triệu đồng với lãi suất đơn {{r}}% mỗi năm trong {{t}} năm. Số tiền lãi thu
+      được là bao nhiêu triệu đồng?
+    hints:
+      - text: "Lãi đơn I = P x r x t, trong đó r được viết dưới dạng số thập phân."
+    solution:
+      - text: "I = {{p}} x {{r/100}} x {{t}} = {{p*r*t/100}} triệu đồng."
+    options:
+      unit: triệu đồng
+  m7-like-terms:
+    prompt: Rút gọn {{a}}x + {{b}}x + {{c}}.
+    hints:
+      - text: Chỉ các hạng tử có cùng phần biến mới cộng được với nhau.
+      - text: "{{a}}x + {{b}}x = {{a+b}}x."
+    solution:
+      - text: "{{a}}x + {{b}}x = {{a+b}}x, còn {{c}} giữ nguyên."
+      - text: "Đáp án: {{a+b}}x + {{c}}."
+    options:
+      placeholder: ví dụ 7x + 3
+  m7-distributive:
+    prompt: Khai triển {{a}}(x + {{b}}).
+    hints:
+      - text: Nhân {{a}} với từng hạng tử trong ngoặc.
+    solution:
+      - text: "{{a}} x x = {{a}}x và {{a}} x {{b}} = {{a*b}}."
+      - text: "Đáp án: {{a}}x + {{a*b}}."
+    options:
+      placeholder: ví dụ 3x + 12
+  m7-factorise-linear:
+    prompt: Phân tích {{a*g}}x + {{b*g}} thành nhân tử.
+    hints:
+      - text: Tìm ước chung lớn nhất của {{a*g}} và {{b*g}}.
+      - text: ƯCLN là {{g}}.
+    solution:
+      - text: "{{a*g}}x + {{b*g}} = {{g}}({{a}}x + {{b}})."
+    options:
+      placeholder: ví dụ 3(2x + 5)
+  m7-two-step-equation:
+    prompt: "Tìm x:   {{a}}x + {{b}} = {{c}}"
+    hints:
+      - text: Trước hết khử {{b}} bằng cách trừ nó ở cả hai vế.
+      - text: Sau đó chia cả hai vế cho {{a}}.
+    solution:
+      - text: "{{a}}x = {{c}} - ({{b}}) = {{c - b}}."
+      - text: "x = {{c-b}} ÷ {{a}} = {{(c-b)/a}}."
+  m7-multi-step-equation:
+    prompt: "Tìm x:   {{a}}x + {{b}} = {{c}}x + {{d}}"
+    hints:
+      - text: Chuyển các hạng tử chứa x về một vế và các số về vế còn lại.
+      - text: Trừ {{c}}x ở cả hai vế ta được {{a-c}}x + {{b}} = {{d}}.
+    solution:
+      - text: "{{a-c}}x = {{d}} - ({{b}}) = {{d - b}}."
+      - text: "x = {{d-b}} ÷ {{a-c}} = {{(d-b)/(a-c)}}."
+  m7-inequality-solve:
+    prompt: "Giải bất phương trình:   -{{a}}x > {{b}}"
+    hints:
+      - text: Chia cả hai vế cho -{{a}}.
+      - text: Khi chia cho một số âm, phải đổi chiều bất đẳng thức.
+    solution:
+      - text: "Chia cho -{{a}} ta được x < {{-b/a : 2}} — lưu ý dấu đã đổi chiều."
+    choices:
+      - "x < {{-b/a : 2}}"
+      - "x > {{-b/a : 2}}"
+      - "x < {{b/a : 2}}"
+      - "x > {{b/a : 2}}"
+  m7-angle-pairs:
+    prompt: Hai góc kề bù, một góc có số đo {{a}} độ. Góc còn lại có số đo bao nhiêu độ?
+    hints:
+      - text: Hai góc kề bù có tổng số đo bằng 180 độ.
+    solution:
+      - text: "180 - {{a}} = {{180 - a}} độ."
+    options:
+      unit: độ
+  m7-complementary:
+    prompt: Hai góc phụ nhau, một góc có số đo {{a}} độ. Góc còn lại có số đo bao nhiêu độ?
+    hints:
+      - text: Hai góc phụ nhau có tổng số đo bằng 90 độ.
+    solution:
+      - text: "90 - {{a}} = {{90 - a}} độ."
+    options:
+      unit: độ
+  m7-parallel-lines:
+    prompt: >-
+      Hai đường thẳng song song bị cắt bởi một đường thẳng thứ ba. Một góc có số đo {{a}} độ.
+      Góc trong cùng phía với nó có số đo bao nhiêu độ?
+    hints:
+      - text: Hai góc trong cùng phía giữa hai đường thẳng song song có tổng bằng 180 độ.
+      - text: Các góc đồng vị và so le trong thì bằng nhau; góc trong cùng phía thì không.
+    solution:
+      - text: "180 - {{a}} = {{180 - a}} độ."
+    options:
+      unit: độ
+  m7-triangle-angle:
+    prompt: Một tam giác có hai góc là {{a}} độ và {{b}} độ. Góc thứ ba có số đo bao nhiêu độ?
+    hints:
+      - text: Tổng ba góc trong một tam giác bằng 180 độ.
+    solution:
+      - text: "180 - {{a}} - {{b}} = {{180 - a - b}} độ."
+    options:
+      unit: độ
+  m7-circumference:
+    prompt: >-
+      Một đường tròn có bán kính {{r}} cm. Tính chu vi của nó theo cm, làm tròn đến 2 chữ số
+      thập phân. Lấy pi = 3,14159.
+    hints:
+      - text: "Chu vi C = 2 pi r."
+    solution:
+      - text: "C = 2 x pi x {{r}} = {{2*pi*r : 2}} cm."
+  m7-circle-area:
+    prompt: >-
+      Một hình tròn có bán kính {{r}} cm. Tính diện tích của nó theo cm vuông, làm tròn đến 2
+      chữ số thập phân. Lấy pi = 3,14159.
+    hints:
+      - text: "Diện tích A = pi r bình phương — bình phương bán kính, không phải nhân đôi."
+    solution:
+      - text: "A = pi x {{r}}^2 = pi x {{r*r}} = {{pi*r*r : 2}} cm vuông."
+  m7-cylinder-volume:
+    prompt: >-
+      Một hình trụ có bán kính đáy {{r}} cm và chiều cao {{h}} cm. Tính thể tích của nó theo cm
+      khối, làm tròn đến 2 chữ số thập phân. Lấy pi = 3,14159.
+    hints:
+      - text: Thể tích = diện tích mặt đáy x chiều cao.
+    solution:
+      - text: "Diện tích đáy = pi x {{r*r}} = {{pi*r*r : 2}} cm vuông."
+      - text: "Thể tích = {{pi*r*r : 2}} x {{h}} = {{pi*r*r*h : 2}} cm khối."
+  m7-simple-probability:
+    prompt: >-
+      Một túi có {{r}} viên bi đỏ và {{b}} viên bi xanh. Lấy ngẫu nhiên một viên. Xác suất lấy
+      được viên bi đỏ là bao nhiêu? Viết đáp án dưới dạng phân số tối giản.
+    hints:
+      - text: Xác suất = số kết quả thuận lợi ÷ tổng số kết quả có thể.
+      - text: Tổng cộng có {{r + b}} viên bi.
+    solution:
+      - text: "P(đỏ) = {{r}}/{{r + b}}, rút gọn thành {{p}}/{{p+q}}."
+  m7-compound-probability:
+    prompt: >-
+      Tung một đồng xu cân đối và gieo một con xúc xắc {{n}} mặt cân đối. Xác suất được mặt
+      ngửa và số {{target}} là bao nhiêu? Viết đáp án dưới dạng phân số.
+    hints:
+      - text: Với hai biến cố độc lập, ta nhân các xác suất thành phần.
+      - text: "P(ngửa) = 1/2 và P({{target}}) = 1/{{n}}."
+    solution:
+      - text: "1/2 x 1/{{n}} = 1/{{2*n}}."
+  m7-compare-datasets:
+    prompt: >-
+      Lớp A có điểm trung bình {{a}} với khoảng biến thiên {{ra}}. Lớp B có điểm trung bình
+      {{b}} với khoảng biến thiên {{rb}}. Khẳng định nào sau đây là đúng?
+    hints:
+      - text: Số trung bình đo mức trung bình; khoảng biến thiên đo độ phân tán.
+    solution:
+      - text: "So sánh số trung bình: {{a}} với {{b}}."
+    choices:
+      - Lớp A có điểm trung bình cao hơn
+      - Lớp B có điểm trung bình cao hơn
+      - Hai lớp có điểm trung bình bằng nhau
+  m7-sampling:
+    prompt: >-
+      Trong một mẫu ngẫu nhiên gồm {{s}} học sinh, có {{f}} em nói rằng mình đi bộ đến trường.
+      Hãy ước lượng số học sinh đi bộ đến trường trong tổng số {{total}} học sinh của trường.
+    hints:
+      - text: Tỉ lệ trong mẫu được xem là xấp xỉ tỉ lệ của toàn trường.
+      - text: Toàn trường lớn gấp {{k}} lần mẫu.
+    solution:
+      - text: "{{total}} ÷ {{s}} = {{k}}, nên nhân số học sinh trong mẫu với {{k}}."
+      - text: "{{f}} x {{k}} = {{f*k}} học sinh."
+  m8-perfect-square:
+    prompt: Tính căn bậc hai của {{n}}.
+    hints:
+      - text: "Hãy tự hỏi: số nào nhân với chính nó thì được {{n}}?"
+    solution:
+      - text: "{{r}} x {{r}} = {{n}}, nên căn bậc hai của {{n}} là {{r}}."
+  m8-estimate-root:
+    prompt: Căn bậc hai của {{n}} nằm giữa hai số tự nhiên liên tiếp nào?
+    hints:
+      - text: Hãy tìm số chính phương gần nhất nhỏ hơn và lớn hơn {{n}}.
+    solution:
+      - text: "{{r*r}} < {{n}} < {{(r+1)*(r+1)}}, nên căn bậc hai nằm giữa {{r}} và {{r+1}}."
+    choices:
+      - "{{r}} và {{r+1}}"
+      - "{{r-1}} và {{r}}"
+      - "{{r+1}} và {{r+2}}"
+      - "{{r+2}} và {{r+3}}"
+  m8-classify-number:
+    prompt: Chọn tất cả các số vô tỉ trong các số dưới đây.
+    hints:
+      - text: Số vô tỉ không viết được dưới dạng phân số của hai số nguyên.
+      - text: Căn bậc hai của một số chính phương là số hữu tỉ.
+    solution:
+      - text: "{{n}} là số chính phương ({{r}}^2), nên căn của nó là số tự nhiên {{r}}."
+      - text: "{{m}} không phải số chính phương nên căn của nó là số vô tỉ, giống như pi."
+    choices:
+      - căn bậc hai của {{m}}
+      - pi
+      - căn bậc hai của {{n}}
+      - "{{r}}/4"
+  m8-index-law-product:
+    prompt: >-
+      Rút gọn {{b}}^{{m}} x {{b}}^{{n}} thành một luỹ thừa của {{b}}. Số mũ mới là bao nhiêu?
+    hints:
+      - text: Khi nhân hai luỹ thừa cùng cơ số, ta cộng các số mũ.
+    solution:
+      - text: "{{b}}^{{m}} x {{b}}^{{n}} = {{b}}^({{m}}+{{n}}) = {{b}}^{{m+n}}."
+  m8-index-law-quotient:
+    prompt: Rút gọn {{b}}^{{m}} ÷ {{b}}^{{n}} thành một luỹ thừa của {{b}}. Số mũ mới là bao nhiêu?
+    hints:
+      - text: Khi chia hai luỹ thừa cùng cơ số, ta trừ các số mũ.
+    solution:
+      - text: "{{b}}^{{m}} ÷ {{b}}^{{n}} = {{b}}^{{m-n}}."
+  m8-zero-negative-index:
+    prompt: Giá trị của {{b}}^-{{n}} là bao nhiêu?
+    hints:
+      - text: Số mũ âm nghĩa là lấy nghịch đảo.
+    solution:
+      - text: "{{b}}^-{{n}} = 1 / {{b}}^{{n}} = 1/{{b ** n}}."
+    choices:
+      - "1 / {{b ** n}}"
+      - "-{{b ** n}}"
+      - "{{b ** n}}"
+      - "0"
+  m8-scientific-notation:
+    prompt: Viết {{a}} x 10^{{e}} dưới dạng số thông thường.
+    hints:
+      - text: Dịch dấu phẩy thập phân sang phải {{e}} chữ số.
+    solution:
+      - text: "{{a}} x 10^{{e}} = {{a * 10 ** e}}."
+  m8-function-or-not:
+    prompt: >-
+      Một tương ứng là hàm số nếu mỗi giá trị đầu vào chỉ ứng với đúng một giá trị đầu ra.
+      Đúng hay sai: tập các điểm ({{a}}, 1), ({{b}}, 2), ({{c}}, 3) là một hàm số.
+    hints:
+      - text: Chỉ khi một đầu vào xuất hiện hai lần với hai đầu ra khác nhau thì mới không phải hàm số.
+    solution:
+      - text: "Các giá trị đầu vào là {{a}}, {{b}} và {{c}} — hãy kiểm tra xem có giá trị nào lặp lại không."
+  m8-function-table:
+    prompt: Cho hàm số y = {{m}}x + {{c}}. Khi x = {{x}} thì y bằng bao nhiêu?
+    hints:
+      - text: Thay x = {{x}} vào và thực hiện phép nhân trước phép cộng.
+    solution:
+      - text: "y = {{m}} x {{x}} + {{c}} = {{m*x}} + {{c}} = {{m*x + c}}."
+  m8-gradient:
+    prompt: Tính hệ số góc của đường thẳng đi qua hai điểm ({{x1}}, {{y1}}) và ({{x2}}, {{y2}}).
+    hints:
+      - text: "Hệ số góc = độ tăng theo trục tung ÷ độ tăng theo trục hoành = (y2 - y1) ÷ (x2 - x1)."
+      - text: "Độ tăng tung độ = {{y2 - y1}}, độ tăng hoành độ = {{x2 - x1}}."
+    solution:
+      - text: "m = ({{y2}} - {{y1}}) ÷ ({{x2}} - {{x1}}) = {{y2-y1}} ÷ {{x2-x1}} = {{(y2-y1)/(x2-x1)}}."
+  m8-slope-intercept-read:
+    prompt: Với đường thẳng y = {{m}}x + {{c}}, tung độ gốc bằng bao nhiêu?
+    hints:
+      - text: "Trong y = mx + c, tung độ gốc là c — giá trị của y khi x = 0."
+    solution:
+      - text: "Thay x = 0 ta được y = {{c}}."
+  m8-write-linear-equation:
+    prompt: >-
+      Một đường thẳng có hệ số góc {{m}} và đi qua điểm (0, {{c}}). Hãy viết phương trình của nó
+      ở dạng y = mx + c (chỉ ghi vế phải).
+    hints:
+      - text: Điểm (0, {{c}}) chính là tung độ gốc.
+    solution:
+      - text: "y = {{m}}x + {{c}}."
+    options:
+      placeholder: ví dụ 3x - 4
+  m8-systems-graphing:
+    prompt: >-
+      Hai đường thẳng y = {{m1}}x + {{c1}} và y = {{m2}}x + {{c2}} cắt nhau tại một điểm.
+      Hoành độ của giao điểm đó bằng bao nhiêu?
+    hints:
+      - text: Tại giao điểm, hai giá trị y bằng nhau, nên ta cho hai biểu thức bằng nhau.
+    solution:
+      - text: "{{m1}}x + {{c1}} = {{m2}}x + {{c2}}."
+      - text: "{{m1 - m2}}x = {{c2 - c1}}, nên x = {{(c2-c1)/(m1-m2)}}."
+  m8-systems-elimination:
+    prompt: "Giải hệ phương trình và cho biết giá trị của x. x + y = {{s}} x - y = {{d}}"
+    hints:
+      - text: Cộng hai phương trình sẽ khử được y.
+      - text: "(x + y) + (x - y) = 2x."
+    solution:
+      - text: "Cộng vế với vế: 2x = {{s}} + {{d}} = {{s + d}}."
+      - text: "x = {{(s+d)/2}}."
+  m8-pythagoras-hypotenuse:
+    prompt: >-
+      Một tam giác vuông có hai cạnh góc vuông là {{a}} cm và {{b}} cm. Cạnh huyền dài bao
+      nhiêu xăng-ti-mét?
+    hints:
+      - text: "Áp dụng định lí Pythagore: a bình phương + b bình phương = c bình phương."
+      - text: "{{a}}^2 + {{b}}^2 = {{a*a}} + {{b*b}} = {{a*a + b*b}}."
+    solution:
+      - text: "c^2 = {{a*a}} + {{b*b}} = {{a*a + b*b}}."
+      - text: "c = căn bậc hai của {{a*a + b*b}} = {{sqrt(a*a + b*b)}} cm."
+  m8-pythagoras-leg:
+    prompt: >-
+      Một tam giác vuông có cạnh huyền {{c}} cm và một cạnh góc vuông {{a}} cm. Cạnh góc vuông
+      còn lại dài bao nhiêu xăng-ti-mét?
+    hints:
+      - text: "Biến đổi thành b bình phương = c bình phương - a bình phương."
+    solution:
+      - text: "b^2 = {{c*c}} - {{a*a}} = {{c*c - a*a}}."
+      - text: "b = {{sqrt(c*c - a*a)}} cm."
+  m8-distance-formula:
+    prompt: Tính khoảng cách giữa hai điểm ({{x1}}, {{y1}}) và ({{x2}}, {{y2}}).
+    hints:
+      - text: "Hãy vẽ một tam giác vuông: khoảng cách ngang và dọc chính là hai cạnh góc vuông."
+      - text: "Khoảng cách ngang = {{x2-x1}}, khoảng cách dọc = {{y2-y1}}."
+    solution:
+      - text: "d^2 = {{(x2-x1)**2}} + {{(y2-y1)**2}} = {{(x2-x1)**2 + (y2-y1)**2}}."
+      - text: "d = {{sqrt((x2-x1)**2 + (y2-y1)**2)}}."
+  m8-translation:
+    prompt: >-
+      Điểm ({{x}}, {{y}}) được tịnh tiến sang phải {{dx}} đơn vị và lên trên {{dy}} đơn vị.
+      Hoành độ mới bằng bao nhiêu?
+    hints:
+      - text: Dịch sang phải làm tăng hoành độ.
+    solution:
+      - text: "{{x}} + {{dx}} = {{x + dx}}."
+  m8-similar-figures:
+    prompt: >-
+      Hai tam giác đồng dạng. Tam giác thứ nhất có một cạnh {{a}} cm tương ứng với cạnh {{b}} cm
+      của tam giác thứ hai. Một cạnh khác của tam giác thứ nhất dài {{c}} cm. Cạnh tương ứng
+      của tam giác thứ hai dài bao nhiêu xăng-ti-mét?
+    hints:
+      - text: Tìm tỉ số đồng dạng bằng cách chia hai cạnh tương ứng.
+      - text: "Tỉ số đồng dạng = {{b}} ÷ {{a}} = {{k}}."
+    solution:
+      - text: "Tỉ số đồng dạng là {{k}}, nên {{c}} x {{k}} = {{c*k}} cm."
+  m8-scatter-association:
+    prompt: >-
+      Một biểu đồ tán xạ cho thấy khi số giờ ôn tập tăng thì điểm thi cũng tăng. Em mô tả mối
+      liên hệ này như thế nào?
+    hints:
+      - text: Khi hai đại lượng cùng tăng, mối liên hệ là tương quan thuận.
+      - text: Nhớ rằng tương quan không đồng nghĩa với quan hệ nhân quả.
+    solution:
+      - text: Hai đại lượng cùng tăng, nên đây là tương quan thuận.
+      - text: Chỉ riêng biểu đồ tán xạ thì không thể khẳng định quan hệ nhân quả.
+    choices:
+      - Tương quan thuận
+      - Tương quan nghịch
+      - Không có tương quan
+      - Nó chứng minh ôn tập làm điểm cao hơn
+  m8-line-of-best-fit:
+    prompt: >-
+      Một đường thẳng phù hợp nhất có phương trình y = {{m}}x + {{c}}. Hãy dùng nó để dự đoán y
+      khi x = {{x}}.
+    hints:
+      - text: Thay x = {{x}} vào phương trình.
+    solution:
+      - text: "y = {{m}} x {{x}} + {{c}} = {{m*x + c}}."
+  m9-expand-binomials:
+    prompt: Khai triển và rút gọn (x + {{a}})(x + {{b}}).
+    hints:
+      - text: Nhân từng hạng tử của ngoặc thứ nhất với từng hạng tử của ngoặc thứ hai.
+      - text: Hệ số của x là {{a}} + {{b}} và hạng tử tự do là {{a}} x {{b}}.
+    solution:
+      - text: "x nhân x = x^2."
+      - text: "Các hạng tử chứa x: {{a}}x + {{b}}x = {{a+b}}x."
+      - text: "Hạng tử tự do: {{a}} x {{b}} = {{a*b}}."
+    options:
+      placeholder: ví dụ x^2 + 5x + 6
+  m9-perfect-square-expand:
+    prompt: Khai triển và rút gọn (x + {{a}})^2.
+    hints:
+      - text: "(x + a)^2 nghĩa là (x + a)(x + a) — không phải x^2 + a^2."
+    solution:
+      - text: "(x + {{a}})^2 = x^2 + 2({{a}})x + {{a}}^2 = x^2 + {{2*a}}x + {{a*a}}."
+  m9-factorise-quadratic:
+    prompt: Phân tích x^2 + {{a + b}}x + {{a*b}} thành nhân tử.
+    hints:
+      - text: Hãy tìm hai số có tích bằng {{a*b}} và tổng bằng {{a+b}}.
+    solution:
+      - text: "{{a}} x {{b}} = {{a*b}} và {{a}} + {{b}} = {{a+b}}."
+      - text: "Vậy kết quả phân tích là (x + {{a}})(x + {{b}})."
+    choices:
+      - "(x + {{a}})(x + {{b}})"
+      - "(x - {{a}})(x - {{b}})"
+      - "(x + {{a+b}})(x + {{a*b}})"
+      - "(x + {{a}})(x - {{b}})"
+  m9-difference-of-squares:
+    prompt: Phân tích x^2 - {{a*a}} thành nhân tử.
+    hints:
+      - text: "Đây là hiệu hai bình phương: a^2 - b^2 = (a + b)(a - b)."
+    solution:
+      - text: "x^2 - {{a*a}} = x^2 - {{a}}^2 = (x + {{a}})(x - {{a}})."
+    choices:
+      - "(x + {{a}})(x - {{a}})"
+      - "(x - {{a}})(x - {{a}})"
+      - "(x + {{a}})(x + {{a}})"
+      - Không phân tích được
+  m9-simplify-surd:
+    prompt: >-
+      Rút gọn căn bậc hai của {{n}} về dạng a x căn(b). Viết theo mẫu, ví dụ 3root2.
+    hints:
+      - text: Hãy tìm số chính phương lớn nhất là ước của {{n}}.
+      - text: "{{n}} = {{a*a}} x {{b}}."
+    solution:
+      - text: "root({{n}}) = root({{a*a}}) x root({{b}}) = {{a}}root{{b}}."
+  m9-algebraic-fraction:
+    prompt: Rút gọn phân thức ({{a}}x + {{a*b}}) / {{a}}.
+    hints:
+      - text: Hãy phân tích tử thức thành nhân tử trước.
+      - text: "{{a}}x + {{a*b}} = {{a}}(x + {{b}})."
+    solution:
+      - text: "{{a}}(x + {{b}}) ÷ {{a}} = x + {{b}}."
+  m9-quadratic-factorising:
+    prompt: >-
+      Giải phương trình x^2 + {{a + b}}x + {{a*b}} = 0. Cho biết nghiệm lớn hơn trong hai nghiệm.
+    hints:
+      - text: "Phân tích thành (x + p)(x + q) = 0."
+      - text: "Khi đó hoặc x + p = 0, hoặc x + q = 0."
+    solution:
+      - text: "(x + {{a}})(x + {{b}}) = 0."
+      - text: "Vậy x = {{-a}} hoặc x = {{-b}}; nghiệm lớn hơn là {{-min(a,b)}}."
+  m9-quadratic-formula-discriminant:
+    prompt: "Với phương trình {{a}}x^2 + {{b}}x + {{c}} = 0, hãy tính biệt thức b^2 - 4ac."
+    hints:
+      - text: "Biệt thức là b^2 - 4ac."
+      - text: "Ở đây a = {{a}}, b = {{b}} và c = {{c}}."
+    solution:
+      - text: "b^2 = {{b*b}} và 4ac = {{4*a*c}}."
+      - text: "Biệt thức = {{b*b}} - {{4*a*c}} = {{b*b - 4*a*c}}."
+  m9-parabola-vertex:
+    prompt: "Với parabol y = x^2 + {{b}}x + {{c}}, hãy tìm hoành độ của đỉnh."
+    hints:
+      - text: "Trục đối xứng có phương trình x = -b ÷ (2a)."
+      - text: "Ở đây a = 1, nên x = -{{b}} ÷ 2."
+    solution:
+      - text: "x = -({{b}}) ÷ 2 = {{-b/2}}."
+  m9-parabola-direction:
+    prompt: "Parabol y = {{a}}x^2 + {{b}}x + {{c}} có bề lõm quay về phía nào?"
+    hints:
+      - text: Hãy xét dấu của hệ số của x^2.
+    solution:
+      - text: "Hệ số của x^2 là {{a}}, dấu của nó quyết định hướng bề lõm."
+    choices:
+      - Lên trên (có điểm cực tiểu)
+      - Xuống dưới (có điểm cực đại)
+      - Đó là một đường thẳng
+  m9-trig-ratio-identify:
+    prompt: >-
+      Trong một tam giác vuông, tỉ số nào bằng cạnh đối chia cho cạnh huyền?
+    hints:
+      - text: Hãy nhớ quy tắc SOH CAH TOA.
+    solution:
+      - text: "SOH: sin = cạnh đối ÷ cạnh huyền."
+    choices:
+      - sin
+      - cos
+      - tan
+      - nghịch đảo của tan
+  m9-trig-find-side:
+    prompt: >-
+      Một tam giác vuông có cạnh huyền {{h}} cm và một góc nhọn {{a}} độ. Tính độ dài cạnh đối
+      diện góc đó theo cm, làm tròn đến 2 chữ số thập phân.
+    hints:
+      - text: Đã biết cạnh huyền và cần tìm cạnh đối, nên dùng sin.
+      - text: "cạnh đối = cạnh huyền x sin(góc)."
+    solution:
+      - text: "cạnh đối = {{h}} x sin({{a}} độ) = {{h * sin(radians(a)) : 2}} cm."
+  m9-trig-find-angle:
+    prompt: >-
+      Một tam giác vuông có cạnh đối {{o}} cm và cạnh huyền {{h}} cm. Tính số đo góc theo độ,
+      làm tròn đến 1 chữ số thập phân.
+    hints:
+      - text: Hãy dùng hàm sin ngược (arcsin).
+      - text: "góc = arcsin(cạnh đối ÷ cạnh huyền)."
+    solution:
+      - text: "sin(góc) = {{o}} ÷ {{h}} = {{o/h : 4}}."
+      - text: "góc = {{degrees(asin(o/h)) : 1}} độ."
+    options:
+      unit: độ
+  m9-elevation:
+    prompt: >-
+      Từ một điểm cách chân tháp {{d}} m, góc nâng đến đỉnh tháp là {{a}} độ. Tháp cao bao
+      nhiêu mét, làm tròn đến 2 chữ số thập phân?
+    hints:
+      - text: Đã biết cạnh kề và cần tìm cạnh đối, nên dùng tan.
+      - text: "chiều cao = khoảng cách x tan(góc)."
+    solution:
+      - text: "chiều cao = {{d}} x tan({{a}} độ) = {{d * tan(radians(a)) : 2}} m."
+  m9-cylinder-surface-area:
+    prompt: >-
+      Một hình trụ kín có bán kính đáy {{r}} cm và chiều cao {{h}} cm. Tính diện tích toàn phần
+      theo cm vuông, làm tròn đến 2 chữ số thập phân. Lấy pi = 3,14159.
+    hints:
+      - text: Diện tích toàn phần = hai hình tròn đáy + mặt xung quanh.
+      - text: "A = 2 pi r^2 + 2 pi r h."
+    solution:
+      - text: "Hai đáy: 2 x pi x {{r*r}} = {{2*pi*r*r : 2}}."
+      - text: "Mặt xung quanh: 2 x pi x {{r}} x {{h}} = {{2*pi*r*h : 2}}."
+      - text: "Tổng = {{2*pi*r*(r+h) : 2}} cm vuông."
+  m9-quartiles:
+    prompt: >-
+      Một mẫu số liệu có tứ phân vị thứ nhất {{q1}} và tứ phân vị thứ ba {{q3}}. Khoảng tứ phân
+      vị bằng bao nhiêu?
+    hints:
+      - text: "Khoảng tứ phân vị bằng Q3 - Q1."
+    solution:
+      - text: "IQR = {{q3}} - {{q1}} = {{q3 - q1}}."
+  m9-box-plot-read:
+    prompt: >-
+      Một biểu đồ hộp có giá trị nhỏ nhất {{mn}}, Q1 {{q1}}, trung vị {{med}}, Q3 {{q3}} và giá
+      trị lớn nhất {{mx}}. Khoảng biến thiên bằng bao nhiêu?
+    hints:
+      - text: Khoảng biến thiên dùng hai giá trị cực trị, không dùng tứ phân vị.
+    solution:
+      - text: "Khoảng biến thiên = {{mx}} - {{mn}} = {{mx - mn}}."
+
+# ----------------------------------------------------------------------------------------
+# Lessons.
+#
+# `blocks` is an overlay applied position by position onto the English blocks: only the prose
+# fields are given here, and everything structural (block type, interactive widget config, the
+# skill a practice block points at) is copied from the original. An empty `{}` leaves a block
+# untouched — used for blocks that contain no prose, such as interactive widgets.
+# ----------------------------------------------------------------------------------------
+lessons:
+  lesson-math-6-order-of-operations:
+    title: Thứ tự thực hiện các phép tính
+    summary: Vì sao 2 + 3 x 4 bằng 14 chứ không phải 20, và quy tắc giải quyết mọi tranh cãi kiểu đó.
+    objectives:
+      - Áp dụng đúng thứ tự thực hiện phép tính trong các biểu thức nhiều bước
+      - Giải thích được vì sao thứ tự lại quan trọng
+      - Dùng dấu ngoặc để chủ động thay đổi thứ tự
+    blocks:
+      - markdown: |
+          Hai bạn học sinh cùng tính `2 + 3 x 4`.
+
+          - **An** nói kết quả là 20. Bạn ấy cộng 2 với 3 được 5, rồi nhân với 4.
+          - **Bình** nói kết quả là 14. Bạn ấy nhân 3 với 4 được 12, rồi cộng thêm 2.
+
+          Không thể cả hai cùng đúng — và toán học không thể có một phép tính mang hai ý nghĩa
+          khác nhau tuỳ theo người đọc. Vì vậy phải có một thứ tự được thống nhất.
+      - title: Thứ tự thực hiện
+        text: >-
+          Ngoặc → Luỹ thừa → Nhân và chia (từ trái sang phải) → Cộng và trừ (từ trái sang phải).
+      - markdown: |
+          Phần cuối quan trọng hơn học sinh thường nghĩ: phép nhân và phép chia ở **cùng một
+          mức**, nên ta thực hiện lần lượt từ trái sang phải. Phép cộng và phép trừ cũng vậy.
+      - title: Thực hiện một phép tính đầy đủ
+        steps:
+          - text: Bắt đầu với biểu thức đã cho.
+            math: '20 - 3 \times (2 + 4)^2 \div 9'
+          - text: Thực hiện trong ngoặc trước.
+            math: '20 - 3 \times 6^2 \div 9'
+          - text: Tiếp theo là luỹ thừa.
+            math: '20 - 3 \times 36 \div 9'
+          - text: "Nhân và chia, từ trái sang phải: 3 × 36 = 108, rồi 108 ÷ 9 = 12."
+            math: '20 - 12'
+          - text: Cuối cùng là phép trừ.
+            math: '8'
+      - title: Một cái bẫy thường gặp
+        text: >-
+          Với 24 ÷ 4 × 2, hãy làm từ trái sang phải: 24 ÷ 4 = 6, rồi 6 × 2 = 12. Nếu nhân trước
+          sẽ ra 3, và đó là kết quả sai.
+      - prompt: Hãy tự làm thử vài câu — mỗi lần hệ thống sẽ sinh ra đề mới.
+      - points:
+          - Ngoặc, rồi luỹ thừa, rồi × và ÷ từ trái sang phải, cuối cùng + và − từ trái sang phải
+          - Phép nhân không phải lúc nào cũng làm trước phép chia — hãy đọc từ trái sang phải
+          - Dùng dấu ngoặc mỗi khi em muốn ép một thứ tự khác
+  lesson-math-6-adding-fractions:
+    title: Cộng và trừ phân số
+    summary: Vì sao không thể cộng tử với tử, mẫu với mẫu, và cách làm đúng.
+    objectives:
+      - Giải thích được vì sao phải quy đồng mẫu số trước khi cộng phân số
+      - Tìm mẫu số chung bằng bội chung nhỏ nhất
+      - Cộng và trừ được các phân số khác mẫu
+    blocks:
+      - markdown: |
+          Đây là lỗi sai phổ biến nhất trong toán THCS:
+
+          $$\frac{1}{2} + \frac{1}{3} = \frac{2}{5} \quad \text{(sai!)}$$
+
+          Em có thể thấy ngay là sai mà không cần biến đổi gì. Một nửa vốn đã lớn hơn hai phần
+          năm — nên cộng thêm một lượng nữa không thể làm nó nhỏ đi được.
+      - title: Lí do
+        text: >-
+          Mẫu số của một phân số cho biết mỗi phần lớn bằng bao nhiêu. Ta chỉ cộng được những
+          phần có cùng kích thước. Một nửa và một phần ba có kích thước khác nhau, nên phải chia
+          lại trước khi gộp được với nhau.
+      - {}
+      - title: Cộng một nửa với một phần ba
+        steps:
+          - text: Mẫu số chung nhỏ nhất của 2 và 3 là 6.
+          - text: Chia lại mỗi phân số thành các phần sáu.
+            math: '\frac{1}{2} = \frac{3}{6} \qquad \frac{1}{3} = \frac{2}{6}'
+          - text: Bây giờ các phần đã bằng nhau, nên chỉ cần cộng các tử số.
+            math: '\frac{3}{6} + \frac{2}{6} = \frac{5}{6}'
+      - markdown: |
+          ### Tìm mẫu số chung
+
+          Hãy dùng **bội chung nhỏ nhất** của hai mẫu số. Em cũng có thể lấy tích của hai mẫu
+          số — cách đó vẫn đúng, chỉ là sẽ phải rút gọn nhiều hơn ở bước cuối.
+      - headers: [Phép tính, Các mẫu số, BCNN, Sau khi quy đồng]
+        rows:
+          - ["1/4 + 1/6", "4 và 6", "12", "3/12 + 2/12 = 5/12"]
+          - ["2/5 + 1/3", "5 và 3", "15", "6/15 + 5/15 = 11/15"]
+          - ["3/8 − 1/4", "8 và 4", "8", "3/8 − 2/8 = 1/8"]
+      - title: Luôn kiểm tra lại
+        text: >-
+          Khi làm xong, hãy tự hỏi kết quả có rút gọn được nữa không — và nó có hợp lí không.
+          Cộng hai phân số nhỏ hơn 1 thì không thể ra một số rất lớn.
+      - {}
+      - points:
+          - Chỉ cộng được phân số khi các mẫu số bằng nhau
+          - Dùng BCNN của các mẫu số làm mẫu số chung
+          - Chỉ cộng các tử số — mẫu số giữ nguyên
+          - Rút gọn ở bước cuối và kiểm tra xem độ lớn của kết quả có hợp lí không
+  lesson-math-6-ratios:
+    title: Hiểu về tỉ số
+    summary: So sánh hai đại lượng — ý tưởng đằng sau công thức nấu ăn, bản đồ và pha màu sơn.
+    objectives:
+      - Viết được tỉ số từ một tình huống thực tế
+      - Rút gọn tỉ số về dạng tối giản
+      - Phân biệt tỉ số giữa hai phần với tỉ số giữa một phần và toàn thể
+    blocks:
+      - markdown: |
+          Một lớp học có 12 bạn nam và 18 bạn nữ. Ta có thể so sánh hai số này theo nhiều cách,
+          và **tỉ số** là một trong số đó.
+
+          Ta viết tỉ số giữa số bạn nam và số bạn nữ là `12 : 18`.
+      - markdown: |
+          ### Rút gọn
+
+          Cũng như phân số, một tỉ số có thể rút gọn bằng cách chia cả hai số hạng cho một ước
+          chung. Ước chung lớn nhất của 12 và 18 là 6:
+
+          $$12 : 18 = 2 : 3$$
+
+          Điều này cho ta một thông tin hữu ích: cứ 2 bạn nam thì có 3 bạn nữ.
+      - title: Tỉ số giữa hai phần khác với tỉ số so với toàn thể
+        text: >-
+          Tỉ số giữa số nam và số nữ là 2 : 3. Nhưng *phân số* chỉ phần học sinh nam của cả lớp
+          lại là 2/5, không phải 2/3 — vì tổng cộng có 5 phần. Nhầm lẫn hai điều này là lỗi sai
+          hay gặp nhất khi học về tỉ số.
+      - title: Chia một lượng theo tỉ số
+        steps:
+          - text: "Chia 350 000 đồng cho hai bạn học sinh theo tỉ số 3 : 4."
+          - text: "Tổng số phần: 3 + 4 = 7."
+          - text: "Một phần: 350 000 ÷ 7 = 50 000 đồng."
+          - text: "Bạn thứ nhất nhận 3 × 50 000 = 150 000 đồng."
+          - text: "Bạn thứ hai nhận 4 × 50 000 = 200 000 đồng."
+          - text: "Kiểm tra lại: 150 000 + 200 000 = 350 000. ✓"
+      - {}
+      - points:
+          - Tỉ số dùng để so sánh hai đại lượng cùng loại
+          - Rút gọn bằng cách chia cả hai số hạng cho ước chung lớn nhất
+          - Với câu hỏi so với toàn thể, hãy cộng các phần lại trước để tìm tổng số phần
+  lesson-math-7-two-step-equations:
+    title: Giải phương trình hai bước
+    summary: Khử hai phép toán theo đúng thứ tự để tìm ẩn số.
+    objectives:
+      - Giải được phương trình dạng ax + b = c
+      - Giải thích được vì sao phải khử các phép toán theo thứ tự ngược lại
+      - Kiểm tra nghiệm bằng cách thay lại vào phương trình
+    blocks:
+      - markdown: |
+          Một phương trình giống như một chiếc cân. Làm gì với vế này thì phải làm đúng như vậy
+          với vế kia — nếu không, hai vế sẽ không còn bằng nhau.
+
+          Để giải `3x + 5 = 20` ta cần đưa `x` về một mình. Bí quyết là **khử các phép toán
+          theo thứ tự ngược lại**.
+      - title: Hãy nghĩ đến việc mặc đồ
+        text: >-
+          Em đi tất trước rồi mới đi giày. Khi cởi ra thì phải cởi giày trước rồi mới cởi tất —
+          theo thứ tự ngược lại. Phương trình cũng vậy: phép toán được thực hiện sau cùng với x
+          chính là phép toán em khử đầu tiên.
+      - title: Giải phương trình 3x + 5 = 20
+        steps:
+          - text: Phương trình đã cho.
+            math: '3x + 5 = 20'
+          - text: "Phép toán cuối cùng tác động lên x là '+ 5', nên khử nó trước — trừ 5 ở cả hai vế."
+            math: '3x = 15'
+          - text: "Bây giờ khử phép '× 3' bằng cách chia cả hai vế cho 3."
+            math: 'x = 5'
+          - text: "Kiểm tra bằng cách thay lại: 3(5) + 5 = 15 + 5 = 20. ✓"
+      - caption: >-
+          Công thức tổng quát — nhưng hiểu và suy luận theo từng bước vẫn tốt hơn nhiều so với
+          học thuộc công thức này.
+      - title: Chú ý dấu
+        text: >-
+          Với 4x − 7 = 13, phép toán là '− 7', nên em khử nó bằng cách *cộng* 7: 4x = 20, suy ra
+          x = 5.
+      - {}
+      - points:
+          - Làm gì với vế này thì phải làm đúng như vậy với vế kia
+          - Khử các phép toán theo thứ tự ngược lại — cộng/trừ trước, rồi mới nhân/chia
+          - Luôn thay nghiệm trở lại phương trình để kiểm tra
+  lesson-math-8-gradient:
+    title: Hệ số góc của đường thẳng
+    summary: Đo độ dốc bằng một con số duy nhất, và ý nghĩa của nó trong thực tế.
+    objectives:
+      - Tính được hệ số góc từ hai điểm
+      - Hiểu ý nghĩa của hệ số góc dương, âm và bằng không
+      - Giải thích được hệ số góc biểu thị điều gì trong một đồ thị thực tế
+    blocks:
+      - markdown: |
+          **Hệ số góc** của một đường thẳng cho biết đường thẳng đó dốc đến mức nào. Nó trả lời
+          câu hỏi: *cứ đi sang phải một bước thì đi lên (hoặc xuống) bao nhiêu?*
+
+          $$m = \frac{\text{độ tăng tung độ}}{\text{độ tăng hoành độ}} = \frac{y_2 - y_1}{x_2 - x_1}$$
+      - {}
+      - title: Tính hệ số góc của đường thẳng qua (1, 3) và (5, 11)
+        steps:
+          - text: Đặt tên cho hai điểm.
+            math: '(x_1, y_1) = (1, 3) \qquad (x_2, y_2) = (5, 11)'
+          - text: "Độ tăng tung độ: phần thay đổi của y."
+            math: '11 - 3 = 8'
+          - text: "Độ tăng hoành độ: phần thay đổi của x."
+            math: '5 - 1 = 4'
+          - text: Hệ số góc.
+            math: 'm = \frac{8}{4} = 2'
+      - headers: [Hệ số góc, Đường thẳng như thế nào, Ví dụ]
+        rows:
+          - [Dương, Đi lên từ trái sang phải, "m = 3"]
+          - [Âm, Đi xuống từ trái sang phải, "m = −2"]
+          - [Bằng không, Nằm ngang, "m = 0"]
+          - [Không xác định, Thẳng đứng (độ tăng hoành độ bằng 0), "x = 4"]
+      - title: Hệ số góc luôn mang một ý nghĩa
+        text: >-
+          Trên đồ thị quãng đường — thời gian, hệ số góc chính là tốc độ. Trên đồ thị chi phí, nó
+          là đơn giá mỗi sản phẩm. Hệ số góc gần như luôn là một *tốc độ thay đổi* — đó là lí do
+          nó quan trọng vượt xa phạm vi hình học.
+      - title: Giữ đúng thứ tự
+        text: >-
+          Nếu em đặt y₂ ở tử thì phải đặt x₂ ở mẫu. Đổi chỗ một cái mà không đổi cái kia sẽ làm
+          hệ số góc đổi dấu.
+      - {}
+      - points:
+          - "Hệ số góc = độ tăng tung độ ÷ độ tăng hoành độ = (y₂ − y₁) ÷ (x₂ − x₁)"
+          - Dương thì đi lên, âm thì đi xuống, bằng không thì nằm ngang
+          - Trong thực tế, hệ số góc biểu thị một tốc độ thay đổi
+  lesson-math-8-pythagoras:
+    title: Định lí Pythagore
+    summary: Mối liên hệ giữa ba cạnh của mọi tam giác vuông.
+    objectives:
+      - Phát biểu và vận dụng được định lí Pythagore
+      - Xác định đúng cạnh huyền
+      - Giải được các bài toán liên quan đến tam giác vuông
+    blocks:
+      - markdown: |
+          Trong **mọi** tam giác vuông, bình phương cạnh dài nhất bằng tổng bình phương hai cạnh
+          còn lại.
+
+          $$a^2 + b^2 = c^2$$
+
+          Cạnh dài nhất, `c`, được gọi là **cạnh huyền**. Nó luôn là cạnh đối diện với góc vuông.
+      - {}
+      - title: Hãy xác định cạnh huyền trước
+        text: >-
+          Trước khi tính toán, hãy tìm góc vuông rồi nhìn thẳng sang cạnh đối diện nó. Cạnh đó
+          chính là cạnh huyền — và nó phải là cạnh dài nhất.
+      - title: Tính cạnh huyền
+        steps:
+          - text: Một tam giác có hai cạnh góc vuông là 6 cm và 8 cm.
+          - text: Áp dụng định lí.
+            math: 'c^2 = 6^2 + 8^2'
+          - text: Bình phương từng cạnh.
+            math: 'c^2 = 36 + 64 = 100'
+          - text: Lấy căn bậc hai.
+            math: 'c = \sqrt{100} = 10\text{ cm}'
+      - title: Tính một cạnh góc vuông
+        steps:
+          - text: Một chiếc thang dài 13 m dựa vào tường, chân thang cách chân tường 5 m.
+          - text: Chiếc thang chính là cạnh huyền, nên ta biến đổi định lí.
+            math: 'a^2 = c^2 - b^2'
+          - text: Thay số.
+            math: 'a^2 = 13^2 - 5^2 = 169 - 25 = 144'
+          - text: Vậy thang chạm tường ở độ cao 12 m.
+            math: 'a = 12\text{ m}'
+      - title: Phải trừ khi tìm cạnh góc vuông
+        text: >-
+          Cộng trong khi lẽ ra phải trừ là lỗi hay gặp nhất khi dùng định lí Pythagore. Nếu em
+          đang tìm một cạnh góc vuông thì kết quả phải *nhỏ hơn* cạnh huyền — nếu không, chắc
+          chắn em đã cộng thay vì trừ.
+      - {}
+      - points:
+          - "a² + b² = c², trong đó c là cạnh huyền"
+          - Cạnh huyền đối diện góc vuông và luôn là cạnh dài nhất
+          - Khi tìm một cạnh góc vuông, phải trừ chứ không cộng
+          - Định lí chỉ đúng với tam giác vuông
+  lesson-math-9-factorising-quadratics:
+    title: Phân tích tam thức bậc hai thành nhân tử
+    summary: Làm ngược lại phép khai triển — kỹ năng then chốt để giải phương trình bậc hai.
+    objectives:
+      - Phân tích được biểu thức dạng x² + bx + c thành nhân tử
+      - Chọn đúng cặp số một cách có hệ thống
+      - Kiểm tra kết quả phân tích bằng cách khai triển lại
+    blocks:
+      - markdown: |
+          Em đã biết cách khai triển:
+
+          $$(x + 2)(x + 3) = x^2 + 5x + 6$$
+
+          **Phân tích thành nhân tử** chính là quá trình đó làm theo chiều ngược lại. Cho
+          `x² + 5x + 6`, ta muốn quay về `(x + 2)(x + 3)`.
+      - title: Hai số cần tìm
+        text: >-
+          Với x² + bx + c, hãy tìm hai số có **tích bằng c** và **tổng bằng b**. Nên bắt đầu từ
+          phép nhân — thường sẽ có ít lựa chọn hơn.
+      - title: Phân tích x² + 7x + 12
+        steps:
+          - text: Ta cần hai số có tích bằng 12 và tổng bằng 7.
+          - text: "Các cặp ước của 12: (1, 12), (2, 6), (3, 4)."
+          - text: "Tổng của chúng: 13, 8, 7. Cặp cuối cùng thoả mãn."
+          - text: "Vậy kết quả phân tích là:"
+            math: 'x^2 + 7x + 12 = (x + 3)(x + 4)'
+          - text: "Kiểm tra bằng cách khai triển: x² + 4x + 3x + 12 = x² + 7x + 12. ✓"
+      - markdown: |
+          ### Khi dấu thay đổi
+
+          Dấu của `b` và `c` cho em biết trước dấu bên trong các ngoặc:
+      - headers: [Dấu của c, Dấu của b, Dấu trong ngoặc, Ví dụ]
+        rows:
+          - [dương, dương, cùng dương, "x² + 7x + 12 = (x+3)(x+4)"]
+          - [dương, âm, cùng âm, "x² − 7x + 12 = (x−3)(x−4)"]
+          - [âm, dương hoặc âm, một dương một âm, "x² − x − 12 = (x−4)(x+3)"]
+      - title: Vì sao điều này quan trọng
+        text: >-
+          Phân tích thành nhân tử không phải là bài tập vô ích. Khi một biểu thức đã ở dạng tích,
+          ta áp dụng được **quy tắc tích bằng không**: nếu A × B = 0 thì A = 0 hoặc B = 0. Chính
+          điều đó làm cho phương trình bậc hai giải được.
+      - {}
+      - points:
+          - Tìm hai số có tích bằng c và tổng bằng b
+          - Dựa vào dấu của b và c để đoán trước dấu trong các ngoặc
+          - Luôn kiểm tra lại bằng cách khai triển
+          - Phân tích thành nhân tử là chìa khoá để giải phương trình bậc hai

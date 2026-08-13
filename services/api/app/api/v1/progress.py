@@ -10,7 +10,8 @@ from sqlalchemy import case, func, select
 from sqlalchemy.orm import selectinload
 
 from app.adaptive import MASTERY_THRESHOLD, recommend_next
-from app.core.deps import CurrentStudent, DbSession
+from app.core.deps import CurrentStudent, DbSession, RequestLocale
+from app.core.i18n import localise
 from app.models import (
     Assignment,
     AssignmentSubmission,
@@ -46,7 +47,19 @@ from app.services.practice import summarise_student
 router = APIRouter(prefix="/progress", tags=["progress"])
 
 
-def _subject_progress(db, student_id: int) -> list[SubjectProgress]:
+def _translated_name(fallback: str, i18n: dict[str, Any] | None, locale: str) -> str:
+    """Pick a translated name out of a raw ``i18n`` value selected by an aggregate query.
+
+    The progress rollup is a GROUP BY, so it works with plain columns rather than ORM instances
+    and cannot use ``localise`` directly. Selecting the JSON column alongside the aggregate keeps
+    this to one query instead of one extra lookup per subject.
+    """
+    if locale == "en":
+        return fallback
+    return ((i18n or {}).get(locale) or {}).get("name") or fallback
+
+
+def _subject_progress(db, student_id: int, locale: str = "en") -> list[SubjectProgress]:
     """Average mastery per subject, over the skills the student has actually touched.
 
     Averaging over *every* skill in the curriculum would make a diligent grade-6 student look
@@ -57,6 +70,7 @@ def _subject_progress(db, student_id: int) -> list[SubjectProgress]:
         select(
             Subject.slug,
             Subject.name,
+            Subject.i18n,
             Subject.color,
             Subject.icon,
             func.avg(StudentSkillMastery.mastery_probability),
@@ -69,25 +83,29 @@ def _subject_progress(db, student_id: int) -> list[SubjectProgress]:
         .join(Skill, Skill.topic_id == Topic.id)
         .join(StudentSkillMastery, StudentSkillMastery.skill_id == Skill.id)
         .where(StudentSkillMastery.student_id == student_id)
-        .group_by(Subject.id, Subject.slug, Subject.name, Subject.color, Subject.icon)
+        .group_by(
+            Subject.id, Subject.slug, Subject.name, Subject.i18n, Subject.color, Subject.icon
+        )
         .order_by(Subject.position)
     ).all()
 
     return [
         SubjectProgress(
             subject_slug=slug,
-            subject_name=name,
+            subject_name=_translated_name(name, i18n, locale),
             color=color,
             icon=icon,
             mastery_percent=int(round((avg_mastery or 0) * 100)),
             skills_tracked=tracked or 0,
             skills_mastered=int(mastered or 0),
         )
-        for slug, name, color, icon, avg_mastery, tracked, mastered in rows
+        for slug, name, i18n, color, icon, avg_mastery, tracked, mastered in rows
     ]
 
 
-def _weak_skills(db, student_id: int, limit: int = 5) -> list[WeakSkillRead]:
+def _weak_skills(
+    db, student_id: int, limit: int = 5, locale: str = "en"
+) -> list[WeakSkillRead]:
     rows = list(
         db.scalars(
             select(StudentSkillMastery)
@@ -118,7 +136,7 @@ def _weak_skills(db, student_id: int, limit: int = 5) -> list[WeakSkillRead]:
             WeakSkillRead(
                 skill_id=row.skill_id,
                 skill_slug=skill.slug if skill else "",
-                skill_name=skill.name if skill else "",
+                skill_name=localise(skill, "name", locale) if skill else "",
                 subject_slug=subject_slug,
                 mastery=round(row.mastery_probability, 4),
                 attempts=row.attempts,
@@ -141,17 +159,19 @@ def _activity_heatmap(db, student_id: int, days: int = 84) -> list[dict[str, Any
 
 
 @router.get("/dashboard", response_model=DashboardResponse)
-def dashboard(db: DbSession, student: CurrentStudent) -> DashboardResponse:
+def dashboard(
+    db: DbSession, student: CurrentStudent, locale: RequestLocale
+) -> DashboardResponse:
     """Everything the student dashboard needs, in one request."""
     now = dt.datetime.now(dt.UTC)
     summary = summarise_student(db, student.id)
 
-    subjects = _subject_progress(db, student.id)
+    subjects = _subject_progress(db, student.id, locale)
     overall = int(round(sum(s.mastery_percent for s in subjects) / len(subjects))) if subjects \
         else 0
 
     recommendations = [
-        RecommendationRead(**rec.as_dict())
+        RecommendationRead(**rec.as_dict(locale))
         for rec in recommend_next(db, student.id, limit=4)
     ]
 
@@ -251,7 +271,7 @@ def dashboard(db: DbSession, student: CurrentStudent) -> DashboardResponse:
         {
             "course_id": enrollment.course.id,
             "slug": enrollment.course.slug,
-            "title": enrollment.course.title,
+            "title": localise(enrollment.course, "title", locale),
             "grade": enrollment.course.grade,
             "last_activity_at": enrollment.last_activity_at,
         }
@@ -281,11 +301,11 @@ def dashboard(db: DbSession, student: CurrentStudent) -> DashboardResponse:
         overall_mastery_percent=overall,
         subjects=subjects,
         recommendations=recommendations,
-        weak_skills=_weak_skills(db, student.id),
+        weak_skills=_weak_skills(db, student.id, locale=locale),
         recent_attempts=[
             RecentAttemptRead(
                 id=a.id,
-                skill_name=a.skill.name if a.skill else "",
+                skill_name=localise(a.skill, "name", locale) if a.skill else "",
                 is_correct=a.is_correct,
                 score=round(a.score, 3),
                 created_at=a.created_at,
@@ -305,6 +325,7 @@ def dashboard(db: DbSession, student: CurrentStudent) -> DashboardResponse:
 def mastery_breakdown(
     db: DbSession,
     student: CurrentStudent,
+    locale: RequestLocale,
     subject: Annotated[str | None, Query()] = None,
 ) -> list[dict[str, Any]]:
     """Full per-skill mastery list, used by the detailed progress page."""
@@ -335,9 +356,13 @@ def mastery_breakdown(
             {
                 "skill_id": skill.id,
                 "skill_slug": skill.slug,
-                "skill_name": skill.name,
-                "topic": skill.topic.title if skill.topic else None,
-                "unit": skill.topic.unit.title if skill.topic and skill.topic.unit else None,
+                "skill_name": localise(skill, "name", locale),
+                "topic": localise(skill.topic, "title", locale) if skill.topic else None,
+                "unit": (
+                    localise(skill.topic.unit, "title", locale)
+                    if skill.topic and skill.topic.unit
+                    else None
+                ),
                 "subject_slug": subject_obj.slug if subject_obj else None,
                 "grade": course.grade if course else None,
                 "mastery": round(row.mastery_probability, 4),

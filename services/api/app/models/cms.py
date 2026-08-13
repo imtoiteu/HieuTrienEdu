@@ -22,7 +22,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import Base, TimestampMixin
+from app.models.base import Base, TimestampMixin, TranslatableMixin
 from app.models.enums import CategoryKind, MediaKind, ReviewStatus
 
 
@@ -94,7 +94,7 @@ class ProductCategory(Base):
     )
 
 
-class SiteSetting(Base, TimestampMixin):
+class SiteSetting(Base, TimestampMixin, TranslatableMixin):
     """Single-value site configuration: address, phone, email, social links, footer text.
 
     Key/value with a JSON payload rather than a wide singleton row, because the set of things a

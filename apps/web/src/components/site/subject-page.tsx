@@ -31,19 +31,19 @@ export async function SubjectPage({
   const href = (path: string) => `/${locale}${path}`;
   const isPhysics = slug === 'physics';
 
-  const subjects = await safe(api.curriculum.subjects(), [] as Subject[]);
+  const subjects = await safe(api.curriculum.subjects(locale), [] as Subject[]);
   const subject = subjects.find((entry) => entry.slug === slug) ?? null;
 
   // Load each grade's unit list so the page shows the real curriculum, not a summary of it.
   const loaded = await Promise.all(
     (subject?.courses ?? []).map((course) =>
-      safe(api.curriculum.course(course.slug), null as CourseDetail | null),
+      safe(api.curriculum.course(course.slug, locale), null as CourseDetail | null),
     ),
   );
   const courses = loaded.filter((course): course is CourseDetail => course !== null);
 
   return (
-    <MarketingShell>
+    <MarketingShell locale={locale}>
       <PageHeader
         eyebrow={`${t('common.grade')} 6–9`}
         title={t(`subject.${slug}.title`)}

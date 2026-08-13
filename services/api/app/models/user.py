@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any
 from sqlalchemy import Boolean, Date, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import Base, TimestampMixin
+from app.models.base import Base, TimestampMixin, TranslatableMixin
 from app.models.enums import UserRole
 
 if TYPE_CHECKING:
@@ -85,7 +85,7 @@ class StudentProfile(Base, TimestampMixin):
     )
 
 
-class TeacherProfile(Base, TimestampMixin):
+class TeacherProfile(Base, TimestampMixin, TranslatableMixin):
     __tablename__ = "teacher_profiles"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)

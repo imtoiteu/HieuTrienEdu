@@ -26,12 +26,12 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import Base, TimestampMixin
+from app.models.base import Base, TimestampMixin, TranslatableMixin
 from app.models.curriculum import Skill
 from app.models.enums import QuestionType, ReviewStatus
 
 
-class Question(Base, TimestampMixin):
+class Question(Base, TimestampMixin, TranslatableMixin):
     __tablename__ = "questions"
     __table_args__ = (
         CheckConstraint("difficulty BETWEEN 1 AND 5", name="difficulty_range"),

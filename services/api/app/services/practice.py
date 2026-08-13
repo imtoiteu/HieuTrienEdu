@@ -149,6 +149,7 @@ def serve_question(
     *,
     session: PracticeSession | None = None,
     exclude_question_ids: list[int] | None = None,
+    locale: str = "en",
 ) -> ServedQuestion:
     """Choose a question for this student and skill, render a fresh variant, and persist it."""
     record = get_or_create_mastery(db, student.id, skill)
@@ -180,7 +181,7 @@ def serve_question(
     for _ in range(_MAX_SELECTION_TRIES):
         seed = secrets.randbelow(2**31 - 1)
         try:
-            generated = generate_variant(QuestionTemplate.from_model(question), seed)
+            generated = generate_variant(QuestionTemplate.from_model(question, locale), seed)
             break
         except GenerationError:
             # A template whose constraints failed on this seed may succeed on another; but if it

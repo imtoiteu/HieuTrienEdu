@@ -29,6 +29,11 @@ from app.api.v1.admin._common import (
     record_audit,
     snapshot,
 )
+from app.api.v1.admin._translations import (
+    TranslationsPayload,
+    apply_translations,
+    read_translations,
+)
 from app.core.text import unique_slug
 from app.models import (
     ContentRevision,
@@ -48,7 +53,7 @@ from app.services.storage import playback_url
 router = APIRouter(prefix="/lessons", tags=["admin:lessons"])
 
 
-class LessonIn(BaseModel):
+class LessonIn(TranslationsPayload):
     topic_id: int
     title: str = Field(min_length=1, max_length=250)
     slug: str | None = Field(default=None, max_length=180)
@@ -63,7 +68,7 @@ class LessonIn(BaseModel):
     blocks: list[dict[str, Any]] = Field(default_factory=list)
 
 
-class LessonUpdate(BaseModel):
+class LessonUpdate(TranslationsPayload):
     topic_id: int | None = None
     title: str | None = Field(default=None, min_length=1, max_length=250)
     slug: str | None = Field(default=None, max_length=180)
@@ -77,13 +82,57 @@ class LessonUpdate(BaseModel):
     blocks: list[dict[str, Any]] | None = None
 
 
-class ResourceIn(BaseModel):
+class ResourceIn(TranslationsPayload):
     title: str = Field(min_length=1, max_length=250)
     url: str = Field(min_length=1, max_length=800)
     resource_type: str = Field(default="link", max_length=40)
     description: str | None = None
     media_asset_id: int | None = None
     is_public: bool = True
+
+
+def _apply_lesson_translations(
+    lesson: Lesson, translations: dict[str, dict[str, Any]] | None, *, publish_now: bool
+) -> None:
+    """Write translated lesson fields, honouring the draft/live split.
+
+    The editor sends translated blocks under ``blocks``, mirroring the English payload. Both are
+    working copies, so both land in the draft — a translator editing a live lesson must not change
+    what students are currently reading. ``publish_now`` promotes the draft in the same call, which
+    is what lesson *creation* with status published does.
+    """
+    if translations is None:
+        return
+    staged: dict[str, dict[str, Any]] = {}
+    for locale, values in translations.items():
+        bucket = dict(values)
+        if "blocks" in bucket:
+            blocks = _validate_blocks(bucket.pop("blocks") or [])
+            bucket["draft_blocks"] = blocks
+            if publish_now:
+                bucket["blocks"] = blocks
+        staged[locale] = bucket
+    apply_translations(lesson, staged)
+
+
+def _publish_lesson_translations(lesson: Lesson) -> None:
+    """Promote every locale's translated draft to live, alongside the English publish."""
+    blob = dict(lesson.i18n or {})
+    for locale, values in blob.items():
+        draft = (values or {}).get("draft_blocks")
+        if draft:
+            blob[locale] = {**values, "blocks": draft}
+    lesson.i18n = blob
+
+
+def _reset_lesson_translation_drafts(lesson: Lesson) -> None:
+    """Reset every locale's translated draft back to its live body."""
+    blob = dict(lesson.i18n or {})
+    for locale, values in blob.items():
+        live = (values or {}).get("blocks")
+        if live:
+            blob[locale] = {**values, "draft_blocks": live}
+    lesson.i18n = blob
 
 
 def _validate_blocks(blocks: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -123,6 +172,7 @@ def _lesson_row(lesson: Lesson, topic: Topic | None = None) -> dict[str, Any]:
         "published_at": lesson.published_at,
         "updated_at": lesson.updated_at,
         "created_at": lesson.created_at,
+        "translations": read_translations(lesson),
     }
 
 
@@ -214,6 +264,7 @@ def create_lesson(payload: LessonIn, db: DbSession, admin: CurrentAdmin) -> dict
         teacher_notes=payload.teacher_notes,
         published_at=dt.datetime.now(dt.UTC) if published else None,
     )
+    _apply_lesson_translations(lesson, payload.translations, publish_now=published)
     db.add(lesson)
     db.flush()
     record_audit(db, admin, "create", "lesson", lesson.id, f"Created lesson “{lesson.title}”")
@@ -263,6 +314,7 @@ def get_lesson(lesson_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, 
                 else None
             ),
             "skill_name": lesson.skill.name if lesson.skill else None,
+            "translations": read_translations(lesson),
             "breadcrumb": {
                 "course_id": course.id if course else None,
                 "course_title": course.title if course else None,
@@ -280,6 +332,7 @@ def get_lesson(lesson_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, 
                     "description": resource.description,
                     "is_public": resource.is_public,
                     "position": resource.position,
+                    "translations": read_translations(resource),
                 }
                 for resource in lesson.resources
             ],
@@ -294,7 +347,7 @@ def update_lesson(
 ) -> dict[str, Any]:
     """Save the working copy. Never touches what students are reading."""
     lesson = get_or_404(db, Lesson, lesson_id, "Lesson")
-    fields = payload.model_dump(exclude_unset=True, exclude={"slug", "blocks"})
+    fields = payload.model_dump(exclude_unset=True, exclude={"slug", "blocks", "translations"})
 
     if fields.get("topic_id") is not None:
         get_or_404(db, Topic, fields["topic_id"], "Topic")
@@ -317,6 +370,8 @@ def update_lesson(
     if payload.blocks is not None:
         lesson.draft_blocks = _validate_blocks(payload.blocks)
         lesson.has_draft = lesson.draft_blocks != (lesson.blocks or [])
+
+    _apply_lesson_translations(lesson, payload.translations, publish_now=False)
 
     record_audit(
         db, admin, "update", "lesson", lesson.id, f"Saved draft of “{lesson.title}”",
@@ -348,6 +403,7 @@ def publish_lesson(lesson_id: int, db: DbSession, admin: CurrentAdmin) -> dict[s
     )
 
     lesson.blocks = draft
+    _publish_lesson_translations(lesson)
     lesson.has_draft = False
     lesson.status = ReviewStatus.PUBLISHED
     lesson.version += 1
@@ -391,6 +447,7 @@ def discard_draft(lesson_id: int, db: DbSession, admin: CurrentAdmin) -> dict[st
     """Throw away unpublished edits and reset the draft to the live version."""
     lesson = get_or_404(db, Lesson, lesson_id, "Lesson")
     lesson.draft_blocks = list(lesson.blocks or [])
+    _reset_lesson_translation_drafts(lesson)
     lesson.has_draft = False
     record_audit(
         db, admin, "discard_draft", "lesson", lesson.id,

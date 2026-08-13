@@ -2,6 +2,8 @@
 
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
 
+import { setClientLocale } from './api';
+
 import {
   DEFAULT_LOCALE,
   type Dictionary,
@@ -41,6 +43,9 @@ export function I18nProvider({
   children: ReactNode;
 }) {
   const value = useMemo<I18nContextValue>(() => {
+    // Tell the API client which language to request content in. Done here rather than in an
+    // effect so the very first client-side fetch already carries the right locale.
+    setClientLocale(locale);
     const t = createTranslator(dictionary, fallback);
     return {
       locale,

@@ -58,5 +58,17 @@ class TimestampMixin:
     )
 
 
+class TranslatableMixin:
+    """Adds the ``i18n`` translation blob to a content model.
+
+    Shape: ``{"vi": {"title": "…", "summary": "…"}}``. Reads go through
+    ``app.core.i18n.localise``, which falls back to the English column when a field is missing,
+    so a partially-translated row renders rather than blanking. See that module for why this is a
+    JSON column rather than per-language columns.
+    """
+
+    i18n: Mapped[dict[str, Any]] = mapped_column(JSON_COLUMN, default=dict, nullable=False)
+
+
 def utcnow() -> dt.datetime:
     return dt.datetime.now(dt.UTC)

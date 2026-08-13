@@ -10,8 +10,10 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 from app.adaptive import build_learning_path, recommend_next
-from app.core.deps import CurrentStudent, DbSession
+from app.core.deps import CurrentStudent, DbSession, RequestLocale
+from app.core.i18n import localise
 from app.exercise_engine import AnswerFormatError
+from app.exercise_engine.feedback import render_format_error
 from app.models import (
     PracticeSession,
     Question,
@@ -71,7 +73,9 @@ def start_session(
 
 
 @router.get("/sessions/{session_id}/next", response_model=ServedQuestionRead)
-def next_question(session_id: int, db: DbSession, student: CurrentStudent) -> ServedQuestionRead:
+def next_question(
+    session_id: int, db: DbSession, student: CurrentStudent, locale: RequestLocale
+) -> ServedQuestionRead:
     """Serve the next question in a session, avoiding templates already seen in it."""
     session = db.get(PracticeSession, session_id)
     if session is None or session.student_id != student.id:
@@ -90,7 +94,12 @@ def next_question(session_id: int, db: DbSession, student: CurrentStudent) -> Se
 
     try:
         served = serve_question(
-            db, student, skill, session=session, exclude_question_ids=already_seen
+            db,
+            student,
+            skill,
+            session=session,
+            exclude_question_ids=already_seen,
+            locale=locale,
         )
     except LookupError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
@@ -100,11 +109,13 @@ def next_question(session_id: int, db: DbSession, student: CurrentStudent) -> Se
 
 
 @router.get("/skills/{skill_slug}/question", response_model=ServedQuestionRead)
-def quick_question(skill_slug: str, db: DbSession, student: CurrentStudent) -> ServedQuestionRead:
+def quick_question(
+    skill_slug: str, db: DbSession, student: CurrentStudent, locale: RequestLocale
+) -> ServedQuestionRead:
     """Serve a single question outside a session — used by the 'try it' widgets."""
     skill = _resolve_skill(db, None, skill_slug)
     try:
-        served = serve_question(db, student, skill)
+        served = serve_question(db, student, skill, locale=locale)
     except LookupError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
     db.commit()
@@ -133,7 +144,8 @@ def get_hint(
 
 @router.post("/submit", response_model=SubmitAnswerResponse)
 def submit_answer(
-    payload: SubmitAnswerRequest, db: DbSession, student: CurrentStudent
+    payload: SubmitAnswerRequest, db: DbSession, student: CurrentStudent,
+    locale: RequestLocale,
 ) -> SubmitAnswerResponse:
     """Grade an answer and apply every consequence: mastery, XP, streak, achievements."""
     variant = db.scalar(
@@ -163,15 +175,17 @@ def submit_answer(
             session=session,
         )
     except AnswerFormatError as exc:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                            detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=render_format_error(exc.key, locale),
+        ) from exc
 
     db.commit()
 
     return SubmitAnswerResponse(
         is_correct=outcome.grade.is_correct,
         score=round(outcome.grade.score, 4),
-        message=outcome.grade.message,
+        message=outcome.grade.localised_message(locale),
         details=outcome.grade.details,
         correct_answer=outcome.grade.correct_answer,
         # The worked solution is released only now, after the student has committed.
@@ -223,15 +237,22 @@ def get_session(session_id: int, db: DbSession, student: CurrentStudent) -> Sess
 def recommendations(
     db: DbSession,
     student: CurrentStudent,
+    locale: RequestLocale,
     limit: Annotated[int, Query(ge=1, le=20)] = 5,
     subject: Annotated[str | None, Query()] = None,
 ) -> list[RecommendationRead]:
     results = recommend_next(db, student.id, limit=limit, subject_slug=subject)
-    return [RecommendationRead(**rec.as_dict()) for rec in results]
+    return [
+        RecommendationRead(**rec.as_dict(locale))
+        for rec in results
+    ]
+
 
 
 @router.get("/path/{unit_slug}", response_model=list[PathNodeRead])
-def learning_path(unit_slug: str, db: DbSession, student: CurrentStudent) -> list[PathNodeRead]:
+def learning_path(
+    unit_slug: str, db: DbSession, student: CurrentStudent, locale: RequestLocale
+) -> list[PathNodeRead]:
     """The visual learning path for one unit: mastered / in progress / available / locked."""
     unit = db.scalar(select(Unit).where(Unit.slug == unit_slug))
     if unit is None:
@@ -242,7 +263,7 @@ def learning_path(unit_slug: str, db: DbSession, student: CurrentStudent) -> lis
         PathNodeRead(
             skill_id=node.skill.id,
             skill_slug=node.skill.slug,
-            skill_name=node.skill.name,
+            skill_name=localise(node.skill, 'name', locale),
             topic=node.skill.topic.title if node.skill.topic else None,
             difficulty=node.skill.difficulty,
             mastery=round(node.mastery, 4),
@@ -255,7 +276,9 @@ def learning_path(unit_slug: str, db: DbSession, student: CurrentStudent) -> lis
 
 
 @router.get("/topics/{topic_slug}/path", response_model=list[PathNodeRead])
-def topic_path(topic_slug: str, db: DbSession, student: CurrentStudent) -> list[PathNodeRead]:
+def topic_path(
+    topic_slug: str, db: DbSession, student: CurrentStudent, locale: RequestLocale
+) -> list[PathNodeRead]:
     topic = db.scalar(select(Topic).where(Topic.slug == topic_slug))
     if topic is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Topic not found")
@@ -263,7 +286,8 @@ def topic_path(topic_slug: str, db: DbSession, student: CurrentStudent) -> list[
     nodes = build_learning_path(db, student.id, unit_id=topic.unit_id)
     return [
         PathNodeRead(
-            skill_id=n.skill.id, skill_slug=n.skill.slug, skill_name=n.skill.name,
+            skill_id=n.skill.id, skill_slug=n.skill.slug,
+            skill_name=localise(n.skill, 'name', locale),
             topic=n.skill.topic.title if n.skill.topic else None,
             difficulty=n.skill.difficulty, mastery=round(n.mastery, 4), status=n.status,
             attempts=n.attempts, blocked_by=n.blocked_by,

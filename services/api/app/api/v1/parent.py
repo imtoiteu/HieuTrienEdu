@@ -18,7 +18,8 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import selectinload
 
 from app.adaptive import MASTERY_THRESHOLD
-from app.core.deps import CurrentParent, CurrentUser, DbSession
+from app.core.deps import CurrentParent, CurrentUser, DbSession, RequestLocale
+from app.core.i18n import localise
 from app.models import (
     Attempt,
     Attendance,
@@ -165,15 +166,17 @@ def link_child(
 
 
 @router.get("/children/{student_id}/progress")
-def child_progress(student_id: int, db: DbSession, parent: CurrentParent) -> dict[str, Any]:
+def child_progress(
+    student_id: int, db: DbSession, parent: CurrentParent, locale: RequestLocale
+) -> dict[str, Any]:
     """Detailed progress for one child: subject mastery, weak skills, recent work."""
     student = _require_linked(db, parent.id, student_id)
 
     subject_rows = db.execute(
         select(
-            Subject.slug, Subject.name, Subject.color,
-            func.avg(StudentSkillMastery.mastery_probability),
-            func.count(StudentSkillMastery.id),
+            Subject.slug, Subject.name, Subject.color, Subject.i18n,
+            func.avg(StudentSkillMastery.mastery_probability).label("avg_mastery"),
+            func.count(StudentSkillMastery.id).label("skills_tracked"),
         )
         .join(Course, Course.subject_id == Subject.id)
         .join(Unit, Unit.course_id == Course.id)
@@ -181,7 +184,7 @@ def child_progress(student_id: int, db: DbSession, parent: CurrentParent) -> dic
         .join(Skill, Skill.topic_id == Topic.id)
         .join(StudentSkillMastery, StudentSkillMastery.skill_id == Skill.id)
         .where(StudentSkillMastery.student_id == student_id)
-        .group_by(Subject.id, Subject.slug, Subject.name, Subject.color)
+        .group_by(Subject.id, Subject.slug, Subject.name, Subject.color, Subject.i18n)
     ).all()
 
     weak = list(
@@ -220,15 +223,17 @@ def child_progress(student_id: int, db: DbSession, parent: CurrentParent) -> dic
         "stats": summarise_student(db, student_id),
         "subjects": [
             {
-                "slug": slug, "name": name, "color": color,
-                "mastery_percent": int(round(float(avg or 0) * 100)),
-                "skills_tracked": count,
+                "slug": row.slug, "name": localise(row, "name", locale), "color": row.color,
+                "mastery_percent": int(round(float(row.avg_mastery or 0) * 100)),
+                "skills_tracked": row.skills_tracked,
             }
-            for slug, name, color, avg, count in subject_rows
+            # ``localise`` reads ``.i18n`` and ``.name`` off the row by attribute, which a labelled
+            # SQLAlchemy Row supports — no need to re-fetch the Subject entities.
+            for row in subject_rows
         ],
         "weak_skills": [
             {
-                "skill_name": row.skill.name if row.skill else "",
+                "skill_name": localise(row.skill, "name", locale) if row.skill else "",
                 "skill_slug": row.skill.slug if row.skill else "",
                 "mastery_percent": int(round(row.mastery_probability * 100)),
                 "attempts": row.attempts,
@@ -238,7 +243,7 @@ def child_progress(student_id: int, db: DbSession, parent: CurrentParent) -> dic
         ],
         "recent_work": [
             {
-                "skill_name": a.skill.name if a.skill else "",
+                "skill_name": localise(a.skill, "name", locale) if a.skill else "",
                 "is_correct": a.is_correct,
                 "created_at": a.created_at,
             }

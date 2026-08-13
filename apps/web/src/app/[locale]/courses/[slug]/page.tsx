@@ -23,7 +23,7 @@ export default async function CourseDetailPage({
 
   let course;
   try {
-    course = await api.curriculum.course(slug);
+    course = await api.curriculum.course(slug, locale);
   } catch {
     notFound();
   }
@@ -31,7 +31,7 @@ export default async function CourseDetailPage({
   const isPhysics = course.subject_slug === 'physics';
 
   return (
-    <MarketingShell>
+    <MarketingShell locale={locale}>
       <Section className={`${isPhysics ? 'bg-teal-50' : 'bg-lavender'} pb-10 pt-12`}>
         <Container>
           <Link

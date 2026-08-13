@@ -24,6 +24,8 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
 from app.adaptive.bkt import MASTERY_THRESHOLD, STRUGGLING_THRESHOLD, decay_mastery
+from app.core.i18n import DEFAULT_LOCALE, localise
+from app.exercise_engine.feedback import render_recommendation
 from app.models import (
     Course,
     Skill,
@@ -61,16 +63,23 @@ class Recommendation:
     readiness: float
     is_locked: bool = False
     blocked_by: list[str] = field(default_factory=list)
+    # Values that go into the translated sentence for ``reason``. Held separately from ``detail``
+    # so the sentence can be rebuilt in any language rather than string-patched after the fact.
+    detail_params: dict[str, Any] = field(default_factory=dict)
 
-    def as_dict(self) -> dict[str, Any]:
+    def as_dict(self, locale: str = DEFAULT_LOCALE) -> dict[str, Any]:
+        skill_name = localise(self.skill, "name", locale)
+        params = {**self.detail_params}
+        if "skill" in params:
+            params["skill"] = skill_name
         return {
             "skill_id": self.skill.id,
             "skill_slug": self.skill.slug,
-            "skill_name": self.skill.name,
-            "topic": self.skill.topic.title if self.skill.topic else None,
+            "skill_name": skill_name,
+            "topic": localise(self.skill.topic, "title", locale) if self.skill.topic else None,
             "score": round(self.score, 4),
             "reason": self.reason,
-            "detail": self.detail,
+            "detail": render_recommendation(self.reason, locale, params),
             "mastery": round(self.mastery, 4),
             "readiness": round(self.readiness, 4),
             "difficulty": self.skill.difficulty,
@@ -226,6 +235,7 @@ def recommend_next(
                     score=score,
                     reason="prerequisite_gap",
                     detail=f"Needed before you can start {skill.name}",
+                    detail_params={"skill": skill.name},
                     mastery=target_mastery,
                     readiness=target_readiness,
                     blocked_by=[],
@@ -244,6 +254,7 @@ def recommend_next(
                         reason="review_due",
                         detail=f"Keep {skill.name} sharp — last practised "
                                f"{int(stale_days)} days ago",
+                        detail_params={"skill": skill.name, "days": int(stale_days)},
                         mastery=mastery,
                         readiness=readiness,
                     ),
