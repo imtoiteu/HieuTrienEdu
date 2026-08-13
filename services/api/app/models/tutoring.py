@@ -8,7 +8,7 @@ A ClassGroup teaches a Course; a Course knows nothing about who is enrolled.
 from __future__ import annotations
 
 import datetime as dt
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import (
     Boolean,
@@ -32,9 +32,13 @@ from app.models.enums import (
     EnrollmentStatus,
     LeadStatus,
     LearningFormat,
+    ReviewStatus,
     SessionStatus,
 )
 from app.models.user import StudentProfile, TeacherProfile
+
+if TYPE_CHECKING:
+    from app.models.ops import LeadNote
 
 
 class TutoringProduct(Base, TimestampMixin):
@@ -67,6 +71,20 @@ class TutoringProduct(Base, TimestampMixin):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     is_featured: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     position: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+
+    # --- admin-managed presentation and scheduling -----------------------------------
+    thumbnail_url: Mapped[str | None] = mapped_column(String(600))
+    status: Mapped[str] = mapped_column(String(20), default=ReviewStatus.PUBLISHED, nullable=False)
+    teacher_id: Mapped[int | None] = mapped_column(
+        ForeignKey("teacher_profiles.id", ondelete="SET NULL")
+    )
+    course_id: Mapped[int | None] = mapped_column(ForeignKey("courses.id", ondelete="SET NULL"))
+    start_date: Mapped[dt.date | None] = mapped_column(Date)
+    end_date: Mapped[dt.date | None] = mapped_column(Date)
+    seo_title: Mapped[str | None] = mapped_column(String(200))
+    seo_description: Mapped[str | None] = mapped_column(Text)
+
+    teacher: Mapped[TeacherProfile | None] = relationship()
 
 
 class ClassGroup(Base, TimestampMixin):
@@ -146,6 +164,17 @@ class ClassEnrollment(Base, TimestampMixin):
     )
     enrolled_at: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True))
     notes: Mapped[str | None] = mapped_column(Text)
+
+    # --- admin workflow ---------------------------------------------------------------
+    # ``payment_status`` is denormalised from the linked order so the enrollment table can be
+    # filtered on it without a join; a class with no order (a free trial place) still needs a
+    # sensible value, which an order join could not provide.
+    payment_status: Mapped[str] = mapped_column(String(20), default="unpaid", nullable=False)
+    preferred_schedule: Mapped[str | None] = mapped_column(Text)
+    requested_format: Mapped[str | None] = mapped_column(String(30))
+    approved_by_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"))
+    approved_at: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True))
+    cancelled_reason: Mapped[str | None] = mapped_column(Text)
 
     class_group: Mapped[ClassGroup] = relationship(back_populates="enrollments")
     student: Mapped[StudentProfile] = relationship()
@@ -238,7 +267,26 @@ class TutoringRequest(Base, TimestampMixin):
         ForeignKey("class_groups.id", ondelete="SET NULL")
     )
 
+    # --- pipeline, mirroring ContactLead so the two feed one consultation inbox --------
+    contact_student_name: Mapped[str | None] = mapped_column(String(200))
+    parent_name: Mapped[str | None] = mapped_column(String(200))
+    parent_phone: Mapped[str | None] = mapped_column(String(40))
+    assigned_to_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"))
+    consultation_result: Mapped[str | None] = mapped_column(Text)
+    last_contacted_at: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True))
+    next_follow_up_at: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True))
+    converted_student_id: Mapped[int | None] = mapped_column(
+        ForeignKey("student_profiles.id", ondelete="SET NULL")
+    )
+    converted_at: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True))
+    source_page: Mapped[str | None] = mapped_column(String(160))
+
     preferred_teacher: Mapped[TeacherProfile | None] = relationship()
+    notes: Mapped[list[LeadNote]] = relationship(
+        cascade="all, delete-orphan",
+        order_by="LeadNote.created_at.desc()",
+        primaryjoin="TutoringRequest.id == LeadNote.tutoring_request_id",
+    )
 
 
 class Assignment(Base, TimestampMixin):

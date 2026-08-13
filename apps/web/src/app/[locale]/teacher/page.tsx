@@ -177,18 +177,12 @@ export default function TeacherDashboardPage({
                   <table className="w-full min-w-[36rem] text-left text-sm">
                     <thead>
                       <tr className="border-b-2 border-ink-100">
-                        <th scope="col" className="pb-2 font-display">
-                          Question
-                        </th>
+                        <th scope="col" className="pb-2 font-display">{t('admin.ex.question')}</th>
                         <th scope="col" className="pb-2 font-display">
                           {t('common.difficulty')}
                         </th>
-                        <th scope="col" className="pb-2 font-display">
-                          Served
-                        </th>
-                        <th scope="col" className="pb-2 font-display">
-                          Success
-                        </th>
+                        <th scope="col" className="pb-2 font-display">{t('teacher.qServed')}</th>
+                        <th scope="col" className="pb-2 font-display">{t('teacher.qSuccess')}</th>
                       </tr>
                     </thead>
                     <tbody>

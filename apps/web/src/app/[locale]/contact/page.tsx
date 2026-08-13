@@ -178,12 +178,10 @@ export default function ContactPage() {
 
             <aside className="space-y-5">
               <Card>
-                <h2 className="font-display text-xl">Visit or call us</h2>
+                <h2 className="font-display text-xl">{t('contact.visitTitle')}</h2>
                 <ul className="mt-4 space-y-3 text-sm text-ink-700">
                   <li className="flex items-start gap-3">
-                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-500" aria-hidden="true" />
-                    HieuTrienEducation Centre, Hà Nội, Việt Nam
-                  </li>
+                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-500" aria-hidden="true" />{t('contact.centreAddress')}</li>
                   <li className="flex items-start gap-3">
                     <Phone className="mt-0.5 h-4 w-4 shrink-0 text-brand-500" aria-hidden="true" />
                     <a href="tel:+842412345678" className="hover:underline">
@@ -200,7 +198,7 @@ export default function ContactPage() {
               </Card>
 
               <Card className="bg-brand-50">
-                <h2 className="font-display text-xl">What the free assessment involves</h2>
+                <h2 className="font-display text-xl">{t('contact.assessmentTitle')}</h2>
                 <ol className="mt-3 space-y-2.5 text-sm text-ink-700">
                   {[
                     'A 15-minute adaptive test, taken online at home.',

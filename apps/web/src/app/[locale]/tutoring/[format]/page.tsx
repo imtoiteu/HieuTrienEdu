@@ -134,7 +134,7 @@ export default async function TutoringFormatPage({
                 <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-100 text-brand-700">
                   <Icon className="h-6 w-6" aria-hidden="true" />
                 </span>
-                <h2 className="mt-4 font-display text-2xl">What you get</h2>
+                <h2 className="mt-4 font-display text-2xl">{t('tutoring.whatYouGet')}</h2>
                 <ul className="mt-4 space-y-3">
                   {config.points.map((point) => (
                     <li key={point} className="flex items-start gap-3 text-ink-700">
@@ -189,7 +189,7 @@ export default async function TutoringFormatPage({
 
               {classes.length > 0 && (
                 <div className="mt-8">
-                  <h2 className="font-display text-2xl">Open classes</h2>
+                  <h2 className="font-display text-2xl">{t('tutoring.openClasses')}</h2>
                   <div className="mt-4 space-y-4">
                     {classes.map((group) => (
                       <Card key={group.id}>
@@ -232,7 +232,7 @@ export default async function TutoringFormatPage({
                           {group.location && (
                             <div className="flex items-center gap-1.5">
                               <MapPin className="h-4 w-4" aria-hidden="true" />
-                              <dt className="sr-only">Location</dt>
+                              <dt className="sr-only">{t('tutoring.location')}</dt>
                               <dd>{group.location}</dd>
                             </div>
                           )}

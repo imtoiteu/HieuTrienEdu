@@ -79,7 +79,7 @@ export default async function LearningMethodsPage({
       <Section className="bg-white">
         <Container>
           <div className="mx-auto max-w-3xl">
-            <h2 className="font-display text-3xl">The model, in the open</h2>
+            <h2 className="font-display text-3xl">{t('methods.modelTitle')}</h2>
             <p className="mt-4 text-lg leading-relaxed text-ink-700">
               We think a platform that makes claims about a student&apos;s understanding owes you
               the method behind them. After each answer, the probability that the student knows the

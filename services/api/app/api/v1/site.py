@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import datetime as dt
-from typing import Annotated
+from typing import Annotated, Any
 
 from fastapi import APIRouter, HTTPException, Query, status
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
@@ -11,18 +11,25 @@ from sqlalchemy import func, select
 
 from app.core.deps import DbSession, OptionalUser
 from app.models import (
+    Announcement,
     BlogPost,
     ContactLead,
+    ContentCategory,
     Course,
+    FaqItem,
     LeadStatus,
+    NotificationKind,
     Question,
     ReviewStatus,
+    SiteSection,
+    SiteSetting,
     Skill,
     Subject,
     TeacherProfile,
     Testimonial,
     User,
 )
+from app.services.notifications import notify_admins
 
 router = APIRouter(prefix="/site", tags=["site"])
 
@@ -69,6 +76,18 @@ class ContactLeadCreate(BaseModel):
     interest: str = Field(default="general", max_length=40)
     message: str | None = Field(default=None, max_length=4000)
     source_page: str | None = Field(default=None, max_length=160)
+
+    # Optional richer detail, supplied by the consultation and enrolment forms. All optional so
+    # the plain "contact us" box keeps working with three fields.
+    student_name: str | None = Field(default=None, max_length=200)
+    parent_name: str | None = Field(default=None, max_length=200)
+    parent_phone: str | None = Field(default=None, max_length=40)
+    school: str | None = Field(default=None, max_length=200)
+    preferred_format: str | None = Field(default=None, max_length=30)
+    preferred_delivery: str | None = Field(default=None, max_length=30)
+    preferred_schedule: str | None = Field(default=None, max_length=1000)
+    interested_course_id: int | None = None
+    interested_product_id: int | None = None
 
 
 class ContactLeadAck(BaseModel):
@@ -166,7 +185,12 @@ def site_stats(db: DbSession) -> SiteStats:
 def submit_contact(
     payload: ContactLeadCreate, db: DbSession, user: OptionalUser = None
 ) -> ContactLeadAck:
-    """Receive a contact / free-assessment enquiry from the public site."""
+    """Receive a contact / consultation enquiry from the public site.
+
+    The submission is a database row *and* an admin notification. Before, an enquiry landed
+    silently in a table nobody was watching; raising a notification is what makes "the request
+    must not disappear" true rather than a matter of someone remembering to check.
+    """
     lead = ContactLead(
         name=payload.name.strip(),
         email=str(payload.email).lower(),
@@ -176,10 +200,30 @@ def submit_contact(
         interest=payload.interest,
         message=payload.message,
         source_page=payload.source_page,
+        student_name=payload.student_name,
+        parent_name=payload.parent_name,
+        parent_phone=payload.parent_phone,
+        school=payload.school,
+        preferred_format=payload.preferred_format,
+        preferred_delivery=payload.preferred_delivery,
+        preferred_schedule=payload.preferred_schedule,
+        interested_course_id=payload.interested_course_id,
+        interested_product_id=payload.interested_product_id,
         status=LeadStatus.NEW,
         handled_by_id=None,
     )
     db.add(lead)
+    db.flush()
+
+    notify_admins(
+        db,
+        NotificationKind.LEAD_CREATED,
+        f"New consultation request from {lead.name}",
+        body=(lead.message or "")[:500] or f"Interest: {lead.interest}",
+        link_url=f"/admin/consultations/contact/{lead.id}",
+        entity_type="lead:contact",
+        entity_id=lead.id,
+    )
     db.commit()
     db.refresh(lead)
     return ContactLeadAck(
@@ -189,3 +233,145 @@ def submit_contact(
             "working day."
         ),
     )
+
+
+# --------------------------------------------------------------------------------------
+# admin-managed website content
+# --------------------------------------------------------------------------------------
+#
+# Everything below reads only *published* rows. The admin CMS writes to a draft field and
+# publishes separately, so an unfinished edit can never be served here — that separation is the
+# whole reason the public site can be edited live without a staging environment.
+
+
+@router.get("/settings")
+def public_settings(db: DbSession) -> dict[str, Any]:
+    """Contact details, social links and footer copy, keyed for direct lookup."""
+    rows = db.scalars(select(SiteSetting).order_by(SiteSetting.group, SiteSetting.position))
+    return {row.key: row.value for row in rows}
+
+
+@router.get("/sections")
+def public_sections(
+    db: DbSession,
+    page: Annotated[str | None, Query(max_length=60)] = None,
+    locale: Annotated[str, Query(max_length=8)] = "en",
+) -> dict[str, Any]:
+    """Published page sections, keyed by section key so a template can look one up directly.
+
+    Falls back to the English row when a locale has no translation: a missing Vietnamese
+    translation should show the English copy, not an empty page.
+    """
+    query = select(SiteSection).where(SiteSection.status == ReviewStatus.PUBLISHED)
+    if page:
+        query = query.where(SiteSection.page == page)
+    rows = list(db.scalars(query.order_by(SiteSection.position, SiteSection.id)))
+
+    by_key: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        if not row.published_content:
+            continue
+        existing = by_key.get(row.key)
+        # Prefer the requested locale; otherwise keep whatever was found first.
+        if existing is None or row.locale == locale:
+            by_key[row.key] = {
+                "key": row.key,
+                "page": row.page,
+                "kind": row.kind,
+                "locale": row.locale,
+                "position": row.position,
+                **(row.published_content or {}),
+            }
+    return by_key
+
+
+@router.get("/faqs")
+def public_faqs(
+    db: DbSession,
+    category: Annotated[str | None, Query(max_length=60)] = None,
+    locale: Annotated[str | None, Query(max_length=8)] = None,
+) -> list[dict[str, Any]]:
+    query = select(FaqItem).where(FaqItem.is_published.is_(True))
+    if category:
+        query = query.where(FaqItem.category == category)
+    if locale:
+        query = query.where(FaqItem.locale == locale)
+    return [
+        {
+            "id": item.id,
+            "question": item.question,
+            "answer": item.answer,
+            "category": item.category,
+        }
+        for item in db.scalars(query.order_by(FaqItem.position, FaqItem.id))
+    ]
+
+
+@router.get("/announcements")
+def public_announcements(
+    db: DbSession,
+    kind: Annotated[str | None, Query(max_length=30)] = None,
+) -> list[dict[str, Any]]:
+    """Banners and notices that are published *and* currently within their date window."""
+    now = dt.datetime.now(dt.UTC)
+    query = select(Announcement).where(Announcement.is_published.is_(True))
+    if kind:
+        query = query.where(Announcement.kind == kind)
+    rows = db.scalars(query.order_by(Announcement.position, Announcement.created_at.desc()))
+    return [
+        {
+            "id": item.id,
+            "title": item.title,
+            "body": item.body,
+            "kind": item.kind,
+            "tone": item.tone,
+            "link_url": item.link_url,
+            "link_label": item.link_label,
+            "image_url": item.image_url,
+        }
+        for item in rows
+        if item.is_live(now)
+    ]
+
+
+@router.get("/categories")
+def public_categories(
+    db: DbSession,
+    kind: Annotated[str | None, Query(max_length=20)] = None,
+    nav_only: Annotated[bool, Query()] = False,
+) -> list[dict[str, Any]]:
+    """The admin-defined taxonomy, as a nested tree of published categories."""
+    query = select(ContentCategory).where(ContentCategory.is_published.is_(True))
+    if kind:
+        query = query.where(ContentCategory.kind == kind)
+    if nav_only:
+        query = query.where(ContentCategory.is_visible_in_nav.is_(True))
+    rows = list(db.scalars(query.order_by(ContentCategory.position, ContentCategory.id)))
+
+    by_parent: dict[int | None, list[ContentCategory]] = {}
+    ids = {row.id for row in rows}
+    for row in rows:
+        # A published child whose parent is unpublished is promoted to the top level rather than
+        # being hidden — otherwise unpublishing a container silently removes its whole subtree.
+        parent = row.parent_id if row.parent_id in ids else None
+        by_parent.setdefault(parent, []).append(row)
+
+    def build(parent_id: int | None) -> list[dict[str, Any]]:
+        return [
+            {
+                "id": row.id,
+                "slug": row.slug,
+                "name": row.name,
+                "description": row.description,
+                "image_url": row.image_url,
+                "icon": row.icon,
+                "color": row.color,
+                "kind": row.kind,
+                "seo_title": row.seo_title,
+                "seo_description": row.seo_description,
+                "children": build(row.id),
+            }
+            for row in by_parent.get(parent_id, [])
+        ]
+
+    return build(None)

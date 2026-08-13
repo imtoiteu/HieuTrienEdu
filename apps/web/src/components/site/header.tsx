@@ -139,7 +139,7 @@ export function SiteHeader() {
               not at all. Without them flex squeezes the links and the labels wrap onto two lines —
               invisible in English, where every label is one word, and immediately obvious in
               Vietnamese, where "Toán học" and "Giới thiệu" are two. */}
-          <nav aria-label="Main" className="hidden shrink-0 items-center gap-0.5 xl:flex">
+          <nav aria-label={t('a11y.mainNav')} className="hidden shrink-0 items-center gap-0.5 xl:flex">
             {NAV.map((item) =>
               item.children ? (
                 <div
@@ -262,7 +262,7 @@ export function SiteHeader() {
           id="mobile-nav"
           className="max-h-[calc(100vh-4rem)] overflow-y-auto border-t-2 border-ink-100 bg-cream px-5 py-4 xl:hidden"
         >
-          <nav aria-label="Mobile">
+          <nav aria-label={t('a11y.mobileNav')}>
             <ul className="space-y-1">
               {NAV.map((item) => (
                 <li key={item.href}>

@@ -27,26 +27,18 @@ export default function RootNotFound() {
         />
       </svg>
 
-      <h1 className="mt-6 font-display text-3xl font-extrabold text-ink-900 sm:text-4xl">
-        We cannot find that page
-      </h1>
-      <p className="mt-3 max-w-md text-ink-600">
-        The link may be out of date, or the page may have moved.
-      </p>
+      <h1 className="mt-6 font-display text-3xl font-extrabold text-ink-900 sm:text-4xl">We cannot find that page</h1>
+      <p className="mt-3 max-w-md text-ink-600">The link may be out of date, or the page may have moved.</p>
 
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         <Link
           href="/en"
           className="inline-flex h-12 items-center rounded-2xl border-2 border-ink-900 bg-brand-500 px-6 font-bold text-white shadow-pop transition-all hover:bg-brand-600 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none"
-        >
-          Back to the home page
-        </Link>
+        >Back to the home page</Link>
         <Link
           href="/en/courses"
           className="inline-flex h-12 items-center rounded-2xl border-2 border-ink-900 bg-white px-6 font-bold text-ink-900 shadow-pop-sm transition-all hover:bg-ink-50"
-        >
-          Courses
-        </Link>
+        >Courses</Link>
       </div>
     </div>
   );

@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+import datetime as dt
 from typing import Any
 
-from sqlalchemy import Boolean, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, TimestampMixin
@@ -48,9 +49,25 @@ class Lesson(Base, TimestampMixin):
     license: Mapped[str | None] = mapped_column(String(80))
     attribution: Mapped[str | None] = mapped_column(Text)
 
+    # --- authoring ---------------------------------------------------------------------
+    # ``blocks`` is the live, student-visible body. ``draft_blocks`` is the admin's working copy.
+    # Separating them is what makes "edit a published lesson without breaking it" true rather than
+    # aspirational: students keep reading ``blocks`` until the author presses Publish.
+    draft_blocks: Mapped[list[dict[str, Any]]] = mapped_column(default=list)
+    has_draft: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    thumbnail_url: Mapped[str | None] = mapped_column(String(600))
+    teacher_notes: Mapped[str | None] = mapped_column(Text)
+    version: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    published_at: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True))
+
     topic: Mapped[Topic] = relationship()
     skill: Mapped[Skill | None] = relationship(back_populates="lessons")
     video: Mapped[Video | None] = relationship()
+    resources: Mapped[list[Resource]] = relationship(
+        back_populates="lesson",
+        cascade="all, delete-orphan",
+        order_by="Resource.position",
+    )
 
 
 class Video(Base, TimestampMixin):
@@ -90,7 +107,16 @@ class Resource(Base, TimestampMixin):
     resource_type: Mapped[str] = mapped_column(String(40), default="link", nullable=False)
     url: Mapped[str] = mapped_column(String(800), nullable=False)
     topic_id: Mapped[int | None] = mapped_column(ForeignKey("topics.id", ondelete="CASCADE"))
+    # A worksheet usually belongs to one lesson rather than a whole topic. Both are nullable so a
+    # resource can be attached at either level, or to neither while it sits in the library.
+    lesson_id: Mapped[int | None] = mapped_column(ForeignKey("lessons.id", ondelete="CASCADE"))
+    media_asset_id: Mapped[int | None] = mapped_column(
+        ForeignKey("media_assets.id", ondelete="SET NULL")
+    )
+    position: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     is_public: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
 
     license: Mapped[str | None] = mapped_column(String(80))
     attribution: Mapped[str | None] = mapped_column(Text)
+
+    lesson: Mapped[Lesson | None] = relationship(back_populates="resources")

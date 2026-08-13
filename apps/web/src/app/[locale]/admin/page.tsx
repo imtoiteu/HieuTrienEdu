@@ -1,291 +1,381 @@
 'use client';
 
-import { BookOpen, ClipboardList, GraduationCap, Mail, Users, Wallet } from 'lucide-react';
+import Link from 'next/link';
+import {
+  Activity,
+  BookOpen,
+  CalendarDays,
+  ClipboardList,
+  FileText,
+  FolderPlus,
+  GraduationCap,
+  MessageSquare,
+  Plus,
+  UserCheck,
+  Users,
+  Wallet,
+} from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 
-import { formatCurrency } from '@hietedu/localization';
 import { Alert, Badge, Button, Card, EmptyState, Spinner } from '@hietedu/ui';
 
-import { AppShell } from '@/components/app/app-shell';
-import { api } from '@/lib/api';
+import { AdminShell } from '@/components/admin/admin-shell';
+import { StatusBadge, humanise } from '@/components/admin/form';
+import { adminApi, type AdminOverview, type DashboardFeed } from '@/lib/admin-api';
 import { useRequireAuth } from '@/lib/auth';
 import { useI18n } from '@/lib/i18n';
 
-interface Overview {
-  students: number;
-  parents: number;
-  teachers: number;
-  classes: number;
-  active_enrollments: number;
-  questions: number;
-  published_questions: number;
-  pending_review_questions: number;
-  courses: number;
-  new_leads: number;
-  new_tutoring_requests: number;
-  orders_awaiting_payment: number;
-  revenue_vnd: number;
-}
-
-interface OrderRow {
-  id: number;
-  reference: string;
-  status: string;
-  total: number;
-  currency: string;
-  customer: string | null;
-  customer_email: string | null;
-  placed_at: string | null;
-  items: { description: string; line_total: number }[];
-}
-
-export default function AdminPage({ params }: { params: Promise<{ locale: string }> }) {
-  const { t, locale, formatDate } = useI18n();
+export default function AdminDashboardPage() {
+  const { t, locale, formatCurrency, formatDateTime, formatDate } = useI18n();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
 
-  const [overview, setOverview] = useState<Overview | null>(null);
-  const [orders, setOrders] = useState<OrderRow[] | null>(null);
-  const [leads, setLeads] = useState<Record<string, unknown>[] | null>(null);
-  const [requests, setRequests] = useState<Record<string, unknown>[] | null>(null);
+  const [overview, setOverview] = useState<AdminOverview | null>(null);
+  const [feed, setFeed] = useState<DashboardFeed | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [busyOrder, setBusyOrder] = useState<number | null>(null);
 
-  const load = useCallback(async () => {
-    const [overviewResult, orderRows, leadRows, requestRows] = await Promise.all([
-      api.admin.overview(),
-      api.admin.orders(),
-      api.admin.leads(),
-      api.admin.tutoringRequests(),
-    ]);
-    setOverview(overviewResult as unknown as Overview);
-    setOrders(orderRows as unknown as OrderRow[]);
-    setLeads(leadRows);
-    setRequests(requestRows);
-  }, []);
+  const href = useCallback((path: string) => `/${locale}${path}`, [locale]);
 
   useEffect(() => {
     if (!user) return;
-    load().catch((caught) => setError((caught as Error).message));
-  }, [user, load]);
+    Promise.all([adminApi.overview(), adminApi.dashboard()])
+      .then(([o, f]) => {
+        setOverview(o);
+        setFeed(f);
+      })
+      .catch((caught) => setError((caught as Error).message));
+  }, [user]);
 
-  async function markPaid(orderId: number) {
-    setBusyOrder(orderId);
-    try {
-      await api.admin.markPaid(orderId);
-      await load();
-    } catch (caught) {
-      setError((caught as Error).message);
-    } finally {
-      setBusyOrder(null);
-    }
-  }
+  if (authLoading || !user) return <AdminShell loading />;
 
-  if (authLoading || !user) return <AppShell role="admin" loading />;
+  const tiles = overview
+    ? [
+        { icon: Users, label: t('admin.tea.students'), value: overview.students,
+          sub: `${overview.active_students} active`, href: '/admin/students' },
+        { icon: GraduationCap, label: t('admin.tea.title'), value: overview.teachers,
+          href: '/admin/teachers' },
+        { icon: BookOpen, label: t('admin.crs.title'), value: overview.courses,
+          sub: `${overview.published_courses} published`, href: '/admin/courses' },
+        { icon: FileText, label: t('admin.les.title'), value: overview.lessons,
+          sub: `${overview.draft_lessons} draft`, href: '/admin/lessons' },
+        { icon: ClipboardList, label: t('admin.ex.title'), value: overview.exercises,
+          sub: `${overview.published_exercises} published`, href: '/admin/exercises' },
+        { icon: UserCheck, label: t('admin.dash.activeEnrollments'), value: overview.active_enrollments,
+          sub: `${overview.pending_enrollments} pending`, href: '/admin/enrollments' },
+        { icon: MessageSquare, label: t('admin.dash.openConsultations'),
+          value: overview.pending_consultations + overview.pending_registrations,
+          sub: `${overview.new_consultations + overview.new_registrations} new`,
+          href: '/admin/consultations' },
+        { icon: CalendarDays, label: t('admin.dash.upcomingClasses'), value: overview.upcoming_classes,
+          href: '/admin/classes' },
+      ]
+    : [];
+
+  const quickActions = [
+    { label: t('admin.crs.createCourse'), icon: BookOpen, href: '/admin/courses?new=1' },
+    { label: t('admin.dash.createLesson'), icon: FileText, href: '/admin/lessons?new=1' },
+    { label: t('admin.dash.createTopic'), icon: FolderPlus, href: '/admin/categories?new=1' },
+    { label: t('admin.dash.addExercise'), icon: ClipboardList, href: '/admin/exercises?new=1' },
+    { label: t('admin.dash.manageStudents'), icon: Users, href: '/admin/students' },
+    { label: t('admin.dash.manageTeachers'), icon: GraduationCap, href: '/admin/teachers' },
+    { label: t('admin.dash.consultationRequests'), icon: MessageSquare, href: '/admin/consultations' },
+  ];
 
   return (
-    <AppShell role="admin">
-      <div className="mx-auto w-full max-w-6xl px-5 py-8 sm:px-8 lg:py-10">
-        <h1 className="font-display text-3xl sm:text-4xl">{t('admin.title')}</h1>
+    <AdminShell
+      title={t('admin.dash.title')}
+      description={t('admin.dash.subtitle')}
+    >
+      {error && (
+        <Alert tone="error" className="mb-6">
+          {error}
+        </Alert>
+      )}
 
-        {error && (
-          <Alert tone="error" className="mt-5">
-            {error}
-          </Alert>
-        )}
+      {!overview && !error && (
+        <div className="flex justify-center py-24">
+          <Spinner className="h-8 w-8 text-brand-500" />
+          <span className="sr-only">Loading</span>
+        </div>
+      )}
 
-        {!overview && !error && (
-          <div className="flex justify-center py-24">
-            <Spinner className="h-8 w-8 text-brand-500" />
-            <span className="sr-only">{t('common.loading')}</span>
-          </div>
-        )}
-
-        {overview && (
-          <>
-            <dl className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                { icon: Users, label: t('teacher.students'), value: overview.students },
-                { icon: GraduationCap, label: t('nav.teachers'), value: overview.teachers },
-                { icon: BookOpen, label: t('nav.courses'), value: overview.courses },
-                {
-                  icon: ClipboardList,
-                  label: t('teacher.questionBank'),
-                  value: overview.published_questions,
-                },
-                { icon: Users, label: t('parent.title'), value: overview.parents },
-                { icon: Mail, label: t('admin.leads'), value: overview.new_leads },
-                {
-                  icon: ClipboardList,
-                  label: t('nav.oneToOne'),
-                  value: overview.new_tutoring_requests,
-                },
-                {
-                  icon: Wallet,
-                  label: t('admin.revenue'),
-                  value: formatCurrency(overview.revenue_vnd, locale),
-                },
-              ].map((stat) => (
-                <Card key={stat.label} className="flex items-center gap-4">
-                  <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-100 text-brand-700">
-                    <stat.icon className="h-5 w-5" aria-hidden="true" />
-                  </span>
-                  <div className="min-w-0">
-                    <dt className="truncate text-xs font-semibold text-ink-500">{stat.label}</dt>
-                    <dd className="truncate font-display text-xl">{stat.value}</dd>
-                  </div>
-                </Card>
-              ))}
-            </dl>
-
-            {overview.pending_review_questions > 0 && (
-              <Alert tone="warning" className="mt-6" title={t('admin.pendingReview')}>
-                {overview.pending_review_questions} questions are awaiting teacher review before
-                students can be served them.
-              </Alert>
-            )}
-          </>
-        )}
-
-        {/* orders */}
-        {orders && (
-          <section className="mt-10">
-            <h2 className="font-display text-2xl">{t('admin.orders')}</h2>
-            {orders.length === 0 ? (
-              <EmptyState className="mt-5" title={t('common.emptyState')} />
-            ) : (
-              <Card className="mt-5 p-0">
-                <div className="scroll-x">
-                  <table className="w-full min-w-[46rem] text-left text-sm">
-                    <thead className="bg-ink-50">
-                      <tr>
-                        {['Reference', 'Customer', 'Items', 'Total', 'Status', ''].map(
-                          (heading, index) => (
-                            <th key={index} scope="col" className="px-4 py-3 font-display">
-                              {heading}
-                            </th>
-                          ),
-                        )}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {orders.map((order) => (
-                        <tr key={order.id} className="border-t border-ink-100">
-                          <td className="px-4 py-3 font-mono text-xs">{order.reference}</td>
-                          <td className="px-4 py-3">
-                            <span className="block font-semibold text-ink-900">
-                              {order.customer ?? '—'}
-                            </span>
-                            <span className="block text-xs text-ink-500">
-                              {order.customer_email}
-                            </span>
-                          </td>
-                          <td className="max-w-xs px-4 py-3 text-xs text-ink-600">
-                            {order.items.map((item) => item.description).join(', ')}
-                          </td>
-                          <td className="px-4 py-3 font-bold tabular-nums">
-                            {formatCurrency(order.total, locale)}
-                          </td>
-                          <td className="px-4 py-3">
-                            <Badge
-                              tone={
-                                order.status === 'paid'
-                                  ? 'teal'
-                                  : order.status === 'awaiting_payment'
-                                    ? 'sun'
-                                    : 'neutral'
-                              }
-                            >
-                              {order.status.replace('_', ' ')}
-                            </Badge>
-                          </td>
-                          <td className="px-4 py-3">
-                            {order.status !== 'paid' && (
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                loading={busyOrder === order.id}
-                                onClick={() => markPaid(order.id)}
-                              >
-                                {t('admin.markPaid')}
-                              </Button>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </Card>
-            )}
-          </section>
-        )}
-
-        {/* tutoring requests */}
-        {requests && requests.length > 0 && (
-          <section className="mt-10">
-            <h2 className="font-display text-2xl">{t('nav.tutoring')}</h2>
-            <div className="mt-5 grid gap-4 md:grid-cols-2">
-              {requests.slice(0, 8).map((request) => (
-                <Card key={String(request.id)}>
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="font-bold text-ink-900">{String(request.contact_name)}</p>
-                      <p className="truncate text-xs text-ink-500">
-                        {String(request.contact_email)}
-                      </p>
-                    </div>
-                    <Badge tone={request.status === 'new' ? 'coral' : 'neutral'}>
-                      {String(request.status)}
-                    </Badge>
-                  </div>
-                  <dl className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-600">
-                    <div>
-                      <dt className="sr-only">{t('common.subject')}</dt>
-                      <dd>{String(request.subject_slug)}</dd>
-                    </div>
-                    <div>
-                      <dt className="sr-only">{t('common.grade')}</dt>
-                      <dd>
-                        {t('common.grade')} {String(request.grade)}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="sr-only">Format</dt>
-                      <dd>{String(request.format).replace(/_/g, ' ')}</dd>
-                    </div>
-                  </dl>
-                  {Boolean(request.goals) && (
-                    <p className="mt-2 text-sm text-ink-600">{String(request.goals)}</p>
-                  )}
-                </Card>
+      {overview && (
+        <>
+          {/* quick actions */}
+          <section aria-labelledby="quick-actions" className="mb-8">
+            <h2 id="quick-actions" className="sr-only">{t('admin.dash.quickActions')}</h2>
+            <div className="flex flex-wrap gap-2">
+              {quickActions.map((action) => (
+                <Link key={action.label} href={href(action.href)}>
+                  <Button size="sm" variant="outline">
+                    <action.icon className="h-4 w-4" aria-hidden="true" />
+                    {action.label}
+                  </Button>
+                </Link>
               ))}
             </div>
           </section>
-        )}
 
-        {/* leads */}
-        {leads && leads.length > 0 && (
-          <section className="mt-10">
-            <h2 className="font-display text-2xl">{t('admin.leads')}</h2>
-            <Card className="mt-5 p-0">
-              <ul className="divide-y divide-ink-100">
-                {leads.slice(0, 10).map((lead) => (
-                  <li key={String(lead.id)} className="flex flex-wrap items-center gap-3 px-4 py-3">
-                    <div className="min-w-0 flex-1">
-                      <p className="font-semibold text-ink-900">{String(lead.name)}</p>
-                      <p className="truncate text-xs text-ink-500">{String(lead.email)}</p>
-                    </div>
-                    <Badge tone="neutral">{String(lead.interest).replace(/_/g, ' ')}</Badge>
-                    <span className="text-xs text-ink-500">
-                      {lead.created_at ? formatDate(String(lead.created_at)) : ''}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+          {/* stats */}
+          <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {tiles.map((tile) => (
+              <Link key={tile.label} href={href(tile.href)} className="group">
+                <Card className="flex h-full items-center gap-4 transition-shadow group-hover:shadow-pop-sm">
+                  <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-100 text-brand-700">
+                    <tile.icon className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <div className="min-w-0">
+                    <dt className="truncate text-xs font-semibold text-ink-500">{tile.label}</dt>
+                    <dd className="font-display text-2xl tabular-nums">{tile.value}</dd>
+                    {tile.sub && <p className="truncate text-xs text-ink-500">{tile.sub}</p>}
+                  </div>
+                </Card>
+              </Link>
+            ))}
+          </dl>
+
+          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <Card className="flex items-center gap-4">
+              <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-teal-100 text-teal-700">
+                <Wallet className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div className="min-w-0">
+                <p className="truncate text-xs font-semibold text-ink-500">{t('admin.dash.revenue')}</p>
+                <p className="font-display text-xl">{formatCurrency(overview.revenue_vnd)}</p>
+              </div>
+            </Card>
+            <Card className="flex items-center gap-4">
+              <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sun-100 text-sun-700">
+                <Activity className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div className="min-w-0">
+                <p className="truncate text-xs font-semibold text-ink-500">{t('admin.dash.attemptsWeek')}</p>
+                <p className="font-display text-xl tabular-nums">
+                  {feed?.attempts_this_week ?? 0}
+                </p>
+              </div>
+            </Card>
+            <Card className="flex items-center gap-4">
+              <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-coral-100 text-coral-700">
+                <Users className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div className="min-w-0">
+                <p className="truncate text-xs font-semibold text-ink-500">{t('admin.dash.newStudentsWeek')}</p>
+                <p className="font-display text-xl tabular-nums">
+                  {overview.new_students_this_week}
+                </p>
+              </div>
+            </Card>
+            <Card className="flex items-center gap-4">
+              <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-ink-100 text-ink-700">
+                <Wallet className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div className="min-w-0">
+                <p className="truncate text-xs font-semibold text-ink-500">{t('admin.dash.awaitingPayment')}</p>
+                <p className="font-display text-xl tabular-nums">
+                  {overview.orders_awaiting_payment}
+                </p>
+              </div>
+            </Card>
+          </div>
+
+          {overview.pending_review_questions > 0 && (
+            <Alert tone="warning" className="mt-6" title={t('admin.dash.reviewAlert')}>
+              {overview.pending_review_questions} exercise(s) are pending review and are not being
+              served to students.{' '}
+              <Link
+                href={href('/admin/exercises?status=pending_review')}
+                className="font-bold underline"
+              >{t('admin.dash.reviewThem')}</Link>
+            </Alert>
+          )}
+
+          {/* work queues */}
+          <div className="mt-8 grid gap-6 lg:grid-cols-2">
+            <section aria-labelledby="consultations-heading">
+              <div className="mb-3 flex items-center justify-between">
+                <h2 id="consultations-heading" className="font-display text-xl">{t('admin.dash.latestConsultations')}</h2>
+                <Link
+                  href={href('/admin/consultations')}
+                  className="text-sm font-bold text-brand-600 hover:underline"
+                >{t('admin.a.viewAll')}</Link>
+              </div>
+              <Card className="p-0">
+                {!feed?.recent_consultations.length ? (
+                  <EmptyState
+                    className="border-0"
+                    title={t('admin.dash.noRequests')}
+                    description={t('admin.dash.noRequestsBody')}
+                  />
+                ) : (
+                  <ul className="divide-y divide-ink-100">
+                    {feed.recent_consultations.slice(0, 6).map((lead) => (
+                      <li key={`${lead.source}-${lead.id}`}>
+                        <Link
+                          href={href(`/admin/consultations/${lead.source}/${lead.id}`)}
+                          className="flex flex-wrap items-center gap-3 px-4 py-3 hover:bg-brand-50/50"
+                        >
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate font-bold text-ink-900">{lead.name}</p>
+                            <p className="truncate text-xs text-ink-500">
+                              {lead.email} · {humanise(lead.interest)}
+                            </p>
+                          </div>
+                          <StatusBadge value={lead.status} kind="lead" />
+                          <span className="text-xs text-ink-400">
+                            {formatDate(lead.created_at)}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </Card>
+            </section>
+
+            <section aria-labelledby="enrollments-heading">
+              <div className="mb-3 flex items-center justify-between">
+                <h2 id="enrollments-heading" className="font-display text-xl">{t('admin.dash.pendingEnrollments')}</h2>
+                <Link
+                  href={href('/admin/enrollments?status=pending')}
+                  className="text-sm font-bold text-brand-600 hover:underline"
+                >{t('admin.a.viewAll')}</Link>
+              </div>
+              <Card className="p-0">
+                {!feed?.pending_enrollments.length ? (
+                  <EmptyState
+                    className="border-0"
+                    title={t('admin.dash.nothingPending')}
+                    description={t('admin.dash.nothingPendingBody')}
+                  />
+                ) : (
+                  <ul className="divide-y divide-ink-100">
+                    {feed.pending_enrollments.map((enrollment) => (
+                      <li
+                        key={enrollment.id}
+                        className="flex flex-wrap items-center gap-3 px-4 py-3"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate font-bold text-ink-900">
+                            {enrollment.student_name ?? 'Unknown student'}
+                          </p>
+                          <p className="truncate text-xs text-ink-500">{enrollment.class_name}</p>
+                        </div>
+                        <StatusBadge value={enrollment.payment_status} kind="payment" />
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </Card>
+            </section>
+
+            <section aria-labelledby="upcoming-heading">
+              <div className="mb-3 flex items-center justify-between">
+                <h2 id="upcoming-heading" className="font-display text-xl">{t('admin.dash.upcomingClasses')}</h2>
+                <Link
+                  href={href('/admin/classes')}
+                  className="text-sm font-bold text-brand-600 hover:underline"
+                >{t('admin.dash.schedule')}</Link>
+              </div>
+              <Card className="p-0">
+                {!feed?.upcoming_classes.length ? (
+                  <EmptyState
+                    className="border-0"
+                    title={t('admin.dash.noClasses')}
+                    description={t('admin.dash.noClassesBody')}
+                    action={
+                      <Link href={href('/admin/classes')}>
+                        <Button size="sm">
+                          <Plus className="h-4 w-4" aria-hidden="true" />{t('admin.dash.createClass')}</Button>
+                      </Link>
+                    }
+                  />
+                ) : (
+                  <ul className="divide-y divide-ink-100">
+                    {feed.upcoming_classes.map((session) => (
+                      <li key={session.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate font-bold text-ink-900">{session.title}</p>
+                          <p className="truncate text-xs text-ink-500">{session.class_name}</p>
+                        </div>
+                        <span className="text-xs font-semibold text-ink-600">
+                          {formatDateTime(session.starts_at)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </Card>
+            </section>
+
+            <section aria-labelledby="students-heading">
+              <div className="mb-3 flex items-center justify-between">
+                <h2 id="students-heading" className="font-display text-xl">{t('admin.dash.recentStudents')}</h2>
+                <Link
+                  href={href('/admin/students')}
+                  className="text-sm font-bold text-brand-600 hover:underline"
+                >{t('admin.a.viewAll')}</Link>
+              </div>
+              <Card className="p-0">
+                {!feed?.recent_students.length ? (
+                  <EmptyState className="border-0" title={t('admin.dash.noStudents')} />
+                ) : (
+                  <ul className="divide-y divide-ink-100">
+                    {feed.recent_students.map((student) => (
+                      <li key={student.id}>
+                        <Link
+                          href={href(`/admin/students/${student.id}`)}
+                          className="flex flex-wrap items-center gap-3 px-4 py-3 hover:bg-brand-50/50"
+                        >
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate font-bold text-ink-900">{student.name}</p>
+                            <p className="truncate text-xs text-ink-500">{student.email}</p>
+                          </div>
+                          <Badge tone="neutral">Grade {student.grade}</Badge>
+                          {!student.is_active && <Badge tone="coral">{t('admin.dash.inactive')}</Badge>}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </Card>
+            </section>
+          </div>
+
+          {/* activity */}
+          <section aria-labelledby="activity-heading" className="mt-8">
+            <div className="mb-3 flex items-center justify-between">
+              <h2 id="activity-heading" className="font-display text-xl">{t('admin.dash.recentActivity')}</h2>
+              <Link
+                href={href('/admin/audit')}
+                className="text-sm font-bold text-brand-600 hover:underline"
+              >{t('admin.dash.fullLog')}</Link>
+            </div>
+            <Card className="p-0">
+              {!feed?.recent_activity.length ? (
+                <EmptyState
+                  className="border-0"
+                  title={t('admin.dash.noActivity')}
+                  description={t('admin.dash.noActivityBody')}
+                />
+              ) : (
+                <ul className="divide-y divide-ink-100">
+                  {feed.recent_activity.map((entry) => (
+                    <li key={entry.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
+                      <Badge tone="neutral">{humanise(entry.action)}</Badge>
+                      <p className="min-w-0 flex-1 truncate text-sm text-ink-700">
+                        {entry.summary}
+                      </p>
+                      <span className="text-xs text-ink-400">
+                        {entry.actor ?? 'system'} · {formatDateTime(entry.created_at)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </Card>
           </section>
-        )}
-      </div>
-    </AppShell>
+        </>
+      )}
+    </AdminShell>
   );
 }

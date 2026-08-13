@@ -26,6 +26,7 @@ interface AnswerInputProps {
  * here rather than touching the session logic.
  */
 export function AnswerInput({ question, value, onChange, disabled }: AnswerInputProps) {
+  const { t } = useI18n();
   switch (question.question_type) {
     case 'multiple_choice':
       return (
@@ -62,9 +63,7 @@ export function AnswerInput({ question, value, onChange, disabled }: AnswerInput
       );
     default:
       return (
-        <p className="rounded-2xl bg-sun-50 p-4 text-sm text-ink-700">
-          This question type is not supported by this version of the app.
-        </p>
+        <p className="rounded-2xl bg-sun-50 p-4 text-sm text-ink-700">{t('exercise.unsupportedType')}</p>
       );
   }
 }
@@ -254,9 +253,7 @@ function TextAnswerInput({ question, value, onChange, disabled }: AnswerInputPro
         )}
       </div>
       {question.question_type === 'expression' && (
-        <p className="mt-2 text-xs text-ink-500">
-          You can write powers as x^2 and products as 2x — both are accepted.
-        </p>
+        <p className="mt-2 text-xs text-ink-500">{t('exercise.expressionHint')}</p>
       )}
     </div>
   );

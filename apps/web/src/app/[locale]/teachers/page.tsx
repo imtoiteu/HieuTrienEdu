@@ -6,7 +6,7 @@ import { Avatar, Badge, Button, Card, Container, Section } from '@hietedu/ui';
 
 import { PageHeader } from '@/components/site/page-header';
 import { MarketingShell } from '@/components/site/marketing-shell';
-import { api, type TeacherCard } from '@/lib/api';
+import { api, type TeacherCard, type TeacherProfileSummary } from '@/lib/api';
 import { getTranslator } from '@/lib/dictionaries';
 import { safe } from '@/lib/server-api';
 
@@ -20,6 +20,10 @@ export default async function TeachersPage({ params }: { params: Promise<{ local
   const locale = isLocale(raw) ? raw : 'en';
   const t = getTranslator(locale);
 
+  // Published profiles are the source of truth for the public roster. Fall back to the older
+  // endpoint so the page still lists teachers on a database where nobody has been published yet.
+  const profiles = await safe(api.tutoring.profiles(), [] as TeacherProfileSummary[]);
+  const slugById = new Map(profiles.map((profile) => [profile.id, profile.slug]));
   const teachers = await safe(api.tutoring.teachers(), [] as TeacherCard[]);
   const featured = teachers.filter((teacher) => teacher.is_featured);
   const others = teachers.filter((teacher) => !teacher.is_featured);
@@ -46,6 +50,7 @@ export default async function TeachersPage({ params }: { params: Promise<{ local
                     <TeacherProfileCard
                       key={teacher.id}
                       teacher={teacher}
+                      slug={slugById.get(teacher.id) ?? null}
                       locale={locale}
                       t={t}
                       featured
@@ -57,7 +62,13 @@ export default async function TeachersPage({ params }: { params: Promise<{ local
               {others.length > 0 && (
                 <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {others.map((teacher) => (
-                    <TeacherProfileCard key={teacher.id} teacher={teacher} locale={locale} t={t} />
+                    <TeacherProfileCard
+                      key={teacher.id}
+                      teacher={teacher}
+                      slug={slugById.get(teacher.id) ?? null}
+                      locale={locale}
+                      t={t}
+                    />
                   ))}
                 </div>
               )}
@@ -71,11 +82,14 @@ export default async function TeachersPage({ params }: { params: Promise<{ local
 
 function TeacherProfileCard({
   teacher,
+  slug,
   locale,
   t,
   featured,
 }: {
   teacher: TeacherCard;
+  /** Present only when the administrator has published this teacher's profile page. */
+  slug: string | null;
   locale: string;
   t: (key: string, values?: Record<string, string | number>) => string;
   featured?: boolean;
@@ -85,7 +99,18 @@ function TeacherProfileCard({
       <div className="flex items-start gap-4">
         <Avatar name={teacher.full_name} src={teacher.avatar_url} size={featured ? 'xl' : 'lg'} />
         <div className="min-w-0 flex-1">
-          <h2 className="font-display text-xl">{teacher.full_name}</h2>
+          <h2 className="font-display text-xl">
+            {slug ? (
+              <Link
+                href={`/${locale}/teachers/${slug}`}
+                className="hover:text-brand-700 hover:underline"
+              >
+                {teacher.full_name}
+              </Link>
+            ) : (
+              teacher.full_name
+            )}
+          </h2>
           {teacher.headline && (
             <p className="mt-0.5 text-sm font-semibold text-brand-700">{teacher.headline}</p>
           )}
@@ -165,11 +190,18 @@ function TeacherProfileCard({
         )}
       </dl>
 
-      {teacher.accepts_one_to_one && (
-        <Link href={`/${locale}/contact?teacher=${teacher.id}`} className="mt-5 inline-block">
-          <Button variant="coral">{t('teachers.bookLesson')}</Button>
-        </Link>
-      )}
+      <div className="mt-5 flex flex-wrap gap-2">
+        {slug && (
+          <Link href={`/${locale}/teachers/${slug}`}>
+            <Button variant="outline">{t('common.viewAll')}</Button>
+          </Link>
+        )}
+        {teacher.accepts_one_to_one && (
+          <Link href={`/${locale}/contact?teacher=${teacher.id}`}>
+            <Button variant="coral">{t('teachers.bookLesson')}</Button>
+          </Link>
+        )}
+      </div>
     </Card>
   );
 }

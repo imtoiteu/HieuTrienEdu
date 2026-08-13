@@ -64,7 +64,7 @@ export default function ParentPaymentsPage({ params }: { params: Promise<{ local
           <EmptyState
             className="mt-8"
             title={t('common.emptyState')}
-            description="Orders appear here once you enrol a child in a class."
+            description={t('parent.noOrders')}
           />
         )}
 

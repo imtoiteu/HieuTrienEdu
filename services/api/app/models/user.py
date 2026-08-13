@@ -12,6 +12,7 @@ from app.models.base import Base, TimestampMixin
 from app.models.enums import UserRole
 
 if TYPE_CHECKING:
+    from app.models.ops import TeacherCredential
     from app.models.progress import Attempt, StudentSkillMastery
 
 
@@ -107,7 +108,32 @@ class TeacherProfile(Base, TimestampMixin):
     # Weekly availability, e.g. [{"weekday": 1, "start": "18:00", "end": "20:00"}]
     availability: Mapped[list[dict[str, Any]]] = mapped_column(default=list)
 
+    # --- public profile, managed from the admin CMS ----------------------------------
+    # ``slug`` gives every teacher a stable public URL that does not leak the database id and
+    # survives a rename. Nullable because profiles created before this column existed have none
+    # until an administrator publishes them.
+    slug: Mapped[str | None] = mapped_column(String(160), unique=True, index=True)
+    photo_url: Mapped[str | None] = mapped_column(String(600))
+    teaching_philosophy: Mapped[str | None] = mapped_column(Text)
+    teaching_style: Mapped[str | None] = mapped_column(Text)
+    specializations: Mapped[list[str]] = mapped_column(default=list)
+    learning_formats: Mapped[list[str]] = mapped_column(default=list)
+    video_intro_url: Mapped[str | None] = mapped_column(String(600))
+    # [{"url": "...", "caption": "..."}]
+    gallery: Mapped[list[dict[str, Any]]] = mapped_column(default=list)
+    # {"facebook": "...", "youtube": "...", "linkedin": "..."}
+    social_links: Mapped[dict[str, Any]] = mapped_column(default=dict)
+    public_email: Mapped[str | None] = mapped_column(String(320))
+    public_phone: Mapped[str | None] = mapped_column(String(40))
+    is_published: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    position: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+
     user: Mapped[User] = relationship(back_populates="teacher_profile")
+    credentials: Mapped[list[TeacherCredential]] = relationship(
+        back_populates="teacher",
+        cascade="all, delete-orphan",
+        order_by="(TeacherCredential.kind, TeacherCredential.position)",
+    )
 
 
 class ParentProfile(Base, TimestampMixin):

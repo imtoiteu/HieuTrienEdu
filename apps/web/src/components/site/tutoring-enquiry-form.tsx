@@ -107,9 +107,7 @@ export function TutoringEnquiryForm({
           <CheckCircle2 className="h-7 w-7 text-teal-600" aria-hidden="true" />
         </span>
         <p className="mt-4 font-display text-xl">{t('contact.form.success')}</p>
-        <p className="mt-2 text-sm text-ink-600">
-          We will match you with a teacher and send some suggested times.
-        </p>
+        <p className="mt-2 text-sm text-ink-600">{t('enquiry.oneToOneNote')}</p>
       </Card>
     );
   }
@@ -117,9 +115,7 @@ export function TutoringEnquiryForm({
   return (
     <Card className="border-ink-900 shadow-pop">
       <h2 className="font-display text-2xl">{t('tutoring.register')}</h2>
-      <p className="mt-1 text-sm text-ink-600">
-        No account needed — we reply within one working day.
-      </p>
+      <p className="mt-1 text-sm text-ink-600">{t('enquiry.noAccountNeeded')}</p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate>
         {error && <Alert tone="error">{error}</Alert>}
@@ -180,14 +176,14 @@ export function TutoringEnquiryForm({
               <option value="group">{t('nav.groupClasses')}</option>
               <option value="online_live">{t('nav.onlineClasses')}</option>
               <option value="recorded">{t('nav.recordedCourses')}</option>
-              <option value="hybrid">Hybrid</option>
+              <option value="hybrid">{t('admin.st.hybrid')}</option>
             </Select>
           </Field>
-          <Field label="Online or at the centre" htmlFor="delivery_mode" required>
+          <Field label={t('enquiry.deliveryLabel')} htmlFor="delivery_mode" required>
             <Select id="delivery_mode" value={form.delivery_mode} onChange={update('delivery_mode')}>
-              <option value="online">Online</option>
-              <option value="offline">At the centre</option>
-              <option value="hybrid">Either</option>
+              <option value="online">{t('admin.st.online')}</option>
+              <option value="offline">{t('enquiry.deliveryOffline')}</option>
+              <option value="hybrid">{t('enquiry.deliveryEither')}</option>
             </Select>
           </Field>
         </div>
@@ -236,13 +232,11 @@ export function TutoringEnquiryForm({
             })}
           </div>
           {slots.length > 0 && (
-            <p className="mt-2 text-xs text-ink-500">
-              We will suggest evening times on the days you selected and confirm with you.
-            </p>
+            <p className="mt-2 text-xs text-ink-500">{t('enquiry.groupNote')}</p>
           )}
         </fieldset>
 
-        <Field label="Number of sessions" htmlFor="sessions_requested">
+        <Field label={t('enquiry.sessionsLabel')} htmlFor="sessions_requested">
           <Select
             id="sessions_requested"
             value={form.sessions_requested}

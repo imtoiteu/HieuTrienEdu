@@ -246,7 +246,7 @@ export default function QuestionBankPage({ params }: { params: Promise<{ locale:
                       variant="ghost"
                       loading={loadingPreview}
                       onClick={() => showPreview(preview.id)}
-                      aria-label="Regenerate with a new seed"
+                      aria-label={t('a11y.regenerateSeed')}
                     >
                       <RefreshCw className="h-4 w-4" aria-hidden="true" />
                     </Button>
@@ -261,9 +261,7 @@ export default function QuestionBankPage({ params }: { params: Promise<{ locale:
                 ) : (
                   <div className="mt-4 space-y-4 text-sm">
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-widest text-ink-500">
-                        Prompt
-                      </p>
+                      <p className="text-xs font-bold uppercase tracking-widest text-ink-500">{t('admin.blk.f.prompt')}</p>
                       <p className="mt-1 text-ink-900">
                         <MathText>{String(preview.data.rendered.prompt ?? '')}</MathText>
                       </p>
@@ -290,9 +288,7 @@ export default function QuestionBankPage({ params }: { params: Promise<{ locale:
                     )}
 
                     <div className="rounded-xl bg-teal-50 p-3">
-                      <p className="text-xs font-bold uppercase tracking-widest text-teal-700">
-                        Answer
-                      </p>
+                      <p className="text-xs font-bold uppercase tracking-widest text-teal-700">{t('admin.web.answer')}</p>
                       <pre className="mt-1 whitespace-pre-wrap break-words font-mono text-xs text-ink-800">
                         {JSON.stringify(preview.data.answer, null, 2)}
                       </pre>

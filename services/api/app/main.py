@@ -8,8 +8,10 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.api.v1 import api_router
+from app.api.v1.admin.media import MEDIA_ROOT, PUBLIC_PREFIX
 from app.core.config import settings
 
 logging.basicConfig(
@@ -89,3 +91,14 @@ def health() -> dict[str, object]:
 
 
 app.include_router(api_router, prefix=settings.api_v1_prefix)
+
+
+# Serve files uploaded through the admin media library.
+#
+# Mounted only when no external base URL is configured: with STORAGE_PUBLIC_BASE_URL set, the
+# asset URLs point at a CDN or object store and serving the same bytes from the API as well would
+# be a second, unversioned copy. The directory is created eagerly so the mount never fails on a
+# fresh checkout that has not uploaded anything yet.
+if not settings.storage_public_base_url:
+    MEDIA_ROOT.mkdir(parents=True, exist_ok=True)
+    app.mount(PUBLIC_PREFIX, StaticFiles(directory=MEDIA_ROOT), name="media")

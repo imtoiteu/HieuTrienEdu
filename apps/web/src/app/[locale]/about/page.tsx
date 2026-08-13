@@ -75,14 +75,14 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                   “A student has never once told me they are bad at maths and turned out to be
                   right. They have simply been missing a step that nobody found.”
                 </blockquote>
-                <p className="mt-3 text-sm font-bold text-brand-800">Thầy Hiếu, co-founder</p>
+                <p className="mt-3 text-sm font-bold text-brand-800">{t('about.founderCaption')}</p>
               </div>
             </div>
 
             <aside className="space-y-4">
               <Card className="border-ink-900 shadow-pop">
                 <Sparkles className="h-7 w-7 text-sun-500" aria-hidden="true" />
-                <h3 className="mt-3 font-display text-xl">What we are not</h3>
+                <h3 className="mt-3 font-display text-xl">{t('about.notTitle')}</h3>
                 <ul className="mt-3 space-y-2.5 text-sm text-ink-700">
                   {[
                     'A worksheet mill. More questions is not a teaching strategy.',
@@ -102,7 +102,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
               </Card>
 
               <Card className="bg-teal-50">
-                <h3 className="font-display text-xl">Where we are</h3>
+                <h3 className="font-display text-xl">{t('about.whereTitle')}</h3>
                 <p className="mt-2 text-sm text-ink-700">
                   Our centre is in Hà Nội, and our online classes reach students across Vietnam.
                   Lessons run in Vietnamese and English.

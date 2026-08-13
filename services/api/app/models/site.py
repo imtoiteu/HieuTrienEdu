@@ -7,12 +7,16 @@ redeploy to change. Testimonials, blog posts and contact leads are all admin-edi
 from __future__ import annotations
 
 import datetime as dt
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, TimestampMixin
 from app.models.enums import LeadStatus, ReviewStatus
+
+if TYPE_CHECKING:
+    from app.models.ops import LeadNote
 
 
 class Testimonial(Base, TimestampMixin):
@@ -51,7 +55,12 @@ class BlogPost(Base, TimestampMixin):
 
 
 class ContactLead(Base, TimestampMixin):
-    """Submissions from the contact / free-assessment forms."""
+    """A consultation enquiry from any public form — contact, free assessment, "đăng ký tư vấn".
+
+    This is a worked pipeline, not an inbox. Everything after ``source_page`` exists so that an
+    enquiry cannot be silently lost: it has an owner, a stage, a follow-up date, a note history
+    (see ``LeadNote``) and a record of what it was converted into.
+    """
 
     __tablename__ = "contact_leads"
 
@@ -64,6 +73,38 @@ class ContactLead(Base, TimestampMixin):
     interest: Mapped[str] = mapped_column(String(40), default="general", nullable=False)
     message: Mapped[str | None] = mapped_column(Text)
     source_page: Mapped[str | None] = mapped_column(String(160))
+
+    # --- who the enquiry is actually about -------------------------------------------
+    # The person filling the form is often a parent, so the student's details are separate.
+    student_name: Mapped[str | None] = mapped_column(String(200))
+    parent_name: Mapped[str | None] = mapped_column(String(200))
+    parent_phone: Mapped[str | None] = mapped_column(String(40))
+    school: Mapped[str | None] = mapped_column(String(200))
+    preferred_format: Mapped[str | None] = mapped_column(String(30))
+    preferred_delivery: Mapped[str | None] = mapped_column(String(30))
+    preferred_schedule: Mapped[str | None] = mapped_column(Text)
+    interested_course_id: Mapped[int | None] = mapped_column(
+        ForeignKey("courses.id", ondelete="SET NULL")
+    )
+    interested_product_id: Mapped[int | None] = mapped_column(
+        ForeignKey("tutoring_products.id", ondelete="SET NULL")
+    )
+
+    # --- pipeline ---------------------------------------------------------------------
     status: Mapped[str] = mapped_column(String(20), default=LeadStatus.NEW, nullable=False)
     handled_by_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"))
+    assigned_to_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"))
     admin_note: Mapped[str | None] = mapped_column(Text)
+    consultation_result: Mapped[str | None] = mapped_column(Text)
+    last_contacted_at: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True))
+    next_follow_up_at: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True))
+    converted_student_id: Mapped[int | None] = mapped_column(
+        ForeignKey("student_profiles.id", ondelete="SET NULL")
+    )
+    converted_at: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True))
+
+    notes: Mapped[list[LeadNote]] = relationship(
+        cascade="all, delete-orphan",
+        order_by="LeadNote.created_at.desc()",
+        primaryjoin="ContactLead.id == LeadNote.contact_lead_id",
+    )

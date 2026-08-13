@@ -14,10 +14,12 @@ from app.core.deps import CurrentUser, DbSession, OptionalUser
 from app.models import (
     ClassEnrollment,
     ClassGroup,
+    Course,
     DeliveryMode,
     EnrollmentStatus,
     LeadStatus,
     LearningFormat,
+    NotificationKind,
     Order,
     OrderItem,
     OrderStatus,
@@ -27,6 +29,7 @@ from app.models import (
     User,
     UserRole,
 )
+from app.services.notifications import notify_admins
 from app.services.payments import create_order_reference, get_payment_provider
 
 router = APIRouter(prefix="/tutoring", tags=["tutoring"])
@@ -122,6 +125,11 @@ class TutoringRequestCreate(BaseModel):
     preferred_slots: list[dict[str, Any]] = Field(default_factory=list)
     sessions_requested: int = Field(default=8, ge=1, le=100)
     goals: str | None = Field(default=None, max_length=2000)
+    # Optional detail so the admin consultation screen has something to work with.
+    contact_student_name: str | None = Field(default=None, max_length=200)
+    parent_name: str | None = Field(default=None, max_length=200)
+    parent_phone: str | None = Field(default=None, max_length=40)
+    source_page: str | None = Field(default=None, max_length=160)
 
 
 class TutoringRequestRead(BaseModel):
@@ -368,9 +376,29 @@ def create_tutoring_request(
         preferred_slots=payload.preferred_slots,
         sessions_requested=payload.sessions_requested,
         goals=payload.goals,
+        contact_student_name=payload.contact_student_name,
+        parent_name=payload.parent_name,
+        parent_phone=payload.parent_phone,
+        source_page=payload.source_page,
         status=LeadStatus.NEW,
     )
     db.add(request)
+    db.flush()
+
+    # Same reasoning as the contact form: a booking request that only lands in a table is a
+    # request nobody has been told about.
+    notify_admins(
+        db,
+        NotificationKind.TUTORING_REQUEST_CREATED,
+        f"New {payload.format.replace('_', '-')} request from {request.contact_name}",
+        body=(
+            f"{payload.subject_slug}, grade {payload.grade}, "
+            f"{payload.sessions_requested} session(s)"
+        ),
+        link_url=f"/admin/consultations/tutoring/{request.id}",
+        entity_type="lead:tutoring",
+        entity_id=request.id,
+    )
     db.commit()
     db.refresh(request)
     return TutoringRequestRead.model_validate(request)
@@ -511,3 +539,160 @@ def my_orders(db: DbSession, user: CurrentUser) -> list[OrderRead]:
         )
         for o in orders
     ]
+
+
+# --------------------------------------------------------------------------------------
+# public teacher profiles
+# --------------------------------------------------------------------------------------
+#
+# These render entirely from admin-managed rows: the profile fields on TeacherProfile plus the
+# structured TeacherCredential list. Nothing about a teacher's page lives in the frontend source,
+# so adding a teacher or an award never requires a deploy.
+
+
+def _grouped_credentials(profile: TeacherProfile) -> dict[str, list[dict[str, Any]]]:
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for credential in sorted(
+        profile.credentials, key=lambda c: (c.kind, c.position, -(c.year_start or 0))
+    ):
+        if not credential.is_published:
+            continue
+        grouped.setdefault(credential.kind, []).append(
+            {
+                "id": credential.id,
+                "title": credential.title,
+                "organisation": credential.organisation,
+                "year_start": credential.year_start,
+                "year_end": credential.year_end,
+                "description": credential.description,
+                "url": credential.url,
+            }
+        )
+    return grouped
+
+
+@router.get("/profiles")
+def list_teacher_profiles(
+    db: DbSession,
+    subject: Annotated[str | None, Query(max_length=60)] = None,
+    featured: Annotated[bool | None, Query()] = None,
+) -> list[dict[str, Any]]:
+    """Published teacher profiles, in the order an administrator arranged them."""
+    query = (
+        select(TeacherProfile)
+        .join(User, TeacherProfile.user_id == User.id)
+        .where(User.is_active.is_(True), TeacherProfile.is_published.is_(True))
+        .options(selectinload(TeacherProfile.user))
+        .order_by(
+            TeacherProfile.position, TeacherProfile.is_featured.desc(), TeacherProfile.id
+        )
+    )
+    if featured is not None:
+        query = query.where(TeacherProfile.is_featured.is_(featured))
+
+    rows = list(db.scalars(query).unique())
+    if subject:
+        rows = [row for row in rows if subject in (row.subjects or [])]
+
+    return [
+        {
+            "id": row.id,
+            "slug": row.slug,
+            "full_name": row.user.full_name if row.user else "",
+            "headline": row.headline,
+            "photo_url": row.photo_url or (row.user.avatar_url if row.user else None),
+            "subjects": row.subjects or [],
+            "grades": row.grades or [],
+            "years_experience": row.years_experience,
+            "specializations": row.specializations or [],
+            "learning_formats": row.learning_formats or [],
+            "is_featured": row.is_featured,
+            "rating": row.rating,
+            "rating_count": row.rating_count,
+        }
+        for row in rows
+    ]
+
+
+@router.get("/profiles/{slug}")
+def get_teacher_profile(slug: str, db: DbSession) -> dict[str, Any]:
+    """One teacher's full public page, assembled from admin-managed content."""
+    profile = db.scalar(
+        select(TeacherProfile)
+        .join(User, TeacherProfile.user_id == User.id)
+        .where(
+            TeacherProfile.slug == slug,
+            TeacherProfile.is_published.is_(True),
+            User.is_active.is_(True),
+        )
+        .options(
+            selectinload(TeacherProfile.user), selectinload(TeacherProfile.credentials)
+        )
+    )
+    if profile is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Teacher not found")
+
+    courses = db.scalars(
+        select(Course).where(
+            Course.teacher_id == profile.id, Course.is_published.is_(True)
+        )
+    )
+    products = db.scalars(
+        select(TutoringProduct).where(
+            TutoringProduct.teacher_id == profile.id, TutoringProduct.is_active.is_(True)
+        )
+    )
+    classes = db.scalars(
+        select(ClassGroup).where(
+            ClassGroup.teacher_id == profile.id,
+            ClassGroup.is_open_for_enrollment.is_(True),
+        )
+    )
+
+    return {
+        "id": profile.id,
+        "slug": profile.slug,
+        "full_name": profile.user.full_name if profile.user else "",
+        "headline": profile.headline,
+        "bio": profile.bio,
+        "photo_url": profile.photo_url or (profile.user.avatar_url if profile.user else None),
+        "subjects": profile.subjects or [],
+        "grades": profile.grades or [],
+        "specializations": profile.specializations or [],
+        "years_experience": profile.years_experience,
+        "languages": profile.languages or [],
+        "qualifications": profile.qualifications or [],
+        "teaching_philosophy": profile.teaching_philosophy,
+        "teaching_style": profile.teaching_style,
+        "learning_formats": profile.learning_formats or [],
+        "accepts_one_to_one": profile.accepts_one_to_one,
+        "hourly_rate_vnd": profile.hourly_rate_vnd,
+        "rating": profile.rating,
+        "rating_count": profile.rating_count,
+        "is_featured": profile.is_featured,
+        "video_intro_url": profile.video_intro_url,
+        "gallery": profile.gallery or [],
+        "social_links": profile.social_links or {},
+        "contact": {
+            "email": profile.public_email,
+            "phone": profile.public_phone,
+        },
+        "availability": profile.availability or [],
+        "credentials": _grouped_credentials(profile),
+        "courses": [
+            {"id": c.id, "slug": c.slug, "title": c.title, "grade": c.grade,
+             "thumbnail_url": c.thumbnail_url}
+            for c in courses
+        ],
+        "programs": [
+            {"id": p.id, "slug": p.slug, "name": p.name, "format": p.format,
+             "price_vnd": p.price_vnd, "price_unit": p.price_unit,
+             "delivery_mode": p.delivery_mode}
+            for p in products
+        ],
+        "classes": [
+            {"id": g.id, "slug": g.slug, "name": g.name, "format": g.format,
+             "start_date": g.start_date, "delivery_mode": g.delivery_mode}
+            for g in classes
+        ],
+    }

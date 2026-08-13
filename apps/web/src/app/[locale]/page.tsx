@@ -31,7 +31,13 @@ import {
 } from '@hietedu/ui';
 
 import { MarketingShell } from '@/components/site/marketing-shell';
-import { api, type SiteStats, type Testimonial, type TutoringProduct } from '@/lib/api';
+import {
+  api,
+  type SiteSectionContent,
+  type SiteStats,
+  type Testimonial,
+  type TutoringProduct,
+} from '@/lib/api';
 import { getTranslator } from '@/lib/dictionaries';
 import { safeAll } from '@/lib/server-api';
 
@@ -43,18 +49,32 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const t = getTranslator(locale);
   const href = (path: string) => `/${locale}${path}`;
 
-  const { stats, testimonials, products } = await safeAll(
+  const { stats, testimonials, products, sections } = await safeAll(
     {
       stats: api.site.stats(),
       testimonials: api.site.testimonials(true),
       products: api.tutoring.products(),
+      sections: api.site.sections('home', locale),
     },
     {
       stats: null as SiteStats | null,
       testimonials: [] as Testimonial[],
       products: [] as TutoringProduct[],
+      sections: {} as Record<string, SiteSectionContent>,
     },
   );
+
+  /**
+   * Read a field from an admin-published page section, falling back to the bundled translation.
+   *
+   * The fallback matters: an administrator who has not touched the CMS yet still gets the
+   * original copy rather than a page full of blanks, and unpublishing a section degrades to the
+   * default rather than to nothing.
+   */
+  const copy = (sectionKey: string, field: string, fallbackKey: string) => {
+    const value = sections[sectionKey]?.[field];
+    return typeof value === 'string' && value.trim() ? value : t(fallbackKey);
+  };
 
   // Each parametric template generates thousands of distinct variants; we quote a deliberately
   // conservative 1,000 per template rather than an unfalsifiable "infinite".
@@ -70,13 +90,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <div className="animate-fade-up">
               <Eyebrow tone="coral">
                 <SparklesIcon className="h-3.5 w-3.5" aria-hidden="true" />
-                {t('home.hero.eyebrow')}
+                {copy('hero', 'eyebrow', 'home.hero.eyebrow')}
               </Eyebrow>
 
               <h1 className="mt-6 font-display text-[2.6rem] leading-[1.05] sm:text-6xl lg:text-[4.25rem]">
-                {t('home.hero.title')}
+                {copy('hero', 'title', 'home.hero.title')}
                 <span className="relative mt-2 block text-brand-600">
-                  {t('home.hero.titleAccent')}
+                  {copy('hero', 'title_accent', 'home.hero.titleAccent')}
                   <Squiggle
                     className="absolute -bottom-3 left-0 h-3 w-56 sm:w-72"
                     tone="#FFC53D"
@@ -85,26 +105,26 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               </h1>
 
               <p className="mt-8 max-w-xl text-lg leading-relaxed text-ink-600 sm:text-xl">
-                {t('home.hero.subtitle')}
+                {copy('hero', 'subtitle', 'home.hero.subtitle')}
               </p>
 
               <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Link href={href('/register')}>
                   <Button size="lg" variant="coral" className="w-full sm:w-auto">
-                    {t('home.hero.ctaPrimary')}
+                    {copy('hero', 'cta_primary', 'home.hero.ctaPrimary')}
                     <ArrowRight className="h-5 w-5" aria-hidden="true" />
                   </Button>
                 </Link>
                 <Link href={href('/contact')}>
                   <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                    {t('home.hero.ctaSecondary')}
+                    {copy('hero', 'cta_secondary', 'home.hero.ctaSecondary')}
                   </Button>
                 </Link>
               </div>
 
               <p className="mt-5 flex items-center gap-2 text-sm font-semibold text-ink-500">
                 <CheckCircle2 className="h-4 w-4 text-teal-500" aria-hidden="true" />
-                {t('home.hero.trust')}
+                {copy('hero', 'trust', 'home.hero.trust')}
               </p>
             </div>
 

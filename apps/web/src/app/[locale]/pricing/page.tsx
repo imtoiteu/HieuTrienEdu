@@ -144,7 +144,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
           )}
 
           <Card className="mt-12 bg-white">
-            <h2 className="font-display text-xl">How payment works</h2>
+            <h2 className="font-display text-xl">{t('pricing.paymentTitle')}</h2>
             <p className="mt-2 text-sm leading-relaxed text-ink-600">
               We currently settle by bank transfer or in person at the centre. When you register
               for a class we hold your place for 48 hours and send you a reference to quote with

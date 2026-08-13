@@ -570,6 +570,106 @@ export interface BlogPostDetail extends BlogPostSummary {
   body_markdown: string;
 }
 
+
+export interface TeacherProfileSummary {
+  id: number;
+  slug: string | null;
+  full_name: string;
+  headline: string | null;
+  photo_url: string | null;
+  subjects: string[];
+  grades: number[];
+  years_experience: number;
+  specializations: string[];
+  learning_formats: string[];
+  is_featured: boolean;
+  rating: number;
+  rating_count: number;
+}
+
+export interface TeacherCredentialPublic {
+  id: number;
+  title: string;
+  organisation: string | null;
+  year_start: number | null;
+  year_end: number | null;
+  description: string | null;
+  url: string | null;
+}
+
+export interface TeacherProfileDetail extends TeacherProfileSummary {
+  bio: string | null;
+  qualifications: string[];
+  languages: string[];
+  teaching_philosophy: string | null;
+  teaching_style: string | null;
+  accepts_one_to_one: boolean;
+  hourly_rate_vnd: number | null;
+  video_intro_url: string | null;
+  gallery: { url: string; caption?: string }[];
+  social_links: Record<string, string>;
+  contact: { email: string | null; phone: string | null };
+  availability: { weekday: number; start: string; end: string }[];
+  credentials: Record<string, TeacherCredentialPublic[]>;
+  courses: { id: number; slug: string; title: string; grade: number; thumbnail_url: string | null }[];
+  programs: {
+    id: number;
+    slug: string;
+    name: string;
+    format: string;
+    price_vnd: number;
+    price_unit: string;
+    delivery_mode: string;
+  }[];
+  classes: {
+    id: number;
+    slug: string;
+    name: string;
+    format: string;
+    start_date: string | null;
+    delivery_mode: string;
+  }[];
+}
+
+/** A published page section, flattened so a template can read fields directly. */
+export type SiteSectionContent = Record<string, unknown> & {
+  key: string;
+  page: string;
+  kind: string;
+};
+
+export interface PublicFaq {
+  id: number;
+  question: string;
+  answer: string;
+  category: string;
+}
+
+export interface PublicAnnouncement {
+  id: number;
+  title: string;
+  body: string | null;
+  kind: string;
+  tone: string;
+  link_url: string | null;
+  link_label: string | null;
+  image_url: string | null;
+}
+
+export interface PublicCategory {
+  id: number;
+  slug: string;
+  name: string;
+  description: string | null;
+  image_url: string | null;
+  icon: string | null;
+  color: string | null;
+  kind: string;
+  seo_title: string | null;
+  seo_description: string | null;
+  children: PublicCategory[];
+}
+
 export interface SiteStats {
   subjects: number;
   courses: number;
@@ -689,6 +789,15 @@ export const api = {
     },
     teacher: (id: number) =>
       apiFetch<TeacherCard>(`/tutoring/teachers/${id}`, { anonymous: true }),
+    profiles: (params?: { subject?: string; featured?: boolean }) => {
+      const query = new URLSearchParams();
+      if (params?.subject) query.set('subject', params.subject);
+      if (params?.featured !== undefined) query.set('featured', String(params.featured));
+      const suffix = query.toString() ? `?${query}` : '';
+      return apiFetch<TeacherProfileSummary[]>(`/tutoring/profiles${suffix}`, { anonymous: true });
+    },
+    profile: (slug: string) =>
+      apiFetch<TeacherProfileDetail>(`/tutoring/profiles/${slug}`, { anonymous: true }),
     classes: (params?: { subject?: string; grade?: number; format?: string }) => {
       const query = new URLSearchParams();
       if (params?.subject) query.set('subject', params.subject);
@@ -725,6 +834,30 @@ export const api = {
         body,
         anonymous: true,
       }),
+
+    /* ---- admin-managed website content ---- */
+    settings: () =>
+      apiFetch<Record<string, Record<string, string>>>('/site/settings', { anonymous: true }),
+    sections: (page: string, locale?: string) =>
+      apiFetch<Record<string, SiteSectionContent>>(
+        `/site/sections?page=${page}${locale ? `&locale=${locale}` : ''}`,
+        { anonymous: true },
+      ),
+    faqs: (category?: string) =>
+      apiFetch<PublicFaq[]>(`/site/faqs${category ? `?category=${category}` : ''}`, {
+        anonymous: true,
+      }),
+    announcements: (kind?: string) =>
+      apiFetch<PublicAnnouncement[]>(`/site/announcements${kind ? `?kind=${kind}` : ''}`, {
+        anonymous: true,
+      }),
+    categories: (params?: { kind?: string; nav_only?: boolean }) => {
+      const query = new URLSearchParams();
+      if (params?.kind) query.set('kind', params.kind);
+      if (params?.nav_only) query.set('nav_only', 'true');
+      const suffix = query.toString() ? `?${query}` : '';
+      return apiFetch<PublicCategory[]>(`/site/categories${suffix}`, { anonymous: true });
+    },
   },
 
   teacher: {

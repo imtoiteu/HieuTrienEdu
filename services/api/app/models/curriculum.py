@@ -23,6 +23,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, TimestampMixin
+from app.models.enums import ReviewStatus
 
 if TYPE_CHECKING:
     from app.models.content import Lesson
@@ -64,8 +65,20 @@ class Course(Base, TimestampMixin):
     summary: Mapped[str | None] = mapped_column(Text)
     description: Mapped[str | None] = mapped_column(Text)
     estimated_hours: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    # ``is_published`` is the flag every existing query filters on; ``status`` adds the draft and
+    # archived stages the admin workflow needs. They are kept in step by the admin API rather than
+    # by a database trigger, and ``is_published`` remains the single source of truth for reads.
     is_published: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    status: Mapped[str] = mapped_column(String(20), default=ReviewStatus.PUBLISHED, nullable=False)
     position: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+
+    thumbnail_url: Mapped[str | None] = mapped_column(String(600))
+    is_featured: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    teacher_id: Mapped[int | None] = mapped_column(
+        ForeignKey("teacher_profiles.id", ondelete="SET NULL")
+    )
+    seo_title: Mapped[str | None] = mapped_column(String(200))
+    seo_description: Mapped[str | None] = mapped_column(Text)
 
     subject: Mapped[Subject] = relationship(back_populates="courses")
     units: Mapped[list[Unit]] = relationship(
@@ -137,7 +150,17 @@ class Skill(Base, TimestampMixin):
     bkt_p_guess: Mapped[float] = mapped_column(default=0.28, nullable=False)
 
     topic: Mapped[Topic] = relationship(back_populates="skills")
-    questions: Mapped[list[Question]] = relationship(back_populates="skill")
+
+    # ``passive_deletes`` is load-bearing, not an optimisation. ``Question.skill_id`` is NOT NULL
+    # with an ``ON DELETE CASCADE`` foreign key, but SQLAlchemy's default behaviour when deleting a
+    # parent is to *nullify* the child's foreign key first — which fails the NOT NULL constraint
+    # and aborts the whole transaction. Deleting a course therefore crashed instead of cascading.
+    # Telling the ORM to leave it to the database makes the declared cascade the one that runs.
+    questions: Mapped[list[Question]] = relationship(
+        back_populates="skill", cascade="all, delete-orphan", passive_deletes=True
+    )
+    # ``Lesson.skill_id`` is nullable with ON DELETE SET NULL, so nullifying is correct here: a
+    # lesson outlives the skill it was tagged with.
     lessons: Mapped[list[Lesson]] = relationship(back_populates="skill")
 
     prerequisite_links: Mapped[list[SkillPrerequisite]] = relationship(

@@ -40,8 +40,26 @@ const COLUMNS: { titleKey: string; links: { labelKey: string; href: string }[] }
   },
 ];
 
-export function SiteFooter() {
+/**
+ * Site footer.
+ *
+ * Contact details come from admin-managed settings rather than being hard-coded, with the
+ * previous constants kept as fallbacks so the footer still renders if the API is unreachable.
+ */
+export function SiteFooter({
+  settings = {},
+}: {
+  settings?: Record<string, Record<string, string>>;
+}) {
   const { t, locale } = useI18n();
+  const setting = (key: string, fallback: string) => settings[key]?.text || fallback;
+  const address = setting('contact.address', 'Hà Nội, Việt Nam');
+  const phone = setting('contact.phone', '+84 24 1234 5678');
+  const email = setting('contact.email', 'hello@hietrieneducation.vn');
+  const tagline = setting('footer.tagline', '');
+  const social = Object.entries(settings)
+    .filter(([key, value]) => key.startsWith('social.') && value?.text)
+    .map(([key, value]) => ({ name: key.replace('social.', ''), url: value.text }));
   const href = (path: string) => `/${locale}${path}`;
   const year = new Date().getFullYear();
 
@@ -53,29 +71,45 @@ export function SiteFooter() {
           <div>
             <Logo />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-600">
-              {t('footer.tagline')}
+              {tagline || t('footer.tagline')}
             </p>
             <ul className="mt-5 space-y-2 text-sm text-ink-600">
-              <li className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 shrink-0 text-brand-500" aria-hidden="true" />
-                Hà Nội, Việt Nam
+              <li className="flex items-start gap-2">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-500" aria-hidden="true" />
+                {address}
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="h-4 w-4 shrink-0 text-brand-500" aria-hidden="true" />
-                <a href="tel:+842412345678" className="hover:text-brand-700 hover:underline">
-                  +84 24 1234 5678
+                <a
+                  href={`tel:${phone.replace(/\s/g, '')}`}
+                  className="hover:text-brand-700 hover:underline"
+                >
+                  {phone}
                 </a>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 shrink-0 text-brand-500" aria-hidden="true" />
-                <a
-                  href="mailto:hello@hietrieneducation.vn"
-                  className="hover:text-brand-700 hover:underline"
-                >
-                  hello@hietrieneducation.vn
+                <a href={`mailto:${email}`} className="hover:text-brand-700 hover:underline">
+                  {email}
                 </a>
               </li>
             </ul>
+            {social.length > 0 && (
+              <ul className="mt-4 flex flex-wrap gap-3">
+                {social.map((link) => (
+                  <li key={link.name}>
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm font-bold capitalize text-brand-600 hover:underline"
+                    >
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           {COLUMNS.map((column) => (
@@ -101,7 +135,8 @@ export function SiteFooter() {
 
         <div className="mt-12 flex flex-col gap-3 border-t-2 border-ink-100 pt-6 text-sm text-ink-500 sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {year} {t('brand.name')}. {t('footer.rights')}
+            {settings['footer.copyright']?.text ??
+              `© ${year} ${t('brand.name')}. ${t('footer.rights')}`}
           </p>
           <p className="text-ink-400">{t('footer.builtWith')}</p>
         </div>

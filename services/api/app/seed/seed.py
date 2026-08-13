@@ -50,6 +50,7 @@ from app.models import (
     User,
     UserRole,
 )
+from app.seed.cms_defaults import seed_cms
 from app.services.practice import record_attempt, serve_question
 
 DEMO_PASSWORD = "HietEdu2026!"
@@ -884,6 +885,11 @@ def run(*, reset: bool = False, simulate: bool = True) -> int:
 
         print("Seeding site content ...")
         seed_site_content(db)
+
+        print("Seeding website CMS defaults ...")
+        cms_counts = seed_cms(db)
+        db.commit()
+        print("  " + ", ".join(f"{v} {k}" for k, v in cms_counts.items() if v))
 
         print("Seeding demo family ...")
         student = seed_demo_family(db, groups)

@@ -115,7 +115,7 @@ export default function ParentPage({ params }: { params: Promise<{ locale: strin
             className="mt-8"
             icon={<Users className="h-10 w-10" />}
             title={t('parent.noChildren')}
-            description="Link your child's account by the email address they signed up with."
+            description={t('parent.linkAria')}
           />
         )}
 
@@ -266,9 +266,7 @@ export default function ParentPage({ params }: { params: Promise<{ locale: strin
 
         <Card className="mt-10">
           <h2 className="font-display text-xl">{t('parent.linkChild')}</h2>
-          <p className="mt-1 text-sm text-ink-600">
-            Enter the email address your child used to create their account.
-          </p>
+          <p className="mt-1 text-sm text-ink-600">{t('parent.linkHint')}</p>
           <form onSubmit={linkChild} className="mt-4 flex flex-wrap items-end gap-3">
             <div className="min-w-[16rem] flex-1">
               <Field label={t('auth.email')} htmlFor="link_email" required>

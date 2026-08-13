@@ -94,7 +94,7 @@ export function AppShell({
           </Link>
         </div>
 
-        <nav aria-label="Dashboard" className="flex-1 space-y-1 p-4">
+        <nav aria-label={t('admin.dash.title')} className="flex-1 space-y-1 p-4">
           {links.map((link) => (
             <Link
               key={link.href}
@@ -167,7 +167,7 @@ export function AppShell({
 
       {/* mobile bottom navigation */}
       <nav
-        aria-label="Dashboard"
+        aria-label={t('admin.dash.title')}
         className="fixed inset-x-0 bottom-0 z-40 border-t-2 border-ink-100 bg-white lg:hidden"
       >
         <ul className="flex">
