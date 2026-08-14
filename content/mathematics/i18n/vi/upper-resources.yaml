@@ -1,0 +1,112 @@
+# Vietnamese translations — mathematics further-reading resources, grades 10-12.
+#
+# Proper names of the simulations and books stay in English, with a Vietnamese gloss in
+# brackets: that is what the student will see when the link opens.
+
+resources:
+  # ---------------------------------------------------------------------------- lớp 10
+  res-m10-openstax-algtrig:
+    title: "OpenStax: Algebra and Trigonometry 2e (Đại số và Lượng giác, bản 2e)"
+    description: >-
+      Giáo trình miễn phí đầy đủ về hàm số bậc hai, định lí sin và côsin cùng hệ bất phương
+      trình. Mỗi mục đều kết thúc bằng lời giải chi tiết.
+  res-m10-graphing-quadratics:
+    title: "PhET: Graphing Quadratics (Vẽ đồ thị hàm bậc hai)"
+    description: >-
+      Kéo các hệ số của ax² + bx + c và xem đỉnh, trục đối xứng cùng các nghiệm di chuyển. Cách
+      nhanh nhất để thấy mỗi hệ số thực sự điều khiển điều gì.
+  res-m10-vector-addition:
+    title: "PhET: Vector Addition (Cộng vectơ)"
+    description: >-
+      Cộng các vectơ theo quy tắc nối đuôi và đọc đồng thời toạ độ cùng vectơ tổng. Số đo góc và
+      độ dài cập nhật ngay khi bạn kéo.
+  res-m10-plinko:
+    title: "PhET: Plinko Probability (Xác suất Plinko)"
+    description: >-
+      Thả hàng trăm quả bóng qua một bảng đinh và xem phân bố nhị thức tự hình thành từ những
+      biến cố ngẫu nhiên riêng lẻ.
+  res-m10-center-variability:
+    title: "PhET: Center and Variability (Số đo trung tâm và độ phân tán)"
+    description: >-
+      Di chuyển các điểm dữ liệu và xem số trung bình, trung vị cùng độ lệch chuẩn phản ứng. Kéo
+      một giá trị ra thật xa sẽ cho thấy giá trị ngoại lai làm dịch chuyển từng số đo bao nhiêu.
+  res-m10-openstax-stats:
+    title: "OpenStax: Introductory Statistics 2e (Thống kê nhập môn, bản 2e)"
+    description: >-
+      Miễn phí và kĩ lưỡng về thống kê mô tả cùng xác suất, với nhiều bộ dữ liệu thực tế hơn hẳn
+      một sách giáo khoa phổ thông thường có.
+  res-m10-owid:
+    title: "Our World in Data"
+    description: >-
+      Hàng nghìn bộ dữ liệu miễn phí, tải về được và có chú thích đầy đủ về dân số, y tế, năng
+      lượng và kinh tế. Những con số thật để tính ra một độ lệch chuẩn thật.
+
+  # ---------------------------------------------------------------------------- lớp 11
+  res-m11-trig-tour:
+    title: "PhET: Trig Tour (Dạo quanh đường tròn lượng giác)"
+    description: >-
+      Di chuyển một điểm quanh đường tròn lượng giác và xem đồ thị sin, côsin, tang tự vẽ ra bên
+      cạnh, theo độ hoặc theo radian.
+  res-m11-openstax-precalc:
+    title: "OpenStax: Precalculus 2e (Tiền giải tích, bản 2e)"
+    description: >-
+      Trình bày miễn phí về công thức và phương trình lượng giác, dãy số, cùng hàm số mũ và
+      lôgarit — về cơ bản là toàn bộ chương trình lớp này.
+  res-m11-owid-growth:
+    title: "Our World in Data: điện năng thế giới được sản xuất như thế nào"
+    description: >-
+      Hàng chục năm dữ liệu sản xuất thật. Khớp một mô hình cấp số nhân vào cột điện mặt trời là
+      một bài tập thực sự gây kinh ngạc về tăng trưởng theo hàm mũ.
+  res-m11-worldbank:
+    title: "World Bank Open Data (Dữ liệu mở của Ngân hàng Thế giới)"
+    description: >-
+      Số liệu thống kê quốc gia miễn phí về dân số, GDP và lạm phát. Nguồn dữ liệu thô tốt cho
+      các bài toán lãi kép dùng số liệu của Việt Nam.
+  res-m11-calculus-grapher:
+    title: "PhET: Calculus Grapher (Vẽ đồ thị đạo hàm)"
+    description: >-
+      Vẽ một đường cong bất kì và xem đạo hàm của nó hiện ra bên dưới theo thời gian thực. Vẽ
+      một hàm có đoạn nằm ngang rồi thấy đạo hàm chạm số không là cách nhanh nhất để hiểu ra mối
+      liên hệ.
+  res-m11-openstax-calc1:
+    title: "OpenStax: Calculus Volume 1 (Giải tích, tập 1)"
+    description: >-
+      Một giáo trình giải tích đầy đủ và miễn phí. Các chương 2 đến 4 trình bày giới hạn, định
+      nghĩa đạo hàm và các quy tắc tính đạo hàm với sự cẩn trọng hiếm thấy ở phần lập luận giới hạn.
+
+  # ---------------------------------------------------------------------------- lớp 12
+  res-m12-calculus-grapher-12:
+    title: "PhET: Calculus Grapher (Vẽ đồ thị đạo hàm)"
+    description: >-
+      Dùng chế độ xem đạo hàm để kiểm tra bảng xét dấu của bạn: ở đâu bảng nói hàm số đồng biến
+      thì ở đó đường đạo hàm phải nằm phía trên trục hoành.
+  res-m12-openstax-calc1-apps:
+    title: "OpenStax: Calculus Volume 1 — ứng dụng của đạo hàm"
+    description: >-
+      Chương 4 hoàn toàn dành cho bài toán tối ưu, khảo sát hàm số và tốc độ biến thiên liên
+      quan, với hàng chục bài giải mẫu cùng dạng với bài chiếc vỏ hộp.
+  res-m12-openstax-calc2:
+    title: "OpenStax: Calculus Volume 2 (Giải tích, tập 2)"
+    description: >-
+      Các phương pháp tính tích phân, diện tích hình phẳng giữa hai đường cong và thể tích khối
+      tròn xoay, vượt xa yêu cầu chương trình nhưng được viết để đọc được.
+  res-m12-curve-fitting:
+    title: "PhET: Curve Fitting (Khớp đường cong)"
+    description: >-
+      Đặt các điểm dữ liệu và khớp đa thức với bậc tăng dần. Một minh hoạ đáng nhớ cho việc vì
+      sao đường cong đi qua đúng mọi điểm thường lại là mô hình sai.
+  res-m12-openstax-stats-bayes:
+    title: "OpenStax: Introductory Statistics 2e — các chủ đề xác suất"
+    description: >-
+      Xác suất có điều kiện, sơ đồ hình cây và tính độc lập, với cách tiếp cận bằng bảng chéo
+      được trình bày chi tiết đúng như trong bài học của chúng ta.
+  res-m12-contemporary-math:
+    title: "OpenStax: Contemporary Mathematics (Toán học đương đại)"
+    description: >-
+      Cách trình bày thiên về ứng dụng, hướng tới người đọc phổ thông, với các mục về việc xác
+      suất có điều kiện bị hiểu sai như thế nào trong y học và trong toà án.
+  res-m12-gravity-orbits:
+    title: "PhET: Gravity and Orbits (Hấp dẫn và quỹ đạo)"
+    description: >-
+      Vectơ trong không gian, được ứng dụng. Quan sát vectơ vận tốc và vectơ lực trên một vật
+      đang quay quanh quỹ đạo và hiểu vì sao lực có thể vuông góc với chuyển động mãi mãi.

@@ -53,7 +53,7 @@ export function SiteFooter({
 }) {
   const { t, locale } = useI18n();
   const setting = (key: string, fallback: string) => settings[key]?.text || fallback;
-  const address = setting('contact.address', 'Hà Nội, Việt Nam');
+  const address = setting('contact.address', '6A Thái Phiên, TP Vinh, Nghệ An');
   const phone = setting('contact.phone', '+84 24 1234 5678');
   const email = setting('contact.email', 'hello@hietrieneducation.vn');
   const tagline = setting('footer.tagline', '');

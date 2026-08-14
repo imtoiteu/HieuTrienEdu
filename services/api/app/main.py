@@ -36,7 +36,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title=f"{settings.platform_name} API",
     description=(
-        "Mathematics and Physics learning platform for grades 6-9 — curriculum, adaptive "
+        "Mathematics and Physics learning platform for grades 6-12 — curriculum, adaptive "
         "practice, tutoring and class management."
     ),
     version="0.1.0",

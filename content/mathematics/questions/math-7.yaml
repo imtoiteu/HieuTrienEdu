@@ -315,7 +315,9 @@ questions:
     prompt: "Solve the inequality:   -{{a}}x > {{b}}"
     variables:
       a: {type: int, min: 2, max: 9}
-      x: {type: int, min: -12, max: -1}
+      # x = -1 makes b zero, and then "x < {{-b/a}}" and "x < {{b/a}}" both render as
+      # "x < 0.00" — two identical choices, one flagged correct and one not.
+      x: {type: int, min: -12, max: -2}
       b: {type: derived, expression: "-a * x - a"}
     options:
       choices:

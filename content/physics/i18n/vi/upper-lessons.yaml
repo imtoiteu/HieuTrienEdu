@@ -1,0 +1,640 @@
+# Vietnamese translations — physics lessons, grades 10-12.
+#
+# `blocks` is a POSITIONAL OVERLAY. Each entry corresponds to the block at the same index in the
+# English lesson, and supplies only the prose fields; block `type`, `skill` and everything else
+# structural is copied from the original. An empty `{}` leaves a block untouched — used for
+# `math` blocks (LaTeX is language-neutral) and `practice` blocks (no prose at all).
+#
+# Where a block IS supplied, the whole field is replaced, so `example.steps` and
+# `interactive.config` must repeat the LaTeX and the plot expressions verbatim. A validation
+# script checks that those non-prose parts are byte-identical to the English ones; a divergence
+# there would mean a Vietnamese student sees a different formula, which is the one failure mode
+# this overlay design exists to prevent.
+
+lessons:
+  # ============================================================================== lớp 10
+  lesson-physics-10-crumple-zones:
+    title: Vì sao ô tô được thiết kế để vỡ
+    summary: Ô tô hiện đại được chế tạo để tự phá huỷ trong một vụ va chạm, và đó chính là thứ cứu bạn.
+    objectives:
+      - Liên hệ xung lượng với độ biến thiên động lượng của một vật
+      - Giải thích vì sao kéo dài thời gian va chạm lại làm giảm lực
+      - Tính lực tác dụng lên hành khách từ thời gian dừng
+    blocks:
+      - markdown: |
+          Một chiếc ô tô cũ những năm 1960 được đóng chắc như xe tăng. Sau một vụ va chạm ở tốc
+          độ thấp, nó gần như không móp — còn người ngồi bên trong thì thường bị thương nặng.
+
+          Ô tô hiện đại thì bẹp dúm. Nắp ca-pô gập lại, khoang động cơ sụp xuống, cả phần đầu xe
+          bị phá huỷ. Vậy mà hành khách bước ra bình thường.
+
+          Đây không phải là chất lượng chế tạo đi xuống. Đó là ý tưởng quan trọng nhất trong an
+          toàn ô tô, và nó suy ra trực tiếp từ một phương trình.
+      - {}
+      - title: Phương trình này đang nói điều gì
+        text: >-
+          Vế trái là xung lượng: lực nhân với khoảng thời gian nó tác dụng. Vế phải là độ biến
+          thiên động lượng. Trong một vụ va chạm, vế phải là *cố định* — một hành khách có khối
+          lượng nhất định sẽ bị hãm từ vận tốc của xe về không, và không gì thay đổi được điều
+          đó. Vậy đại lượng duy nhất người thiết kế kiểm soát được là thời gian.
+      - markdown: |
+          ### Sự đánh đổi
+
+          Nếu Δp cố định thì F và Δt đánh đổi lẫn nhau. Dừng trong nửa thời gian thì lực tăng gấp
+          đôi. Kéo dài quá trình dừng gấp bốn lần thì lực giảm còn một phần tư.
+
+          Một chiếc xe cứng dừng lại trong khoảng 20 mili giây. Vùng biến dạng gập lại dần dần
+          kéo con số đó lên 100 đến 150 mili giây. Đó là ranh giới giữa một gia tốc hãm còn sống
+          được và một gia tốc hãm gây tử vong.
+      - title: Cùng một vụ va chạm, hai chiếc xe
+        steps:
+          - text: "Một hành khách 70 kg đang chuyển động với vận tốc 20 m/s. Độ biến thiên động lượng là như nhau ở cả hai trường hợp."
+            math: "\\Delta p = 70 \\times 20 = 1400\\text{ kg m/s}"
+          - text: "Xe cứng — quá trình dừng kéo dài 0,02 s."
+            math: "F = \\frac{1400}{0.02} = 70\\,000\\text{ N}"
+          - text: "Có vùng biến dạng và túi khí — quá trình dừng kéo dài 0,15 s."
+            math: "F = \\frac{1400}{0.15} \\approx 9\\,300\\text{ N}"
+          - text: "Cùng vận tốc, cùng khối lượng, cùng động lượng. Lực chỉ còn khoảng một phần bảy."
+      - headers: ["Chi tiết an toàn", "Nó thực sự làm gì", "Đại lượng nó thay đổi"]
+        rows:
+          - ["Vùng biến dạng", "Gập lại dần thay vì chống lại", "Tăng Δt"]
+          - ["Túi khí", "Cho đầu giảm tốc trên quãng đường dài hơn", "Tăng Δt"]
+          - ["Dây an toàn", "Giãn ra một chút khi chịu tải", "Tăng Δt"]
+          - ["Đệm mũ bảo hiểm", "Bị nén lại trong lúc va chạm", "Tăng Δt"]
+      - title: Cùng một ý tưởng, ở khắp nơi
+        text: >-
+          Vận động viên thể dục khuỵu gối khi tiếp đất. Người bắt bóng chày kéo tay về phía sau
+          khi bắt. Thùng bìa các-tông bảo vệ một kiện hàng. Tất cả đều đang mua thêm thời gian để
+          cắt giảm lực — cùng một phương trình, trong những bối cảnh khác nhau.
+      - title: Một hiểu lầm phổ biến
+        text: >-
+          Vùng biến dạng không "hấp thụ cú va chạm" theo nghĩa làm động lượng biến mất. Động
+          lượng được bảo toàn. Thứ chúng thay đổi là thời gian diễn ra sự chuyển giao đó.
+      - {}
+      - points:
+          - Xung lượng F Δt bằng độ biến thiên động lượng m Δv
+          - Trong một vụ va chạm, độ biến thiên động lượng bị ấn định bởi khối lượng và vận tốc
+          - Kéo dài thời gian va chạm là cách duy nhất để giảm lực
+          - Vùng biến dạng, túi khí, dây an toàn và lớp đệm đều kéo dài thời gian
+
+  lesson-physics-10-terminal-velocity:
+    title: Vì sao người nhảy dù ngừng tăng tốc
+    summary: Vật rơi không tăng tốc mãi mãi — và lí do nằm ở một lực lớn dần lên.
+    objectives:
+      - Mô tả lực cản phụ thuộc vào tốc độ như thế nào
+      - Giải thích tốc độ giới hạn là sự cân bằng giữa trọng lực và lực cản
+      - Đọc tốc độ giới hạn trên đồ thị vận tốc - thời gian
+    blocks:
+      - markdown: |
+          Thả một hòn đá từ một toà nhà cao và nó tăng tốc với gia tốc khoảng 10 m/s² suốt quãng
+          đường rơi. Nhảy ra khỏi máy bay, và sau chừng mười hai giây bạn ngừng tăng tốc hoàn
+          toàn — bạn rơi nốt quãng đường còn lại với tốc độ không đổi, khoảng 55 m/s.
+
+          Vì sao vật này cứ tăng tốc mãi còn vật kia thì không?
+      - markdown: |
+          ### Lực cản lớn lên theo tốc độ
+
+          Lực hướng lên do không khí gây ra là **lực cản**, và khác với trọng lực, nó không phải
+          hằng số. Bạn càng chuyển động nhanh, mỗi giây bạn càng phải đẩy nhiều không khí sang
+          hai bên, và nó càng đẩy lại mạnh hơn. Ở khoảng tốc độ đang xét, gần đúng là:
+
+          $$F_{\text{cản}} \propto v^2$$
+
+          Tăng gấp đôi tốc độ thì lực cản tăng khoảng gấp bốn.
+      - title: Trình tự diễn biến
+        text: >-
+          Ngay lúc nhảy ra, v = 0 nên lực cản bằng 0 và lực duy nhất là trọng lực — bạn tăng tốc
+          với đúng 10 m/s². Khi v lớn lên, lực cản lớn theo, nên *hợp lực* nhỏ đi và gia tốc giảm
+          xuống. Cuối cùng lực cản bằng trọng lực, hợp lực bằng không, và tốc độ ngừng thay đổi.
+          Tốc độ đó chính là tốc độ giới hạn.
+      - config:
+          functions:
+            - {expression: "55*(1 - 2.718281828**(-x/5))", label: "Người nhảy dù — đạt tốc độ giới hạn", color: "primary"}
+            - {expression: "10*x", label: "Không có lực cản — tăng tốc mãi mãi", color: "accent"}
+          xRange: [0, 20]
+          yRange: [0, 120]
+          axisLabels: {x: "thời gian (s)", y: "tốc độ (m/s)"}
+      - markdown: |
+          Hãy để ý hình dạng đường màu xanh. Nó dốc nhất ở lúc đầu, khi lực cản còn nhỏ nhất, rồi
+          thoải dần khi hai lực tiến tới cân bằng. Nó không bao giờ tạo thành một góc gãy — nó
+          tiệm cận tới tốc độ giới hạn.
+      - title: Tìm một tốc độ giới hạn
+        steps:
+          - text: "Người nhảy dù 80 kg có trọng lực P = 80 × 10 = 800 N."
+          - text: "Ở tốc độ giới hạn, lực cản cân bằng chính xác với nó."
+            math: "F_{\\text{cản}} = 800\\text{ N}"
+          - text: "Nếu mô hình hoá lực cản là F = kv² với k = 0,25 kg/m thì:"
+            math: "0.25 v^2 = 800 \\;\\Rightarrow\\; v = \\sqrt{3200} \\approx 57\\text{ m/s}"
+      - headers: ["Vật", "Tốc độ giới hạn (xấp xỉ)", "Vì sao"]
+        rows:
+          - ["Người nhảy dù, nằm sấp", "55 m/s", "Diện tích lớn, khối lượng vừa phải"]
+          - ["Người nhảy dù, chúc đầu xuống", "90 m/s", "Cùng khối lượng, diện tích nhỏ hơn nhiều"]
+          - ["Dù đã bung", "5 m/s", "Diện tích cực lớn"]
+          - ["Hạt mưa (2 mm)", "6 m/s", "Khối lượng rất nhỏ"]
+          - ["Hạt sương mù", "0,01 m/s", "Khối lượng tí hon, lực cản tương đối lớn"]
+      - title: Vì sao dù lại có tác dụng
+        text: >-
+          Bung dù không tạo ra một lực hướng lên từ hư không. Nó nhân diện tích lên nhiều lần,
+          nên *cùng* tốc độ ấy giờ tạo ra lực cản lớn hơn hẳn trọng lực. Hợp lực hướng lên trên,
+          bạn giảm tốc, và ổn định ở một tốc độ giới hạn mới, thấp hơn rất nhiều.
+      - title: Sương mù không gây đau
+        text: >-
+          Nếu lực cản không tồn tại, một hạt mưa rơi từ độ cao 2 km sẽ chạm đất với tốc độ khoảng
+          200 m/s. Mưa sẽ giết người. Tốc độ giới hạn là lí do mưa chỉ làm bạn ướt.
+      - {}
+      - points:
+          - Lực cản tăng theo tốc độ, gần đúng theo v bình phương
+          - Gia tốc giảm khi lực cản lớn lên, vì hợp lực nhỏ đi
+          - Tốc độ giới hạn đạt được khi lực cản bằng trọng lực
+          - Diện tích lớn hơn cho lực cản lớn hơn và do đó tốc độ giới hạn thấp hơn
+
+  lesson-physics-10-projectiles:
+    title: Một quả bóng được ném đang làm hai việc cùng lúc
+    summary: Ý tưởng duy nhất khiến mọi bài toán chuyển động ném đều giải được — hãy tách riêng hai phương.
+    objectives:
+      - Phân tích vận tốc ban đầu thành thành phần ngang và thẳng đứng
+      - Giải thích vì sao hai thành phần đó độc lập với nhau
+      - Tính thời gian bay và tầm xa của một vật bị ném
+    blocks:
+      - markdown: |
+          Đây là một thí nghiệm khiến gần như ai cũng ngạc nhiên khi lần đầu nhìn thấy.
+
+          Lấy hai quả bóng giống hệt nhau. **Thả rơi** một quả thẳng xuống. Cùng đúng lúc đó,
+          **bắn** quả kia theo phương ngang với tốc độ lớn. Quả nào chạm đất trước?
+
+          Chúng chạm đất cùng lúc. Lần nào cũng vậy.
+      - title: Ý tưởng then chốt
+        text: >-
+          Trọng lực kéo xuống dưới, nên nó chỉ làm thay đổi chuyển động theo phương *thẳng đứng*.
+          Nó không quan tâm vật đang làm gì theo phương ngang. Hai chuyển động hoàn toàn độc lập
+          với nhau — và đó chính là điều cho phép bạn giải từng cái một.
+      - markdown: |
+          ### Phân tích vận tốc ban đầu
+
+          Một quả bóng được ném với tốc độ $u$ hợp với phương ngang góc $\theta$ thực ra đang
+          chuyển động theo hai phương cùng một lúc:
+
+          $$u_x = u\cos\theta \qquad u_y = u\sin\theta$$
+
+          Từ thời điểm đó trở đi:
+
+          - **Theo phương ngang** không có lực nào (bỏ qua lực cản không khí), nên $u_x$ không đổi.
+          - **Theo phương thẳng đứng** có trọng lực, nên $u_y$ giảm dần, bằng không ở điểm cao
+            nhất, rồi đổi chiều.
+      - headers: ["", "Phương ngang", "Phương thẳng đứng"]
+        rows:
+          - ["Vận tốc ban đầu", "u cos θ", "u sin θ"]
+          - ["Gia tốc", "0", "−g (hướng xuống)"]
+          - ["Vận tốc về sau", "không đổi", "u sin θ − gt"]
+          - ["Tại điểm cao nhất", "không đổi", "0"]
+      - title: Quả bóng được đá với vận tốc 20 m/s, góc 30°
+        steps:
+          - text: "Phân tích vận tốc ban đầu."
+            math: "u_x = 20\\cos 30° = 17.3\\text{ m/s},\\quad u_y = 20\\sin 30° = 10\\text{ m/s}"
+          - text: "Thời gian lên tới đỉnh: vận tốc thẳng đứng giảm từ 10 m/s về 0 với gia tốc 10 m/s² —"
+            math: "t_{\\text{up}} = \\frac{10}{10} = 1.0\\text{ s}"
+          - text: "Rơi xuống mất đúng chừng ấy thời gian, nên tổng thời gian bay là 2,0 s."
+          - text: "Vận tốc theo phương ngang không hề thay đổi, nên tầm xa là:"
+            math: "R = 17.3 \\times 2.0 = 34.6\\text{ m}"
+      - title: Vì sao góc 45° cho tầm xa lớn nhất
+        text: >-
+          Ném thoải cho u_x lớn nhưng thời gian bay rất ngắn. Ném dốc cho nhiều thời gian nhưng
+          gần như không có tốc độ ngang. Tầm xa là tích của hai đại lượng đó, và nó đạt cực đại
+          đúng ở giữa, tại 45°.
+      - title: Chỗ mô hình này không còn đúng
+        text: >-
+          Tất cả những điều trên đều giả sử lực cản không khí là không đáng kể. Với quả bóng đá
+          hay quả bóng tennis thì không phải vậy, và một quả bóng thật sẽ rơi ngắn hơn tầm xa dự
+          đoán, theo một quỹ đạo hơi bất đối xứng. Mô hình vẫn là điểm khởi đầu đúng đắn — chỉ
+          đừng mong nó mô tả chính xác một cú phát bóng gôn.
+      - {}
+      - points:
+          - Phân tích vận tốc ban đầu thành u cos θ theo phương ngang và u sin θ theo phương thẳng đứng
+          - Vận tốc theo phương ngang không đổi; chỉ vận tốc thẳng đứng thay đổi
+          - Hai chuyển động độc lập với nhau và chỉ chung nhau biến thời gian
+          - Trên mặt đất nằm ngang, tầm xa lớn nhất ứng với góc ném 45 độ
+
+  # ============================================================================== lớp 11
+  lesson-physics-11-resonance:
+    title: Cây cầu tự rung lắc đến sụp đổ
+    summary: Một cơn gió vừa phải đã phá huỷ cây cầu treo bằng thép. Cơn gió chưa bao giờ là vấn đề.
+    objectives:
+      - Định nghĩa tần số riêng của một hệ dao động
+      - Giải thích cộng hưởng theo cách năng lượng được bơm vào đúng pha với chuyển động
+      - Nhận ra cộng hưởng trong kĩ thuật, âm nhạc và y học
+    blocks:
+      - markdown: |
+          Ngày 7 tháng 11 năm 1940, cầu Tacoma Narrows ở bang Washington bắt đầu xoắn vặn. Gió
+          đều và vừa phải — khoảng 19 m/s, hoàn toàn nằm trong giới hạn thiết kế của cây cầu. Đó
+          không phải một cơn bão.
+
+          Trong giờ tiếp theo, độ xoắn cứ lớn dần. Rồi lớn nữa. Mặt cầu cuối cùng xoay gần 45 độ
+          về mỗi phía trước khi kết cấu tự xé toạc và rơi xuống nước.
+
+          Gió chưa bao giờ mạnh lên. Vậy năng lượng đến từ đâu?
+      - title: Tần số riêng
+        text: >-
+          Mọi vật có thể dao động đều có một tần số mà nó "ưa thích" — tốc độ nó rung khi bị kích
+          thích rồi để yên. Dây đàn ghi-ta, ly rượu, con lắc, mặt cầu thép: mỗi thứ đều có tần số
+          riêng của nó, quyết định bởi độ cứng và khối lượng.
+      - markdown: |
+          ### Đẩy đúng nhịp
+
+          Hãy nghĩ đến việc đẩy một đứa trẻ trên xích đu. Chiếc xích đu có một tần số riêng. Nếu
+          bạn đẩy vào những thời điểm ngẫu nhiên, một nửa số lần đẩy trợ giúp và một nửa cản trở,
+          và chẳng có gì đáng kể xảy ra. Nhưng nếu bạn canh mỗi cú đẩy đến đúng lúc xích đu vừa
+          rời xa mình, thì mọi cú đẩy đều bơm thêm năng lượng.
+
+          Bạn không hề đẩy mạnh hơn. Bạn đang đẩy **đúng pha**. Và biên độ cứ thế lớn dần.
+
+          Đó là cộng hưởng, và đó là điều đã xảy ra với cây cầu: gió tách các xoáy khỏi mặt cầu ở
+          một nhịp tình cờ trùng với một trong các tần số xoắn riêng của mặt cầu. Mỗi chu kì lại
+          bơm thêm một chút năng lượng, đúng nhịp với chuyển động.
+      - config:
+          functions:
+            - {expression: "1/((1 - x*x)*(1 - x*x) + 0.02*x*x)", label: "Tắt dần yếu — đỉnh rất cao", color: "primary"}
+            - {expression: "1/((1 - x*x)*(1 - x*x) + 0.4*x*x)", label: "Tắt dần mạnh — đỉnh bị san phẳng", color: "accent"}
+          xRange: [0, 2.5]
+          yRange: [0, 20]
+          axisLabels: {x: "tần số cưỡng bức ÷ tần số riêng", y: "biên độ"}
+      - markdown: |
+          Đỉnh nằm ở chỗ tần số cưỡng bức bằng tần số riêng — tỉ số bằng 1 trên trục hoành. Hãy
+          để ý tác dụng của sự tắt dần: nó gần như không dịch chuyển vị trí đỉnh, nhưng hạn chế
+          mạnh mẽ độ cao của đỉnh.
+
+          Mặt cầu Tacoma Narrows là một dầm bản đặc. Nó cứng, nhẹ, và tắt dần rất kém. Sự kết hợp
+          đó chính là đường màu xanh.
+      - headers: ["Cộng hưởng xuất hiện ở đâu", "Nguồn cưỡng bức", "Kết quả"]
+        rows:
+          - ["Xích đu", "Những cú đẩy canh đúng nhịp", "Biên độ lớn từ những cú đẩy nhỏ"]
+          - ["Thùng đàn ghi-ta", "Dây đàn rung", "Âm thanh mà ta thực sự nghe được"]
+          - ["Lò vi sóng", "Bức xạ 2,45 GHz", "Phân tử nước hấp thụ năng lượng, thức ăn nóng lên"]
+          - ["Máy chụp MRI", "Xung vô tuyến ở tần số Larmor", "Hạt nhân hiđrô đáp ứng, tạo ra hình ảnh"]
+          - ["Toà nhà trong động đất", "Chuyển động của nền đất", "Sụp đổ, nếu các tần số trùng nhau"]
+      - title: Kĩ sư ứng phó thế nào
+        text: >-
+          Chỉ có hai cách phòng vệ, và cả hai đều được dùng. **Dịch chuyển tần số riêng** ra xa
+          mọi thứ có thể cưỡng bức nó — cây cầu thay thế dùng mặt cầu dạng giàn hở cho gió lọt
+          qua. Hoặc **tăng độ tắt dần**, để năng lượng thoát ra nhanh bằng tốc độ nó đi vào: các
+          toà nhà cao tầng hiện đại treo những khối giảm chấn khổng lồ gần đỉnh chính vì lí do này.
+      - title: Không giống một lực mạnh
+        text: >-
+          Điểm mấu chốt của câu chuyện Tacoma Narrows là một lực tuần hoàn nhỏ ở đúng tần số có
+          thể làm được điều mà một lực không đổi lớn hơn nhiều không làm nổi. Cộng hưởng là
+          chuyện về nhịp điệu, không phải về độ lớn.
+      - {}
+      - points:
+          - Mọi hệ dao động đều có một tần số riêng
+          - Cộng hưởng xảy ra khi lực cưỡng bức có tần số trùng với tần số riêng đó
+          - Năng lượng bơm vào đúng pha sẽ tích luỹ, nên biên độ lớn vượt xa độ lớn của lực cưỡng bức
+          - Tắt dần hạn chế độ cao của đỉnh; thay đổi tần số riêng thì tránh được hoàn toàn
+
+  lesson-physics-11-noise-cancelling:
+    title: Tạo ra sự im lặng từ hai âm thanh
+    summary: Tai nghe chống ồn không chặn âm thanh. Chúng phát thêm âm thanh vào.
+    objectives:
+      - Áp dụng nguyên lí chồng chất cho hai sóng gặp nhau
+      - Liên hệ hiệu đường đi với giao thoa tăng cường và giao thoa triệt tiêu
+      - Giải thích cách khử ồn chủ động hoạt động và những chỗ nó thất bại
+    blocks:
+      - markdown: |
+          Đeo tai nghe chống ồn trên máy bay và tiếng động cơ gầm rú biến mất. Cảm giác như tai
+          nghe đang chặn âm thanh lại.
+
+          Không phải vậy. Có một micrô ở mặt ngoài, và tai nghe *đang phát ra âm thanh của chính
+          nó* — một âm được tạo hình cẩn thận để khử tiếng ồn. Chúng tạo ra sự im lặng bằng cách
+          cộng thêm âm thanh vào âm thanh.
+      - title: Nguyên lí chồng chất
+        text: >-
+          Ở nơi hai sóng gặp nhau, li độ tổng hợp tại mỗi điểm đơn giản là tổng các li độ thành
+          phần. Các sóng đi xuyên qua nhau rồi tiếp tục lan truyền không đổi; chúng chỉ cộng lại
+          ở chỗ chúng gặp nhau.
+      - markdown: |
+          ### Hai trường hợp cực đoan
+
+          Vì các li độ cộng lại với nhau, kết quả phụ thuộc hoàn toàn vào quan hệ **pha**:
+
+          - **Cùng pha** — đỉnh trùng đỉnh. Các li độ cộng lại cho biên độ lớn hơn. Đây là giao
+            thoa *tăng cường*.
+          - **Ngược pha** — đỉnh trùng hõm. Hai li độ bằng nhau và trái dấu cộng lại bằng không.
+            Đây là giao thoa *triệt tiêu*.
+      - {}
+      - title: Hai chiếc loa trong một căn phòng
+        steps:
+          - text: "Hai loa phát cùng một nốt 340 Hz, cùng pha. Âm truyền với tốc độ 340 m/s nên λ = 1,0 m."
+          - text: "Tại một điểm cách loa này 3,0 m và loa kia 4,0 m, hiệu đường đi là 1,0 m."
+            math: "\\Delta = 1.0\\text{ m} = 1\\lambda"
+          - text: "Một số nguyên lần bước sóng — tăng cường. Nốt nhạc nghe to ở đây."
+          - text: "Di chuyển tới chỗ hiệu đường đi là 1,5 m thì thành 1,5λ — triệt tiêu. Nốt nhạc gần như biến mất."
+      - title: Bạn có thể đi bộ xuyên qua hiện tượng này
+        text: >-
+          Với hai chiếc loa phát cùng một âm thuần trong một căn phòng, đi chậm ngang qua phòng
+          sẽ đưa bạn qua những dải to và nhỏ xen kẽ. Âm thanh không hề thay đổi. Vị trí của bạn
+          so với hai đường truyền mới là thứ thay đổi.
+      - markdown: |
+          ### Quay lại chiếc tai nghe
+
+          Khử ồn chủ động làm đúng điều đó một cách có chủ ý. Micrô bên ngoài lấy mẫu tiếng ồn
+          đang tới; mạch điện tử đảo pha nó — dịch đi nửa chu kì — và loa phát ra phiên bản đảo
+          pha ấy. Tiếng ồn cộng với tiếng ồn đảo pha cho tổng gần bằng không tại màng nhĩ bạn.
+      - headers: ["Âm thanh", "Khử tốt đến đâu", "Vì sao"]
+        rows:
+          - ["Tiếng động cơ máy bay", "Rất tốt", "Tần số thấp, đều đặn, dự đoán được"]
+          - ["Tiếng điều hoà", "Rất tốt", "Liên tục và không đổi"]
+          - ["Tiếng nói", "Kém", "Thay đổi quá nhanh để dự đoán"]
+          - ["Tiếng loảng xoảng đột ngột", "Gần như không", "Kết thúc trước khi tạo kịp sóng ngược pha"]
+      - title: Vì sao các âm cao vẫn lọt qua
+        text: >-
+          Khử ồn đòi hỏi sóng đảo pha phải đến trong một phần rất nhỏ của chu kì. Ở 100 Hz, chu
+          kì là 10 ms — thừa thời gian. Ở 5 kHz, chu kì chỉ 0,2 ms, và bất kì độ trễ xử lí nào
+          cũng phá hỏng sự khớp pha. Đây đúng là lí do loại tai nghe này dập được tiếng động cơ
+          trầm nhưng không dập được tiếng trẻ con khóc.
+      - {}
+      - points:
+          - Chồng chất nghĩa là các li độ gặp nhau thì đơn giản cộng lại
+          - Hiệu đường đi bằng một số nguyên lần bước sóng cho giao thoa tăng cường
+          - Hiệu đường đi bằng một số bán nguyên lần bước sóng cho giao thoa triệt tiêu
+          - Khử ồn chủ động tạo ra sóng đảo pha, và hiệu quả nhất ở tần số thấp
+
+  lesson-physics-11-touchscreen:
+    title: Làm sao màn hình biết bạn vừa chạm vào nó
+    summary: Màn hình điện thoại không có nút bấm và không có cảm biến áp lực. Nó đo điện dung.
+    objectives:
+      - Áp dụng Q = C U và tính năng lượng tích trữ
+      - Giải thích điều gì làm thay đổi điện dung
+      - Mô tả cách màn hình cảm ứng điện dung nhận biết ngón tay
+    blocks:
+      - markdown: |
+          Thử dùng điện thoại khi đang đeo găng tay và chẳng có gì xảy ra. Chạm vào nó bằng một
+          chiếc bút chì cũng vậy. Nhưng chạm bằng ngón tay trần — không cần ấn, chỉ lướt nhẹ — và
+          nó phản hồi ngay lập tức.
+
+          Màn hình không phát hiện lực. Nó đang phát hiện *bạn*.
+      - markdown: |
+          ### Tụ điện là gì
+
+          Tụ điện là hai vật dẫn ngăn cách nhau bởi một lớp cách điện. Nối nó vào một hiệu điện
+          thế và điện tích tích tụ trên hai bản:
+
+          $$Q = CU$$
+
+          Điện dung $C$ đo lượng điện tích mà cấu hình đó tích được trên mỗi vôn. Nó chỉ phụ
+          thuộc vào hình học và vào chất nằm giữa hai bản — không phụ thuộc vào hiệu điện thế bạn
+          đặt vào.
+      - title: Điều gì làm thay đổi điện dung
+        text: >-
+          Diện tích đối diện lớn hơn cho điện dung lớn hơn. Khoảng cách nhỏ hơn cho điện dung lớn
+          hơn. Và đặt vào khe hở một chất có hằng số điện môi cao cũng cho điện dung lớn hơn —
+          đó chính là phần quan trọng ở đây.
+      - markdown: |
+          ### Chiếc màn hình
+
+          Bên dưới lớp kính là một lưới các điện cực trong suốt, tạo thành một tụ điện nhỏ tại
+          mỗi giao điểm. Điện thoại liên tục đo điện dung tại từng giao điểm đó.
+
+          Cơ thể người chủ yếu là nước, và nước có hằng số điện môi cao bất thường. Đưa ngón tay
+          lại gần một giao điểm là bạn làm thay đổi điện trường ở đó — điện dung tại điểm ấy dịch
+          đi vài phần trăm. Bộ điều khiển đọc xem những giao điểm nào đã thay đổi và đỉnh nằm ở
+          đâu, rồi báo về vị trí chạm.
+
+          Ngón tay đeo găng bị ngăn cách bởi một lớp cách điện nên gần như không được ghi nhận.
+          Bút chì gỗ không dẫn điện nên không làm nhiễu điện trường. Bút cảm ứng chuyên dụng có
+          đầu dẫn điện nối với bàn tay bạn, và đó là lí do *nó* dùng được.
+      - title: Năng lượng trong tụ điện đèn flash máy ảnh
+        steps:
+          - text: "Một tụ điện 220 μF được tích điện đến 300 V."
+          - text: "Điện tích tích trữ:"
+            math: "Q = CV = 220\\times10^{-6} \\times 300 = 0.066\\text{ C}"
+          - text: "Năng lượng tích trữ:"
+            math: "E = \\tfrac{1}{2}CV^2 = 0.5 \\times 220\\times10^{-6} \\times 300^2 = 9.9\\text{ J}"
+          - text: "Giải phóng trong khoảng 1 ms, đó là công suất tức thời chừng 10 kW — từ một tụ điện được nạp bởi cục pin nhỏ."
+      - headers: ["Ứng dụng của tụ điện", "Giá trị điển hình", "Nó khai thác điều gì"]
+        rows:
+          - ["Giao điểm màn hình cảm ứng", "~1 pF", "Hằng số điện môi thay đổi khi có ngón tay"]
+          - ["Đèn flash máy ảnh", "100–500 μF", "Nạp chậm, phóng cực nhanh"]
+          - ["Lọc nguồn điện", "1000+ μF", "Tích điện giữa các chu kì của điện lưới"]
+          - ["Dò sóng radio", "thay đổi được, ~pF", "Thay đổi C làm thay đổi tần số cộng hưởng"]
+      - title: Tụ điện đã nạp vẫn nguy hiểm
+        text: >-
+          Tụ điện giữ nguyên năng lượng sau khi đã ngắt nguồn. Tụ đèn flash trong máy ảnh dùng
+          một lần có thể gây giật điện nghiêm trọng nhiều ngày sau đó. Đừng bao giờ tháo nó ra.
+      - {}
+      - points:
+          - Điện dung là điện tích tích trữ trên mỗi vôn, Q = C U
+          - Năng lượng tích trữ bằng một nửa C U bình phương
+          - Điện dung phụ thuộc vào diện tích, khoảng cách và chất nằm giữa hai bản
+          - Màn hình cảm ứng phát hiện sự thay đổi điện dung do ngón tay gây ra, chứ không phải áp lực
+
+  # ============================================================================== lớp 12
+  lesson-physics-12-hot-air-balloon:
+    title: Vì sao khinh khí cầu bay lên
+    summary: Một phương trình giải thích được cả khinh khí cầu, chiếc lốp xe giữa trưa nắng lẫn bình khí lặn.
+    objectives:
+      - Áp dụng phương trình khí lí tưởng pV = nRT
+      - Giải thích vì sao đun nóng không khí ở áp suất không đổi làm giảm khối lượng riêng của nó
+      - Dùng đúng nhiệt độ tuyệt đối trong các tính toán về chất khí
+    blocks:
+      - markdown: |
+          Một khinh khí cầu chở vài tấn gồm giỏ, đầu đốt, nhiên liệu và hành khách. Nó không có
+          cánh, không động cơ, không cánh quạt. Nó bay lên vì không khí bên trong nó nóng.
+
+          Đó là toàn bộ cơ chế — và nó suy ra từ một phương trình.
+      - {}
+      - title: T luôn tính bằng kelvin
+        text: >-
+          Đây là sai lầm phổ biến nhất trong các bài toán chất khí. Đun không khí từ 20 °C lên
+          100 °C không làm nhiệt độ tăng gấp năm lần — nó đi từ 293 K lên 373 K, tức hệ số 1,27.
+          Dùng độ Celsius ở đây cho ra kết quả không chỉ thiếu chính xác mà là vô nghĩa, vì thang
+          đo ấy có gốc tuỳ tiện.
+      - markdown: |
+          ### Vì sao đun nóng làm không khí bay lên
+
+          Vỏ khinh khí cầu hở ở phía dưới, nên áp suất bên trong luôn bằng áp suất bên ngoài. Thể
+          tích thì do lớp vải ấn định. Vậy trong $pV = nRT$, với cả $p$ và $V$ đều giữ nguyên,
+          tăng $T$ buộc phải làm giảm $n$ — không khí bị đẩy ra khỏi miệng vỏ.
+
+          Ít phân tử hơn trong cùng một thể tích nghĩa là **khối lượng riêng nhỏ hơn**. Và một
+          vật có khối lượng riêng nhỏ hơn chất lưu bao quanh nó thì chịu một hợp lực hướng lên.
+      - title: Lực nâng là bao nhiêu?
+        steps:
+          - text: "Vỏ khinh khí cầu chứa 2800 m³. Không khí ngoài trời ở 15 °C (288 K) có khối lượng riêng khoảng 1,23 kg/m³."
+          - text: "Đun không khí bên trong lên 100 °C (373 K). Ở áp suất không đổi, khối lượng riêng tỉ lệ nghịch với nhiệt độ tuyệt đối:"
+            math: "\\rho_{\\text{in}} = 1.23 \\times \\frac{288}{373} = 0.95\\text{ kg/m}^3"
+          - text: "Khối lượng không khí bị chiếm chỗ:"
+            math: "m_{\\text{out}} = 1.23 \\times 2800 = 3444\\text{ kg}"
+          - text: "Khối lượng không khí bên trong:"
+            math: "m_{\\text{in}} = 0.95 \\times 2800 = 2660\\text{ kg}"
+          - text: "Hiệu số chính là tải trọng khinh khí cầu nâng được — khoảng 780 kg, kể cả bản thân lớp vỏ."
+      - headers: ["Tình huống", "Giữ không đổi", "Hệ quả"]
+        rows:
+          - ["Khinh khí cầu", "p và V", "Đun nóng đẩy khí ra, khối lượng riêng giảm"]
+          - ["Lốp xe giữa trưa nắng", "V và n", "Đun nóng làm tăng áp suất"]
+          - ["Nạp bình khí lặn", "V và T", "Nhiều mol hơn nghĩa là áp suất lớn hơn"]
+          - ["Ấn pit-tông xi-lanh", "n và T", "Thể tích nhỏ hơn nghĩa là áp suất lớn hơn"]
+      - title: Đọc phương trình như một công cụ
+        text: >-
+          Gần như mọi bài toán chất khí đều được giải theo cùng một cách: xác định đại lượng nào
+          giữ nguyên, rút gọn chúng khỏi cả hai vế của pV = nRT, và mối liên hệ bạn cần chính là
+          phần còn lại. Định luật Boyle và định luật Charles không phải hai quy tắc riêng cần học
+          thuộc — chúng là phương trình này với một đại lượng được giữ không đổi.
+      - title: Chỗ chữ "lí tưởng" không còn đúng
+        text: >-
+          Phương trình giả sử các phân tử không có thể tích và không hút nhau. Cả hai giả thiết
+          đều đúng tốt với không khí ở áp suất thường ngày. Gần điểm hoá lỏng — chất khí ở áp
+          suất rất cao hoặc gần nhiệt độ sôi — khí thực lệch đi đáng kể.
+      - {}
+      - points:
+          - pV = nRT liên hệ áp suất, thể tích, lượng chất và nhiệt độ tuyệt đối
+          - Nhiệt độ luôn phải tính bằng kelvin
+          - Đun nóng không khí ở áp suất và thể tích không đổi sẽ đẩy phân tử ra ngoài, làm giảm khối lượng riêng
+          - Khinh khí cầu bay lên vì không khí bên trong có khối lượng riêng nhỏ hơn không khí bên ngoài
+
+  lesson-physics-12-transformers:
+    title: Lí do đường dây tải điện chạy ở 500.000 vôn
+    summary: Truyền tải điện ở hiệu điện thế cao không phải một lựa chọn thiết kế. Đó là số học.
+    objectives:
+      - Áp dụng công thức tỉ số vòng dây của máy biến áp
+      - Giải thích vì sao hao phí truyền tải giảm khi hiệu điện thế tăng
+      - Mô tả vì sao lưới điện dùng dòng điện xoay chiều
+    blocks:
+      - markdown: |
+          Dây dẫn trên cột điện cao thế truyền điện ở hàng trăm nghìn vôn. Ổ cắm trên tường nhà
+          bạn cấp 220 V. Ở đâu đó giữa hai chỗ ấy, hiệu điện thế được hạ xuống — vài lần.
+
+          Vì sao phải phiền phức đến thế? Sao không phát điện ở 220 V rồi đưa thẳng tới các hộ gia đình?
+      - markdown: |
+          ### Cái giá của việc tải dòng điện
+
+          Dây tải điện có điện trở. Công suất hao phí do đốt nóng dây là:
+
+          $$P_{\text{hao phí}} = I^2 R$$
+
+          Hãy để ý nó phụ thuộc vào **bình phương cường độ dòng điện**, và hoàn toàn không phụ
+          thuộc vào hiệu điện thế. Trong khi đó công suất thực sự truyền đi là $P = UI$.
+
+          Vậy với một lượng công suất truyền đi cố định, tăng U cho phép giảm I theo đúng tỉ lệ —
+          và hao phí giảm theo *bình phương* của mức giảm đó.
+      - title: Cùng 10 MW, hai cách làm
+        steps:
+          - text: "Truyền 10 MW trên đường dây có điện trở 5 Ω ở 10 kV."
+            math: "I = \\frac{10^7}{10^4} = 1000\\text{ A} \\;\\Rightarrow\\; P_{\\text{lost}} = 1000^2 \\times 5 = 5\\text{ MW}"
+          - text: "Một nửa công suất bị đốt thành nhiệt trên dây. Giờ thử ở 400 kV."
+            math: "I = \\frac{10^7}{4\\times10^5} = 25\\text{ A} \\;\\Rightarrow\\; P_{\\text{lost}} = 25^2 \\times 5 = 3.1\\text{ kW}"
+          - text: "Hao phí giảm từ 5 MW xuống còn khoảng 3 kW — hệ số 1600, chỉ từ hệ số 40 ở hiệu điện thế."
+      - title: Đây là lí do lưới điện dùng dòng xoay chiều
+        text: >-
+          Máy biến áp hoạt động nhờ cảm ứng điện từ, mà cảm ứng đòi hỏi một từ trường *biến
+          thiên*. Dòng điện một chiều ổn định tạo ra từ trường ổn định và không cảm ứng ra gì cả.
+          Dòng xoay chiều biến thiên liên tục, đúng thứ máy biến áp cần. Lưới điện dùng dòng xoay
+          chiều vì máy biến áp chỉ làm việc được với dòng xoay chiều.
+      - {}
+      - markdown: |
+          Cuộn thứ cấp nhiều vòng hơn cuộn sơ cấp thì **tăng** hiệu điện thế; ít vòng hơn thì
+          **hạ** nó xuống. Trong máy biến áp lí tưởng không có công suất nào mất đi, nên tăng
+          hiệu điện thế tất yếu làm giảm cường độ dòng điện theo đúng hệ số ấy:
+
+          $$U_1 I_1 = U_2 I_2$$
+      - headers: ["Khâu", "Hiệu điện thế", "Vì sao"]
+        rows:
+          - ["Máy phát", "25 kV", "Do thiết kế của máy quy định"]
+          - ["Máy biến áp tăng thế", "500 kV", "Giảm thiểu I²R trên quãng đường dài"]
+          - ["Trạm biến áp khu vực", "110 kV", "Quãng đường ngắn hơn, vận hành an toàn hơn"]
+          - ["Trạm biến áp địa phương", "22 kV", "Phân phối trong một quận"]
+          - ["Trạm biến áp đầu phố", "220 V", "An toàn cho sinh hoạt gia đình"]
+      - title: Năng lượng thực sự đi đâu
+        text: >-
+          Máy biến áp không tạo ra năng lượng. Nó đánh đổi hiệu điện thế lấy cường độ dòng điện ở
+          công suất không đổi. Nếu bạn tăng hiệu điện thế lên mười lần thì cường độ dòng điện
+          giảm mười lần — và chính sự đánh đổi đó làm cho việc truyền tải đường dài trở nên khả thi.
+      - title: Máy biến áp thật không lí tưởng
+        text: >-
+          Máy thật hao một chút vì điện trở của cuộn dây, vì dòng Fu-cô trong lõi (được giảm bớt
+          bằng cách ghép lõi từ nhiều lá mỏng), và vì phải từ hoá lại lõi liên tục. Các máy biến
+          áp lớn của lưới điện vẫn đạt hiệu suất trên 99%.
+      - {}
+      - points:
+          - Hao phí truyền tải là I bình phương R, nên nó phụ thuộc vào cường độ dòng điện chứ không phải hiệu điện thế
+          - Nâng hiệu điện thế truyền tải làm giảm cường độ dòng điện và cắt hao phí theo bình phương
+          - Tỉ số vòng dây quyết định tỉ số hiệu điện thế, còn cường độ dòng điện biến đổi ngược lại
+          - Máy biến áp cần từ trường biến thiên, vì thế lưới điện dùng dòng xoay chiều
+
+  lesson-physics-12-radiocarbon:
+    title: Xác định niên đại quá khứ bằng một hạt nhân đang phân rã
+    summary: Phóng xạ hoàn toàn ngẫu nhiên với một nguyên tử và hoàn toàn dự đoán được với một nghìn tỉ nguyên tử.
+    objectives:
+      - Áp dụng định luật phân rã theo hàm mũ N = N₀e^(−λt)
+      - Liên hệ hằng số phóng xạ với chu kì bán rã
+      - Giải thích phương pháp xác định niên đại bằng cacbon phóng xạ và các giới hạn của nó
+    blocks:
+      - markdown: |
+          Lấy một hạt nhân cacbon-14 duy nhất. Khi nào nó sẽ phân rã? Không có câu trả lời. Không
+          phải "chúng ta chưa biết" — mà thực sự không tồn tại một sự thật nào về điều đó. Hạt
+          nhân không già đi, không trở nên dễ phân rã hơn theo thời gian, và không mang trong nó
+          chiếc đồng hồ nào cả.
+
+          Giờ hãy lấy một gam cacbon-14, chứa chừng 10²² hạt nhân. Đúng 5.730 năm kể từ bây giờ,
+          một nửa số đó sẽ đã phân rã. Bạn có thể đem cả một phòng thí nghiệm ra cá cược.
+
+          Ngẫu nhiên hoàn hảo ở từng cá thể; dự đoán hoàn hảo ở tập hợp.
+      - markdown: |
+          ### Định luật phân rã
+
+          Mỗi hạt nhân có một xác suất phân rã cố định trong mỗi giây, gọi là hằng số phóng xạ λ.
+          Số hạt phân rã trong một khoảng thời gian ngắn do đó tỉ lệ với số hạt còn lại — điều
+          này cho ra một hàm mũ:
+
+          $$N = N_0 e^{-\lambda t}$$
+
+          Đặt $N = N_0/2$ rồi giải sẽ cho mối liên hệ với chu kì bán rã:
+
+          $$t_{1/2} = \frac{\ln 2}{\lambda}$$
+      - config:
+          functions:
+            - {expression: "100*0.5**(x/5730)", label: "Lượng cacbon-14 còn lại (%)", color: "primary"}
+            - {expression: "50", label: "Một chu kì bán rã", color: "muted"}
+          xRange: [0, 30000]
+          yRange: [0, 100]
+          axisLabels: {x: "năm", y: "phần trăm còn lại"}
+      - title: Đường cong không bao giờ chạm số không
+        text: >-
+          Mỗi chu kì bán rã lấy đi một nửa phần còn lại, chứ không phải một lượng cố định. Sau 10
+          chu kì bán rã còn khoảng 0,1%; sau 20 chu kì, còn khoảng một phần triệu. Vì thế câu hỏi
+          "bao lâu thì hết sạch" không có lời đáp — nhưng câu hỏi "bao lâu thì không còn đo được"
+          thì có.
+      - markdown: |
+          ### Xác định niên đại một vật từng sống
+
+          Tia vũ trụ liên tục tạo ra cacbon-14 ở tầng khí quyển trên cao, giữ cho tỉ lệ của nó
+          trong khí CO₂ khí quyển gần như không đổi. Cây đang sống trao đổi cacbon với không khí
+          nên giữ đúng tỉ lệ ấy. Con vật ăn cây đó cũng vậy.
+
+          Khi chết, sự trao đổi dừng lại. Không còn cacbon-14 mới đi vào, và lượng đang có phân
+          rã với chu kì bán rã 5.730 năm. Đo lượng còn lại so với cacbon-12 bền, và định luật
+          phân rã cho ta khoảng thời gian kể từ lúc chết.
+      - title: Một mẩu than từ bếp lửa cổ
+        steps:
+          - text: "Một mẫu vật còn 25% lượng cacbon-14 so với mẫu vật đang sống."
+          - text: "25% là một nửa, rồi lại một nửa nữa — hai chu kì bán rã."
+            math: "N/N_0 = 0.25 = \\left(\\tfrac{1}{2}\\right)^2"
+          - text: "Vậy tuổi của nó là:"
+            math: "t = 2 \\times 5730 = 11\\,460\\text{ years}"
+          - text: "Với giá trị không phải luỹ thừa đẹp của một nửa, hãy dùng dạng lôgarit: t = −ln(N/N₀)/λ."
+      - headers: ["Đồng vị", "Chu kì bán rã", "Dùng để xác định niên đại"]
+        rows:
+          - ["Cacbon-14", "5.730 năm", "Vật liệu từng sống, tới khoảng 50.000 năm"]
+          - ["Urani-238", "4,5 tỉ năm", "Đá, tuổi của Trái Đất"]
+          - ["Kali-40", "1,25 tỉ năm", "Đá núi lửa, di chỉ người vượn"]
+          - ["Tecneti-99m", "6 giờ", "Chẩn đoán hình ảnh y học, không dùng xác định niên đại"]
+      - title: Điều mà cacbon phóng xạ không làm được
+        text: >-
+          Nó chỉ dùng được cho vật liệu từng sống — không bao giờ dùng cho đá hay kim loại. Quá
+          khoảng mười chu kì bán rã (50.000 năm), lượng cacbon-14 còn lại quá ít để đo tin cậy.
+          Và tỉ lệ trong khí quyển không hoàn toàn cố định: các vụ thử vũ khí hạt nhân thập niên
+          1950 và việc đốt nhiên liệu hoá thạch đều làm nó dịch chuyển, nên niên đại thực tế phải
+          được hiệu chỉnh theo vòng năm của cây chứ không đọc thẳng từ phương trình.
+      - {}
+      - points:
+          - Phân rã là ngẫu nhiên với một hạt nhân và dự đoán được với một số lượng lớn
+          - N = N₀e^(−λt), và chu kì bán rã bằng ln 2 chia cho λ
+          - Mỗi chu kì bán rã lấy đi một nửa phần còn lại, nên đường cong không bao giờ chạm số không
+          - Xác định niên đại bằng cacbon dùng được cho vật liệu từng sống tới khoảng 50.000 năm

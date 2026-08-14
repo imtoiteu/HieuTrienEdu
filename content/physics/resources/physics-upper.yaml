@@ -1,0 +1,391 @@
+# Further reading for physics grades 10-12 — curated links to open repositories.
+#
+# Every URL here was fetched and confirmed to resolve before being committed. Licences are
+# recorded because most of these sources are openly licensed *on the condition* that they are
+# credited, and the lesson page renders the attribution for exactly that reason.
+#
+# A resource attaches to a `topic` (useful anywhere in it) or a `lesson` (specific to that one).
+#
+# On PhET: simulations published before 29 March 2026 are licensed CC BY 4.0. Everything linked
+# here is a long-established simulation that predates that change. We link rather than
+# redistribute, which keeps us well inside the terms either way.
+defaults:
+  resource_type: link
+  is_public: true
+
+resources:
+  # ---------------------------------------------------------------------------- grade 10
+  - slug: res-p10-forces-motion-sim
+    topic: physics-10-newton-laws
+    resource_type: simulation
+    title: "PhET: Forces and Motion — Basics"
+    description: >-
+      Push a crate and watch the free-body diagram update live. The friction toggle makes the
+      difference between applied force and net force impossible to miss.
+    url: https://phet.colorado.edu/en/simulations/forces-and-motion-basics
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-p10-projectile-sim
+    lesson: lesson-physics-10-projectiles
+    resource_type: simulation
+    title: "PhET: Projectile Motion"
+    description: >-
+      Fire a cannonball at any angle and speed, with air resistance on or off. Turn it off and
+      confirm for yourself that 45 degrees really does give the greatest range.
+    url: https://phet.colorado.edu/en/simulations/projectile-motion
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-p10-collision-lab
+    lesson: lesson-physics-10-crumple-zones
+    resource_type: simulation
+    title: "PhET: Collision Lab"
+    description: >-
+      Set two masses colliding and watch momentum stay constant while kinetic energy does not.
+      The elasticity slider turns a bouncing collision into a sticking one.
+    url: https://phet.colorado.edu/en/simulations/collision-lab
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-p10-energy-skate-park
+    topic: physics-10-work-energy
+    resource_type: simulation
+    title: "PhET: Energy Skate Park"
+    description: >-
+      Build a track and watch kinetic and potential energy trade off in real time. Adding
+      friction shows exactly where the "missing" energy goes.
+    url: https://phet.colorado.edu/en/simulations/energy-skate-park
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 1
+
+  - slug: res-p10-hookes-law-sim
+    topic: physics-10-circular-elastic
+    resource_type: simulation
+    title: "PhET: Hooke's Law"
+    description: >-
+      Stretch a spring and see the force and the stored energy graphed together — one linear,
+      one quadratic.
+    url: https://phet.colorado.edu/en/simulations/hookes-law
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-p10-openstax-mechanics
+    topic: physics-10-describing-motion
+    resource_type: reading
+    title: "OpenStax: University Physics Volume 1"
+    description: >-
+      A complete free university-level mechanics textbook. Chapters 3 to 9 cover this entire
+      grade in more depth than the syllabus requires, with worked examples throughout.
+    url: https://openstax.org/details/books/university-physics-volume-1
+    license: CC BY 4.0
+    attribution: OpenStax, Rice University
+    position: 0
+
+  - slug: res-p10-openstax-college-physics
+    topic: physics-10-friction-drag
+    resource_type: reading
+    title: "OpenStax: College Physics 2e"
+    description: >-
+      A gentler, less calculus-heavy treatment than University Physics. The drag and terminal
+      velocity section is where the skydiver numbers in our lesson come from.
+    url: https://openstax.org/details/books/college-physics-2e
+    license: CC BY 4.0
+    attribution: OpenStax, Rice University
+    position: 0
+
+  # ---------------------------------------------------------------------------- grade 11
+  - slug: res-p11-tacoma-footage
+    lesson: lesson-physics-11-resonance
+    resource_type: video
+    title: "Wikimedia Commons: the Tacoma Narrows Bridge collapse (1940)"
+    description: >-
+      The original film of the deck twisting and failing. Worth watching for the amplitude
+      alone — and for how ordinary the wind looks.
+    url: https://commons.wikimedia.org/wiki/File:Tacoma_Narrows_Bridge_destruction.ogv
+    license: Public domain (see the file page)
+    attribution: Wikimedia Commons
+    position: 0
+
+  - slug: res-p11-tacoma-background
+    lesson: lesson-physics-11-resonance
+    resource_type: reading
+    title: "Wikipedia: Tacoma Narrows Bridge (1940)"
+    description: >-
+      The engineering background, including why the debate over whether this was textbook
+      resonance or aeroelastic flutter is more subtle than most physics courses admit.
+    url: https://en.wikipedia.org/wiki/Tacoma_Narrows_Bridge_(1940)
+    license: CC BY-SA 4.0
+    attribution: Wikipedia contributors
+    position: 1
+
+  - slug: res-p11-normal-modes
+    topic: physics-11-shm
+    resource_type: simulation
+    title: "PhET: Normal Modes"
+    description: >-
+      Drive a system of masses at different frequencies and watch the amplitude explode when you
+      hit a natural mode. This is the resonance curve, made interactive.
+    url: https://phet.colorado.edu/en/simulations/normal-modes
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-p11-pendulum-lab
+    topic: physics-11-shm
+    resource_type: simulation
+    title: "PhET: Pendulum Lab"
+    description: >-
+      Change the mass and confirm the period does not move. Change the length and watch it obey
+      the square root. A two-minute experiment that settles a common misconception.
+    url: https://phet.colorado.edu/en/simulations/pendulum-lab
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 1
+
+  - slug: res-p11-wave-interference
+    lesson: lesson-physics-11-noise-cancelling
+    resource_type: simulation
+    title: "PhET: Wave Interference"
+    description: >-
+      Two sources, one tank. Drag the detector into a quiet band and then a loud one, and read
+      the path difference that produced each.
+    url: https://phet.colorado.edu/en/simulations/wave-interference
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-p11-sound-waves
+    topic: physics-11-standing-doppler
+    resource_type: simulation
+    title: "PhET: Sound Waves"
+    description: >-
+      Visualise the pressure variations of a sound wave, and add a second speaker to see
+      interference in air rather than on water.
+    url: https://phet.colorado.edu/en/simulations/sound-waves
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-p11-charges-and-fields
+    topic: physics-11-coulomb
+    resource_type: simulation
+    title: "PhET: Charges and Fields"
+    description: >-
+      Place charges and map the field with a sensor. Building a dipole and then a parallel-plate
+      arrangement makes the uniform-field idea concrete.
+    url: https://phet.colorado.edu/en/simulations/charges-and-fields
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-p11-coulombs-law-sim
+    topic: physics-11-coulomb
+    resource_type: simulation
+    title: "PhET: Coulomb's Law"
+    description: >-
+      Vary the charges and the separation and watch the force change. Halving the distance
+      quadrupling the force is the inverse-square law you can feel.
+    url: https://phet.colorado.edu/en/simulations/coulombs-law
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 1
+
+  - slug: res-p11-circuit-kit
+    topic: physics-11-circuit-analysis
+    resource_type: simulation
+    title: "PhET: Circuit Construction Kit — DC"
+    description: >-
+      Build any circuit in this unit and measure it with the virtual ammeter and voltmeter. The
+      battery has an adjustable internal resistance, which is exactly the point.
+    url: https://phet.colorado.edu/en/simulations/circuit-construction-kit-dc
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-p11-openstax-em
+    topic: physics-11-coulomb
+    resource_type: reading
+    title: "OpenStax: University Physics Volume 2"
+    description: >-
+      Free and complete coverage of electric fields, potential, capacitance and DC circuits —
+      chapters 5 to 10 map closely onto this grade.
+    url: https://openstax.org/details/books/university-physics-volume-2
+    license: CC BY 4.0
+    attribution: OpenStax, Rice University
+    position: 0
+
+  # ---------------------------------------------------------------------------- grade 12
+  - slug: res-p12-gas-properties
+    lesson: lesson-physics-12-hot-air-balloon
+    resource_type: simulation
+    title: "PhET: Gas Properties"
+    description: >-
+      Pump molecules into a box and hold pressure, volume or temperature constant while you vary
+      the others. Every gas law in this unit can be discovered here in about ten minutes.
+    url: https://phet.colorado.edu/en/simulations/gas-properties
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-p12-states-of-matter
+    topic: physics-12-molecular-model
+    resource_type: simulation
+    title: "PhET: States of Matter"
+    description: >-
+      Watch molecular motion speed up as temperature rises. It makes the link between
+      temperature and mean kinetic energy visible rather than asserted.
+    url: https://phet.colorado.edu/en/simulations/states-of-matter
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-p12-energy-forms
+    topic: physics-12-first-law
+    resource_type: simulation
+    title: "PhET: Energy Forms and Changes"
+    description: >-
+      Follow energy through a whole chain — burner to water to steam to generator to bulb — and
+      see how much is rejected at each stage.
+    url: https://phet.colorado.edu/en/simulations/energy-forms-and-changes
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-p12-faradays-law
+    lesson: lesson-physics-12-transformers
+    resource_type: simulation
+    title: "PhET: Faraday's Law"
+    description: >-
+      Move a magnet through a coil and watch the induced voltage appear only while it is moving.
+      Stopping the magnet inside the coil is the demonstration worth doing.
+    url: https://phet.colorado.edu/en/simulations/faradays-law
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-p12-generator
+    lesson: lesson-physics-12-transformers
+    resource_type: simulation
+    title: "PhET: Generator"
+    description: >-
+      A water wheel turns a magnet inside a coil and lights a bulb. The whole chain from
+      mechanical energy to electricity, in one screen.
+    url: https://phet.colorado.edu/en/simulations/generator
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 1
+
+  - slug: res-p12-magnets-electromagnets
+    topic: physics-12-magnetic-force
+    resource_type: simulation
+    title: "PhET: Magnets and Electromagnets"
+    description: >-
+      Compare the field of a bar magnet with the field of a current-carrying coil, and see why
+      they are the same shape.
+    url: https://phet.colorado.edu/en/simulations/magnets-and-electromagnets
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-p12-radioactive-dating
+    lesson: lesson-physics-12-radiocarbon
+    resource_type: simulation
+    title: "PhET: Radioactive Dating Game"
+    description: >-
+      Date real objects by measuring their remaining carbon-14 or uranium-238. It also shows
+      individual nuclei decaying at random, which is the point the lesson opens with.
+    url: https://phet.colorado.edu/en/simulations/radioactive-dating-game
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-p12-build-a-nucleus
+    topic: physics-12-nuclear-energy
+    resource_type: simulation
+    title: "PhET: Build a Nucleus"
+    description: >-
+      Add protons and neutrons and watch stability change. It builds an intuition for why the
+      band of stable isotopes curves the way it does.
+    url: https://phet.colorado.edu/en/simulations/build-a-nucleus
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-p12-nuclear-fission
+    topic: physics-12-nuclear-energy
+    resource_type: simulation
+    title: "PhET: Nuclear Fission"
+    description: >-
+      Fire a neutron at a uranium-235 nucleus, then build a reactor and try to keep the chain
+      reaction under control with the moderator rods.
+    url: https://phet.colorado.edu/en/simulations/nuclear-fission
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 1
+
+  - slug: res-p12-nasa-sun
+    topic: physics-12-induction-ac
+    resource_type: reading
+    title: "NASA: the Sun"
+    description: >-
+      The Sun's magnetic field, flipping every eleven years and driving solar storms that induce
+      currents in power grids on Earth. Electromagnetic induction on the largest scale you will
+      meet.
+    url: https://science.nasa.gov/sun/
+    license: Public domain
+    attribution: NASA
+    position: 0
+
+  - slug: res-p12-nasa-aurora
+    topic: physics-12-magnetic-force
+    resource_type: reading
+    title: "NASA Space Place: what causes an aurora?"
+    description: >-
+      Charged particles from the Sun spiralling along Earth's magnetic field lines — a magnetic
+      force on a moving charge, several hundred kilometres tall.
+    url: https://spaceplace.nasa.gov/aurora/en/
+    license: Public domain
+    attribution: NASA
+    position: 1
+
+  - slug: res-p12-mri-images
+    lesson: lesson-physics-12-radiocarbon
+    resource_type: image
+    title: "Wikimedia Commons: magnetic resonance imaging"
+    description: >-
+      Real MRI scans. The scanner works by resonance — a radio pulse tuned to the frequency at
+      which hydrogen nuclei precess in a strong magnetic field.
+    url: https://commons.wikimedia.org/wiki/Category:Magnetic_resonance_imaging
+    license: Various open licences — check each file
+    attribution: Wikimedia Commons contributors
+    position: 1
+
+  - slug: res-p12-openstax-modern
+    topic: physics-12-decay-applications
+    resource_type: reading
+    title: "OpenStax: University Physics Volume 3"
+    description: >-
+      Free coverage of nuclear physics, binding energy, decay and radiation, with far more
+      worked examples than a school textbook carries.
+    url: https://openstax.org/details/books/university-physics-volume-3
+    license: CC BY 4.0
+    attribution: OpenStax, Rice University
+    position: 0
+
+  - slug: res-p12-owid-energy
+    topic: physics-12-first-law
+    resource_type: dataset
+    title: "Our World in Data: energy"
+    description: >-
+      Real national data on how electricity is generated and how much is lost in conversion.
+      Useful for putting a number on the efficiency limits this unit derives.
+    url: https://ourworldindata.org/energy
+    license: CC BY 4.0
+    attribution: Our World in Data
+    position: 1

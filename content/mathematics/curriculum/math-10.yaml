@@ -1,0 +1,213 @@
+# Mathematics — Math 10
+#
+# The first upper-secondary year (GDPT 2018). Grade 9 finished the quadratic and the right
+# triangle; grade 10 generalises both — quadratics become inequalities and optimisation
+# problems, and trigonometry escapes the right angle via the sine and cosine rules. Sets and
+# logic arrive as the language the rest of the programme is written in, and combinatorics gives
+# probability something to count.
+subject:
+  slug: mathematics
+  name: Mathematics
+  icon: calculator
+  color: "#FF6B6B"
+  position: 1
+
+course:
+  slug: math-10
+  title: Mathematics — Grade 10
+  grade: 10
+  summary: Logic and sets, quadratic functions, triangle trigonometry, vectors and counting.
+  description: >-
+    Grade 10 opens upper-secondary mathematics. Students learn to state and negate a
+    mathematical claim precisely, solve systems of inequalities and use them to optimise a real
+    constraint, work with quadratic functions as objects rather than equations to be solved,
+    extend trigonometry to any triangle with the sine and cosine rules, meet vectors and the dot
+    product, and count arrangements well enough to compute genuine probabilities.
+  estimated_hours: 120
+
+units:
+  - slug: math-10-logic-sets
+    title: Logic, Sets and Inequalities
+    icon: braces
+    summary: Saying exactly what you mean, and describing a region of the plane.
+    topics:
+      - slug: math-10-statements-sets
+        title: Statements and Sets
+        summary: The grammar of mathematics — and where "not all" differs from "none".
+        skills:
+          - slug: math-10-statements
+            name: Mathematical statements and negation
+            description: >-
+              Identify a mathematical statement, form its negation, and use the universal and
+              existential quantifiers correctly.
+            difficulty: 3
+            tags: [logic, foundation]
+          - slug: math-10-set-operations
+            name: Set operations
+            description: >-
+              Compute unions, intersections, differences and complements, and represent them on
+              a Venn diagram.
+            difficulty: 3
+            tags: [logic, foundation]
+
+      - slug: math-10-inequalities-2d
+        title: Inequalities in Two Variables
+        summary: A budget, a timetable or a factory's capacity, drawn as a region.
+        skills:
+          - slug: math-10-linear-inequality-2d
+            name: Linear inequalities in two variables
+            description: >-
+              Sketch the solution region of a linear inequality and of a system of them.
+            difficulty: 4
+            prerequisites: [math-7-solve-inequalities, math-8-slope-intercept]
+            tags: [algebra, core]
+          - slug: math-10-linear-programming
+            name: Optimising over a feasible region
+            description: >-
+              Maximise or minimise a linear objective over the vertices of a feasible region.
+            difficulty: 5
+            prerequisites: [math-10-linear-inequality-2d]
+            tags: [algebra]
+
+  - slug: math-10-quadratic-functions
+    title: Quadratic Functions
+    icon: chart-spline
+    summary: The parabola as a tool for modelling, not just an equation to solve.
+    topics:
+      - slug: math-10-quadratic-graphs
+        title: Quadratic Functions and their Graphs
+        summary: Vertex, axis of symmetry, and where the curve sits relative to the axis.
+        skills:
+          - slug: math-10-quadratic-graph
+            name: The quadratic function and its graph
+            description: >-
+              Find the vertex, axis of symmetry and intercepts of a quadratic, and describe its
+              variation.
+            difficulty: 4
+            prerequisites: [math-9-sketch-parabola, math-9-parabola-features]
+            tags: [functions, core]
+          - slug: math-10-quadratic-inequalities
+            name: Quadratic inequalities
+            description: >-
+              Solve a quadratic inequality using a sign table or the shape of the parabola.
+            difficulty: 5
+            prerequisites: [math-9-quadratic-by-factorising, math-10-quadratic-graph]
+            tags: [functions, core]
+
+      - slug: math-10-quadratic-applications
+        title: Modelling with Quadratics
+        summary: Maximum area, maximum profit, maximum height.
+        skills:
+          - slug: math-10-quadratic-optimisation
+            name: Maximum and minimum problems
+            description: >-
+              Translate a worded situation into a quadratic and use its vertex to find the
+              optimal value.
+            difficulty: 5
+            prerequisites: [math-10-quadratic-graph]
+            tags: [functions]
+          - slug: math-10-quadratic-reducible
+            name: Equations reducible to quadratics
+            description: >-
+              Solve equations containing a square root or a repeated expression by reducing them
+              to a quadratic, and check for extraneous roots.
+            difficulty: 5
+            prerequisites: [math-9-quadratic-formula]
+            tags: [algebra]
+
+  - slug: math-10-trig-vectors
+    title: Triangle Trigonometry and Vectors
+    icon: triangle
+    summary: Trigonometry beyond the right angle, and quantities that carry a direction.
+    topics:
+      - slug: math-10-triangle-relations
+        title: Relations in a Triangle
+        summary: How surveyors measure a distance they cannot walk.
+        skills:
+          - slug: math-10-law-of-sines
+            name: The law of sines
+            description: >-
+              Apply a/sin A = b/sin B = c/sin C to find an unknown side or angle in any triangle.
+            difficulty: 4
+            prerequisites: [math-9-trig-ratios, math-7-triangle-angles]
+            tags: [geometry, core]
+          - slug: math-10-law-of-cosines
+            name: The law of cosines
+            description: >-
+              Apply c^2 = a^2 + b^2 - 2ab cos C, and recognise it as Pythagoras generalised.
+            difficulty: 4
+            prerequisites: [math-9-trig-ratios, math-8-pythagoras-hypotenuse]
+            tags: [geometry, core]
+          - slug: math-10-triangle-area
+            name: Area of a triangle
+            description: >-
+              Find the area of a triangle from two sides and the included angle, and from
+              Heron's formula.
+            difficulty: 4
+            prerequisites: [math-10-law-of-cosines]
+            tags: [geometry]
+
+      - slug: math-10-vectors
+        title: Vectors in the Plane
+        summary: Adding a wind to an aircraft's heading.
+        skills:
+          - slug: math-10-vector-operations
+            name: Adding and scaling vectors
+            description: >-
+              Add, subtract and scale vectors both geometrically and in component form.
+            difficulty: 4
+            prerequisites: [math-6-coordinate-plane]
+            tags: [geometry, core]
+          - slug: math-10-dot-product
+            name: The dot product
+            description: >-
+              Compute the dot product, use it to find the angle between two vectors, and test
+              for perpendicularity.
+            difficulty: 5
+            prerequisites: [math-10-vector-operations, math-9-trig-ratios]
+            tags: [geometry]
+
+  - slug: math-10-counting-probability
+    title: Counting, Statistics and Probability
+    icon: dices
+    summary: Counting outcomes carefully enough to put a number on a chance.
+    topics:
+      - slug: math-10-counting
+        title: Counting
+        summary: Why a six-character password is not six times harder than one character.
+        skills:
+          - slug: math-10-counting-rules
+            name: The addition and multiplication rules
+            description: >-
+              Count outcomes using the rules of sum and product, including cases with
+              restrictions.
+            difficulty: 4
+            tags: [probability, core]
+          - slug: math-10-permutations-combinations
+            name: Permutations and combinations
+            description: >-
+              Distinguish arrangements from selections and compute nPr and nCr.
+            difficulty: 5
+            prerequisites: [math-10-counting-rules]
+            tags: [probability, core]
+
+      - slug: math-10-statistics-probability
+        title: Spread and Probability
+        summary: An average alone hides everything that matters about a data set.
+        skills:
+          - slug: math-10-spread-measures
+            name: Variance and standard deviation
+            description: >-
+              Calculate the variance and standard deviation of a data set and interpret them as
+              a spread around the mean.
+            difficulty: 4
+            prerequisites: [math-6-mean-median-mode, math-9-quartiles]
+            tags: [statistics, core]
+          - slug: math-10-classical-probability
+            name: Classical probability
+            description: >-
+              Compute the probability of an event by counting equally likely outcomes, and apply
+              the complement and addition rules.
+            difficulty: 4
+            prerequisites: [math-7-simple-probability, math-10-permutations-combinations]
+            tags: [probability, core]

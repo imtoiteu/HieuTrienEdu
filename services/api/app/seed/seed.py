@@ -167,7 +167,7 @@ def seed_staff(db: Session) -> dict[str, object]:
                 "and for refusing to let anyone move on from fractions until they truly have them."
             ),
             "subjects": ["mathematics"],
-            "grades": [6, 7, 8, 9],
+            "grades": [6, 7, 8, 9, 10, 11, 12],
             "qualifications": ["MSc Mathematics Education", "National teaching certification"],
             "years_experience": 12,
             "languages": ["Vietnamese", "English"],
@@ -189,7 +189,7 @@ def seed_staff(db: Session) -> dict[str, object]:
                 "work towards the equation that explains it."
             ),
             "subjects": ["physics"],
-            "grades": [6, 7, 8, 9],
+            "grades": [6, 7, 8, 9, 10, 11, 12],
             "qualifications": ["MSc Physics", "Advanced pedagogy certification"],
             "years_experience": 11,
             "languages": ["Vietnamese", "English"],

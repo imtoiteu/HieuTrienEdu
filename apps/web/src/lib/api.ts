@@ -305,6 +305,18 @@ export interface LessonBlock {
   [key: string]: unknown;
 }
 
+/** A curated link out of the site — a simulation, an open textbook chapter, a dataset. */
+export interface LessonResource {
+  id: number;
+  title: string;
+  description: string | null;
+  resource_type: string;
+  url: string;
+  host: string | null;
+  license: string | null;
+  attribution: string | null;
+}
+
 export interface LessonDetail extends LessonSummary {
   blocks: LessonBlock[];
   topic_slug: string | null;
@@ -323,6 +335,7 @@ export interface LessonDetail extends LessonSummary {
     playback_url: string | null;
     attribution: string | null;
   } | null;
+  resources: LessonResource[];
   attribution: string | null;
   license: string | null;
   progress_percent: number | null;

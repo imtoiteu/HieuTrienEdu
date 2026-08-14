@@ -18,25 +18,17 @@ export async function generateMetadata({
 export default async function PhysicsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = await params;
   const locale = isLocale(raw) ? raw : 'en';
+  const t = getTranslator(locale);
 
   return (
     <SubjectPage
       locale={locale}
       slug="physics"
-      intro="Measurement, motion, forces, energy, electricity, waves and the atom — physics taught as a measuring science, where every idea ends in a calculation a student can actually do."
+      intro={t('subject.physics.intro')}
       highlights={[
-        {
-          title: 'Every idea has a number',
-          body: 'Concepts are anchored to a formula students can apply and rearrange. Understanding you can calculate with is understanding you can rely on.',
-        },
-        {
-          title: 'The maths is never the blocker',
-          body: 'Physics skills carry prerequisites into the mathematics curriculum. If rearranging equations is the real problem, we send the student there first.',
-        },
-        {
-          title: 'Misconceptions targeted directly',
-          body: 'Wrong answers in our multiple choice are the mistakes students actually make, so which option they pick tells a teacher what they believe.',
-        },
+        { title: t('subject.physics.h1.title'), body: t('subject.physics.h1.body') },
+        { title: t('subject.physics.h2.title'), body: t('subject.physics.h2.body') },
+        { title: t('subject.physics.h3.title'), body: t('subject.physics.h3.body') },
       ]}
     />
   );

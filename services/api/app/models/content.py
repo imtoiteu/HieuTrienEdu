@@ -102,6 +102,10 @@ class Resource(Base, TimestampMixin, TranslatableMixin):
     __tablename__ = "resources"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    # Nullable on purpose. Authored resources are loaded from YAML and upserted by slug, so
+    # re-running the seed updates them in place; a resource an administrator adds through the
+    # CMS has no authored counterpart to key against and leaves it null.
+    slug: Mapped[str | None] = mapped_column(String(120), unique=True, index=True)
     title: Mapped[str] = mapped_column(String(250), nullable=False)
     description: Mapped[str | None] = mapped_column(Text)
     resource_type: Mapped[str] = mapped_column(String(40), default="link", nullable=False)

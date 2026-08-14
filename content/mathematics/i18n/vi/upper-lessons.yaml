@@ -1,0 +1,685 @@
+# Vietnamese translations — mathematics lessons, grades 10-12.
+#
+# `blocks` is a positional overlay — see the physics file for the full explanation. An empty
+# `{}` leaves a block untouched (used for `math` and `practice` blocks). Where a block IS
+# supplied the whole field is replaced, so `example.steps` repeats each `math` string verbatim
+# and `interactive.config` repeats each plot expression verbatim; scripts/check_lesson_overlays.py
+# asserts those stay identical across locales.
+
+lessons:
+  # ============================================================================== lớp 10
+  lesson-math-10-surveying:
+    title: Đo một khoảng cách mà bạn không thể đi qua
+    summary: Cách tìm chiều rộng một con sông mà không cần lội qua.
+    objectives:
+      - Áp dụng định lí sin để tìm cạnh hoặc góc chưa biết
+      - Áp dụng định lí côsin khi biết hai cạnh và góc xen giữa
+      - Chọn đúng định lí dựa trên dữ kiện đã có
+    blocks:
+      - markdown: |
+          Bạn cần biết khoảng cách ngang qua một con sông. Bạn không bơi qua được, và không có
+          cây cầu nào trong nhiều kilômét. Nhưng bạn đi lại được dọc bờ bên mình, và bạn đo được góc.
+
+          Thế là đủ. Từ thời cổ đại điều đó đã là đủ, và đó là cách mọi bản đồ đường bờ biển được
+          vẽ ra trước khi có vệ tinh.
+      - markdown: |
+          ### Vượt ra ngoài góc vuông
+
+          Ở lớp 9, các tỉ số lượng giác đòi hỏi phải có một góc vuông. Phần lớn tam giác trong
+          thực tế thì không có. Hai định lí gỡ bỏ hạn chế đó, và giữa chúng là mọi trường hợp.
+
+          **Định lí sin** liên hệ mỗi cạnh với sin của góc đối diện nó:
+
+          $$\frac{a}{\sin A} = \frac{b}{\sin B} = \frac{c}{\sin C}$$
+
+          **Định lí côsin** xử lí những trường hợp mà định lí sin không làm được:
+
+          $$c^2 = a^2 + b^2 - 2ab\cos C$$
+      - title: Dùng định lí nào đây?
+        text: >-
+          Hãy nhìn vào dữ kiện đề cho. Nếu bạn có một góc *đi kèm với cạnh đối diện nó*, dùng
+          định lí sin. Nếu bạn có hai cạnh và góc *xen giữa* chúng, hoặc cả ba cạnh, dùng định lí
+          côsin. Chỉ một phép kiểm tra ấy giải quyết được gần như mọi bài toán.
+      - headers: ["Dữ kiện đã biết", "Định lí cần dùng", "Tìm được gì"]
+        rows:
+          - ["Hai góc và một cạnh bất kì", "Sin", "Các cạnh còn lại"]
+          - ["Hai cạnh và một góc không xen giữa", "Sin", "Góc còn lại (cẩn thận có hai nghiệm)"]
+          - ["Hai cạnh và góc xen giữa", "Côsin", "Cạnh thứ ba"]
+          - ["Cả ba cạnh", "Côsin", "Góc bất kì"]
+      - title: Ngang qua con sông
+        steps:
+          - text: "Đánh dấu hai điểm A và B trên bờ bên mình, cách nhau 50 m. Gọi cái cây ở bờ bên kia là C."
+          - text: "Đo góc tại A nhìn tới cái cây: 68°. Đo góc tại B: 74°."
+          - text: "Góc thứ ba suy ra được, vì tổng ba góc trong tam giác bằng 180°."
+            math: "C = 180° - 68° - 74° = 38°"
+          - text: "Cạnh AB = 50 m đối diện với góc C, nên áp dụng được định lí sin."
+            math: "\\frac{AC}{\\sin 74°} = \\frac{50}{\\sin 38°}"
+          - text: "Giải ra AC ≈ 78,1 m — khoảng cách theo đường thẳng tới cái cây, mà không hề rời khỏi bờ bên mình."
+      - title: Khi định lí sin không giúp được
+        steps:
+          - text: "Hai con đường rời một ngã ba, hợp với nhau góc 110°. Bạn đi 8 km theo đường này và 5 km theo đường kia."
+          - text: "Bạn biết hai cạnh và góc xen giữa chúng — không cạnh nào đi kèm một góc đối diện đã biết."
+          - text: "Áp dụng định lí côsin."
+            math: "d^2 = 8^2 + 5^2 - 2(8)(5)\\cos 110°"
+          - text: "cos 110° = −0,342, nên số hạng cuối trừ đi một số âm và làm tổng tăng lên."
+            math: "d^2 = 64 + 25 + 27.4 = 116.4"
+          - text: "d ≈ 10,8 km cách nhau."
+      - title: Pythagore là một trường hợp riêng
+        text: >-
+          Đặt C = 90° trong định lí côsin. Khi đó cos C = 0, số hạng cuối biến mất, và công thức
+          rút về c² = a² + b². Định lí Pythagore chính là định lí côsin cho tam giác vuông —
+          không phải một kết quả riêng biệt.
+      - title: Trường hợp có hai nghiệm
+        text: >-
+          Khi biết hai cạnh và một góc không xen giữa, có thể tồn tại *hai* tam giác khác nhau
+          cùng thoả mãn. Máy tính chỉ trả về góc nhọn từ hàm arcsin; góc tù 180° − θ cũng có thể
+          hợp lệ. Hãy luôn kiểm tra xem nghiệm thứ hai có ý nghĩa hình học hay không trước khi
+          loại bỏ nó.
+      - {}
+      - points:
+          - Định lí sin ghép mỗi cạnh với góc đối diện nó
+          - Định lí côsin xử lí trường hợp hai cạnh cùng góc xen giữa, hoặc cả ba cạnh
+          - Chọn định lí bằng cách kiểm tra xem có cặp cạnh - góc đối diện hay không
+          - Định lí Pythagore là định lí côsin với góc bằng 90 độ
+
+  lesson-math-10-optimisation:
+    title: Thửa ruộng lớn nhất với ít hàng rào nhất
+    summary: Mọi parabol đều có đúng một điểm cao nhất hoặc thấp nhất, và đó là thứ khiến nó hữu dụng.
+    objectives:
+      - Chuyển một ràng buộc bằng lời thành hàm số bậc hai
+      - Xác định toạ độ đỉnh và hiểu nó là giá trị lớn nhất hay nhỏ nhất
+      - Kiểm tra rằng lời giải tối ưu có ý nghĩa trong bối cảnh bài toán
+    blocks:
+      - markdown: |
+          Một người nông dân có 100 m hàng rào và muốn quây một thửa ruộng hình chữ nhật. Thửa
+          ruộng nên có hình dạng thế nào?
+
+          Một dải dài hẹp 49 m × 1 m dùng hết hàng rào và quây được 49 m². Một hình chữ nhật
+          40 m × 10 m dùng đúng chừng ấy hàng rào và quây được 400 m². Ở đâu đó có một đáp án tốt
+          nhất, và một hàm bậc hai tìm ra nó một cách chính xác.
+      - markdown: |
+          ### Thiết lập bài toán
+
+          Gọi một cạnh là $x$. Chu vi ấn định cạnh kia: $2x + 2y = 100$, nên $y = 50 - x$.
+
+          Diện tích là thứ ta muốn làm lớn nhất:
+
+          $$A(x) = x(50 - x) = 50x - x^2$$
+
+          Đây là hàm bậc hai với hệ số của $x^2$ âm, nên đồ thị là parabol quay bề lõm xuống — nó
+          có đúng một giá trị lớn nhất, tại đỉnh.
+      - config:
+          functions:
+            - {expression: "50*x - x*x", label: "A = 50x − x²", color: "primary"}
+            - {expression: "625", label: "Diện tích lớn nhất = 625", color: "muted"}
+          xRange: [0, 50]
+          yRange: [0, 700]
+          axisLabels: {x: "độ dài cạnh x (m)", y: "diện tích (m²)"}
+      - title: Tìm toạ độ đỉnh
+        steps:
+          - text: "Với A(x) = −x² + 50x, ta có a = −1 và b = 50."
+          - text: "Trục đối xứng nằm tại:"
+            math: "x = -\\frac{b}{2a} = -\\frac{50}{-2} = 25"
+          - text: "Vậy một cạnh là 25 m, cạnh kia là 50 − 25 = 25 m. Hình chữ nhật tối ưu là một hình vuông."
+          - text: "Diện tích lớn nhất:"
+            math: "A = 25 \\times 25 = 625\\text{ m}^2"
+      - title: Một kết quả đáng nhớ
+        text: >-
+          Với chu vi cho trước, hình chữ nhật có diện tích lớn nhất luôn là hình vuông. Đó cũng
+          là lí do hình tròn thắng mọi đa giác khi độ dài đường bao bằng nhau, và là lí do bong
+          bóng xà phòng có dạng hình cầu.
+      - headers: ["x (m)", "y = 50 − x", "Diện tích (m²)"]
+        rows:
+          - ["5", "45", "225"]
+          - ["15", "35", "525"]
+          - ["25", "25", "625"]
+          - ["35", "15", "525"]
+          - ["45", "5", "225"]
+      - markdown: |
+          Hãy để ý tính đối xứng trong bảng: x = 15 và x = 35 cho cùng một diện tích. Đó chính là
+          trục đối xứng của parabol hiện ra trong các con số, và nó là một phép kiểm tra hữu ích
+          — nếu hai giá trị đầu vào khác nhau cho cùng một kết quả thì đỉnh nằm đúng ở giữa chúng.
+      - title: Luôn kiểm tra lại bối cảnh
+        text: >-
+          Về mặt đại số, x = 60 vẫn tính được, và cho ra "diện tích" âm. Về mặt hình học thì
+          không: x phải nằm giữa 0 và 50 thì thửa ruộng mới tồn tại. Một lời giải tối ưu nằm
+          ngoài miền hợp lí có nghĩa là giá trị tối ưu thật sự nằm ở một đầu mút.
+      - {}
+      - points:
+          - Dùng ràng buộc để viết đại lượng cần tối ưu thành hàm của một biến
+          - Hàm bậc hai có đúng một điểm cực trị, tại x = −b/2a
+          - Hệ số của x² âm cho giá trị lớn nhất; hệ số dương cho giá trị nhỏ nhất
+          - Kiểm tra lời giải nằm trong miền mà tình huống cho phép
+
+  lesson-math-10-spread:
+    title: Hai lớp, một điểm trung bình, hai câu chuyện rất khác nhau
+    summary: Số trung bình cho biết dữ liệu nằm ở đâu. Nó không nói gì về mức độ phân tán.
+    objectives:
+      - Tính phương sai và độ lệch chuẩn
+      - Hiểu độ lệch chuẩn như khoảng cách điển hình tới số trung bình
+      - So sánh hai mẫu số liệu có cùng số trung bình nhưng khác độ phân tán
+    blocks:
+      - markdown: |
+          Hai lớp làm cùng một bài kiểm tra. Cả hai đều có điểm trung bình là 60.
+
+          **Lớp A:** 58, 59, 60, 61, 62
+          **Lớp B:** 20, 40, 60, 80, 100
+
+          Điểm trung bình giống hệt nhau. Tình hình thì hoàn toàn khác — và một giáo viên chỉ
+          nhìn vào số trung bình sẽ đối xử với hai lớp như nhau, điều đó sai với cả hai lớp.
+      - markdown: |
+          ### Đo độ phân tán
+
+          Ý tưởng hiển nhiên là lấy trung bình các khoảng cách tới số trung bình. Nhưng tổng các
+          khoảng cách ấy luôn bằng không theo đúng cách xây dựng — phần dương và phần âm triệt
+          tiêu nhau chính xác.
+
+          Cách khắc phục là bình phương chúng lên trước. Việc đó khử dấu, và cho ta **phương sai**:
+
+          $$\sigma^2 = \frac{\sum (x_i - \bar{x})^2}{n}$$
+
+          Tuy nhiên bình phương làm thay đổi đơn vị — "điểm bình phương" thì vô nghĩa. Vậy hãy
+          khai căn, và ta có **độ lệch chuẩn** σ, trở lại đúng đơn vị ban đầu.
+      - title: Lớp A
+        steps:
+          - text: "Số trung bình là 60. Các độ lệch là −2, −1, 0, 1, 2."
+          - text: "Bình phương lên: 4, 1, 0, 1, 4. Tổng của chúng là 10."
+          - text: "Phương sai:"
+            math: "\\sigma^2 = \\frac{10}{5} = 2"
+          - text: "Độ lệch chuẩn:"
+            math: "\\sigma = \\sqrt{2} \\approx 1.4\\text{ marks}"
+      - title: Lớp B
+        steps:
+          - text: "Số trung bình là 60. Các độ lệch là −40, −20, 0, 20, 40."
+          - text: "Bình phương lên: 1600, 400, 0, 400, 1600. Tổng của chúng là 4000."
+          - text: "Phương sai:"
+            math: "\\sigma^2 = \\frac{4000}{5} = 800"
+          - text: "Độ lệch chuẩn:"
+            math: "\\sigma = \\sqrt{800} \\approx 28.3\\text{ marks}"
+      - headers: ["", "Lớp A", "Lớp B"]
+        rows:
+          - ["Số trung bình", "60", "60"]
+          - ["Khoảng biến thiên", "4", "80"]
+          - ["Độ lệch chuẩn", "1,4", "28,3"]
+          - ["Điều đó có nghĩa gì", "Cả lớp cùng một trình độ", "Có em bị bỏ lại, có em vượt xa"]
+      - title: Con số ấy nghĩa là gì
+        text: >-
+          Hãy đọc độ lệch chuẩn như "khoảng cách điển hình tới số trung bình". Học sinh lớp A nằm
+          cách 60 khoảng 1,4 điểm. Học sinh lớp B nằm cách khoảng 28 điểm — số trung bình gần như
+          không mô tả được ai trong lớp đó.
+      - title: Sao không dùng luôn khoảng biến thiên?
+        text: >-
+          Khoảng biến thiên chỉ dùng hai giá trị và bị phá huỷ bởi một giá trị ngoại lai duy
+          nhất. Độ lệch chuẩn dùng mọi giá trị, nên nó mô tả cả mẫu số liệu chứ không chỉ hai đầu
+          mút của nó.
+      - title: Hai mẫu số chia
+        text: >-
+          Chia cho n cho ta độ lệch chuẩn của *tổng thể*, dùng khi dữ liệu của bạn là toàn bộ
+          nhóm. Chia cho n − 1 cho phiên bản *mẫu*, dùng khi dữ liệu là một mẫu lấy từ tổng thể
+          lớn hơn. Hãy xem đề bài yêu cầu loại nào — với n nhỏ, hai giá trị chênh nhau đáng kể.
+      - {}
+      - points:
+          - Tổng các độ lệch so với số trung bình bằng không, nên phải bình phương trước khi lấy trung bình
+          - Phương sai là trung bình các bình phương độ lệch; độ lệch chuẩn là căn bậc hai của nó
+          - Độ lệch chuẩn là khoảng cách điển hình tới số trung bình, theo đơn vị ban đầu
+          - Hai mẫu số liệu có thể cùng số trung bình mà hoàn toàn khác nhau
+
+  # ============================================================================== lớp 11
+  lesson-math-11-radians:
+    title: Vì sao các nhà toán học từ bỏ đơn vị độ
+    summary: 360 là một con số tuỳ tiện thừa hưởng từ Babylon. Radian thì hoàn toàn không tuỳ tiện.
+    objectives:
+      - Đổi giữa độ và radian
+      - Định nghĩa radian theo độ dài cung
+      - Đọc các giá trị lượng giác trên đường tròn lượng giác
+    blocks:
+      - markdown: |
+          Vì sao một vòng tròn có 360 độ?
+
+          Vì các nhà thiên văn Babylon đếm theo hệ cơ số 60 và tính một năm xấp xỉ 360 ngày. Đó
+          là toàn bộ lí do. Chẳng có gì trong bản thân đường tròn làm cho 360 trở nên đặc biệt —
+          chúng ta hoàn toàn có thể đã thừa hưởng con số 100, hay 400.
+
+          Radian thì ngược lại, nó đến từ chính đường tròn.
+      - title: Định nghĩa
+        text: >-
+          Một radian là góc mà ở đó độ dài cung bằng bán kính. Cuốn bán kính dọc theo đường tròn;
+          góc mà nó chắn ở tâm chính là một radian. Không quy ước, không lịch sử — chỉ hình dạng
+          mà thôi.
+      - markdown: |
+          ### Một vòng tròn chứa bao nhiêu radian?
+
+          Toàn bộ chu vi là $2\pi r$. Mỗi radian chiếm một cung dài $r$. Vậy một vòng trọn vẹn là
+          $2\pi$ radian — khoảng 6,28 radian.
+
+          $$180° = \pi \text{ rad} \qquad 1\text{ rad} = \frac{180°}{\pi} \approx 57.3°$$
+
+          Để đổi, nhân với $\pi/180$ khi sang radian, và nhân với $180/\pi$ khi trở về độ.
+      - headers: ["Độ", "Radian", "Dạng thập phân"]
+        rows:
+          - ["30°", "π/6", "0,524"]
+          - ["45°", "π/4", "0,785"]
+          - ["60°", "π/3", "1,047"]
+          - ["90°", "π/2", "1,571"]
+          - ["180°", "π", "3,142"]
+          - ["360°", "2π", "6,283"]
+      - markdown: |
+          ### Vì sao phải bận tâm
+
+          Radian không chỉ là một quy ước gọn gàng hơn. Chúng làm các công thức đơn giản đi vì
+          bây giờ góc là một tỉ số thật sự giữa hai độ dài, chứ không phải số đếm của những đơn
+          vị tuỳ tiện.
+
+          Độ dài cung trở thành đúng $s = r\theta$. Diện tích hình quạt trở thành
+          $A = \tfrac{1}{2}r^2\theta$. Cả hai sẽ phải kèm một hệ số $\pi/180$ vụng về nếu dùng độ.
+
+          Và quan trọng nhất cho lớp 12: đạo hàm của $\sin x$ bằng $\cos x$ **chỉ khi x tính bằng
+          radian**. Dùng độ thì bạn sẽ mắc kẹt với $\frac{\pi}{180}\cos x$ mãi mãi.
+      - title: Độ dài cung và diện tích hình quạt
+        steps:
+          - text: "Một đường tròn bán kính 8 cm có hình quạt ứng với góc 50°. Đổi đơn vị trước."
+            math: "\\theta = 50 \\times \\frac{\\pi}{180} = 0.873\\text{ rad}"
+          - text: "Độ dài cung:"
+            math: "s = r\\theta = 8 \\times 0.873 = 6.98\\text{ cm}"
+          - text: "Diện tích hình quạt:"
+            math: "A = \\tfrac{1}{2}r^2\\theta = 0.5 \\times 64 \\times 0.873 = 27.9\\text{ cm}^2"
+      - title: Đường tròn lượng giác
+        text: >-
+          Vẽ một đường tròn bán kính 1. Điểm ứng với góc θ trên đường tròn đó có toạ độ
+          (cos θ, sin θ). Đây không phải sự trùng hợp — đó chính là định nghĩa, và nó mở rộng sin
+          cùng côsin ra mượt mà bên ngoài khoảng 0–90° mà một tam giác vuông cho phép.
+      - title: Kiểm tra máy tính của bạn
+        text: >-
+          Máy tính đặt sai chế độ sẽ cho những đáp án sai một cách rất tự tin mà không hề cảnh
+          báo. sin(30) bằng 0,5 ở chế độ độ và bằng −0,988 ở chế độ radian. Hãy tìm chữ DEG hay
+          RAD trên màn hình trước khi bắt đầu.
+      - {}
+      - points:
+          - Một radian là góc có độ dài cung bằng bán kính
+          - Một vòng trọn vẹn là 2π radian, và 180° = π radian
+          - Độ dài cung là rθ và diện tích hình quạt là một nửa r bình phương θ, chỉ đúng với radian
+          - Các công thức giải tích cho sin và côsin đòi hỏi đơn vị radian
+
+  lesson-math-11-compound-growth:
+    title: Sức mạnh lớn nhất là phép nhân
+    summary: Nhân lặp đi lặp lại vượt xa trực giác, và nó giải thích được cả tiền tiết kiệm, khoản nợ lẫn dịch bệnh.
+    objectives:
+      - Mô hình hóa sự tăng trưởng bằng cấp số nhân
+      - So sánh tăng trưởng kép với tăng trưởng tuyến tính
+      - Dùng lôgarit để giải tìm thời gian hoặc lãi suất
+    blocks:
+      - markdown: |
+          Một câu đố kinh điển. Một cái ao có một lá sen. Mỗi ngày số lá sen tăng gấp đôi. Đến
+          ngày thứ 30 thì mặt ao bị phủ kín hoàn toàn.
+
+          Vậy đến ngày nào thì ao được phủ một nửa?
+
+          Đáp án là ngày thứ 29 — và gần như không ai nói đúng ngay lần đầu. Nhân đôi có nghĩa là
+          bước cuối cùng lớn bằng tất cả những bước trước đó cộng lại. Trực giác con người được
+          xây dựng cho phép cộng, không phải phép nhân.
+      - markdown: |
+          ### Cộng so với nhân
+
+          Tăng trưởng **cấp số cộng** thêm vào một lượng cố định mỗi bước: 100, 110, 120, 130 …
+          Tăng trưởng **cấp số nhân** nhân với một hệ số cố định: 100, 110, 121, 133,1 …
+
+          Ban đầu chúng trông gần như giống hệt nhau. Theo thời gian chúng tách hẳn ra, vì cấp số
+          nhân sinh lãi trên chính phần đã tăng trưởng của nó.
+
+          $$u_n = a r^{\,n-1}$$
+      - config:
+          functions:
+            - {expression: "100*1.07**x", label: "Lãi kép 7%", color: "primary"}
+            - {expression: "100 + 7*x", label: "7 mỗi năm, lãi đơn", color: "accent"}
+          xRange: [0, 40]
+          yRange: [0, 1200]
+          axisLabels: {x: "năm", y: "giá trị"}
+      - title: Một tài khoản tiết kiệm
+        steps:
+          - text: "Gửi 100 triệu đồng với lãi suất 7% một năm, tính lãi kép hằng năm."
+          - text: "Mỗi năm nhân số dư với 1,07."
+            math: "V_n = 100 \\times 1.07^{\\,n}"
+          - text: "Sau 10 năm:"
+            math: "V = 100 \\times 1.07^{10} = 196.7\\text{ million}"
+          - text: "Sau 30 năm:"
+            math: "V = 100 \\times 1.07^{30} = 761.2\\text{ million}"
+          - text: "Lãi đơn 7 triệu mỗi năm chỉ cho 310 triệu sau đúng 30 năm ấy."
+      - title: Quy tắc 72
+        text: >-
+          Lấy 72 chia cho tỉ lệ tăng trưởng theo phần trăm sẽ ra thời gian nhân đôi gần đúng. Ở
+          mức 7%, tiền nhân đôi sau khoảng 72 ÷ 7 ≈ 10 năm — khớp gần như chính xác với phép tính
+          bên trên. Đó là một ước lượng đủ tốt để nhẩm trong đầu.
+      - markdown: |
+          ### Giải tìm thời gian
+
+          Nếu ẩn số nằm ở số mũ thì lôgarit là công cụ kéo nó xuống:
+
+          $$100 \times 1.07^{\,n} = 500 \;\Rightarrow\; 1.07^{\,n} = 5 \;\Rightarrow\; n = \frac{\ln 5}{\ln 1.07} \approx 23.8\text{ năm}$$
+      - headers: ["Tình huống", "Công bội r", "Diễn biến"]
+        rows:
+          - ["Tiết kiệm 7%", "1,07", "Tăng, nhân đôi khoảng mỗi 10 năm"]
+          - ["Nợ thẻ tín dụng 2% mỗi tháng", "1,02 mỗi tháng", "Tăng 27% một năm nếu không trả"]
+          - ["Phân rã phóng xạ", "0,5 mỗi chu kì bán rã", "Giảm dần về không"]
+          - ["Ô tô mất giá 15%/năm", "0,85", "Mất hơn một nửa giá trị sau 5 năm"]
+      - title: Nó cũng chống lại bạn
+        text: >-
+          Lãi kép không phải một lợi ích — nó là một cơ chế, và khoản nợ dùng nó hăng hái chẳng
+          kém gì khoản tiết kiệm. Thẻ tín dụng 2% mỗi tháng không phải 24% một năm; nó là
+          1,02¹² − 1 ≈ 26,8%, và nó tính lãi trên cả phần lãi đã nợ.
+      - {}
+      - points:
+          - Tăng trưởng cấp số nhân nhân với một công bội cố định ở mỗi bước
+          - Số hạng thứ n là a nhân r mũ n trừ 1
+          - Lãi kép tách xa hẳn tăng trưởng đơn giản qua những khoảng thời gian dài
+          - Dùng lôgarit khi ẩn số nằm ở số mũ
+
+  lesson-math-11-derivative:
+    title: Ngay lúc này bạn đang đi nhanh bao nhiêu?
+    summary: Vận tốc tại một thời điểm, từ một phép tính chỉ biết xử lí những khoảng thời gian.
+    objectives:
+      - Định nghĩa đạo hàm là giới hạn của tỉ số gia
+      - Hiểu đạo hàm là tốc độ biến thiên tức thời
+      - Liên hệ hệ số góc của cát tuyến với hệ số góc của tiếp tuyến
+    blocks:
+      - markdown: |
+          Đồng hồ tốc độ báo 60 km/h. Điều đó thực sự có nghĩa gì?
+
+          Vận tốc là quãng đường chia cho thời gian. Nhưng *ngay lúc này* là một thời điểm — thời
+          gian đã trôi qua bằng không, và bạn đã đi được quãng đường bằng không. Phép tính là
+          0 ÷ 0, mà đó không phải một con số.
+
+          Vậy mà đồng hồ tốc độ rõ ràng đang cho bạn biết một điều đúng đắn. Giải quyết mâu thuẫn
+          đó chính là lí do giải tích ra đời.
+      - markdown: |
+          ### Bóp nhỏ khoảng thời gian
+
+          Bạn không đo được vận tốc trong khoảng thời gian bằng không. Nhưng bạn đo được nó trong
+          một khoảng *nhỏ*, rồi cứ thế thu nhỏ khoảng ấy lại.
+
+          Xét một hành trình có quãng đường $s(t) = t^2$ mét. Vận tốc tại đúng thời điểm t = 3 s
+          bằng bao nhiêu?
+      - headers: ["Khoảng thời gian", "Quãng đường đi được", "Vận tốc trung bình"]
+        rows:
+          - ["3 → 4 s", "16 − 9 = 7 m", "7,0 m/s"]
+          - ["3 → 3,1 s", "9,61 − 9 = 0,61 m", "6,1 m/s"]
+          - ["3 → 3,01 s", "9,0601 − 9 = 0,0601 m", "6,01 m/s"]
+          - ["3 → 3,001 s", "0,006001 m", "6,001 m/s"]
+      - title: Quy luật
+        text: >-
+          Các vận tốc trung bình đang hội tụ về 6 m/s. Ta không bao giờ thực sự đạt tới khoảng
+          thời gian bằng không — nhưng các giá trị tiến gần tới 6 đến mức nào ta muốn. Giá trị
+          giới hạn đó *chính là* vận tốc tức thời. Đây là toàn bộ ý tưởng.
+      - markdown: |
+          ### Viết nó ra
+
+          Với một hàm số bất kì, lấy một khoảng có độ rộng $h$ bắt đầu từ $x$:
+
+          $$\text{tốc độ trung bình} = \frac{f(x+h) - f(x)}{h}$$
+
+          Đây là hệ số góc của **cát tuyến** nối hai điểm trên đồ thị. Bây giờ cho $h$ co về
+          không. Cát tuyến xoay dần cho tới khi nó trở thành **tiếp tuyến**:
+
+          $$f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}$$
+      - title: Suy ra công thức cho f(x) = x²
+        steps:
+          - text: "Viết ra tỉ số gia."
+            math: "\\frac{(x+h)^2 - x^2}{h}"
+          - text: "Khai triển tử số."
+            math: "= \\frac{x^2 + 2xh + h^2 - x^2}{h} = \\frac{2xh + h^2}{h}"
+          - text: "Mọi số hạng đều có h, nên nó rút gọn được — và đây chính là bước cứu ta khỏi dạng 0/0."
+            math: "= 2x + h"
+          - text: "Bây giờ cho h tiến tới 0."
+            math: "f'(x) = 2x"
+          - text: "Tại x = 3 điều này cho 6 — đúng giá trị mà bảng số liệu đang hội tụ về."
+      - config:
+          functions:
+            - {expression: "x*x", label: "f(x) = x²", color: "primary"}
+            - {expression: "6*x - 9", label: "tiếp tuyến tại x = 3, hệ số góc 6", color: "accent"}
+          xRange: [-1, 6]
+          yRange: [-10, 30]
+          axisLabels: {x: "x", y: "y"}
+      - title: Một ý tưởng, nhiều tên gọi
+        text: >-
+          Hệ số góc của tiếp tuyến, tốc độ biến thiên tức thời, chi phí biên, vận tốc đọc từ đồ
+          thị quãng đường - thời gian, cường độ dòng điện đọc từ đồ thị điện tích - thời gian —
+          tất cả đều là đạo hàm. Nhận ra chúng là cùng một đối tượng là phần lớn những gì lớp 12
+          đòi hỏi ở bạn.
+      - title: Giới hạn không phải là "thay h = 0"
+        text: >-
+          Bạn không thể đặt h = 0 vào tỉ số gia — làm vậy lại ra 0/0. Bạn phải rút gọn về mặt đại
+          số trước, khử được h, rồi mới lấy giới hạn. Bỏ qua bước rút gọn là lỗi phổ biến nhất
+          trong chủ đề này.
+      - {}
+      - points:
+          - Tốc độ biến thiên trung bình là hệ số góc của cát tuyến
+          - Đạo hàm là giới hạn của hệ số góc đó khi khoảng co về không
+          - Về mặt hình học, đó là hệ số góc của tiếp tuyến tại một điểm
+          - Hãy rút gọn h về mặt đại số trước khi lấy giới hạn
+
+  # ============================================================================== lớp 12
+  lesson-math-12-optimisation:
+    title: Thiết kế chiếc vỏ hộp rẻ nhất có thể
+    summary: Một câu hỏi sản xuất có thật, được trả lời chính xác bằng cách cho một đạo hàm bằng không.
+    objectives:
+      - Chuyển một ràng buộc thành hàm số của một biến duy nhất
+      - Dùng đạo hàm để xác định giá trị nhỏ nhất
+      - Xác nhận điểm dừng đúng là giá trị tối ưu cần tìm
+    blocks:
+      - markdown: |
+          Một nhà máy sản xuất vỏ hộp hình trụ chứa 500 ml. Kim loại tốn tiền, nên họ muốn tìm
+          hình dạng dùng ít kim loại nhất.
+
+          Hộp nên cao và hẹp, hay thấp và rộng? Có vô số hình trụ tích 500 ml, và đúng một trong
+          số đó dùng ít kim loại nhất.
+      - markdown: |
+          ### Ba bước
+
+          Mọi bài toán tối ưu đều có chung một bộ khung:
+
+          1. Viết ra đại lượng cần tối ưu. Ở đây là diện tích toàn phần.
+          2. Dùng ràng buộc để khử hết các biến, chỉ để lại một biến.
+          3. Lấy đạo hàm, cho bằng không, và giải.
+      - title: Thiết lập cho chiếc vỏ hộp
+        steps:
+          - text: "Với hình trụ kín bán kính r và chiều cao h:"
+            math: "A = 2\\pi r^2 + 2\\pi r h, \\qquad V = \\pi r^2 h = 500"
+          - text: "Ràng buộc cho h theo r."
+            math: "h = \\frac{500}{\\pi r^2}"
+          - text: "Thay vào sẽ khử hẳn h — bây giờ A chỉ còn phụ thuộc vào r."
+            math: "A(r) = 2\\pi r^2 + \\frac{1000}{r}"
+      - title: Tìm giá trị nhỏ nhất
+        steps:
+          - text: "Lấy đạo hàm."
+            math: "A'(r) = 4\\pi r - \\frac{1000}{r^2}"
+          - text: "Cho bằng không."
+            math: "4\\pi r = \\frac{1000}{r^2} \\;\\Rightarrow\\; r^3 = \\frac{250}{\\pi}"
+          - text: "Giải ra."
+            math: "r = 4.30\\text{ cm}"
+          - text: "Và chiều cao:"
+            math: "h = \\frac{500}{\\pi (4.30)^2} = 8.60\\text{ cm}"
+          - text: "Vậy h = 2r đúng bằng — chiếc vỏ hộp tối ưu cao đúng bằng bề ngang của nó."
+      - config:
+          functions:
+            - {expression: "2*3.14159*x*x + 1000/x", label: "A(r) = 2πr² + 1000/r", color: "primary"}
+            - {expression: "348.7", label: "giá trị nhỏ nhất ≈ 349 cm²", color: "muted"}
+          xRange: [1, 12]
+          yRange: [0, 900]
+          axisLabels: {x: "bán kính r (cm)", y: "diện tích toàn phần (cm²)"}
+      - title: Xác nhận đó là giá trị nhỏ nhất
+        text: >-
+          A'(r) = 0 mới chỉ nói tiếp tuyến nằm ngang — chỗ đó có thể là cực đại. Hãy kiểm tra đạo
+          hàm cấp hai: A''(r) = 4π + 2000/r³, dương với mọi r > 0. Đồ thị lồi lên ở khắp nơi, nên
+          điểm dừng này là điểm cực tiểu.
+      - markdown: |
+          ### Vì sao vỏ hộp thật không có hình dạng đó
+
+          Nhìn một lon nước ngọt thì rõ ràng nó cao hơn bề ngang. Toán học không sai — mô hình
+          chưa đầy đủ. Sản xuất thực tế có thêm những chi phí mà mô hình đã bỏ qua: nắp và đáy
+          dùng kim loại dày hơn, đường hàn tốn tiền, và lon phải vừa tay cầm cũng như xếp chồng
+          được trên kệ.
+
+          Đưa những yếu tố đó vào hàm mục tiêu thì điểm tối ưu sẽ dịch chuyển. Đó là đặc tính của
+          việc mô hình hóa, không phải thất bại của giải tích.
+      - title: Kiểm tra cả hai đầu mút
+        text: >-
+          Trên một đoạn đóng, giá trị lớn nhất hoặc nhỏ nhất có thể rơi vào một đầu mút thay vì
+          một điểm dừng. Hãy luôn tính giá trị hàm số tại cả hai đầu mút nữa trước khi kết luận.
+      - {}
+      - points:
+          - Viết đại lượng cần tối ưu, rồi dùng ràng buộc để đưa nó về một biến
+          - Lấy đạo hàm và cho bằng không để tìm các điểm dừng
+          - Dùng đạo hàm cấp hai hoặc dấu của đạo hàm cấp một để phân loại chúng
+          - Kiểm tra các đầu mút, và kiểm tra lời giải có hợp lí trong bối cảnh
+
+  lesson-math-12-integral:
+    title: Tìm lại hành trình từ đồng hồ tốc độ
+    summary: Nếu đạo hàm biến quãng đường thành vận tốc thì tích phân biến vận tốc trở lại thành quãng đường.
+    objectives:
+      - Hiểu tích phân xác định như một tổng tích luỹ
+      - Áp dụng định lí cơ bản của giải tích
+      - Liên hệ tích phân với diện tích dưới đường cong
+    blocks:
+      - markdown: |
+          Giả sử bạn ghi lại vận tốc của mình ở mọi thời điểm trong một chuyến đi nhưng chưa hề
+          nhìn công-tơ-mét. Bạn có tính được quãng đường đã đi không?
+
+          Nếu vận tốc không đổi thì quá dễ: quãng đường = vận tốc × thời gian. Nhưng nó đâu có
+          không đổi — bạn đã tăng tốc, phanh lại, dừng đèn đỏ.
+      - markdown: |
+          ### Chia nhỏ ra
+
+          Chia hành trình thành những khoảng ngắn đến mức vận tốc gần như không đổi trong mỗi
+          khoảng. Trên một khoảng như vậy, quãng đường xấp xỉ bằng $v \times \Delta t$ — diện
+          tích của một hình chữ nhật mỏng dưới đồ thị vận tốc - thời gian.
+
+          Cộng tất cả các hình chữ nhật lại. Rồi làm chúng mỏng hơn và lấy nhiều hơn. Ở giới hạn,
+          tổng diện tích các hình chữ nhật trở thành diện tích chính xác dưới đường cong:
+
+          $$\text{quãng đường} = \int_{a}^{b} v(t)\,dt$$
+      - title: Tích phân thực chất là gì
+        text: >-
+          Tích phân xác định là một tổng tích luỹ: một tốc độ nhân với một khoảng, cộng dồn trên
+          toàn miền. Vận tốc tích luỹ thành quãng đường, lưu lượng thành thể tích, công suất
+          thành năng lượng, chi phí biên thành tổng chi phí. Cách hiểu theo diện tích là bức
+          tranh minh hoạ cho tổng đó.
+      - markdown: |
+          ### Định lí khiến nó tính được
+
+          Cộng vô hạn hình chữ nhật không phải một phương pháp khả thi. **Định lí cơ bản của giải
+          tích** thay nó bằng một việc bạn làm được bằng tay:
+
+          $$\int_a^b f(x)\,dx = F(b) - F(a) \quad\text{với } F'(x) = f(x)$$
+
+          Muốn tìm diện tích, hãy tìm một nguyên hàm rồi trừ giá trị của nó tại hai đầu mút. Đây
+          là một trong những kết quả có sức ảnh hưởng lớn nhất của toán học: nó nối liền hai bài
+          toán — tiếp tuyến và diện tích — vốn đã được nghiên cứu tách biệt suốt hai nghìn năm.
+      - title: Một chiếc ô tô tăng tốc đều
+        steps:
+          - text: "Vận tốc của ô tô là v(t) = 4t m/s. Nó đi được bao xa trong 5 giây đầu?"
+          - text: "Tìm một nguyên hàm của 4t."
+            math: "F(t) = 2t^2"
+          - text: "Thay hai cận vào rồi trừ."
+            math: "\\int_0^5 4t\\,dt = F(5) - F(0) = 50 - 0 = 50\\text{ m}"
+          - text: "Kiểm tra bằng hình học: đồ thị vận tốc - thời gian là tam giác đáy 5 và chiều cao 20."
+            math: "\\text{area} = \\tfrac{1}{2}(5)(20) = 50\\text{ m} \\;\\checkmark"
+      - config:
+          functions:
+            - {expression: "4*x", label: "v(t) = 4t", color: "primary"}
+          xRange: [0, 6]
+          yRange: [0, 26]
+          axisLabels: {x: "thời gian (s)", y: "vận tốc (m/s)"}
+      - headers: ["Lấy tích phân đại lượng này", "Theo", "Và bạn được"]
+        rows:
+          - ["Vận tốc (m/s)", "Thời gian", "Quãng đường (m)"]
+          - ["Lưu lượng (l/s)", "Thời gian", "Thể tích (l)"]
+          - ["Công suất (W)", "Thời gian", "Năng lượng (J)"]
+          - ["Lực (N)", "Quãng đường", "Công (J)"]
+          - ["Chi phí biên", "Sản lượng", "Tổng chi phí"]
+      - title: Phần diện tích dưới trục hoành mang dấu âm
+        text: >-
+          Nếu đường cong tụt xuống dưới trục hoành thì tích phân sẽ trừ đi phần đó. Với vận tốc
+          mang giá trị âm thì như vậy là hoàn toàn đúng — nó nghĩa là chuyển động ngược lại, và
+          tích phân cho ra đúng *độ dịch chuyển*. Nhưng nếu bạn thật sự muốn tổng diện tích, hãy
+          tách tích phân tại mỗi giao điểm với trục hoành rồi cộng các giá trị tuyệt đối.
+      - {}
+      - points:
+          - Tích phân xác định tích luỹ một tốc độ trên một khoảng
+          - Về mặt hình học, đó là diện tích có dấu nằm dưới đường cong
+          - Định lí cơ bản tính nó bằng F(b) − F(a)
+          - Phần nằm dưới trục hoành đóng góp giá trị âm
+
+  lesson-math-12-bayes:
+    title: Kết quả dương tính của bạn nhiều khả năng không phải là dương tính
+    summary: Một xét nghiệm chính xác 99% cho một bệnh hiếm lại sai phần lớn những lần nó nói "có".
+    objectives:
+      - Áp dụng công thức xác suất toàn phần
+      - Dùng công thức Bayes để đảo ngược một xác suất có điều kiện
+      - Giải thích vì sao tỉ lệ nền chi phối kết quả khi biến cố là hiếm
+    blocks:
+      - markdown: |
+          Một căn bệnh xuất hiện ở 1 trên 1.000 người. Xét nghiệm phát hiện bệnh có độ chính xác
+          99%: nó bắt được 99% số người thực sự mắc bệnh, và chỉ báo nhầm 1% số người khoẻ mạnh.
+
+          Bạn có kết quả dương tính. Xác suất bạn thực sự mắc bệnh là bao nhiêu?
+
+          Phần lớn mọi người trả lời 99%. Phần lớn bác sĩ, khi bị hỏi bất ngờ, nói một con số
+          trên 80%. Đáp án thật sự là khoảng **9%**.
+      - markdown: |
+          ### Hãy đếm người thật
+
+          Tạm quên công thức đi. Hãy hình dung xét nghiệm cho 100.000 người.
+
+          - **100** người mắc bệnh (1 trên 1.000). Xét nghiệm bắt được 99 người trong số đó.
+          - **99.900** người khoẻ mạnh. Xét nghiệm báo nhầm 1% trong số họ — tức là **999** người.
+
+          Vậy có 99 + 999 = 1.098 người cho kết quả dương tính. Trong số đó, chỉ 99 người thực sự
+          mắc bệnh.
+      - {}
+      - title: Trực giác sai ở chỗ nào
+        text: >-
+          Nhóm khoẻ mạnh đông gấp một nghìn lần nhóm mắc bệnh. Ngay cả một tỉ lệ sai sót nhỏ áp
+          dụng lên một nhóm khổng lồ cũng tạo ra nhiều kết quả dương tính giả hơn tổng số dương
+          tính thật trong nhóm nhỏ kia. Xét nghiệm không hề tồi — căn bệnh hiếm, và sự hiếm gặp
+          mới là thứ chi phối.
+      - headers: ["", "Mắc bệnh", "Khoẻ mạnh", "Tổng"]
+        rows:
+          - ["Dương tính", "99", "999", "1.098"]
+          - ["Âm tính", "1", "98.901", "98.902"]
+          - ["Tổng", "100", "99.900", "100.000"]
+      - markdown: |
+          ### Công thức
+
+          Điều mà bảng số liệu vừa làm bằng cách đếm, công thức Bayes làm bằng đại số:
+
+          $$P(A \mid B) = \frac{P(B \mid A)\,P(A)}{P(B)}$$
+
+          và mẫu số thường cần đến **công thức xác suất toàn phần** — mọi con đường dẫn tới một
+          kết quả dương tính, cộng lại:
+
+          $$P(B) = P(B \mid A)P(A) + P(B \mid \text{not }A)P(\text{not }A)$$
+      - title: Vẫn phép tính ấy, viết bằng kí hiệu
+        steps:
+          - text: "P(mắc bệnh) = 0,001, P(+ | mắc bệnh) = 0,99, P(+ | khoẻ mạnh) = 0,01."
+          - text: "Xác suất toàn phần của một kết quả dương tính:"
+            math: "P(+) = (0.99)(0.001) + (0.01)(0.999) = 0.00099 + 0.00999 = 0.01098"
+          - text: "Áp dụng công thức Bayes:"
+            math: "P(\\text{disease} \\mid +) = \\frac{0.00099}{0.01098} = 0.090"
+          - text: "Giống hệt cách lập luận bằng đếm, và tất phải như vậy."
+      - title: Vì sao xét nghiệm lần hai thay đổi mọi thứ
+        text: >-
+          Sau một kết quả dương tính, xác suất của bạn tăng từ 0,1% lên 9% — cao gấp chín mươi
+          lần. Xét nghiệm lại thì 9% ấy trở thành tỉ lệ nền mới, và một kết quả dương tính thứ
+          hai đẩy nó vượt quá 90%. Đây chính là lí do các chương trình tầm soát luôn xét nghiệm
+          khẳng định lại trước khi điều trị.
+      - title: Đừng nhầm lẫn hai chiều
+        text: >-
+          P(dương tính | mắc bệnh) và P(mắc bệnh | dương tính) là hai con số hoàn toàn khác nhau.
+          Số thứ nhất là đặc tính của xét nghiệm, gần 99%. Số thứ hai phụ thuộc vào mức độ phổ
+          biến của bệnh, và ở đây nó là 9%. Đảo lẫn hai số này là sai lầm gây hậu quả lớn nhất
+          trong xác suất ứng dụng.
+      - {}
+      - points:
+          - Công thức Bayes đảo ngược một xác suất có điều kiện
+          - Công thức xác suất toàn phần cung cấp mẫu số
+          - Khi một biến cố là hiếm, số dương tính giả nhiều hơn số dương tính thật
+          - P(B với điều kiện A) và P(A với điều kiện B) là hai đại lượng khác nhau

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     template: '%s · HieuTrienEducation',
   },
   description:
-    'Adaptive Mathematics and Physics learning for grades 6 to 9, with 1-to-1 tutoring, ' +
+    'Adaptive Mathematics and Physics learning for grades 6 to 12, with 1-to-1 tutoring, ' +
     'group and online classes. Built by Thầy Hiếu & Cô Triền.',
   applicationName: 'HieuTrienEducation',
   authors: [{ name: 'HieuTrienEducation' }],

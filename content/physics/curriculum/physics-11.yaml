@@ -1,0 +1,215 @@
+# Physics — Physics 11
+#
+# Oscillations, waves and electric fields. This is the grade where physics stops being about
+# single objects and starts being about *patterns* — a repeating motion, a travelling
+# disturbance, a field filling the space between charges. The phenomena carrying it are chosen
+# because they are all things a student has already experienced: a bridge shaking itself apart,
+# headphones that cancel noise, a passing siren changing pitch, a phone screen that senses a
+# finger without being pressed.
+subject:
+  slug: physics
+  name: Physics
+  icon: atom
+  color: "#00B8A9"
+  position: 2
+
+course:
+  slug: physics-11
+  title: Physics — Grade 11
+  grade: 11
+  summary: Oscillations, waves, electric fields and the circuits that carry real current.
+  description: >-
+    Grade 11 is about repeating and travelling behaviour. Students describe oscillations with
+    amplitude, period and phase, and find out why a bridge can be destroyed by a wind far too
+    weak to push it over. They superpose waves — the principle behind noise-cancelling
+    headphones and every musical instrument — and meet the Doppler effect. The second half
+    moves to electric fields: Coulomb's law, field strength, capacitance behind a touchscreen,
+    and circuits analysed properly with internal resistance and Kirchhoff's laws.
+  estimated_hours: 105
+
+units:
+  - slug: physics-11-oscillations
+    title: Oscillations
+    icon: activity
+    summary: Motion that repeats, and the catastrophe that happens when you push it in time.
+    topics:
+      - slug: physics-11-shm
+        title: Simple Harmonic Motion
+        summary: The one oscillation that describes almost every small vibration in nature.
+        skills:
+          - slug: physics-11-shm-basics
+            name: Describing simple harmonic motion
+            description: >-
+              Use amplitude, period, frequency and angular frequency to describe an oscillation,
+              and relate displacement, velocity and acceleration.
+            difficulty: 4
+            prerequisites: [physics-8-wave-anatomy, math-11-trig-graphs]
+            tags: [oscillations, core]
+          - slug: physics-11-pendulum-spring
+            name: Pendulums and mass-spring systems
+            description: >-
+              Calculate the period of a simple pendulum and of a mass on a spring, and identify
+              what each period does and does not depend on.
+            difficulty: 5
+            prerequisites: [physics-11-shm-basics, physics-10-hookes-law]
+            tags: [oscillations]
+
+      - slug: physics-11-damping-resonance
+        title: Damping and Resonance
+        summary: The Tacoma Narrows bridge, and why soldiers break step crossing one.
+        skills:
+          - slug: physics-11-damping
+            name: Damped oscillations
+            description: >-
+              Compare light, heavy and critical damping, and identify which one a car suspension
+              is designed for.
+            difficulty: 4
+            prerequisites: [physics-11-shm-basics]
+            tags: [oscillations]
+          - slug: physics-11-resonance
+            name: Resonance
+            description: >-
+              Explain resonance as driving a system at its natural frequency, and identify it in
+              bridges, buildings, instruments and microwave ovens.
+            difficulty: 5
+            prerequisites: [physics-11-damping]
+            tags: [oscillations, core]
+
+  - slug: physics-11-waves
+    title: Waves
+    icon: audio-waveform
+    summary: Disturbances that carry energy without carrying matter.
+    topics:
+      - slug: physics-11-wave-properties
+        title: Wave Properties and Superposition
+        summary: What happens where two waves arrive at the same place at the same time.
+        skills:
+          - slug: physics-11-wave-equation-adv
+            name: The wave equation and wave graphs
+            description: >-
+              Apply v = f lambda and read amplitude, wavelength and period from displacement-
+              distance and displacement-time graphs.
+            difficulty: 4
+            prerequisites: [physics-8-wave-equation]
+            tags: [waves, core]
+          - slug: physics-11-superposition
+            name: Superposition and interference
+            description: >-
+              Add two waves by superposition, and predict constructive and destructive
+              interference from a path difference.
+            difficulty: 5
+            prerequisites: [physics-11-wave-equation-adv]
+            tags: [waves, core]
+
+      - slug: physics-11-standing-doppler
+        title: Standing Waves and the Doppler Effect
+        summary: Why a guitar string has one pitch, and why a siren changes as it passes.
+        skills:
+          - slug: physics-11-standing-waves
+            name: Standing waves on strings and in pipes
+            description: >-
+              Locate nodes and antinodes and calculate the fundamental frequency and harmonics
+              of a string or an air column.
+            difficulty: 5
+            prerequisites: [physics-11-superposition, physics-8-sound-properties]
+            tags: [waves]
+          - slug: physics-11-doppler
+            name: The Doppler effect
+            description: >-
+              Explain and calculate the change in observed frequency when a source or observer
+              is moving.
+            difficulty: 4
+            prerequisites: [physics-11-wave-equation-adv, physics-10-displacement-velocity]
+            tags: [waves]
+
+  - slug: physics-11-electric-field
+    title: Electric Fields
+    icon: zap
+    summary: Charges push each other across empty space. The field is how.
+    topics:
+      - slug: physics-11-coulomb
+        title: Charge and Coulomb's Law
+        summary: An inverse-square law, and 1500 volts of static on a dry day.
+        skills:
+          - slug: physics-11-coulombs-law
+            name: Coulomb's law
+            description: >-
+              Calculate the electrostatic force between two point charges and compare it with
+              the gravitational force between the same objects.
+            difficulty: 4
+            prerequisites: [physics-8-charge-current, math-8-scientific-notation]
+            tags: [electricity, core]
+          - slug: physics-11-field-strength
+            name: Electric field strength
+            description: >-
+              Calculate field strength as force per unit charge, and sketch the field around a
+              point charge and between parallel plates.
+            difficulty: 4
+            prerequisites: [physics-11-coulombs-law]
+            tags: [electricity]
+
+      - slug: physics-11-potential-capacitance
+        title: Potential and Capacitance
+        summary: The physics inside a phone screen and a camera flash.
+        skills:
+          - slug: physics-11-potential-difference
+            name: Electric potential and potential difference
+            description: >-
+              Relate work done, charge and potential difference, and use the electronvolt as an
+              energy unit.
+            difficulty: 5
+            prerequisites: [physics-11-field-strength, physics-8-voltage]
+            tags: [electricity]
+          - slug: physics-11-capacitance
+            name: Capacitance and stored charge
+            description: >-
+              Apply Q = C V and calculate the energy stored in a capacitor, and explain how a
+              capacitive touchscreen detects a finger.
+            difficulty: 4
+            prerequisites: [physics-11-potential-difference]
+            tags: [electricity]
+
+  - slug: physics-11-current-circuits
+    title: Current and Circuits
+    icon: circuit-board
+    summary: Why a torch dims as its battery ages, and how to analyse any circuit.
+    topics:
+      - slug: physics-11-current-emf
+        title: Current and EMF
+        summary: What is actually moving, and why a real battery is not an ideal one.
+        skills:
+          - slug: physics-11-charge-carriers
+            name: Current and charge carriers
+            description: >-
+              Relate current to the charge passing a point per second, and describe the slow
+              drift of electrons behind an almost instant effect.
+            difficulty: 4
+            prerequisites: [physics-8-charge-current]
+            tags: [electricity]
+          - slug: physics-11-emf-internal-resistance
+            name: EMF and internal resistance
+            description: >-
+              Apply E = I (R + r) and explain why terminal voltage falls as current is drawn.
+            difficulty: 5
+            prerequisites: [physics-8-ohms-law, physics-11-charge-carriers]
+            tags: [electricity, core]
+
+      - slug: physics-11-circuit-analysis
+        title: Circuit Analysis
+        summary: Two conservation laws are enough to solve any circuit you will meet.
+        skills:
+          - slug: physics-11-kirchhoff
+            name: Kirchhoff's laws
+            description: >-
+              Apply conservation of charge at a junction and conservation of energy around a
+              loop to find unknown currents and voltages.
+            difficulty: 5
+            prerequisites: [physics-8-series-parallel, physics-11-emf-internal-resistance]
+            tags: [electricity, core]
+          - slug: physics-11-energy-cost
+            name: Electrical energy and household cost
+            description: >-
+              Calculate energy in kilowatt-hours and work out what an appliance costs to run.
+            difficulty: 3
+            prerequisites: [physics-8-electrical-power]
+            tags: [electricity]

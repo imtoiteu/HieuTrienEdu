@@ -93,10 +93,17 @@ content/
 ├── mathematics/
 │   ├── curriculum/math-6.yaml …          subject, course, units, topics, skills
 │   ├── lessons/math-lessons.yaml
-│   └── questions/math-6.yaml …
+│   ├── questions/math-6.yaml …
+│   ├── resources/math-upper.yaml         further-reading links, by topic or lesson
+│   ├── i18n/vi.yaml                      translations, keyed by entity kind and slug
+│   └── i18n/vi/upper-*.yaml              the same, split across files and merged
 └── physics/
     └── …
 ```
+
+Files are read in sorted order within each directory, which is **not** curriculum order —
+`math-10.yaml` sorts before `math-6.yaml`. Nothing may depend on that order: prerequisite edges
+are therefore resolved in a final pass, once every skill in every subject and grade exists.
 
 ### Curriculum file
 
@@ -244,15 +251,19 @@ reading a thermometer. Defaults cover almost everything; overrides are there for
 
 ## Extending
 
-**Adding a grade 10** — create `content/mathematics/curriculum/math-10.yaml` with
-`course.grade: 10`, declare prerequisites into grade 9 skills, add questions, re-seed. Nothing in
-the code assumes grades 6–9.
+**Adding a grade** — create `content/<subject>/curriculum/<course>.yaml` with the right
+`course.grade`, declare prerequisites into the grade below, add questions, re-seed. Grades 6–12
+exist for both subjects; nothing in the code assumes a particular range.
 
-**Adding a subject** — create `content/chemistry/` with the same three subdirectories. The loader
+**Adding a subject** — create `content/chemistry/` with the same subdirectories. The loader
 discovers subjects by directory. You will want to add a colour to `SUBJECT_THEME` in
 `apps/web/src/lib/utils.ts`.
 
-**Translating content** — the *interface* is fully internationalised, but **content is not**.
-Skill names, lesson text and question prompts are stored as single strings. Translating them needs
-either a `locale` column with one row per language, or a parallel `content/vi/` tree. This is the
-largest outstanding piece of the Vietnamese-first plan and is deliberately not faked.
+**Adding further reading** — put curated external links in `content/<subject>/resources/*.yaml`,
+attached to a `topic` or a `lesson`. They appear under the lesson body, with their licence and
+attribution shown, because most open sources are licensed on the condition that they are
+credited. Record the licence you actually verified rather than the one you assume.
+
+**Translating content** — both the interface *and* the content are internationalised. See
+[LOCALISATION.md](LOCALISATION.md): translations live in `content/<subject>/i18n/`, are merged
+into each row's `i18n` column at load time, and fall back to English field by field.

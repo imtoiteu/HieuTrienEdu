@@ -1,0 +1,851 @@
+# Mathematics lessons for grades 10-12 — original content authored for HieuTrienEducation.
+#
+# Upper-secondary mathematics loses students at the point where it stops obviously being about
+# anything. Each of these lessons therefore opens with a question someone actually needed to
+# answer, and derives the machinery from it.
+lessons:
+  # ------------------------------------------------------------------------------------
+  # Grade 10
+  # ------------------------------------------------------------------------------------
+  - slug: lesson-math-10-surveying
+    title: Measuring a Distance You Cannot Walk
+    topic: math-10-triangle-relations
+    skill: math-10-law-of-cosines
+    estimated_minutes: 22
+    summary: How to find the width of a river without crossing it.
+    objectives:
+      - Apply the law of sines to find an unknown side or angle
+      - Apply the law of cosines when two sides and the included angle are known
+      - Choose the correct rule from the information available
+    attribution: Written for HieuTrienEducation. Trigonometric treatment informed by OpenStax Algebra and Trigonometry 2e (CC BY 4.0).
+    license: proprietary
+    blocks:
+      - type: text
+        markdown: |
+          You need the distance across a river. You cannot swim it, and there is no bridge for
+          kilometres. But you can walk along your own bank, and you can measure angles.
+
+          That is enough. It has been enough since antiquity, and it is how every map of a
+          coastline was made before satellites.
+      - type: text
+        markdown: |
+          ### Beyond the right angle
+
+          In grade 9 the trigonometric ratios required a right angle. Most real triangles do not
+          have one. Two rules remove that restriction, and between them they cover every case.
+
+          **The law of sines** relates each side to the sine of the angle opposite it:
+
+          $$\frac{a}{\sin A} = \frac{b}{\sin B} = \frac{c}{\sin C}$$
+
+          **The law of cosines** handles the cases the sine rule cannot:
+
+          $$c^2 = a^2 + b^2 - 2ab\cos C$$
+      - type: callout
+        variant: tip
+        title: Which rule do I use?
+        text: >-
+          Look at what you are given. If you have an angle *paired with the side opposite it*,
+          use the law of sines. If you have two sides and the angle *between* them, or all three
+          sides, use the law of cosines. That single check settles almost every problem.
+      - type: table
+        headers: ["What you know", "Rule to use", "What you can find"]
+        rows:
+          - ["Two angles and any side", "Sines", "The other sides"]
+          - ["Two sides and a non-included angle", "Sines", "The other angle (watch for two solutions)"]
+          - ["Two sides and the included angle", "Cosines", "The third side"]
+          - ["All three sides", "Cosines", "Any angle"]
+      - type: example
+        title: Across the river
+        steps:
+          - text: "Mark points A and B on your bank, 50 m apart. Call the tree on the far bank C."
+          - text: "Measure the angle at A to the tree: 68°. Measure the angle at B: 74°."
+          - text: "The third angle follows, since angles in a triangle sum to 180°."
+            math: "C = 180° - 68° - 74° = 38°"
+          - text: "Now the side AB = 50 m is opposite angle C, so the sine rule applies."
+            math: "\\frac{AC}{\\sin 74°} = \\frac{50}{\\sin 38°}"
+          - text: "Solving gives AC ≈ 78.1 m — the straight-line distance to the tree, never having left your bank."
+      - type: example
+        title: When the sine rule will not help
+        steps:
+          - text: "Two roads leave a junction at 110° to each other. You drive 8 km along one and 5 km along the other."
+          - text: "You know two sides and the angle between them — no side is paired with a known opposite angle."
+          - text: "Apply the law of cosines."
+            math: "d^2 = 8^2 + 5^2 - 2(8)(5)\\cos 110°"
+          - text: "cos 110° = −0.342, so the term subtracts a negative and increases the total."
+            math: "d^2 = 64 + 25 + 27.4 = 116.4"
+          - text: "d ≈ 10.8 km apart."
+      - type: callout
+        variant: note
+        title: Pythagoras is a special case
+        text: >-
+          Set C = 90° in the law of cosines. Then cos C = 0, the last term vanishes, and it
+          reduces to c² = a² + b². Pythagoras' theorem is the law of cosines for right triangles
+          — not a separate result.
+      - type: callout
+        variant: warning
+        title: The ambiguous case
+        text: >-
+          Given two sides and a non-included angle, there can be *two* different triangles that
+          fit. Your calculator returns only the acute angle from arcsin; the obtuse angle
+          180° − θ may also be valid. Always check whether the second solution makes geometric
+          sense before discarding it.
+      - type: practice
+        skill: math-10-law-of-cosines
+      - type: summary
+        points:
+          - The law of sines pairs each side with the angle opposite it
+          - The law of cosines handles two sides plus the included angle, or all three sides
+          - Choose the rule by checking whether you have a side-angle pair
+          - Pythagoras is the law of cosines with the angle set to 90 degrees
+
+  - slug: lesson-math-10-optimisation
+    title: The Largest Field for the Least Fence
+    topic: math-10-quadratic-applications
+    skill: math-10-quadratic-optimisation
+    estimated_minutes: 20
+    summary: Every parabola has one highest or lowest point, and that is what makes it useful.
+    objectives:
+      - Translate a worded constraint into a quadratic function
+      - Locate the vertex and interpret it as a maximum or minimum
+      - Check that an optimal answer makes sense in context
+    attribution: Written for HieuTrienEducation. Quadratic modelling informed by OpenStax Algebra and Trigonometry 2e (CC BY 4.0).
+    license: proprietary
+    blocks:
+      - type: text
+        markdown: |
+          A farmer has 100 m of fencing and wants to enclose a rectangular field. What shape
+          should it be?
+
+          A long thin strip 49 m × 1 m uses all the fence and encloses 49 m². A 40 m × 10 m
+          rectangle uses the same fence and encloses 400 m². Somewhere there is a best answer,
+          and a quadratic finds it exactly.
+      - type: text
+        markdown: |
+          ### Setting it up
+
+          Call one side $x$. The perimeter fixes the other: $2x + 2y = 100$, so $y = 50 - x$.
+
+          The area is what we want to maximise:
+
+          $$A(x) = x(50 - x) = 50x - x^2$$
+
+          This is a quadratic with a negative $x^2$ coefficient, so its graph is a downward
+          parabola — it has a single maximum, at the vertex.
+      - type: interactive
+        widget: function-plot
+        config:
+          functions:
+            - {expression: "50*x - x*x", label: "A = 50x − x²", color: "primary"}
+            - {expression: "625", label: "Maximum area = 625", color: "muted"}
+          xRange: [0, 50]
+          yRange: [0, 700]
+          axisLabels: {x: "side length x (m)", y: "area (m²)"}
+      - type: example
+        title: Finding the vertex
+        steps:
+          - text: "For A(x) = −x² + 50x, read off a = −1 and b = 50."
+          - text: "The axis of symmetry sits at:"
+            math: "x = -\\frac{b}{2a} = -\\frac{50}{-2} = 25"
+          - text: "So one side is 25 m, and the other is 50 − 25 = 25 m. The optimal rectangle is a square."
+          - text: "Maximum area:"
+            math: "A = 25 \\times 25 = 625\\text{ m}^2"
+      - type: callout
+        variant: note
+        title: A result worth remembering
+        text: >-
+          For a fixed perimeter, the rectangle of greatest area is always a square. It is the
+          reason a circle beats every polygon for a given boundary length, and the reason a soap
+          bubble is spherical.
+      - type: table
+        headers: ["x (m)", "y = 50 − x", "Area (m²)"]
+        rows:
+          - ["5", "45", "225"]
+          - ["15", "35", "525"]
+          - ["25", "25", "625"]
+          - ["35", "15", "525"]
+          - ["45", "5", "225"]
+      - type: text
+        markdown: |
+          Notice the symmetry in the table: x = 15 and x = 35 give the same area. That is the
+          parabola's axis of symmetry showing up in the arithmetic, and it is a useful check —
+          if two different inputs give the same output, the vertex lies exactly between them.
+      - type: callout
+        variant: warning
+        title: Always check the context
+        text: >-
+          The algebra is happy with x = 60, giving a negative "area". Geometry is not: x must
+          lie between 0 and 50 for the field to exist. An optimisation answer outside the
+          sensible domain means the true optimum sits at an endpoint instead.
+      - type: practice
+        skill: math-10-quadratic-optimisation
+      - type: summary
+        points:
+          - Use the constraint to write the quantity as a function of one variable
+          - A quadratic has one turning point, at x = −b/2a
+          - A negative x² coefficient gives a maximum; a positive one gives a minimum
+          - Check the answer lies within the domain the situation allows
+
+  - slug: lesson-math-10-spread
+    title: Two Classes, One Average, Very Different Stories
+    topic: math-10-statistics-probability
+    skill: math-10-spread-measures
+    estimated_minutes: 20
+    summary: The mean tells you where the data sits. It tells you nothing about how spread out it is.
+    objectives:
+      - Calculate variance and standard deviation
+      - Interpret standard deviation as a typical distance from the mean
+      - Compare two data sets with the same mean but different spread
+    attribution: Written for HieuTrienEducation. Statistical treatment informed by OpenStax Introductory Statistics 2e (CC BY 4.0).
+    license: proprietary
+    blocks:
+      - type: text
+        markdown: |
+          Two classes sit the same test. Both have a mean of 60.
+
+          **Class A:** 58, 59, 60, 61, 62
+          **Class B:** 20, 40, 60, 80, 100
+
+          Identical averages. Completely different situations — and a teacher who only sees the
+          mean would treat them the same way, which would be a mistake in both cases.
+      - type: text
+        markdown: |
+          ### Measuring the spread
+
+          The obvious idea is to average the distances from the mean. But those distances sum to
+          zero by construction — the positives and negatives cancel exactly.
+
+          The fix is to square them first. That removes the signs, and gives the **variance**:
+
+          $$\sigma^2 = \frac{\sum (x_i - \bar{x})^2}{n}$$
+
+          Squaring changes the units, though — square marks are meaningless. So take the square
+          root, and you have the **standard deviation** σ, back in the original units.
+      - type: example
+        title: Class A
+        steps:
+          - text: "Mean is 60. The deviations are −2, −1, 0, 1, 2."
+          - text: "Square them: 4, 1, 0, 1, 4. Their sum is 10."
+          - text: "Variance:"
+            math: "\\sigma^2 = \\frac{10}{5} = 2"
+          - text: "Standard deviation:"
+            math: "\\sigma = \\sqrt{2} \\approx 1.4\\text{ marks}"
+      - type: example
+        title: Class B
+        steps:
+          - text: "Mean is 60. The deviations are −40, −20, 0, 20, 40."
+          - text: "Square them: 1600, 400, 0, 400, 1600. Their sum is 4000."
+          - text: "Variance:"
+            math: "\\sigma^2 = \\frac{4000}{5} = 800"
+          - text: "Standard deviation:"
+            math: "\\sigma = \\sqrt{800} \\approx 28.3\\text{ marks}"
+      - type: table
+        headers: ["", "Class A", "Class B"]
+        rows:
+          - ["Mean", "60", "60"]
+          - ["Range", "4", "80"]
+          - ["Standard deviation", "1.4", "28.3"]
+          - ["What it means", "Everyone is at the same level", "Some are lost, some are far ahead"]
+      - type: callout
+        variant: tip
+        title: What the number means
+        text: >-
+          Read the standard deviation as "a typical distance from the mean". Class A students
+          sit about 1.4 marks from 60. Class B students sit about 28 marks away — the mean
+          describes almost nobody in that class.
+      - type: callout
+        variant: note
+        title: Why not just use the range?
+        text: >-
+          The range uses only two values and is destroyed by a single outlier. Standard
+          deviation uses every value, so it describes the whole data set rather than its
+          extremes.
+      - type: callout
+        variant: warning
+        title: Two divisors
+        text: >-
+          Dividing by n gives the *population* standard deviation, used when your data is the
+          entire group. Dividing by n − 1 gives the *sample* version, used when your data is a
+          sample from a larger population. Check which one a question wants — they differ
+          noticeably for small n.
+      - type: practice
+        skill: math-10-spread-measures
+      - type: summary
+        points:
+          - Deviations from the mean sum to zero, so they are squared before averaging
+          - Variance is the mean squared deviation; standard deviation is its square root
+          - Standard deviation is a typical distance from the mean, in the original units
+          - Two data sets can share a mean and be completely different
+
+  # ------------------------------------------------------------------------------------
+  # Grade 11
+  # ------------------------------------------------------------------------------------
+  - slug: lesson-math-11-radians
+    title: Why Mathematicians Abandoned the Degree
+    topic: math-11-trig-functions
+    skill: math-11-radians
+    estimated_minutes: 20
+    summary: 360 is an arbitrary number inherited from Babylon. Radians are not arbitrary at all.
+    objectives:
+      - Convert between degrees and radians
+      - Define the radian in terms of arc length
+      - Read trigonometric values off the unit circle
+    attribution: Written for HieuTrienEducation. Informed by OpenStax Precalculus 2e (CC BY 4.0).
+    license: proprietary
+    blocks:
+      - type: text
+        markdown: |
+          Why are there 360 degrees in a circle?
+
+          Because Babylonian astronomers counted in base 60 and reckoned a year at roughly 360
+          days. That is the entire reason. There is nothing about a circle that singles out 360
+          — we could as easily have inherited 100, or 400.
+
+          A radian, by contrast, comes from the circle itself.
+      - type: callout
+        variant: note
+        title: The definition
+        text: >-
+          One radian is the angle you get when the arc length equals the radius. Wrap the radius
+          along the circumference; the angle it subtends at the centre is one radian. No
+          convention, no history — just the shape.
+      - type: text
+        markdown: |
+          ### How many fit in a circle?
+
+          The full circumference is $2\pi r$. Each radian uses up an arc of length $r$. So a
+          complete turn is $2\pi$ radians — about 6.28 of them.
+
+          $$180° = \pi \text{ rad} \qquad 1\text{ rad} = \frac{180°}{\pi} \approx 57.3°$$
+
+          To convert, multiply by $\pi/180$ going into radians, and by $180/\pi$ coming out.
+      - type: table
+        headers: ["Degrees", "Radians", "As a decimal"]
+        rows:
+          - ["30°", "π/6", "0.524"]
+          - ["45°", "π/4", "0.785"]
+          - ["60°", "π/3", "1.047"]
+          - ["90°", "π/2", "1.571"]
+          - ["180°", "π", "3.142"]
+          - ["360°", "2π", "6.283"]
+      - type: text
+        markdown: |
+          ### Why bother
+
+          Radians are not merely a tidier convention. They make the formulas simpler because the
+          angle is now a genuine ratio of two lengths rather than a count of arbitrary units.
+
+          Arc length becomes just $s = r\theta$. Sector area becomes $A = \tfrac{1}{2}r^2\theta$.
+          Both would need a clumsy $\pi/180$ factor in degrees.
+
+          And critically for grade 12: the derivative of $\sin x$ is $\cos x$ **only when x is
+          in radians**. In degrees you would be stuck writing $\frac{\pi}{180}\cos x$ forever.
+      - type: example
+        title: Arc length and sector area
+        steps:
+          - text: "A circle of radius 8 cm has a sector of angle 50°. Convert first."
+            math: "\\theta = 50 \\times \\frac{\\pi}{180} = 0.873\\text{ rad}"
+          - text: "Arc length:"
+            math: "s = r\\theta = 8 \\times 0.873 = 6.98\\text{ cm}"
+          - text: "Sector area:"
+            math: "A = \\tfrac{1}{2}r^2\\theta = 0.5 \\times 64 \\times 0.873 = 27.9\\text{ cm}^2"
+      - type: callout
+        variant: tip
+        title: The unit circle
+        text: >-
+          Draw a circle of radius 1. A point at angle θ around it has coordinates (cos θ, sin θ).
+          That is not a coincidence — it is the definition, and it extends sine and cosine
+          smoothly beyond the 0–90° range a right triangle allows.
+      - type: callout
+        variant: warning
+        title: Check your calculator
+        text: >-
+          A calculator in the wrong mode gives confidently wrong answers with no warning.
+          sin(30) is 0.5 in degrees and −0.988 in radians. Look for DEG or RAD on the display
+          before you start.
+      - type: practice
+        skill: math-11-radians
+      - type: summary
+        points:
+          - One radian is the angle whose arc length equals the radius
+          - A full turn is 2π radians, and 180° = π radians
+          - Arc length is rθ and sector area is half r squared θ, only in radians
+          - Calculus formulas for sine and cosine require radians
+
+  - slug: lesson-math-11-compound-growth
+    title: The Most Powerful Force Is Multiplication
+    topic: math-11-geometric
+    skill: math-11-compound-growth
+    estimated_minutes: 20
+    summary: Repeated multiplication outruns intuition, and it explains savings, debt and epidemics alike.
+    objectives:
+      - Model growth with a geometric progression
+      - Compare compound growth with linear growth
+      - Solve for the time or rate using logarithms
+    attribution: Written for HieuTrienEducation. Informed by OpenStax Algebra and Trigonometry 2e (CC BY 4.0).
+    license: proprietary
+    blocks:
+      - type: text
+        markdown: |
+          A classic puzzle. A pond has one lily pad. Every day the number doubles. On day 30 the
+          pond is completely covered.
+
+          On which day was it half covered?
+
+          The answer is day 29 — and almost nobody says it first time. Doubling means the last
+          step is as large as everything before it combined. Human intuition is built for adding,
+          not multiplying.
+      - type: text
+        markdown: |
+          ### Adding versus multiplying
+
+          **Arithmetic** growth adds a fixed amount each step: 100, 110, 120, 130 …
+          **Geometric** growth multiplies by a fixed factor: 100, 110, 121, 133.1 …
+
+          They look nearly identical at first. Over time they diverge completely, because the
+          geometric one earns growth on its previous growth.
+
+          $$u_n = a r^{\,n-1}$$
+      - type: interactive
+        widget: function-plot
+        config:
+          functions:
+            - {expression: "100*1.07**x", label: "7% compound", color: "primary"}
+            - {expression: "100 + 7*x", label: "7 per year, simple", color: "accent"}
+          xRange: [0, 40]
+          yRange: [0, 1200]
+          axisLabels: {x: "years", y: "value"}
+      - type: example
+        title: A savings account
+        steps:
+          - text: "100 million dong is deposited at 7% compounded annually."
+          - text: "Each year multiplies the balance by 1.07."
+            math: "V_n = 100 \\times 1.07^{\\,n}"
+          - text: "After 10 years:"
+            math: "V = 100 \\times 1.07^{10} = 196.7\\text{ million}"
+          - text: "After 30 years:"
+            math: "V = 100 \\times 1.07^{30} = 761.2\\text{ million}"
+          - text: "Simple interest at 7 million a year would have given only 310 million over the same 30 years."
+      - type: callout
+        variant: tip
+        title: The rule of 72
+        text: >-
+          Divide 72 by the percentage growth rate and you get the approximate doubling time. At
+          7%, money doubles in roughly 72 ÷ 7 ≈ 10 years — which matches the calculation above
+          almost exactly. It is a good enough estimate to do in your head.
+      - type: text
+        markdown: |
+          ### Solving for time
+
+          If the unknown is in the exponent, logarithms are the tool that brings it down:
+
+          $$100 \times 1.07^{\,n} = 500 \;\Rightarrow\; 1.07^{\,n} = 5 \;\Rightarrow\; n = \frac{\ln 5}{\ln 1.07} \approx 23.8\text{ years}$$
+      - type: table
+        headers: ["Situation", "Ratio r", "Behaviour"]
+        rows:
+          - ["Savings at 7%", "1.07", "Grows, doubling about every 10 years"]
+          - ["Credit card debt at 2% monthly", "1.02 monthly", "Grows 27% a year if unpaid"]
+          - ["Radioactive decay", "0.5 per half-life", "Shrinks towards zero"]
+          - ["Depreciating car at 15%/year", "0.85", "Loses over half its value in 5 years"]
+      - type: callout
+        variant: warning
+        title: It works against you too
+        text: >-
+          Compounding is not a benefit — it is a mechanism, and debt uses it as readily as
+          savings. A credit card at 2% per month is not 24% a year; it is 1.02¹² − 1 ≈ 26.8%,
+          and it compounds on the interest already owed.
+      - type: practice
+        skill: math-11-compound-growth
+      - type: summary
+        points:
+          - Geometric growth multiplies by a fixed ratio each step
+          - The nth term is a r to the power n minus 1
+          - Compounding diverges sharply from simple growth over long periods
+          - Use logarithms when the unknown is in the exponent
+
+  - slug: lesson-math-11-derivative
+    title: How Fast Are You Going Right Now?
+    topic: math-11-derivatives
+    skill: math-11-derivative-definition
+    estimated_minutes: 24
+    summary: Speed at an instant, from a calculation that only knows how to handle intervals.
+    objectives:
+      - Define the derivative as the limit of a difference quotient
+      - Interpret the derivative as an instantaneous rate of change
+      - Connect the gradient of a chord to the gradient of a tangent
+    attribution: Written for HieuTrienEducation. Informed by OpenStax Calculus Volume 1 (CC BY 4.0).
+    license: proprietary
+    blocks:
+      - type: text
+        markdown: |
+          Your speedometer says 60 km/h. What does that actually mean?
+
+          Speed is distance divided by time. But *right now* is an instant — zero time has
+          elapsed, and you have covered zero distance. The calculation is 0 ÷ 0, which is not a
+          number.
+
+          And yet the speedometer is clearly telling you something true. Resolving that tension
+          is what calculus was invented for.
+      - type: text
+        markdown: |
+          ### Squeezing the interval
+
+          You cannot measure speed over zero time. But you can measure it over a *small* time,
+          and then keep shrinking the interval.
+
+          Take a journey where distance is $s(t) = t^2$ metres. What is the speed at exactly
+          t = 3 s?
+      - type: table
+        headers: ["Interval", "Distance covered", "Average speed"]
+        rows:
+          - ["3 → 4 s", "16 − 9 = 7 m", "7.0 m/s"]
+          - ["3 → 3.1 s", "9.61 − 9 = 0.61 m", "6.1 m/s"]
+          - ["3 → 3.01 s", "9.0601 − 9 = 0.0601 m", "6.01 m/s"]
+          - ["3 → 3.001 s", "0.006001 m", "6.001 m/s"]
+      - type: callout
+        variant: note
+        title: The pattern
+        text: >-
+          The averages are converging on 6 m/s. We never actually reach a zero interval — but
+          the values approach 6 as closely as we like. That limiting value *is* the instantaneous
+          speed. This is the whole idea.
+      - type: text
+        markdown: |
+          ### Writing it down
+
+          For a general function, take an interval of width $h$ starting at $x$:
+
+          $$\text{average rate} = \frac{f(x+h) - f(x)}{h}$$
+
+          This is the gradient of the **chord** joining two points on the curve. Now let $h$
+          shrink towards zero. The chord pivots until it becomes the **tangent**:
+
+          $$f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h}$$
+      - type: example
+        title: Deriving it for f(x) = x²
+        steps:
+          - text: "Write out the difference quotient."
+            math: "\\frac{(x+h)^2 - x^2}{h}"
+          - text: "Expand the numerator."
+            math: "= \\frac{x^2 + 2xh + h^2 - x^2}{h} = \\frac{2xh + h^2}{h}"
+          - text: "Every term has an h, so it cancels — and this is the step that rescues us from 0/0."
+            math: "= 2x + h"
+          - text: "Now let h approach 0."
+            math: "f'(x) = 2x"
+          - text: "At x = 3 this gives 6 — exactly the value the table was converging on."
+      - type: interactive
+        widget: function-plot
+        config:
+          functions:
+            - {expression: "x*x", label: "f(x) = x²", color: "primary"}
+            - {expression: "6*x - 9", label: "tangent at x = 3, gradient 6", color: "accent"}
+          xRange: [-1, 6]
+          yRange: [-10, 30]
+          axisLabels: {x: "x", y: "y"}
+      - type: callout
+        variant: tip
+        title: One idea, many names
+        text: >-
+          Gradient of a tangent, instantaneous rate of change, marginal cost, velocity from a
+          distance-time graph, current from a charge-time graph — all of these are the
+          derivative. Recognising that they are the same object is most of what grade 12 asks of
+          you.
+      - type: callout
+        variant: warning
+        title: The limit is not "substitute h = 0"
+        text: >-
+          You cannot set h = 0 in the difference quotient — that gives 0/0 again. You must
+          simplify algebraically first, cancelling the h, and only then take the limit. Skipping
+          the cancellation is the most common error in this topic.
+      - type: practice
+        skill: math-11-derivative-definition
+      - type: summary
+        points:
+          - Average rate of change is the gradient of a chord
+          - The derivative is the limit of that gradient as the interval shrinks to zero
+          - Geometrically it is the gradient of the tangent at a point
+          - Cancel the h algebraically before taking the limit
+
+  # ------------------------------------------------------------------------------------
+  # Grade 12
+  # ------------------------------------------------------------------------------------
+  - slug: lesson-math-12-optimisation
+    title: Designing the Cheapest Possible Tin Can
+    topic: math-12-asymptotes-optimisation
+    skill: math-12-optimisation
+    estimated_minutes: 24
+    summary: A real manufacturing question, answered exactly by setting one derivative to zero.
+    objectives:
+      - Translate a constraint into a function of a single variable
+      - Use the derivative to locate a minimum
+      - Confirm a stationary point is the optimum required
+    attribution: Written for HieuTrienEducation. Informed by OpenStax Calculus Volume 1 (CC BY 4.0).
+    license: proprietary
+    blocks:
+      - type: text
+        markdown: |
+          A factory makes cylindrical cans holding 500 ml. Metal costs money, so they want the
+          shape that uses the least of it.
+
+          Should the can be tall and narrow, or short and wide? There are infinitely many
+          cylinders with a volume of 500 ml, and exactly one of them uses the least metal.
+      - type: text
+        markdown: |
+          ### The three steps
+
+          Optimisation problems all have the same skeleton:
+
+          1. Write the quantity to optimise. Here, the surface area.
+          2. Use the constraint to eliminate every variable but one.
+          3. Differentiate, set to zero, and solve.
+      - type: example
+        title: Setting up the can
+        steps:
+          - text: "For a closed cylinder of radius r and height h:"
+            math: "A = 2\\pi r^2 + 2\\pi r h, \\qquad V = \\pi r^2 h = 500"
+          - text: "The constraint gives h in terms of r."
+            math: "h = \\frac{500}{\\pi r^2}"
+          - text: "Substituting removes h entirely — now A depends on r alone."
+            math: "A(r) = 2\\pi r^2 + \\frac{1000}{r}"
+      - type: example
+        title: Minimising it
+        steps:
+          - text: "Differentiate."
+            math: "A'(r) = 4\\pi r - \\frac{1000}{r^2}"
+          - text: "Set to zero."
+            math: "4\\pi r = \\frac{1000}{r^2} \\;\\Rightarrow\\; r^3 = \\frac{250}{\\pi}"
+          - text: "Solve."
+            math: "r = 4.30\\text{ cm}"
+          - text: "And the height:"
+            math: "h = \\frac{500}{\\pi (4.30)^2} = 8.60\\text{ cm}"
+          - text: "So h = 2r exactly — the optimal can is as tall as it is wide."
+      - type: interactive
+        widget: function-plot
+        config:
+          functions:
+            - {expression: "2*3.14159*x*x + 1000/x", label: "A(r) = 2πr² + 1000/r", color: "primary"}
+            - {expression: "348.7", label: "minimum ≈ 349 cm²", color: "muted"}
+          xRange: [1, 12]
+          yRange: [0, 900]
+          axisLabels: {x: "radius r (cm)", y: "surface area (cm²)"}
+      - type: callout
+        variant: note
+        title: Confirming it is a minimum
+        text: >-
+          A'(r) = 0 only says the tangent is horizontal — that could be a maximum. Check the
+          second derivative: A''(r) = 4π + 2000/r³, which is positive for all r > 0. The curve
+          is concave up everywhere, so this stationary point is a minimum.
+      - type: text
+        markdown: |
+          ### Why real cans are not this shape
+
+          Look at a can of drink and it is clearly taller than it is wide. The mathematics is not
+          wrong — the model is incomplete. Real manufacturing adds costs the model ignored: the
+          top and bottom are thicker gauge metal, seams cost money, and cans have to fit a hand
+          and stack on a shelf.
+
+          Feed those into the objective function and the optimum moves. That is a feature of
+          modelling, not a failure of calculus.
+      - type: callout
+        variant: warning
+        title: Check the endpoints
+        text: >-
+          On a closed interval, the greatest or least value can occur at an endpoint rather than
+          a stationary point. Always evaluate the function at both ends as well before declaring
+          an answer.
+      - type: practice
+        skill: math-12-optimisation
+      - type: summary
+        points:
+          - Write the quantity to optimise, then use the constraint to reduce it to one variable
+          - Differentiate and set to zero to find stationary points
+          - Use the second derivative or the sign of the first to classify them
+          - Check endpoints, and check the answer makes sense in context
+
+  - slug: lesson-math-12-integral
+    title: Recovering the Journey from the Speedometer
+    topic: math-12-definite-integrals
+    skill: math-12-definite-integral
+    estimated_minutes: 22
+    summary: If a derivative turns distance into speed, integration turns speed back into distance.
+    objectives:
+      - Interpret a definite integral as an accumulated total
+      - Apply the fundamental theorem of calculus
+      - Relate the integral to the area under a curve
+    attribution: Written for HieuTrienEducation. Informed by OpenStax Calculus Volume 1 (CC BY 4.0).
+    license: proprietary
+    blocks:
+      - type: text
+        markdown: |
+          Suppose you recorded your speed every instant of a journey but never looked at the
+          odometer. Could you work out how far you travelled?
+
+          If the speed were constant, easily: distance = speed × time. But it was not constant —
+          you accelerated, braked, stopped at lights.
+      - type: text
+        markdown: |
+          ### Chop it up
+
+          Split the journey into intervals so short that the speed is nearly constant within
+          each. Over one such interval the distance is approximately $v \times \Delta t$ — the
+          area of a thin rectangle under the speed-time graph.
+
+          Add all the rectangles. Then make them thinner and take more of them. In the limit,
+          the sum of rectangle areas becomes the exact area under the curve:
+
+          $$\text{distance} = \int_{a}^{b} v(t)\,dt$$
+      - type: callout
+        variant: note
+        title: What an integral actually is
+        text: >-
+          A definite integral is an accumulated total: a rate multiplied by an interval, summed
+          over the whole range. Speed accumulates into distance, flow rate into volume, power
+          into energy, marginal cost into total cost. The area interpretation is a picture of
+          that sum.
+      - type: text
+        markdown: |
+          ### The theorem that makes it computable
+
+          Summing infinitely many rectangles is not a practical method. The **fundamental
+          theorem of calculus** replaces it with something you can do by hand:
+
+          $$\int_a^b f(x)\,dx = F(b) - F(a) \quad\text{where } F'(x) = f(x)$$
+
+          To find an area, find an antiderivative and subtract its values at the two ends. This
+          is one of the most consequential results in mathematics: it connects two problems —
+          tangents and areas — that had been studied separately for two thousand years.
+      - type: example
+        title: A car accelerating uniformly
+        steps:
+          - text: "A car's speed is v(t) = 4t m/s. How far does it travel in the first 5 seconds?"
+          - text: "Find an antiderivative of 4t."
+            math: "F(t) = 2t^2"
+          - text: "Evaluate at the limits and subtract."
+            math: "\\int_0^5 4t\\,dt = F(5) - F(0) = 50 - 0 = 50\\text{ m}"
+          - text: "Check it geometrically: the speed-time graph is a triangle of base 5 and height 20."
+            math: "\\text{area} = \\tfrac{1}{2}(5)(20) = 50\\text{ m} \\;\\checkmark"
+      - type: interactive
+        widget: function-plot
+        config:
+          functions:
+            - {expression: "4*x", label: "v(t) = 4t", color: "primary"}
+          xRange: [0, 6]
+          yRange: [0, 26]
+          axisLabels: {x: "time (s)", y: "speed (m/s)"}
+      - type: table
+        headers: ["Integrate this rate", "Over", "And you get"]
+        rows:
+          - ["Speed (m/s)", "Time", "Distance (m)"]
+          - ["Flow rate (l/s)", "Time", "Volume (l)"]
+          - ["Power (W)", "Time", "Energy (J)"]
+          - ["Force (N)", "Distance", "Work done (J)"]
+          - ["Marginal cost", "Quantity", "Total cost"]
+      - type: callout
+        variant: warning
+        title: Area below the axis counts as negative
+        text: >-
+          If the curve dips below the horizontal axis, the integral subtracts that region. For a
+          velocity that goes negative this is exactly right — it means moving backwards, and the
+          integral correctly gives *displacement*. But if you genuinely want total area, split
+          the integral at each crossing and add the absolute values.
+      - type: practice
+        skill: math-12-definite-integral
+      - type: summary
+        points:
+          - A definite integral accumulates a rate over an interval
+          - Geometrically it is the signed area under the curve
+          - The fundamental theorem evaluates it as F(b) − F(a)
+          - Regions below the axis contribute negatively
+
+  - slug: lesson-math-12-bayes
+    title: Your Positive Test Result Probably Is Not One
+    topic: math-12-conditional
+    skill: math-12-bayes
+    estimated_minutes: 24
+    summary: A 99% accurate test for a rare disease is wrong most of the time it says yes.
+    objectives:
+      - Apply the law of total probability
+      - Use Bayes' formula to reverse a conditional probability
+      - Explain why base rates dominate when an event is rare
+    attribution: Written for HieuTrienEducation. Informed by OpenStax Introductory Statistics 2e (CC BY 4.0).
+    license: proprietary
+    blocks:
+      - type: text
+        markdown: |
+          A disease affects 1 in 1,000 people. A test for it is 99% accurate: it catches 99% of
+          people who have the disease, and wrongly flags only 1% of healthy people.
+
+          You test positive. What is the probability you have the disease?
+
+          Most people say 99%. Most doctors, asked without warning, say something above 80%. The
+          actual answer is about **9%**.
+      - type: text
+        markdown: |
+          ### Count actual people
+
+          Forget the formula for a moment. Imagine testing 100,000 people.
+
+          - **100** have the disease (1 in 1,000). The test catches 99 of them.
+          - **99,900** are healthy. The test wrongly flags 1% of them — that is **999** people.
+
+          So 99 + 999 = 1,098 people test positive. Of those, only 99 actually have the disease.
+      - type: math
+        latex: "P(\\text{disease} \\mid +) = \\frac{99}{1098} \\approx 0.090"
+      - type: callout
+        variant: note
+        title: Where the intuition fails
+        text: >-
+          The healthy group is a thousand times larger than the sick group. Even a small error
+          rate applied to a huge population produces more false positives than there are true
+          positives in the small one. The test is not bad — the disease is rare, and rarity
+          dominates.
+      - type: table
+        headers: ["", "Has disease", "Healthy", "Total"]
+        rows:
+          - ["Tests positive", "99", "999", "1,098"]
+          - ["Tests negative", "1", "98,901", "98,902"]
+          - ["Total", "100", "99,900", "100,000"]
+      - type: text
+        markdown: |
+          ### The formula
+
+          What the table did by counting, Bayes' formula does algebraically:
+
+          $$P(A \mid B) = \frac{P(B \mid A)\,P(A)}{P(B)}$$
+
+          and the denominator usually needs the **law of total probability** — every route to a
+          positive result, added up:
+
+          $$P(B) = P(B \mid A)P(A) + P(B \mid \text{not }A)P(\text{not }A)$$
+      - type: example
+        title: The same calculation symbolically
+        steps:
+          - text: "P(disease) = 0.001, P(+ | disease) = 0.99, P(+ | healthy) = 0.01."
+          - text: "Total probability of a positive:"
+            math: "P(+) = (0.99)(0.001) + (0.01)(0.999) = 0.00099 + 0.00999 = 0.01098"
+          - text: "Apply Bayes:"
+            math: "P(\\text{disease} \\mid +) = \\frac{0.00099}{0.01098} = 0.090"
+          - text: "Identical to the counting argument, as it must be."
+      - type: callout
+        variant: tip
+        title: Why a second test changes everything
+        text: >-
+          After one positive result your probability rose from 0.1% to 9% — ninety times higher.
+          Test again and that 9% becomes the new base rate, and a second positive pushes it past
+          90%. This is exactly why screening programmes always confirm before treating.
+      - type: callout
+        variant: warning
+        title: Do not confuse the two directions
+        text: >-
+          P(positive | disease) and P(disease | positive) are entirely different numbers. The
+          first is a property of the test, near 99%. The second depends on how common the
+          disease is, and here it is 9%. Swapping them is the single most consequential error in
+          applied probability.
+      - type: practice
+        skill: math-12-bayes
+      - type: summary
+        points:
+          - Bayes' formula reverses a conditional probability
+          - The law of total probability supplies the denominator
+          - When an event is rare, false positives outnumber true positives
+          - P(B given A) and P(A given B) are different quantities

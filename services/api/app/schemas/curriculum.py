@@ -118,6 +118,25 @@ class VideoRead(BaseModel):
     attribution: str | None = None
 
 
+class ResourceRead(BaseModel):
+    """A further-reading link shown under a lesson.
+
+    ``host`` is derived rather than stored: a student deciding whether to follow a link out of
+    the site benefits from seeing where it goes before they click it.
+    """
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    title: str
+    description: str | None = None
+    resource_type: str
+    url: str
+    host: str | None = None
+    license: str | None = None
+    attribution: str | None = None
+
+
 class LessonDetail(LessonSummary):
     blocks: list[dict[str, Any]] = Field(default_factory=list)
     topic_slug: str | None = None
@@ -125,6 +144,7 @@ class LessonDetail(LessonSummary):
     skill_slug: str | None = None
     skill_name: str | None = None
     video: VideoRead | None = None
+    resources: list[ResourceRead] = Field(default_factory=list)
     attribution: str | None = None
     license: str | None = None
     # Student-specific, absent for anonymous callers.

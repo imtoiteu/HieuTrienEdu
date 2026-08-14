@@ -16,6 +16,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session, selectinload
 
 from app.adaptive.bkt import MASTERY_THRESHOLD, BKTParameters, update_mastery
+from app.core.i18n import localise
 from app.exercise_engine import (
     GenerationError,
     QuestionTemplate,
@@ -218,7 +219,8 @@ def serve_question(
         "question_type": question.question_type,
         "difficulty": question.difficulty,
         "estimated_seconds": question.estimated_seconds,
-        "skill": {"id": skill.id, "slug": skill.slug, "name": skill.name},
+        # The skill name is displayed above the question, so it localises with everything else.
+        "skill": {"id": skill.id, "slug": skill.slug, "name": localise(skill, "name", locale)},
         **generated.rendered,
         "hints": [{"index": i, "text": h.get("text", "")}
                   for i, h in enumerate(generated.hints)],

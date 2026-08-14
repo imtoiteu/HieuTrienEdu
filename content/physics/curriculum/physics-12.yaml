@@ -1,0 +1,212 @@
+# Physics — Physics 12
+#
+# The final grade of the GDPT 2018 programme: thermal physics, the ideal gas, magnetic fields
+# and nuclear physics. These are the four topics where school physics touches things students
+# will actually read about in the news — power stations, climate, medical scanners, nuclear
+# energy — so each unit is deliberately tied to one of them rather than left as formalism.
+subject:
+  slug: physics
+  name: Physics
+  icon: atom
+  color: "#00B8A9"
+  position: 2
+
+course:
+  slug: physics-12
+  title: Physics — Grade 12
+  grade: 12
+  summary: Thermal physics, the ideal gas, magnetic fields and the nucleus.
+  description: >-
+    Grade 12 closes the programme with the physics behind power and medicine. Students apply the
+    first law of thermodynamics and find out why no engine can be perfectly efficient; derive
+    the ideal gas equation and use it on a hot-air balloon; work through electromagnetic
+    induction to the transformers that make a national grid possible; and finish inside the
+    nucleus, with binding energy, fission, fusion, and the decay law that dates a piece of
+    charcoal or targets a tumour.
+  estimated_hours: 105
+
+units:
+  - slug: physics-12-thermal
+    title: Thermal Physics
+    icon: thermometer
+    summary: Energy, heat and work — and the reason a perfect engine is impossible.
+    topics:
+      - slug: physics-12-first-law
+        title: Internal Energy and the First Law
+        summary: Heating something and doing work on it are two routes to the same place.
+        skills:
+          - slug: physics-12-internal-energy
+            name: Internal energy and the first law
+            description: >-
+              Apply delta-U = Q + W, and distinguish internal energy from heat and from
+              temperature.
+            difficulty: 5
+            prerequisites: [physics-9-specific-heat, physics-6-particle-model]
+            tags: [heat, core]
+          - slug: physics-12-heat-engines
+            name: Heat engines and efficiency
+            description: >-
+              Calculate the efficiency of a heat engine and explain why some energy must always
+              be rejected to a cold reservoir.
+            difficulty: 5
+            prerequisites: [physics-12-internal-energy, physics-8-efficiency]
+            tags: [heat]
+
+      - slug: physics-12-temperature-calorimetry
+        title: Temperature and Calorimetry
+        summary: An absolute scale, and what happens when hot meets cold.
+        skills:
+          - slug: physics-12-kelvin
+            name: The Kelvin scale and absolute zero
+            description: >-
+              Convert between Celsius and Kelvin and explain what absolute zero means in terms
+              of particle motion.
+            difficulty: 3
+            prerequisites: [physics-7-temperature-vs-heat]
+            tags: [heat, foundation]
+          - slug: physics-12-calorimetry
+            name: Calorimetry and mixtures
+            description: >-
+              Find the final temperature when two substances at different temperatures are
+              mixed, including changes of state.
+            difficulty: 5
+            prerequisites: [physics-9-specific-heat, physics-9-latent-heat]
+            tags: [heat, core]
+
+  - slug: physics-12-ideal-gas
+    title: The Ideal Gas
+    icon: wind
+    summary: Why a hot-air balloon rises, from the behaviour of individual molecules.
+    topics:
+      - slug: physics-12-gas-laws-adv
+        title: The Gas Laws
+        summary: Three experimental laws that turn out to be one equation.
+        skills:
+          - slug: physics-12-boyle-charles
+            name: Boyle's and Charles's laws
+            description: >-
+              Apply the pressure-volume and volume-temperature relationships for a fixed mass of
+              gas, using absolute temperature throughout.
+            difficulty: 4
+            prerequisites: [physics-9-gas-laws, physics-12-kelvin]
+            tags: [heat, core]
+          - slug: physics-12-ideal-gas-equation
+            name: The ideal gas equation
+            description: >-
+              Apply pV = nRT to real situations — a hot-air balloon, a scuba tank, a car tyre on
+              a hot day.
+            difficulty: 5
+            prerequisites: [physics-12-boyle-charles]
+            tags: [heat, core]
+
+      - slug: physics-12-molecular-model
+        title: Kinetic Theory
+        summary: Pressure is molecules hitting the walls, and temperature is how fast they move.
+        skills:
+          - slug: physics-12-kinetic-theory
+            name: Kinetic theory of gases
+            description: >-
+              Relate the pressure of a gas to the motion of its molecules and the mean kinetic
+              energy to absolute temperature.
+            difficulty: 5
+            prerequisites: [physics-12-ideal-gas-equation]
+            tags: [heat]
+          - slug: physics-12-avogadro
+            name: Moles and the Avogadro constant
+            description: >-
+              Convert between mass, number of moles and number of molecules.
+            difficulty: 4
+            prerequisites: [math-8-scientific-notation]
+            tags: [heat]
+
+  - slug: physics-12-magnetic-field
+    title: Magnetic Fields and Induction
+    icon: magnet
+    summary: The effect that generates almost every unit of electricity you have ever used.
+    topics:
+      - slug: physics-12-magnetic-force
+        title: Magnetic Force and Flux
+        summary: Forces on currents and on moving charges, and how to count field lines.
+        skills:
+          - slug: physics-12-force-on-conductor
+            name: Force on a current-carrying conductor
+            description: >-
+              Apply F = B I L sin(theta) and use Fleming's left-hand rule to find the direction.
+            difficulty: 4
+            prerequisites: [physics-9-motor-effect, math-9-trig-ratios]
+            tags: [electromagnetism, core]
+          - slug: physics-12-flux
+            name: Magnetic flux and flux linkage
+            description: >-
+              Calculate magnetic flux through a coil and flux linkage for N turns.
+            difficulty: 5
+            prerequisites: [physics-9-magnetic-fields]
+            tags: [electromagnetism]
+
+      - slug: physics-12-induction-ac
+        title: Induction and Alternating Current
+        summary: From a moving magnet to the transformers on every street.
+        skills:
+          - slug: physics-12-faraday-lenz
+            name: Faraday's and Lenz's laws
+            description: >-
+              Calculate an induced EMF from the rate of change of flux linkage, and use Lenz's
+              law to find its direction.
+            difficulty: 5
+            prerequisites: [physics-12-flux, physics-9-induction]
+            tags: [electromagnetism, core]
+          - slug: physics-12-ac-transformers
+            name: Alternating current and transformers
+            description: >-
+              Relate peak and RMS values, and apply the turns ratio to explain why power is
+              transmitted at high voltage.
+            difficulty: 5
+            prerequisites: [physics-12-faraday-lenz, physics-8-electrical-power]
+            tags: [electromagnetism]
+
+  - slug: physics-12-nuclear
+    title: Nuclear Physics
+    icon: atom
+    summary: Where the energy in a power station and the dose in a scanner come from.
+    topics:
+      - slug: physics-12-nuclear-energy
+        title: Mass, Binding Energy and Nuclear Reactions
+        summary: A missing fraction of a gram, worth a city's electricity.
+        skills:
+          - slug: physics-12-mass-defect
+            name: Mass defect and binding energy
+            description: >-
+              Calculate mass defect and binding energy per nucleon using E = mc^2, and read the
+              binding-energy curve.
+            difficulty: 5
+            prerequisites: [physics-9-atom-structure, math-8-scientific-notation]
+            tags: [atomic, core]
+          - slug: physics-12-fission-fusion
+            name: Fission and fusion
+            description: >-
+              Compare fission and fusion, balance a nuclear equation, and explain why both
+              release energy despite being opposites.
+            difficulty: 5
+            prerequisites: [physics-12-mass-defect, physics-9-isotopes]
+            tags: [atomic]
+
+      - slug: physics-12-decay-applications
+        title: Decay and its Applications
+        summary: Radiocarbon dating, medical imaging and the reason a dose is measured.
+        skills:
+          - slug: physics-12-decay-law
+            name: The radioactive decay law
+            description: >-
+              Apply N = N0 e^(-lambda t), relate the decay constant to half-life, and date a
+              sample from its remaining activity.
+            difficulty: 5
+            prerequisites: [physics-9-half-life, math-11-log-equations]
+            tags: [atomic, core]
+          - slug: physics-12-radiation-safety
+            name: Radiation in medicine and safety
+            description: >-
+              Compare the uses of radiation in imaging and therapy, and justify the choice of
+              isotope and half-life for each.
+            difficulty: 3
+            prerequisites: [physics-9-radiation-types]
+            tags: [atomic]

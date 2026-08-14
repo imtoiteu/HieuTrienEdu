@@ -1,0 +1,553 @@
+# Vietnamese translations — physics question templates, grades 10-12.
+#
+# These are TEMPLATES, not rendered questions. Every {{ placeholder }} must survive intact and
+# unchanged: the loader generates a variant in each language at the same seed and refuses to
+# store the question if the Vietnamese version fails to render. `choices` supplies labels only,
+# in the original order — the answer key is never restated here.
+
+questions:
+  # ---------------------------------------------------------------------------- lớp 10
+  p10-resultant-displacement:
+    prompt: >-
+      Một học sinh đi {{a}} m về hướng đông, rồi đi tiếp {{b}} m về hướng bắc.
+      Độ lớn độ dịch chuyển của bạn ấy bằng bao nhiêu mét?
+    hints:
+      - text: "Độ dịch chuyển là một vectơ: hai chặng đường vuông góc với nhau."
+      - text: "Áp dụng định lí Pythagore cho tam giác vuông có hai cạnh góc vuông là {{a}} và {{b}}."
+    solution:
+      - text: "Hai chặng vuông góc với nhau nên độ dịch chuyển chính là cạnh huyền."
+      - text: "s = căn({{a}}^2 + {{b}}^2) = {{sqrt(a*a + b*b) : 2}} m."
+      - text: "Quãng đường đi được là {{a + b}} m — lớn hơn, vì quãng đường không kể đến hướng."
+  p10-distance-vs-displacement:
+    prompt: >-
+      Một vận động viên chạy đúng một vòng trên đường chạy dài 400 m và dừng lại ở đúng chỗ
+      xuất phát. Khẳng định nào sau đây là đúng?
+    choices:
+      - "Quãng đường là 400 m và độ dịch chuyển là 0 m"
+      - "Quãng đường là 0 m và độ dịch chuyển là 400 m"
+      - "Cả quãng đường và độ dịch chuyển đều là 400 m"
+      - "Cả quãng đường và độ dịch chuyển đều là 0 m"
+    hints:
+      - text: "Độ dịch chuyển chỉ đo đoạn thẳng nối điểm đầu với điểm cuối."
+    solution:
+      - text: "Chiều dài đường đi là 400 m, nên quãng đường đi được là 400 m."
+      - text: "Điểm kết thúc trùng với điểm xuất phát, nên độ dịch chuyển bằng không."
+  p10-vt-graph-area:
+    prompt: >-
+      Trên đồ thị vận tốc - thời gian, một vật tăng tốc đều từ trạng thái nghỉ đến {{v}} m/s
+      trong {{t}} s. Vật đi được quãng đường bao nhiêu mét?
+    hints:
+      - text: "Trên đồ thị vận tốc - thời gian, diện tích phía dưới đồ thị chính là quãng đường."
+      - text: "Ở đây hình đó là một tam giác có đáy {{t}} và chiều cao {{v}}."
+    solution:
+      - text: "Diện tích tam giác = 1/2 x đáy x chiều cao."
+      - text: "s = 0,5 x {{t}} x {{v}} = {{0.5*v*t : 1}} m."
+      - text: "Chú ý đây là một nửa của {{v*t}} m — quãng đường nếu đi với tốc độ cuối trong suốt thời gian ấy."
+  p10-projectile-horizontal:
+    prompt: >-
+      Một quả bóng được ném với vận tốc {{u}} m/s, hợp với phương ngang góc {{theta}} độ.
+      Thành phần nằm ngang của vận tốc bằng bao nhiêu m/s?
+    hints:
+      - text: "Phân tích vận tốc ban đầu thành thành phần ngang và thành phần thẳng đứng."
+      - text: "Thành phần nằm ngang dùng côsin: u cos(theta)."
+    solution:
+      - text: "u_x = {{u}} x cos({{theta}} độ) = {{u * cos(radians(theta)) : 2}} m/s."
+      - text: "Thành phần này không đổi trong suốt quá trình bay — trọng lực chỉ tác dụng theo phương thẳng đứng."
+  p10-projectile-time-of-flight:
+    prompt: >-
+      Một quả bóng được ném từ mặt đất với vận tốc {{u}} m/s, hợp với phương ngang góc
+      {{theta}} độ. Bóng ở trên không bao nhiêu giây? Lấy g = 10 m/s^2.
+    hints:
+      - text: "Thành phần thẳng đứng của vận tốc ban đầu là u sin(theta)."
+      - text: "Thời gian rơi xuống bằng đúng thời gian bay lên."
+    solution:
+      - text: "u_y = {{u}} x sin({{theta}} độ) = {{u * sin(radians(theta)) : 2}} m/s."
+      - text: "Thời gian lên tới điểm cao nhất = u_y / g = {{u * sin(radians(theta)) / 10 : 2}} s."
+      - text: "Tổng thời gian bay gấp đôi: {{2 * u * sin(radians(theta)) / 10 : 2}} s."
+  p10-free-body-constant-velocity:
+    prompt: >-
+      Một thùng hàng đang được đẩy trượt trên sàn với *vận tốc không đổi*.
+      Có thể nói gì về các lực theo phương ngang tác dụng lên nó?
+    choices:
+      - "Lực đẩy và lực ma sát có độ lớn bằng nhau và ngược chiều"
+      - "Lực đẩy lớn hơn lực ma sát"
+      - "Lực ma sát lớn hơn lực đẩy"
+      - "Không có lực ma sát nào tác dụng"
+    hints:
+      - text: "Vận tốc không đổi nghĩa là gia tốc bằng không."
+      - text: "Gia tốc bằng không nghĩa là *hợp lực* bằng không, chứ không phải mọi lực đều bằng không."
+    solution:
+      - text: "Theo định luật I Newton, vận tốc không đổi đòi hỏi hợp lực bằng không."
+      - text: "Vậy lực đẩy và lực ma sát phải triệt tiêu nhau hoàn toàn."
+  p10-slope-component:
+    prompt: >-
+      Một vật {{m}} kg nằm trên mặt phẳng nghiêng không ma sát, nghiêng góc {{theta}} độ.
+      Thành phần trọng lực dọc theo mặt phẳng nghiêng bằng bao nhiêu niutơn? Lấy g = 10 m/s^2.
+    hints:
+      - text: "Trọng lực là {{m}} x 10 = {{m*10}} N, hướng thẳng xuống."
+      - text: "Phân tích nó theo phương song song với mặt nghiêng — thành phần đó dùng sin."
+    solution:
+      - text: "P = {{m}} x 10 = {{m*10}} N."
+      - text: "Thành phần dọc mặt nghiêng = P sin(theta) = {{m * 10 * sin(radians(theta)) : 2}} N."
+      - text: "Thành phần vuông góc, P cos(theta), được cân bằng bởi phản lực pháp tuyến."
+  p10-friction-force:
+    prompt: >-
+      Một thùng {{m}} kg đặt trên sàn nằm ngang có hệ số ma sát {{mu}}.
+      Lực ma sát lớn nhất bằng bao nhiêu niutơn? Lấy g = 10 m/s^2.
+    hints:
+      - text: "Trên sàn nằm ngang, phản lực pháp tuyến bằng trọng lực."
+      - text: "Lực ma sát = mu x N."
+    solution:
+      - text: "N = {{m}} x 10 = {{m*10}} N."
+      - text: "F = {{mu}} x {{m*10}} = {{mu * m * 10 : 2}} N."
+  p10-terminal-velocity:
+    prompt: >-
+      Đúng hay sai: người nhảy dù đang rơi với tốc độ giới hạn thì không có lực nào tác dụng lên họ.
+    hints:
+      - text: "Tốc độ giới hạn nghĩa là vận tốc không đổi, tức *hợp lực* bằng không."
+      - text: "Hợp lực bằng không không có nghĩa là không có lực nào."
+    solution:
+      - text: "Vẫn có hai lực lớn tác dụng: trọng lực hướng xuống và lực cản hướng lên."
+      - text: "Chúng có độ lớn bằng nhau nên triệt tiêu, và người nhảy dù ngừng tăng tốc."
+  p10-work-at-angle:
+    prompt: >-
+      Một sợi dây kéo chiếc xe trượt đi {{s}} m trên mặt đất bằng lực {{f}} N,
+      hợp với phương ngang góc {{theta}} độ. Công thực hiện bằng bao nhiêu jun?
+    hints:
+      - text: "Chỉ thành phần lực *dọc theo* chuyển động mới sinh công."
+      - text: "A = F s cos(theta)."
+    solution:
+      - text: "Thành phần dọc mặt đất = {{f}} x cos({{theta}} độ) = {{f * cos(radians(theta)) : 2}} N."
+      - text: "A = {{f * cos(radians(theta)) : 2}} x {{s}} = {{f * s * cos(radians(theta)) : 2}} J."
+  p10-work-energy-braking:
+    prompt: >-
+      Một ô tô {{m}} kg đang chạy với vận tốc {{v}} m/s thì phanh lại và dừng hẳn nhờ lực hãm
+      không đổi {{f}} N. Xe đi thêm bao nhiêu mét trước khi dừng?
+    hints:
+      - text: "Toàn bộ động năng phải bị triệt tiêu bởi công của lực hãm."
+      - text: "Cho 1/2 m v^2 bằng F x s rồi giải tìm s."
+    solution:
+      - text: "Động năng = 0,5 x {{m}} x {{v}}^2 = {{0.5 * m * v * v}} J."
+      - text: "Công của lực hãm = F s, nên s = W_đ / F."
+      - text: "s = {{0.5 * m * v * v}} ÷ {{f}} = {{0.5 * m * v * v / f : 2}} m."
+      - text: "Chú ý số hạng v^2: tăng gấp đôi tốc độ thì quãng đường phanh tăng gấp bốn."
+  p10-power-force-velocity:
+    prompt: >-
+      Một đoàn tàu chạy đều với vận tốc {{v}} m/s, chịu tổng lực cản {{f}} N.
+      Động cơ phải sinh công suất bao nhiêu oát?
+    hints:
+      - text: "Khi vận tốc không đổi, lực kéo của đầu máy bằng lực cản."
+      - text: "Công suất = lực x vận tốc."
+    solution:
+      - text: "P = {{f}} x {{v}} = {{f*v}} W."
+      - text: "Tức là {{f*v/1000 : 2}} kW."
+  p10-efficiency-chain:
+    prompt: >-
+      Một nhà máy điện cung cấp {{ein}} J năng lượng hóa học. Lò hơi có hiệu suất {{e1}}% và
+      tua bin phía sau có hiệu suất {{e2}}%. Năng lượng có ích ra khỏi tua bin là bao nhiêu jun?
+    hints:
+      - text: "Hiệu suất trong một chuỗi thì nhân với nhau — không phải cộng."
+      - text: "Sau lò hơi: {{ein}} x {{e1}}/100 = {{ein * e1 / 100 : 1}} J."
+    solution:
+      - text: "Sau lò hơi: {{ein * e1 / 100 : 1}} J."
+      - text: "Sau tua bin: {{ein * e1 / 100 : 1}} x {{e2}}/100 = {{ein * e1 / 100 * e2 / 100 : 1}} J."
+      - text: "Hiệu suất tổng là {{e1 * e2 / 100 : 1}}%, chứ không phải {{e1 + e2}}%."
+  p10-impulse-force:
+    prompt: >-
+      Một hình nhân thử va chạm {{m}} kg đang chuyển động với vận tốc {{v}} m/s được túi khí
+      hãm lại trong {{t}} s. Lực trung bình tác dụng lên nó bằng bao nhiêu niutơn?
+    hints:
+      - text: "Xung lượng = F t = độ biến thiên động lượng."
+      - text: "Độ biến thiên động lượng là {{m}} x {{v}} = {{m*v}} kg m/s."
+    solution:
+      - text: "Độ biến thiên động lượng = {{m}} x {{v}} = {{m*v}} kg m/s."
+      - text: "F = {{m*v}} ÷ {{t}} = {{m * v / t : 1}} N."
+      - text: "Không có túi khí thì thời gian dừng sẽ ngắn hơn nhiều, nên lực sẽ lớn hơn rất nhiều — đó chính là công dụng của nó."
+  p10-collision-type:
+    prompt: >-
+      Hai xe lăn va chạm rồi dính vào nhau. Đại lượng nào chắc chắn *không* được bảo toàn?
+    choices:
+      - "Động năng"
+      - "Động lượng"
+      - "Năng lượng toàn phần"
+      - "Tổng khối lượng"
+    hints:
+      - text: "Dính vào nhau khiến đây là va chạm mềm (hoàn toàn không đàn hồi)."
+      - text: "Động lượng được bảo toàn trong mọi va chạm; động năng thì không."
+    solution:
+      - text: "Động lượng luôn được bảo toàn khi không có ngoại lực tác dụng."
+      - text: "Trong va chạm mềm, một phần động năng chuyển thành nhiệt, âm thanh và biến dạng."
+      - text: "Năng lượng toàn phần vẫn được bảo toàn — nó chỉ đổi sang dạng khác."
+  p10-centripetal-force:
+    prompt: >-
+      Một ô tô {{m}} kg vào cua trên cung đường bán kính {{r}} m với vận tốc {{v}} m/s.
+      Cần lực hướng tâm bằng bao nhiêu niutơn?
+    hints:
+      - text: "F = m v^2 / r."
+      - text: "{{v}}^2 = {{v*v}}."
+    solution:
+      - text: "F = {{m}} x {{v*v}} ÷ {{r}} = {{m * v * v / r : 1}} N."
+      - text: "Lực này đến từ ma sát giữa lốp xe và mặt đường — vì thế khúc cua trơn trượt rất nguy hiểm."
+  p10-elastic-energy:
+    prompt: >-
+      Một dây nhảy bungee có độ cứng {{k}} N/m và bị kéo giãn {{x}} m.
+      Thế năng đàn hồi tích trữ trong dây bằng bao nhiêu jun?
+    hints:
+      - text: "W_t = 1/2 k x^2."
+      - text: "{{x}}^2 = {{x*x : 2}}."
+    solution:
+      - text: "W_t = 0,5 x {{k}} x {{x*x : 2}} = {{0.5 * k * x * x : 2}} J."
+      - text: "Lực ở độ giãn đó là {{k*x : 1}} N, nhưng lực *trung bình* trong cả quá trình giãn chỉ bằng một nửa — đó là nguồn gốc của hệ số 1/2."
+
+  # ---------------------------------------------------------------------------- lớp 11
+  p11-shm-period:
+    prompt: >-
+      Một vật gắn vào lò xo thực hiện {{n}} dao động toàn phần trong {{t}} s.
+      Chu kì của dao động bằng bao nhiêu giây?
+    hints:
+      - text: "Chu kì là thời gian thực hiện *một* dao động toàn phần."
+      - text: "Lấy tổng thời gian chia cho số dao động."
+    solution:
+      - text: "T = {{t}} ÷ {{n}} = {{t / n : 3}} s."
+      - text: "Tần số là nghịch đảo của nó: {{n / t : 3}} Hz."
+  p11-shm-max-acceleration:
+    prompt: >-
+      Một vật dao động điều hòa với biên độ {{a}} m và tần số góc {{w}} rad/s.
+      Gia tốc cực đại của nó bằng bao nhiêu m/s^2?
+    hints:
+      - text: "Trong dao động điều hòa, a_max = omega^2 x biên độ."
+      - text: "omega^2 = {{w*w}}."
+    solution:
+      - text: "a_max = {{w*w}} x {{a}} = {{a * w * w : 3}} m/s^2."
+      - text: "Nó xảy ra ở vị trí biên, nơi lực kéo về có độ lớn lớn nhất."
+  p11-pendulum-period:
+    prompt: >-
+      Một con lắc đơn có chiều dài {{l}} m. Chu kì của nó bằng bao nhiêu giây?
+      Lấy g = 10 m/s^2.
+    hints:
+      - text: "T = 2 pi căn(L / g)."
+      - text: "L / g = {{l}} ÷ 10 = {{l / 10 : 4}}."
+    solution:
+      - text: "T = 2 pi x căn({{l / 10 : 4}}) = {{2 * pi * sqrt(l / 10) : 3}} s."
+      - text: "Chú ý khối lượng quả nặng không xuất hiện — con lắc nặng dao động cùng nhịp với con lắc nhẹ cùng chiều dài."
+  p11-damping-suspension:
+    prompt: >-
+      Hệ thống giảm xóc ô tô được thiết kế để trở về vị trí cân bằng nhanh nhất có thể mà không
+      dao động. Đó là kiểu tắt dần nào?
+    choices:
+      - "Tắt dần tới hạn"
+      - "Tắt dần yếu"
+      - "Tắt dần mạnh"
+      - "Không tắt dần"
+    hints:
+      - text: "Tắt dần yếu vẫn còn dao động; tắt dần mạnh thì trở về rất chậm."
+    solution:
+      - text: "Tắt dần tới hạn là trường hợp ranh giới: trở về nhanh nhất mà không vượt quá vị trí cân bằng."
+      - text: "Giảm xóc mòn trở thành tắt dần yếu, vì thế xe hỏng cứ nhún lên nhún xuống mãi."
+  p11-resonance-bridge:
+    prompt: >-
+      Một cơn gió đều và vừa phải đã phá hủy cầu Tacoma Narrows năm 1940, dù nó quá yếu để xô
+      đổ cây cầu. Cách giải thích nào là đúng nhất?
+    choices:
+      - "Gió cưỡng bức cây cầu ở tần số gần với một trong các tần số riêng của nó"
+      - "Gió tạo ra lực lớn hơn sức chịu đựng của cây cầu"
+      - "Thép của cầu bị mỏi do nhiệt độ thay đổi"
+      - "Gió làm giảm áp suất không khí cho đến khi mặt cầu bị nâng lên"
+    hints:
+      - text: "Biên độ tăng dần trong nhiều giờ, từ một lực cưỡng bức không hề mạnh lên."
+      - text: "Đó là dấu hiệu đặc trưng của cộng hưởng."
+    solution:
+      - text: "Khi một hệ bị cưỡng bức ở đúng tần số riêng, mỗi lần tác dụng đều bơm thêm năng lượng đúng nhịp với chuyển động."
+      - text: "Biên độ tăng vượt xa mức mà riêng độ lớn của lực cưỡng bức có thể gợi ra."
+      - text: "Đó cũng là hiện tượng giúp ca sĩ làm vỡ ly thủy tinh, và là lí do bộ đội phải bỏ nhịp bước khi qua cầu."
+  p11-wave-speed:
+    prompt: >-
+      Một sóng có tần số {{f}} Hz và bước sóng {{lam}} m.
+      Tốc độ truyền sóng bằng bao nhiêu m/s?
+    hints:
+      - text: "v = f lambda."
+    solution:
+      - text: "v = {{f}} x {{lam}} = {{f * lam : 2}} m/s."
+  p11-path-difference:
+    prompt: >-
+      Hai loa phát ra sóng âm giống hệt nhau, cùng pha. Tại một điểm, hiệu đường đi đúng bằng
+      nửa bước sóng. Người đứng ở đó nghe thấy gì?
+    choices:
+      - "Gần như không nghe thấy gì — hai sóng triệt tiêu nhau"
+      - "Âm to gấp đôi so với khi chỉ có một loa"
+      - "Âm có tần số gấp đôi"
+      - "Giống hệt như khi chỉ có một loa"
+    hints:
+      - text: "Hiệu đường đi bằng nửa bước sóng làm hai sóng ngược pha hoàn toàn."
+    solution:
+      - text: "Hai sóng ngược pha có cùng biên độ giao thoa triệt tiêu và khử lẫn nhau."
+      - text: "Đây đúng là cách tai nghe chống ồn hoạt động: chúng chủ động tạo ra sóng ngược pha."
+  p11-standing-wave-fundamental:
+    prompt: >-
+      Một sợi dây dài {{l}} m được giữ cố định ở hai đầu. Sóng truyền trên dây với tốc độ
+      {{v}} m/s. Tần số cơ bản của nó bằng bao nhiêu Hz?
+    hints:
+      - text: "Ở họa âm cơ bản, sợi dây chứa đúng nửa bước sóng."
+      - text: "Vậy lambda = 2L = {{2*l : 2}} m."
+    solution:
+      - text: "lambda = 2 x {{l}} = {{2*l : 2}} m."
+      - text: "f = v / lambda = {{v}} ÷ {{2*l : 2}} = {{v / (2 * l) : 2}} Hz."
+      - text: "Bấm ngắn dây lại sẽ nâng cao độ — đó chính là điều ngón tay người chơi ghi-ta đang làm."
+  p11-doppler-approaching:
+    prompt: >-
+      Còi xe cứu thương phát ra âm {{f}} Hz và xe chạy về phía bạn với vận tốc {{vs}} m/s.
+      Bạn nghe thấy tần số bao nhiêu Hz? Lấy tốc độ âm trong không khí là 340 m/s.
+    hints:
+      - text: "Nguồn tiến lại gần làm các mặt sóng bị nén lại, nên âm nghe cao hơn."
+      - text: "f' = f v / (v - v_s) khi nguồn tiến lại gần."
+    solution:
+      - text: "f' = {{f}} x 340 ÷ (340 - {{vs}}) = {{f * 340 / (340 - vs) : 2}} Hz."
+      - text: "Khi xe đi qua và ra xa, mẫu số thành 340 + {{vs}}, và âm tụt xuống dưới {{f}} Hz — đúng cái tiếng trầm đột ngột bạn nghe được."
+  p11-coulombs-law:
+    prompt: >-
+      Hai điện tích điểm {{q1}} micrôcoulomb và {{q2}} micrôcoulomb đặt cách nhau {{r}} m.
+      Lực tương tác giữa chúng bằng bao nhiêu niutơn? Lấy k = 9 x 10^9 N m^2/C^2.
+    hints:
+      - text: "F = k q1 q2 / r^2. Trước hết hãy đổi micrôcoulomb sang coulomb."
+      - text: "{{q1}} micrôcoulomb = {{q1}} x 10^-6 C."
+    solution:
+      - text: "F = 9e9 x ({{q1}}e-6) x ({{q2}}e-6) ÷ {{r*r : 2}}."
+      - text: "F = {{9e9 * q1 * 1e-6 * q2 * 1e-6 / (r * r) : 4}} N."
+  p11-field-strength:
+    prompt: >-
+      Một điện tích {{q}} micrôcoulomb chịu lực {{f}} N khi đặt trong điện trường.
+      Cường độ điện trường bằng bao nhiêu N/C?
+    hints:
+      - text: "Cường độ điện trường là lực *trên một đơn vị điện tích*: E = F / q."
+    solution:
+      - text: "q = {{q}} x 10^-6 C."
+      - text: "E = {{f}} ÷ ({{q}}e-6) = {{f / (q * 1e-6) : 1}} N/C."
+  p11-work-on-charge:
+    prompt: >-
+      Công thực hiện khi dịch chuyển điện tích {{q}} milicoulomb qua hiệu điện thế {{v}} V
+      bằng bao nhiêu jun?
+    hints:
+      - text: "A = q U."
+      - text: "{{q}} milicoulomb = {{q}} x 10^-3 C."
+    solution:
+      - text: "A = ({{q}}e-3) x {{v}} = {{q * 1e-3 * v : 4}} J."
+      - text: "Hiệu điện thế chính là đại lượng này: công thực hiện trên mỗi coulomb dịch chuyển."
+  p11-capacitor-energy:
+    prompt: >-
+      Đèn flash máy ảnh dùng tụ điện {{c}} micrôfara được tích điện đến {{v}} V.
+      Năng lượng tích trữ trong tụ bằng bao nhiêu jun?
+    hints:
+      - text: "W = 1/2 C U^2."
+      - text: "{{c}} micrôfara = {{c}} x 10^-6 F, và U^2 = {{v*v}}."
+    solution:
+      - text: "W = 0,5 x ({{c}}e-6) x {{v*v}} = {{0.5 * c * 1e-6 * v * v : 4}} J."
+      - text: "Đèn flash giải phóng năng lượng đó trong vài mili giây, vì thế công suất tức thời rất lớn."
+  p11-internal-resistance:
+    prompt: >-
+      Một nguồn điện có suất điện động {{e}} V và điện trở trong {{r}} ôm được mắc với điện trở
+      {{rex}} ôm. Cường độ dòng điện bằng bao nhiêu ampe?
+    hints:
+      - text: "Điện trở trong mắc nối tiếp với điện trở ngoài."
+      - text: "E = I ({{rex}} + r), nên I = E / ({{rex}} + r)."
+    solution:
+      - text: "Điện trở toàn mạch = {{rex}} + {{r}} = {{rex + r : 1}} ôm."
+      - text: "I = {{e}} ÷ {{rex + r : 1}} = {{e / (rex + r) : 3}} A."
+      - text: "Hiệu điện thế ở hai cực chỉ còn {{e - e / (rex + r) * r : 3}} V — phần còn lại mất bên trong nguồn."
+  p11-kirchhoff-junction:
+    prompt: >-
+      Tại một nút mạch, các dòng điện {{i1}} A và {{i2}} A đi vào, còn dòng {{i3}} A và một
+      dòng chưa biết đi ra. Dòng điện chưa biết bằng bao nhiêu ampe?
+    hints:
+      - text: "Điện tích được bảo toàn: dòng đi vào nút bằng dòng đi ra khỏi nút."
+      - text: "Đi vào: {{i1}} + {{i2}} = {{i1 + i2 : 1}} A."
+    solution:
+      - text: "Tổng dòng đi vào = {{i1 + i2 : 1}} A."
+      - text: "Dòng đi ra đã biết là {{i3}} A, nên dòng chưa biết là {{i1 + i2 - i3 : 2}} A."
+  p11-energy-cost:
+    prompt: >-
+      Một máy điều hòa công suất {{p}} W chạy {{h}} giờ mỗi ngày trong 30 ngày.
+      Với giá {{c}} đồng mỗi kWh, tiền điện cả tháng là bao nhiêu đồng?
+    hints:
+      - text: "Trước hết đổi công suất sang kilôoát: {{p}} W = {{p/1000 : 3}} kW."
+      - text: "Điện năng theo kWh = công suất theo kW x số giờ."
+    solution:
+      - text: "Điện năng mỗi ngày = {{p/1000 : 3}} x {{h}} = {{p / 1000 * h : 3}} kWh."
+      - text: "Trong 30 ngày: {{p / 1000 * h * 30 : 2}} kWh."
+      - text: "Tiền điện = {{p / 1000 * h * 30 : 2}} x {{c}} = {{p / 1000 * h * 30 * c : 0}} đồng."
+
+  # ---------------------------------------------------------------------------- lớp 12
+  p12-first-law:
+    prompt: >-
+      Một khối khí nhận {{q}} J nhiệt lượng và nhận {{w}} J công từ bên ngoài.
+      Nội năng của nó biến thiên bao nhiêu jun?
+    hints:
+      - text: "Nguyên lí I: delta-U = Q + A, trong đó A là công *nhận được* từ bên ngoài."
+      - text: "Ở đây cả hai số hạng đều bổ sung năng lượng cho khí nên đều dương."
+    solution:
+      - text: "delta-U = {{q}} + {{w}} = {{q + w}} J."
+      - text: "Nếu ngược lại khí sinh {{w}} J công ra bên ngoài thì A âm và nội năng chỉ tăng {{q - w}} J."
+  p12-engine-efficiency:
+    prompt: >-
+      Một động cơ nhiệt nhận {{qh}} J từ nguồn nóng và thải {{qc}} J ra nguồn lạnh.
+      Hiệu suất của nó bằng bao nhiêu phần trăm?
+    hints:
+      - text: "Công có ích = nhiệt nhận vào - nhiệt thải ra."
+      - text: "A = {{qh}} - {{qc}} = {{qh - qc}} J."
+    solution:
+      - text: "A = {{qh - qc}} J."
+      - text: "Hiệu suất = {{qh - qc}} ÷ {{qh}} x 100 = {{(qh - qc) / qh * 100 : 2}}%."
+      - text: "Không động cơ nào đạt được 100%: luôn phải thải một phần nhiệt ra nguồn lạnh."
+  p12-kelvin-conversion:
+    prompt: "Nhiệt độ {{t}} độ Celsius bằng bao nhiêu kelvin?"
+    hints:
+      - text: "K = độ C + 273."
+    solution:
+      - text: "{{t}} + 273 = {{t + 273}} K."
+      - text: "Độ không tuyệt đối là 0 K, tức -273 độ C — nơi chuyển động của các hạt là nhỏ nhất."
+  p12-calorimetry-mixture:
+    prompt: >-
+      Trộn {{m1}} kg nước ở {{t1}} độ C với {{m2}} kg nước ở {{t2}} độ C.
+      Nhiệt độ cuối cùng bằng bao nhiêu độ C?
+    hints:
+      - text: "Nhiệt lượng nước nóng tỏa ra bằng nhiệt lượng nước lạnh thu vào."
+      - text: "Cả hai đều là nước nên nhiệt dung riêng triệt tiêu — nó trở thành trung bình có trọng số theo khối lượng."
+    solution:
+      - text: "m1 c (t1 - T) = m2 c (T - t2), và c triệt tiêu."
+      - text: "T = ({{m1}} x {{t1}} + {{m2}} x {{t2}}) ÷ ({{m1}} + {{m2}})."
+      - text: "T = {{(m1 * t1 + m2 * t2) / (m1 + m2) : 2}} độ C."
+  p12-boyles-law:
+    prompt: >-
+      Một khối khí xác định ở áp suất {{p1}} kPa chiếm thể tích {{v1}} lít. Nó được nén xuống
+      {{v2}} lít ở nhiệt độ không đổi. Áp suất mới bằng bao nhiêu kPa?
+    hints:
+      - text: "Ở nhiệt độ không đổi, p1 V1 = p2 V2."
+      - text: "Khí bị nén lại nên áp suất phải tăng."
+    solution:
+      - text: "p2 = {{p1}} x {{v1}} ÷ {{v2}} = {{p1 * v1 / v2 : 2}} kPa."
+  p12-charles-law:
+    prompt: >-
+      Một quả bóng chứa {{v1}} lít khí ở {{t1}} độ C. Nó được làm nóng tới {{t2}} độ C ở áp
+      suất không đổi. Thể tích mới bằng bao nhiêu lít?
+    hints:
+      - text: "V1 / T1 = V2 / T2 — nhưng T phải tính bằng kelvin."
+      - text: "T1 = {{t1 + 273}} K và T2 = {{t2 + 273}} K."
+    solution:
+      - text: "V2 = {{v1}} x {{t2 + 273}} ÷ {{t1 + 273}} = {{v1 * (t2 + 273) / (t1 + 273) : 3}} lít."
+      - text: "Dùng thẳng độ Celsius sẽ cho kết quả sai nghiêm trọng — định luật chỉ đúng trên thang nhiệt độ tuyệt đối."
+  p12-ideal-gas-equation:
+    prompt: >-
+      {{n}} mol khí lí tưởng trong bình {{v}} m^3 ở nhiệt độ {{t}} K gây ra áp suất bao nhiêu
+      pascal? Lấy R = 8,31 J/mol/K.
+    hints:
+      - text: "pV = nRT, nên p = nRT / V."
+    solution:
+      - text: "p = {{n}} x 8,31 x {{t}} ÷ {{v}} = {{n * 8.31 * t / v : 1}} Pa."
+      - text: "Đây chính là thứ nâng khinh khí cầu lên: đun nóng không khí làm giảm khối lượng riêng của nó ở áp suất không đổi."
+  p12-mean-kinetic-energy:
+    prompt: >-
+      Động năng trung bình của một phân tử khí ở {{t}} K bằng bao nhiêu jun?
+      Lấy hằng số Boltzmann là 1,38 x 10^-23 J/K.
+    hints:
+      - text: "Động năng trung bình của một phân tử là (3/2) k_B T."
+    solution:
+      - text: "W = 1,5 x 1,38e-23 x {{t}} = {{1.5 * 1.38e-23 * t : 24}} J."
+      - text: "Nhiệt độ *chính là* đại lượng này — nó là thước đo trực tiếp của động năng trung bình của các hạt."
+  p12-moles-to-molecules:
+    prompt: >-
+      Trong {{n}} mol khí có bao nhiêu phân tử? Hãy trả lời theo đơn vị 10^23 phân tử.
+      Lấy hằng số Avogadro là 6,02 x 10^23 mỗi mol.
+    hints:
+      - text: "Một mol chứa 6,02 x 10^23 hạt."
+      - text: "Làm việc theo đơn vị 10^23, bạn chỉ cần tính {{n}} x 6,02."
+    solution:
+      - text: "N = {{n}} x 6,02 x 10^23 = {{n * 6.02 : 3}} x 10^23 phân tử."
+  p12-force-on-conductor:
+    prompt: >-
+      Một dây dẫn dài {{l}} m mang dòng điện {{i}} A đặt hợp với đường sức từ trường {{b}} T
+      một góc {{theta}} độ. Lực từ tác dụng lên dây bằng bao nhiêu niutơn?
+    hints:
+      - text: "F = B I L sin(theta)."
+      - text: "sin({{theta}} độ) = {{sin(radians(theta)) : 4}}."
+    solution:
+      - text: "F = {{b}} x {{i}} x {{l}} x {{sin(radians(theta)) : 4}} = {{b * i * l * sin(radians(theta)) : 4}} N."
+      - text: "Ở góc 0 độ — dây song song với đường sức — lực sẽ bằng không."
+  p12-magnetic-flux:
+    prompt: >-
+      Một khung dây {{n}} vòng có diện tích {{a}} m^2 đặt vuông góc với từ trường {{b}} T.
+      Số liên kết từ bằng bao nhiêu vêbe-vòng?
+    hints:
+      - text: "Từ thông qua một vòng là Phi = B A khi khung vuông góc với đường sức."
+      - text: "Số liên kết từ là tích của nó với số vòng dây."
+    solution:
+      - text: "Phi = {{b}} x {{a}} = {{b * a : 5}} Wb."
+      - text: "N Phi = {{n}} x {{b * a : 5}} = {{n * b * a : 4}} Wb-vòng."
+  p12-faraday-emf:
+    prompt: >-
+      Số liên kết từ qua một khung dây biến thiên {{df}} Wb-vòng trong {{dt}} s.
+      Suất điện động cảm ứng trung bình bằng bao nhiêu vôn?
+    hints:
+      - text: "Định luật Faraday: suất điện động cảm ứng bằng tốc độ biến thiên của số liên kết từ."
+    solution:
+      - text: "e = {{df}} ÷ {{dt}} = {{df / dt : 3}} V."
+      - text: "Định luật Lenz xác định chiều: dòng điện cảm ứng luôn chống lại sự biến thiên đã sinh ra nó."
+  p12-transformer:
+    prompt: >-
+      Một máy biến áp lí tưởng có {{np}} vòng ở cuộn sơ cấp và {{ns}} vòng ở cuộn thứ cấp.
+      Đặt hiệu điện thế {{vp}} V vào cuộn sơ cấp, hiệu điện thế thứ cấp bằng bao nhiêu vôn?
+    hints:
+      - text: "U2 / U1 = N2 / N1."
+    solution:
+      - text: "U2 = {{vp}} x {{ns}} ÷ {{np}} = {{vp * ns / np : 2}} V."
+      - text: "Nâng hiệu điện thế để truyền tải làm giảm cường độ dòng điện, mà nhiệt hao phí trên dây tỉ lệ với I^2 R."
+  p12-mass-energy:
+    prompt: >-
+      Một phản ứng hạt nhân chuyển {{m}} micrôgam khối lượng thành năng lượng.
+      Năng lượng tỏa ra bằng bao nhiêu jun? Lấy c = 3 x 10^8 m/s.
+    hints:
+      - text: "E = m c^2, và c^2 = 9 x 10^16."
+      - text: "{{m}} micrôgam = {{m}} x 10^-9 kg."
+    solution:
+      - text: "E = ({{m}}e-9) x 9e16 = {{m * 1e-9 * 9e16 : 2}} J."
+      - text: "Một micrôgam khối lượng tương đương năng lượng của khoảng 20 tấn thuốc nổ TNT — vì thế nhiên liệu hạt nhân đậm đặc đến vậy."
+  p12-fission-fusion:
+    prompt: >-
+      Phân hạch tách hạt nhân nặng còn nhiệt hạch ghép hạt nhân nhẹ, thế nhưng *cả hai* đều
+      tỏa năng lượng. Điều gì giải thích được chuyện này?
+    choices:
+      - "Cả hai đều đưa hạt nhân tiến về phía sắt, nguyên tố có năng lượng liên kết riêng lớn nhất"
+      - "Cả hai đều làm tăng tổng khối lượng của các sản phẩm"
+      - "Cả hai đều biến proton trực tiếp thành năng lượng"
+      - "Cả hai đều luôn sinh ra nơtron tự do mang năng lượng đi"
+    hints:
+      - text: "Hãy nhìn hình dạng đồ thị năng lượng liên kết riêng."
+      - text: "Nó đạt cực đại quanh sắt-56."
+    solution:
+      - text: "Năng lượng liên kết riêng tăng dần tới cực đại gần sắt rồi giảm xuống ở cả hai phía."
+      - text: "Tách một hạt nhân nặng đưa các mảnh của nó lên cao trên đồ thị; ghép các hạt nhân nhẹ cũng đưa chúng lên cao."
+      - text: "Dù theo cách nào, sản phẩm cũng liên kết chặt hơn, và phần khối lượng chênh lệch xuất hiện dưới dạng năng lượng."
+  p12-decay-law:
+    prompt: >-
+      Một mẫu chất phóng xạ có hằng số phóng xạ {{lam}} mỗi năm. Sau {{t}} năm còn lại bao
+      nhiêu phần số hạt nhân ban đầu? Hãy trả lời dưới dạng số thập phân.
+    hints:
+      - text: "N / N0 = e^(-lambda t)."
+      - text: "lambda t = {{lam}} x {{t}} = {{lam * t : 4}}."
+    solution:
+      - text: "N / N0 = e^(-{{lam * t : 4}}) = {{exp(-lam * t) : 5}}."
+      - text: "Chu kì bán rã là ln(2) / lambda = {{log(2) / lam : 2}} năm."
+  p12-radiation-medicine:
+    prompt: >-
+      Người ta tiêm một chất đánh dấu phóng xạ để chụp hình các cơ quan của bệnh nhân.
+      Tính chất nào làm cho một đồng vị phù hợp với việc này?
+    choices:
+      - "Phát tia gamma với chu kì bán rã vài giờ"
+      - "Phát tia alpha với chu kì bán rã vài giờ"
+      - "Phát tia gamma với chu kì bán rã vài năm"
+      - "Phát tia alpha với chu kì bán rã vài năm"
+    hints:
+      - text: "Bức xạ phải thoát ra khỏi cơ thể mới đến được đầu dò."
+      - text: "Nó cũng phải sớm hết tính phóng xạ sau khi chụp xong."
+    solution:
+      - text: "Tia gamma đủ xuyên thấu để thoát khỏi cơ thể và được ghi nhận từ bên ngoài."
+      - text: "Tia alpha sẽ bị hấp thụ trong vài milimét mô — vô dụng cho chụp hình và rất có hại khi ở bên trong cơ thể."
+      - text: "Chu kì bán rã ngắn có nghĩa liều chiếu giảm nhanh sau khi chụp xong."

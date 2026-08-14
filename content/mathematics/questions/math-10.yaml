@@ -1,0 +1,384 @@
+# Mathematics — Grade 10 question templates
+defaults:
+  license: proprietary
+  source: HieuTrienEducation
+  status: published
+
+questions:
+  - slug: m10-negation
+    skill: math-10-statements
+    type: multiple_choice
+    difficulty: 3
+    prompt: 'What is the negation of "every student in the class passed"?'
+    options:
+      choices:
+        - {label: "At least one student in the class did not pass", correct: true}
+        - {label: "No student in the class passed", correct: false}
+        - {label: "Every student in the class failed", correct: false}
+        - {label: "Most students in the class did not pass", correct: false}
+    hints:
+      - text: "The negation of 'for all' is 'there exists at least one that does not'."
+      - text: "It is not 'for all, not' — that is a much stronger claim."
+    solution:
+      - text: "The statement claims something about *every* student."
+      - text: "To contradict it you need only one counterexample, so the negation is 'at least one did not pass'."
+
+  - slug: m10-set-union-count
+    skill: math-10-set-operations
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      In a class, {{a}} students study French and {{b}} study Japanese.
+      {{c}} students study both. How many study at least one of the two?
+    variables:
+      a: {type: int, min: 8, max: 30}
+      b: {type: int, min: 8, max: 30}
+      c: {type: int, min: 1, max: 8}
+    constraints: ["c < a", "c < b"]
+    answer: {expression: "a + b - c"}
+    options:
+      distractors: ["a + b", "a + b + c"]
+    hints:
+      - text: "Adding the two groups counts the students doing both twice."
+      - text: "|A union B| = |A| + |B| - |A intersect B|."
+    solution:
+      - text: "{{a}} + {{b}} = {{a + b}}, but that counts the {{c}} doing both twice."
+      - text: "So the answer is {{a + b}} - {{c}} = {{a + b - c}}."
+
+  - slug: m10-inequality-region
+    skill: math-10-linear-inequality-2d
+    type: true_false
+    difficulty: 4
+    prompt: >-
+      True or false: the point ({{x}}, {{y}}) satisfies the inequality
+      {{m}}x + y <= {{k}}.
+    variables:
+      x: {type: int, min: -6, max: 6}
+      y: {type: int, min: -6, max: 6}
+      m: {type: int, min: 1, max: 5}
+      k: {type: int, min: -8, max: 20}
+    answer: {expression: "m * x + y <= k"}
+    hints:
+      - text: "Substitute the coordinates and compare the two sides."
+      - text: "{{m}} x {{x}} + {{y}} = {{m * x + y}}."
+    solution:
+      - text: "Left-hand side = {{m}}({{x}}) + {{y}} = {{m * x + y}}."
+      - text: "Compare with {{k}}: the inequality is {{m * x + y <= k}}."
+
+  - slug: m10-linear-programming
+    skill: math-10-linear-programming
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      A workshop makes tables and chairs. Each table gives {{pt}} thousand dong of profit and
+      each chair {{pc}} thousand dong. It can make at most {{nt}} tables and {{nc}} chairs a
+      week, and materials allow at most {{total}} items in total. What is the maximum weekly
+      profit, in thousand dong?
+    variables:
+      pt: {type: int, min: 200, max: 600, step: 50}
+      pc: {type: int, min: 40, max: 180, step: 10}
+      nt: {type: int, min: 5, max: 20}
+      nc: {type: int, min: 10, max: 40}
+      total: {type: int, min: 20, max: 45}
+    constraints: ["pt > pc", "total > nt", "total < nt + nc"]
+    answer:
+      expression: "nt * pt + (total - nt) * pc"
+      unit: "thousand dong"
+    options:
+      distractors: ["nt * pt + nc * pc", "total * pt"]
+    hints:
+      - text: "A table is worth more than a chair, so make as many tables as allowed first."
+      - text: "That is {{nt}} tables, leaving {{total - nt}} items for chairs."
+    solution:
+      - text: "Tables are more profitable, so make the maximum {{nt}} of them."
+      - text: "The total limit of {{total}} leaves {{total - nt}} chairs (and {{nc}} were allowed, so this fits)."
+      - text: "Profit = {{nt}} x {{pt}} + {{total - nt}} x {{pc}} = {{nt * pt + (total - nt) * pc}} thousand dong."
+
+  - slug: m10-quadratic-vertex
+    skill: math-10-quadratic-graph
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      What is the x-coordinate of the vertex of y = {{a}}x^2 + {{b}}x + {{c}}?
+    variables:
+      a: {type: int, min: 1, max: 6}
+      b: {type: int, min: -20, max: 20}
+      c: {type: int, min: -10, max: 10}
+    constraints: ["b != 0"]
+    answer: {expression: "-b / (2 * a)", decimals: 3, tolerance: 0.005}
+    options:
+      distractors: ["b / (2 * a)", "-b / a"]
+    hints:
+      - text: "The axis of symmetry is at x = -b / 2a."
+    solution:
+      - text: "x = -({{b}}) ÷ (2 x {{a}}) = {{-b / (2 * a) : 3}}."
+      - text: "Since a = {{a}} > 0 the parabola opens upwards, so this is a minimum."
+
+  - slug: m10-quadratic-inequality
+    skill: math-10-quadratic-inequalities
+    type: multiple_choice
+    difficulty: 5
+    prompt: "For which values of x is (x - {{p}})(x - {{q}}) < 0?"
+    variables:
+      p: {type: int, min: -8, max: 4}
+      q: {type: int, min: 5, max: 12}
+    options:
+      choices:
+        - {label: "Between the two roots", correct: true}
+        - {label: "Outside the two roots", correct: false}
+        - {label: "For every value of x", correct: false}
+        - {label: "For no value of x", correct: false}
+    hints:
+      - text: "The roots are x = {{p}} and x = {{q}}."
+      - text: "The parabola opens upwards, so it dips below the axis between its roots."
+    solution:
+      - text: "The product is negative exactly when the two factors have opposite signs."
+      - text: "That happens for {{p}} < x < {{q}} — between the roots."
+
+  - slug: m10-max-area
+    skill: math-10-quadratic-optimisation
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      A farmer has {{p}} m of fencing to enclose a rectangular field.
+      What is the largest area they can enclose, in square metres?
+    variables:
+      p: {type: int, min: 20, max: 400, step: 4}
+    answer: {expression: "(p / 4) * (p / 4)", unit: "m^2", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["p * p", "(p / 2) * (p / 2)"]
+    hints:
+      - text: "If one side is x, the other is {{p}}/2 - x, and the area is a quadratic in x."
+      - text: "That quadratic is largest at its vertex, where the rectangle is a square."
+    solution:
+      - text: "Area A = x({{p}}/2 - x), a downward parabola with vertex at x = {{p / 4 : 2}}."
+      - text: "So the field is a square of side {{p / 4 : 2}} m."
+      - text: "A = {{p / 4 : 2}}^2 = {{(p / 4) * (p / 4) : 2}} m^2."
+
+  - slug: m10-reducible-equation
+    skill: math-10-quadratic-reducible
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      Solve for x, where x > 0: x + sqrt(x) = {{k}}.
+      (Hint: let t = sqrt(x).) Give x.
+    variables:
+      t: {type: int, min: 2, max: 12}
+      k: {type: derived, expression: "t * t + t"}
+    answer: {expression: "t * t"}
+    options:
+      distractors: ["t", "k - t"]
+    hints:
+      - text: "Substituting t = sqrt(x) gives t^2 + t = {{k}}."
+      - text: "Solve that quadratic for t, then square to recover x."
+    solution:
+      - text: "With t = sqrt(x), the equation becomes t^2 + t - {{k}} = 0."
+      - text: "The positive root is t = {{t}}."
+      - text: "So x = t^2 = {{t * t}}. (Check: {{t*t}} + {{t}} = {{k}}.)"
+
+  - slug: m10-law-of-sines
+    skill: math-10-law-of-sines
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      In a triangle, side a = {{a}} cm is opposite an angle of {{A}} degrees.
+      What is the side opposite an angle of {{B}} degrees, in centimetres?
+    variables:
+      a: {type: int, min: 4, max: 40}
+      A: {type: choice, choices: [30, 40, 45, 50, 60, 70]}
+      B: {type: choice, choices: [35, 55, 65, 75, 80]}
+    answer:
+      expression: "a * sin(radians(B)) / sin(radians(A))"
+      unit: "cm"
+      decimals: 3
+      tolerance: 0.005
+    options:
+      distractors: ["a * sin(radians(A)) / sin(radians(B))", "a * sin(radians(B))"]
+    hints:
+      - text: "a / sin A = b / sin B."
+      - text: "So b = a sin B / sin A."
+    solution:
+      - text: "b = {{a}} x sin({{B}}) ÷ sin({{A}}) = {{a * sin(radians(B)) / sin(radians(A)) : 3}} cm."
+
+  - slug: m10-law-of-cosines
+    skill: math-10-law-of-cosines
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A triangle has sides {{a}} cm and {{b}} cm with an angle of {{C}} degrees between them.
+      How long is the third side, in centimetres?
+    variables:
+      a: {type: int, min: 3, max: 30}
+      b: {type: int, min: 3, max: 30}
+      C: {type: choice, choices: [30, 45, 60, 75, 90, 110, 120]}
+    answer:
+      expression: "sqrt(a*a + b*b - 2*a*b*cos(radians(C)))"
+      unit: "cm"
+      decimals: 3
+      tolerance: 0.005
+    options:
+      distractors: ["sqrt(a*a + b*b)", "a + b"]
+    hints:
+      - text: "c^2 = a^2 + b^2 - 2ab cos C."
+      - text: "cos({{C}} degrees) = {{cos(radians(C)) : 4}}."
+    solution:
+      - text: "c^2 = {{a*a}} + {{b*b}} - 2({{a}})({{b}})cos({{C}}) = {{a*a + b*b - 2*a*b*cos(radians(C)) : 3}}."
+      - text: "c = {{sqrt(a*a + b*b - 2*a*b*cos(radians(C))) : 3}} cm."
+      - text: "At C = 90 degrees the cosine term vanishes and this reduces to Pythagoras."
+
+  - slug: m10-triangle-area
+    skill: math-10-triangle-area
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      Find the area of a triangle with sides {{a}} cm and {{b}} cm and an included angle of
+      {{C}} degrees, in square centimetres.
+    variables:
+      a: {type: int, min: 3, max: 30}
+      b: {type: int, min: 3, max: 30}
+      C: {type: choice, choices: [30, 45, 60, 90, 120, 135]}
+    answer:
+      expression: "0.5 * a * b * sin(radians(C))"
+      unit: "cm^2"
+      decimals: 3
+      tolerance: 0.005
+    options:
+      distractors: ["a * b * sin(radians(C))", "0.5 * a * b"]
+    hints:
+      - text: "Area = 1/2 ab sin C."
+    solution:
+      - text: "Area = 0.5 x {{a}} x {{b}} x sin({{C}}) = {{0.5 * a * b * sin(radians(C)) : 3}} cm^2."
+
+  - slug: m10-vector-magnitude
+    skill: math-10-vector-operations
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      Vectors u = ({{a}}, {{b}}) and v = ({{c}}, {{d}}).
+      What is the magnitude of u + v?
+    variables:
+      a: {type: int, min: -8, max: 8}
+      b: {type: int, min: -8, max: 8}
+      c: {type: int, min: -8, max: 8}
+      d: {type: int, min: -8, max: 8}
+    constraints: ["a + c != 0 or b + d != 0"]
+    answer:
+      expression: "sqrt((a+c)*(a+c) + (b+d)*(b+d))"
+      decimals: 3
+      tolerance: 0.005
+    options:
+      distractors: ["abs(a + c) + abs(b + d)", "sqrt(a*a + b*b)"]
+    hints:
+      - text: "Add the components first: u + v = ({{a + c}}, {{b + d}})."
+      - text: "Then take the magnitude with Pythagoras."
+    solution:
+      - text: "u + v = ({{a + c}}, {{b + d}})."
+      - text: "|u + v| = sqrt({{(a+c)*(a+c)}} + {{(b+d)*(b+d)}}) = {{sqrt((a+c)*(a+c) + (b+d)*(b+d)) : 3}}."
+
+  - slug: m10-dot-product
+    skill: math-10-dot-product
+    type: numeric
+    difficulty: 5
+    prompt: "Find the dot product of u = ({{a}}, {{b}}) and v = ({{c}}, {{d}})."
+    variables:
+      a: {type: int, min: -9, max: 9}
+      b: {type: int, min: -9, max: 9}
+      c: {type: int, min: -9, max: 9}
+      d: {type: int, min: -9, max: 9}
+    answer: {expression: "a * c + b * d"}
+    options:
+      distractors: ["a * c - b * d", "a * b + c * d"]
+    hints:
+      - text: "Multiply matching components and add: u.v = a c + b d."
+    solution:
+      - text: "u.v = ({{a}})({{c}}) + ({{b}})({{d}}) = {{a * c}} + {{b * d}} = {{a * c + b * d}}."
+      - text: "A dot product of zero would mean the vectors are perpendicular."
+
+  - slug: m10-counting-rule
+    skill: math-10-counting-rules
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A password is {{n}} characters long and each character is one of {{k}} allowed symbols.
+      Characters may repeat. How many passwords are possible?
+    variables:
+      n: {type: int, min: 2, max: 6}
+      k: {type: int, min: 2, max: 26}
+    answer: {expression: "k ** n"}
+    options:
+      distractors: ["k * n", "n ** k"]
+    hints:
+      - text: "Each of the {{n}} positions can be filled in {{k}} ways, independently."
+      - text: "Multiply: {{k}} x {{k}} x ... , {{n}} times."
+    solution:
+      - text: "Total = {{k}}^{{n}} = {{k ** n}}."
+      - text: "Adding one more character would multiply this by {{k}} again — which is why length matters so much."
+
+  - slug: m10-combinations
+    skill: math-10-permutations-combinations
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      In how many ways can a committee of 3 people be chosen from {{n}} people,
+      when the order of selection does not matter?
+    variables:
+      n: {type: int, min: 5, max: 20}
+    answer: {expression: "n * (n - 1) * (n - 2) / 6"}
+    options:
+      distractors: ["n * (n - 1) * (n - 2)", "n * 3"]
+    hints:
+      - text: "Picking 3 people *in order* can be done in {{n}} x {{n-1}} x {{n-2}} = {{n * (n-1) * (n-2)}} ways."
+      - text: "Each committee of 3 was counted 3! = 6 times, once per ordering."
+    solution:
+      - text: "Ordered selections: {{n}} x {{n-1}} x {{n-2}} = {{n * (n-1) * (n-2)}}."
+      - text: "Each committee appears 3! = 6 times, so divide by 6."
+      - text: "Number of committees = {{n * (n - 1) * (n - 2) / 6}}."
+
+  - slug: m10-standard-deviation
+    skill: math-10-spread-measures
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      Find the standard deviation of the data set {{a}}, {{b}}, {{c}}, {{d}}.
+      Use the population formula.
+    variables:
+      a: {type: int, min: 1, max: 30}
+      b: {type: int, min: 1, max: 30}
+      c: {type: int, min: 1, max: 30}
+      d: {type: int, min: 1, max: 30}
+    constraints: ["not (a == b and b == c and c == d)"]
+    answer:
+      expression: >-
+        sqrt(((a - (a+b+c+d)/4)**2 + (b - (a+b+c+d)/4)**2
+        + (c - (a+b+c+d)/4)**2 + (d - (a+b+c+d)/4)**2) / 4)
+      decimals: 3
+      tolerance: 0.005
+    options:
+      distractors: ["(a + b + c + d) / 4", "max(a, b, c, d) - min(a, b, c, d)"]
+    hints:
+      - text: "First find the mean: ({{a}} + {{b}} + {{c}} + {{d}}) ÷ 4 = {{(a+b+c+d)/4 : 2}}."
+      - text: "Then average the squared deviations, and take the square root."
+    solution:
+      - text: "Mean = {{(a+b+c+d)/4 : 2}}."
+      - text: "The mean of the squared deviations is the variance."
+      - text: "Standard deviation = {{sqrt(((a - (a+b+c+d)/4)**2 + (b - (a+b+c+d)/4)**2 + (c - (a+b+c+d)/4)**2 + (d - (a+b+c+d)/4)**2) / 4) : 3}}."
+
+  - slug: m10-classical-probability
+    skill: math-10-classical-probability
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A bag holds {{r}} red balls and {{b}} blue balls. One ball is drawn at random.
+      What is the probability that it is red? Give your answer as a decimal.
+    variables:
+      r: {type: int, min: 1, max: 20}
+      b: {type: int, min: 1, max: 20}
+    answer: {expression: "r / (r + b)", decimals: 4, tolerance: 0.005}
+    options:
+      distractors: ["r / b", "b / (r + b)"]
+    hints:
+      - text: "There are {{r + b}} balls in total, all equally likely."
+      - text: "P = favourable outcomes ÷ total outcomes."
+    solution:
+      - text: "P(red) = {{r}} ÷ {{r + b}} = {{r / (r + b) : 4}}."
+      - text: "P(blue) = {{b / (r + b) : 4}}, and the two add to 1."

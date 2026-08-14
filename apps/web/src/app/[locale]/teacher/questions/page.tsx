@@ -117,7 +117,7 @@ export default function QuestionBankPage({ params }: { params: Promise<{ locale:
                 }
               >
                 <option value="">{t('common.all')}</option>
-                {[6, 7, 8, 9].map((grade) => (
+                {[6, 7, 8, 9, 10, 11, 12].map((grade) => (
                   <option key={grade} value={grade}>
                     {grade}
                   </option>

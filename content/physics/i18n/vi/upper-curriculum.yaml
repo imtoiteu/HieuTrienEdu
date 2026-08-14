@@ -1,0 +1,385 @@
+# Vietnamese translations — physics curriculum, grades 10-12.
+#
+# Merged with ../vi.yaml by the loader: a subject may keep one file per locale, a directory of
+# files per locale, or both. Splitting the upper grades out keeps each file reviewable.
+#
+# Terminology follows the Vietnamese upper-secondary programme (GDPT 2018): động lượng, xung
+# lượng, dao động điều hòa, cộng hưởng, điện trường, suất điện động, nội năng, khí lí tưởng,
+# từ thông, độ hụt khối, chu kì bán rã. "Vật lý" is spelled as in the existing lower-grade file.
+
+courses:
+  physics-10:
+    title: Vật lý — Lớp 10
+    summary: Chuyển động trong mặt phẳng, lực tác dụng lên vật thực, năng lượng, động lượng và chuyển động tròn.
+    description: >-
+      Lớp 10 mở đầu chương trình vật lý THPT. Chuyển động trở thành hai chiều và mang tính
+      vectơ: học sinh phân tích chuyển động ném thành các thành phần, vẽ giản đồ lực cho vật
+      trên mặt phẳng nghiêng và giải thích vì sao người nhảy dù ngừng tăng tốc. Sau đó năng
+      lượng và động lượng được dùng như công cụ tính toán — vì sao vùng biến dạng của ô tô cứu
+      được một mạng người, vì sao vòng lượn của tàu lượn siêu tốc phải đủ nhanh ở điểm cao
+      nhất, và một sợi dây bị kéo giãn tích trữ bao nhiêu năng lượng.
+  physics-11:
+    title: Vật lý — Lớp 11
+    summary: Dao động, sóng, điện trường và những mạch điện mang dòng điện thực.
+    description: >-
+      Lớp 11 nói về những hành vi lặp lại và lan truyền. Học sinh mô tả dao động bằng biên độ,
+      chu kì và pha, và tìm hiểu vì sao một cây cầu có thể bị phá hủy bởi cơn gió quá yếu để
+      xô đổ nó. Các em tổng hợp sóng — nguyên lí đằng sau tai nghe chống ồn và mọi nhạc cụ — và
+      gặp hiệu ứng Doppler. Nửa sau chuyển sang điện trường: định luật Coulomb, cường độ điện
+      trường, điện dung bên trong màn hình cảm ứng, và mạch điện được phân tích đầy đủ với điện
+      trở trong và các định luật Kirchhoff.
+  physics-12:
+    title: Vật lý — Lớp 12
+    summary: Vật lí nhiệt, khí lí tưởng, từ trường và hạt nhân nguyên tử.
+    description: >-
+      Lớp 12 khép lại chương trình bằng vật lý đứng sau năng lượng và y học. Học sinh áp dụng
+      nguyên lí I nhiệt động lực học và tìm ra vì sao không động cơ nào có thể đạt hiệu suất
+      hoàn hảo; thiết lập phương trình khí lí tưởng và dùng nó cho khinh khí cầu; đi từ hiện
+      tượng cảm ứng điện từ đến máy biến áp — thứ làm cho lưới điện quốc gia trở nên khả thi; và
+      kết thúc bên trong hạt nhân, với năng lượng liên kết, phân hạch, nhiệt hạch, cùng định
+      luật phóng xạ dùng để xác định niên đại một mẩu than hay để điều trị một khối u.
+
+units:
+  physics-10-kinematics:
+    title: Động học
+    summary: Mô tả chuyển động một cách đúng đắn — bằng vectơ, trong hai chiều, và đọc được trên đồ thị.
+  physics-10-dynamics:
+    title: Động lực học
+    summary: Lực thực sự làm gì với một vật, khi đã kể đến tất cả các lực.
+  physics-10-energy:
+    title: Công, năng lượng và công suất
+    summary: Tính toán năng lượng, áp dụng cho những cỗ máy có thật.
+  physics-10-momentum-circular:
+    title: Động lượng, chuyển động tròn và biến dạng
+    summary: Vùng biến dạng ô tô, vòng lượn công viên và năng lượng trong một sợi dây bị kéo giãn.
+  physics-11-oscillations:
+    title: Dao động
+    summary: Chuyển động lặp lại, và thảm họa xảy ra khi ta đẩy nó đúng nhịp.
+  physics-11-waves:
+    title: Sóng
+    summary: Những nhiễu loạn mang theo năng lượng mà không mang theo vật chất.
+  physics-11-electric-field:
+    title: Điện trường
+    summary: Các điện tích đẩy nhau qua khoảng không. Điện trường là cách chúng làm điều đó.
+  physics-11-current-circuits:
+    title: Dòng điện và mạch điện
+    summary: Vì sao đèn pin mờ dần khi pin cũ đi, và cách phân tích mọi mạch điện.
+  physics-12-thermal:
+    title: Vật lí nhiệt
+    summary: Năng lượng, nhiệt và công — cùng lí do một động cơ hoàn hảo là bất khả thi.
+  physics-12-ideal-gas:
+    title: Khí lí tưởng
+    summary: Vì sao khinh khí cầu bay lên, xuất phát từ hành vi của từng phân tử.
+  physics-12-magnetic-field:
+    title: Từ trường và cảm ứng điện từ
+    summary: Hiệu ứng tạo ra gần như từng kilowatt giờ điện mà bạn từng dùng.
+  physics-12-nuclear:
+    title: Vật lí hạt nhân
+    summary: Nguồn gốc của năng lượng trong nhà máy điện và của liều chiếu trong máy chụp.
+
+topics:
+  physics-10-describing-motion:
+    title: Mô tả chuyển động
+    summary: Vì sao chạy 5 km rồi dừng đúng chỗ xuất phát lại có độ dịch chuyển bằng không.
+  physics-10-projectile-motion:
+    title: Chuyển động ném
+    summary: Một quả bóng được ném là hai chuyển động diễn ra đồng thời.
+  physics-10-newton-laws:
+    title: Các định luật Newton trong mặt phẳng
+    summary: Vẽ mọi lực tác dụng lên vật, rồi cộng chúng lại như những vectơ.
+  physics-10-friction-drag:
+    title: Ma sát và lực cản
+    summary: Vì sao người nhảy dù ngừng tăng tốc từ rất lâu trước khi chạm đất.
+  physics-10-work-energy:
+    title: Công và năng lượng
+    summary: Chỉ phần lực nằm dọc theo chuyển động mới sinh công.
+  physics-10-power-machines:
+    title: Công suất và hiệu suất
+    summary: Năng lượng chuyển hóa nhanh đến đâu, và bao nhiêu phần đến được nơi ta muốn.
+  physics-10-impulse-collisions:
+    title: Xung lượng và va chạm
+    summary: Vì sao kéo dài thời gian va chạm mới chính là thứ cứu bạn.
+  physics-10-circular-elastic:
+    title: Chuyển động tròn và tính đàn hồi
+    summary: Lực giữ bạn trên quỹ đạo, và năng lượng tích trữ trong một biến dạng.
+  physics-11-shm:
+    title: Dao động điều hòa
+    summary: Dạng dao động duy nhất mô tả được gần như mọi rung động nhỏ trong tự nhiên.
+  physics-11-damping-resonance:
+    title: Dao động tắt dần và cộng hưởng
+    summary: Cầu Tacoma Narrows, và vì sao bộ đội phải bỏ nhịp bước khi qua cầu.
+  physics-11-wave-properties:
+    title: Tính chất của sóng và sự chồng chất
+    summary: Điều gì xảy ra ở nơi hai sóng cùng đến một lúc.
+  physics-11-standing-doppler:
+    title: Sóng dừng và hiệu ứng Doppler
+    summary: Vì sao dây đàn ghi-ta có một cao độ, và vì sao còi xe đổi giọng khi đi qua.
+  physics-11-coulomb:
+    title: Điện tích và định luật Coulomb
+    summary: Một định luật tỉ lệ nghịch bình phương, và 1500 vôn tĩnh điện trong một ngày hanh khô.
+  physics-11-potential-capacitance:
+    title: Điện thế và điện dung
+    summary: Vật lý bên trong màn hình điện thoại và đèn flash máy ảnh.
+  physics-11-current-emf:
+    title: Dòng điện và suất điện động
+    summary: Thứ gì thực sự đang chuyển động, và vì sao pin thật không phải pin lí tưởng.
+  physics-11-circuit-analysis:
+    title: Phân tích mạch điện
+    summary: Hai định luật bảo toàn là đủ để giải mọi mạch điện bạn sẽ gặp.
+  physics-12-first-law:
+    title: Nội năng và nguyên lí I
+    summary: Truyền nhiệt cho vật và thực hiện công lên vật là hai con đường tới cùng một đích.
+  physics-12-temperature-calorimetry:
+    title: Nhiệt độ và cân bằng nhiệt
+    summary: Một thang đo tuyệt đối, và chuyện gì xảy ra khi nóng gặp lạnh.
+  physics-12-gas-laws-adv:
+    title: Các định luật chất khí
+    summary: Ba định luật thực nghiệm hóa ra chỉ là một phương trình.
+  physics-12-molecular-model:
+    title: Thuyết động học phân tử
+    summary: Áp suất là các phân tử va vào thành bình, còn nhiệt độ là chúng chuyển động nhanh đến đâu.
+  physics-12-magnetic-force:
+    title: Lực từ và từ thông
+    summary: Lực tác dụng lên dòng điện và lên điện tích chuyển động, cùng cách đếm đường sức.
+  physics-12-induction-ac:
+    title: Cảm ứng điện từ và dòng điện xoay chiều
+    summary: Từ một nam châm chuyển động đến những máy biến áp trên mọi con phố.
+  physics-12-nuclear-energy:
+    title: Khối lượng và năng lượng hạt nhân
+    summary: Một phần nhỏ của gam bị thiếu hụt, đáng giá bằng lượng điện của cả một thành phố.
+  physics-12-decay-applications:
+    title: Phóng xạ và ứng dụng
+    summary: Xác định niên đại bằng cacbon, chẩn đoán hình ảnh y học và lí do phải đo liều chiếu.
+
+skills:
+  # --- Lớp 10 ---
+  physics-10-displacement-velocity:
+    name: Độ dịch chuyển và vận tốc dưới dạng vectơ
+    description: >-
+      Phân biệt quãng đường với độ dịch chuyển, tốc độ với vận tốc, và tổng hợp các độ dịch
+      chuyển theo những hướng khác nhau.
+  physics-10-motion-graphs:
+    name: Đọc đồ thị chuyển động
+    description: >-
+      Xác định vận tốc từ độ dốc của đồ thị độ dịch chuyển - thời gian và độ dịch chuyển từ
+      diện tích dưới đồ thị vận tốc - thời gian.
+  physics-10-projectile-components:
+    name: Phân tích chuyển động ném
+    description: >-
+      Tách vận tốc ban đầu thành thành phần ngang và thành phần thẳng đứng, rồi xét hai chuyển
+      động một cách độc lập.
+  physics-10-projectile-range:
+    name: Thời gian bay và tầm xa
+    description: >-
+      Tính thời gian vật ở trên không và quãng đường ngang nó đi được, bỏ qua lực cản không khí.
+  physics-10-free-body:
+    name: Giản đồ lực
+    description: >-
+      Xác định mọi lực tác dụng lên một vật và biểu diễn chúng thành các vectơ có chú thích trên
+      giản đồ lực.
+  physics-10-resolving-forces:
+    name: Phân tích lực trên mặt phẳng nghiêng
+    description: >-
+      Phân tích trọng lực thành thành phần song song và vuông góc với mặt phẳng nghiêng, rồi tìm
+      hợp lực.
+  physics-10-friction:
+    name: Lực ma sát và phản lực pháp tuyến
+    description: >-
+      Áp dụng F = mu N cho ma sát nghỉ và ma sát trượt, và dự đoán vật có bắt đầu trượt hay không.
+  physics-10-terminal-velocity:
+    name: Lực cản và tốc độ giới hạn
+    description: >-
+      Giải thích tốc độ giới hạn là lúc lực cản cân bằng với trọng lực, và đọc giá trị đó trên
+      đồ thị vận tốc - thời gian.
+  physics-10-work-done:
+    name: Công của lực hợp với phương chuyển động một góc
+    description: >-
+      Áp dụng W = F s cos(theta), và giải thích vì sao lực vuông góc với chuyển động không sinh
+      công.
+  physics-10-work-energy-theorem:
+    name: Định lí công - động năng
+    description: >-
+      Liên hệ công của hợp lực với độ biến thiên động năng, và dùng nó để tìm quãng đường phanh.
+  physics-10-power-calc:
+    name: Công suất trong máy móc thực tế
+    description: >-
+      Tính công suất bằng công trên đơn vị thời gian và bằng tích lực với vận tốc, cho thang
+      máy, động cơ và người đạp xe.
+  physics-10-efficiency-chains:
+    name: Hiệu suất qua một chuỗi chuyển hóa
+    description: >-
+      Theo dõi hiệu suất qua nhiều giai đoạn và giải thích phần năng lượng bị hao hụt đã đi đâu.
+  physics-10-impulse:
+    name: Xung lượng và độ biến thiên động lượng
+    description: >-
+      Áp dụng xung lượng = F t = độ biến thiên động lượng, và giải thích túi khí cùng vùng biến
+      dạng làm giảm lực tác dụng lên hành khách như thế nào.
+  physics-10-collision-types:
+    name: Va chạm đàn hồi và va chạm mềm
+    description: >-
+      Phân biệt va chạm đàn hồi với va chạm mềm bằng cách kiểm tra động năng có được bảo toàn
+      cùng với động lượng hay không.
+  physics-10-centripetal:
+    name: Gia tốc và lực hướng tâm
+    description: >-
+      Áp dụng a = v^2 / r và F = m v^2 / r, và chỉ ra lực thực nào đang đóng vai trò lực hướng
+      tâm trong từng tình huống.
+  physics-10-hookes-law:
+    name: Định luật Hooke và thế năng đàn hồi
+    description: >-
+      Áp dụng F = k x cho lò xo hoặc dây đàn hồi và tính thế năng đàn hồi tích trữ trong đó.
+
+  # --- Lớp 11 ---
+  physics-11-shm-basics:
+    name: Mô tả dao động điều hòa
+    description: >-
+      Dùng biên độ, chu kì, tần số và tần số góc để mô tả một dao động, và liên hệ li độ, vận
+      tốc với gia tốc.
+  physics-11-pendulum-spring:
+    name: Con lắc đơn và con lắc lò xo
+    description: >-
+      Tính chu kì của con lắc đơn và của vật gắn vào lò xo, và chỉ ra chu kì phụ thuộc — cũng
+      như không phụ thuộc — vào những đại lượng nào.
+  physics-11-damping:
+    name: Dao động tắt dần
+    description: >-
+      So sánh tắt dần yếu, tắt dần mạnh và tắt dần tới hạn, và nhận ra hệ thống giảm xóc ô tô
+      được thiết kế theo kiểu nào.
+  physics-11-resonance:
+    name: Cộng hưởng
+    description: >-
+      Giải thích cộng hưởng là việc cưỡng bức hệ ở đúng tần số riêng của nó, và nhận ra hiện
+      tượng này ở cầu, nhà cao tầng, nhạc cụ và lò vi sóng.
+  physics-11-wave-equation-adv:
+    name: Phương trình sóng và đồ thị sóng
+    description: >-
+      Áp dụng v = f lambda và đọc biên độ, bước sóng, chu kì từ đồ thị li độ - khoảng cách và
+      li độ - thời gian.
+  physics-11-superposition:
+    name: Chồng chất và giao thoa
+    description: >-
+      Tổng hợp hai sóng theo nguyên lí chồng chất, và dự đoán giao thoa tăng cường hay triệt
+      tiêu từ hiệu đường đi.
+  physics-11-standing-waves:
+    name: Sóng dừng trên dây và trong ống
+    description: >-
+      Xác định vị trí nút và bụng sóng, tính tần số cơ bản và các họa âm của một sợi dây hoặc
+      một cột không khí.
+  physics-11-doppler:
+    name: Hiệu ứng Doppler
+    description: >-
+      Giải thích và tính độ thay đổi tần số quan sát được khi nguồn hoặc người quan sát chuyển
+      động.
+  physics-11-coulombs-law:
+    name: Định luật Coulomb
+    description: >-
+      Tính lực tĩnh điện giữa hai điện tích điểm và so sánh nó với lực hấp dẫn giữa cùng hai vật đó.
+  physics-11-field-strength:
+    name: Cường độ điện trường
+    description: >-
+      Tính cường độ điện trường bằng lực trên một đơn vị điện tích, và vẽ điện trường quanh một
+      điện tích điểm cũng như giữa hai bản song song.
+  physics-11-potential-difference:
+    name: Điện thế và hiệu điện thế
+    description: >-
+      Liên hệ công thực hiện, điện tích và hiệu điện thế, và dùng electronvôn làm đơn vị năng lượng.
+  physics-11-capacitance:
+    name: Điện dung và điện tích tích trữ
+    description: >-
+      Áp dụng Q = C U và tính năng lượng tích trữ trong tụ điện, đồng thời giải thích màn hình
+      cảm ứng điện dung nhận biết ngón tay như thế nào.
+  physics-11-charge-carriers:
+    name: Dòng điện và hạt tải điện
+    description: >-
+      Liên hệ cường độ dòng điện với lượng điện tích qua một tiết diện trong một giây, và mô tả
+      chuyển động trôi rất chậm của electron đằng sau một tác dụng gần như tức thời.
+  physics-11-emf-internal-resistance:
+    name: Suất điện động và điện trở trong
+    description: >-
+      Áp dụng E = I (R + r) và giải thích vì sao hiệu điện thế ở hai cực giảm khi dòng điện lấy
+      ra tăng lên.
+  physics-11-kirchhoff:
+    name: Các định luật Kirchhoff
+    description: >-
+      Áp dụng định luật bảo toàn điện tích tại nút và bảo toàn năng lượng trên một vòng kín để
+      tìm dòng điện và hiệu điện thế chưa biết.
+  physics-11-energy-cost:
+    name: Điện năng và chi phí tiền điện
+    description: >-
+      Tính điện năng theo kilôoát giờ và tính ra số tiền phải trả để chạy một thiết bị.
+
+  # --- Lớp 12 ---
+  physics-12-internal-energy:
+    name: Nội năng và nguyên lí I
+    description: >-
+      Áp dụng delta-U = Q + A, và phân biệt nội năng với nhiệt lượng cũng như với nhiệt độ.
+  physics-12-heat-engines:
+    name: Động cơ nhiệt và hiệu suất
+    description: >-
+      Tính hiệu suất của động cơ nhiệt và giải thích vì sao luôn phải thải một phần nhiệt ra
+      nguồn lạnh.
+  physics-12-kelvin:
+    name: Thang Kelvin và độ không tuyệt đối
+    description: >-
+      Đổi giữa độ Celsius và kelvin, và giải thích độ không tuyệt đối có nghĩa gì xét theo
+      chuyển động của các hạt.
+  physics-12-calorimetry:
+    name: Phương trình cân bằng nhiệt
+    description: >-
+      Tìm nhiệt độ cuối cùng khi trộn hai chất ở nhiệt độ khác nhau, kể cả khi có chuyển thể.
+  physics-12-boyle-charles:
+    name: Định luật Boyle và định luật Charles
+    description: >-
+      Áp dụng mối liên hệ áp suất - thể tích và thể tích - nhiệt độ cho một khối khí xác định,
+      luôn dùng nhiệt độ tuyệt đối.
+  physics-12-ideal-gas-equation:
+    name: Phương trình khí lí tưởng
+    description: >-
+      Áp dụng pV = nRT vào tình huống thực tế — khinh khí cầu, bình khí lặn, lốp xe giữa trưa nắng.
+  physics-12-kinetic-theory:
+    name: Thuyết động học phân tử chất khí
+    description: >-
+      Liên hệ áp suất chất khí với chuyển động của các phân tử, và động năng trung bình với
+      nhiệt độ tuyệt đối.
+  physics-12-avogadro:
+    name: Mol và hằng số Avogadro
+    description: >-
+      Chuyển đổi giữa khối lượng, số mol và số phân tử.
+  physics-12-force-on-conductor:
+    name: Lực từ tác dụng lên dây dẫn mang dòng điện
+    description: >-
+      Áp dụng F = B I L sin(theta) và dùng quy tắc bàn tay trái để xác định chiều của lực.
+  physics-12-flux:
+    name: Từ thông và số liên kết từ
+    description: >-
+      Tính từ thông qua một khung dây và số liên kết từ với N vòng dây.
+  physics-12-faraday-lenz:
+    name: Định luật Faraday và định luật Lenz
+    description: >-
+      Tính suất điện động cảm ứng từ tốc độ biến thiên của số liên kết từ, và dùng định luật
+      Lenz để xác định chiều của nó.
+  physics-12-ac-transformers:
+    name: Dòng điện xoay chiều và máy biến áp
+    description: >-
+      Liên hệ giá trị cực đại với giá trị hiệu dụng, và áp dụng tỉ số vòng dây để giải thích vì
+      sao điện được truyền tải ở hiệu điện thế cao.
+  physics-12-mass-defect:
+    name: Độ hụt khối và năng lượng liên kết
+    description: >-
+      Tính độ hụt khối và năng lượng liên kết riêng bằng E = mc^2, và đọc đồ thị năng lượng
+      liên kết riêng.
+  physics-12-fission-fusion:
+    name: Phân hạch và nhiệt hạch
+    description: >-
+      So sánh phân hạch với nhiệt hạch, cân bằng phương trình phản ứng hạt nhân, và giải thích
+      vì sao cả hai đều tỏa năng lượng dù trái ngược nhau.
+  physics-12-decay-law:
+    name: Định luật phóng xạ
+    description: >-
+      Áp dụng N = N0 e^(-lambda t), liên hệ hằng số phóng xạ với chu kì bán rã, và xác định
+      niên đại một mẫu vật từ độ phóng xạ còn lại.
+  physics-12-radiation-safety:
+    name: Phóng xạ trong y học và an toàn bức xạ
+    description: >-
+      So sánh việc dùng bức xạ trong chẩn đoán hình ảnh và trong điều trị, và lí giải việc chọn
+      đồng vị cùng chu kì bán rã cho mỗi mục đích.

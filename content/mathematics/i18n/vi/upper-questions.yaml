@@ -1,0 +1,501 @@
+# Vietnamese translations — mathematics question templates, grades 10-12.
+#
+# Templates, not rendered questions: every {{ placeholder }} must survive intact. `choices`
+# supplies labels only, in the original order.
+
+questions:
+  # ---------------------------------------------------------------------------- lớp 10
+  m10-negation:
+    prompt: 'Mệnh đề phủ định của "mọi học sinh trong lớp đều đỗ" là gì?'
+    choices:
+      - "Có ít nhất một học sinh trong lớp không đỗ"
+      - "Không học sinh nào trong lớp đỗ"
+      - "Mọi học sinh trong lớp đều trượt"
+      - "Phần lớn học sinh trong lớp không đỗ"
+    hints:
+      - text: 'Phủ định của "với mọi" là "tồn tại ít nhất một cái không thoả mãn".'
+      - text: 'Nó không phải là "với mọi, không" — đó là một khẳng định mạnh hơn nhiều.'
+    solution:
+      - text: "Mệnh đề khẳng định điều gì đó về *mọi* học sinh."
+      - text: "Để bác bỏ nó chỉ cần một phản ví dụ, nên phủ định là \"có ít nhất một học sinh không đỗ\"."
+  m10-set-union-count:
+    prompt: >-
+      Trong một lớp, {{a}} học sinh học tiếng Pháp và {{b}} học sinh học tiếng Nhật.
+      Có {{c}} học sinh học cả hai. Bao nhiêu học sinh học ít nhất một trong hai thứ tiếng?
+    hints:
+      - text: "Cộng hai nhóm lại sẽ đếm những học sinh học cả hai thứ tiếng hai lần."
+      - text: "|A hợp B| = |A| + |B| - |A giao B|."
+    solution:
+      - text: "{{a}} + {{b}} = {{a + b}}, nhưng như thế đã đếm {{c}} học sinh học cả hai hai lần."
+      - text: "Vậy đáp số là {{a + b}} - {{c}} = {{a + b - c}}."
+  m10-inequality-region:
+    prompt: >-
+      Đúng hay sai: điểm ({{x}}; {{y}}) thoả mãn bất phương trình {{m}}x + y <= {{k}}.
+    hints:
+      - text: "Thay toạ độ vào rồi so sánh hai vế."
+      - text: "{{m}} x {{x}} + {{y}} = {{m * x + y}}."
+    solution:
+      - text: "Vế trái = {{m}}({{x}}) + {{y}} = {{m * x + y}}."
+      - text: "So với {{k}}: bất phương trình cho kết quả {{m * x + y <= k}}."
+  m10-linear-programming:
+    prompt: >-
+      Một xưởng mộc làm bàn và ghế. Mỗi chiếc bàn cho lợi nhuận {{pt}} nghìn đồng, mỗi chiếc ghế
+      {{pc}} nghìn đồng. Mỗi tuần xưởng làm được nhiều nhất {{nt}} bàn và {{nc}} ghế, và vật
+      liệu chỉ cho phép tổng cộng nhiều nhất {{total}} sản phẩm. Lợi nhuận lớn nhất mỗi tuần là
+      bao nhiêu nghìn đồng?
+    hints:
+      - text: "Một chiếc bàn lãi hơn một chiếc ghế, nên hãy làm tối đa số bàn được phép trước."
+      - text: "Tức là {{nt}} chiếc bàn, còn lại {{total - nt}} sản phẩm dành cho ghế."
+    solution:
+      - text: "Bàn cho lợi nhuận cao hơn, nên làm tối đa {{nt}} chiếc."
+      - text: "Giới hạn tổng {{total}} sản phẩm còn lại {{total - nt}} chiếc ghế (mà giới hạn cho phép {{nc}} chiếc, nên vẫn hợp lệ)."
+      - text: "Lợi nhuận = {{nt}} x {{pt}} + {{total - nt}} x {{pc}} = {{nt * pt + (total - nt) * pc}} nghìn đồng."
+  m10-quadratic-vertex:
+    prompt: >-
+      Hoành độ đỉnh của parabol y = {{a}}x^2 + {{b}}x + {{c}} bằng bao nhiêu?
+    hints:
+      - text: "Trục đối xứng có phương trình x = -b / 2a."
+    solution:
+      - text: "x = -({{b}}) ÷ (2 x {{a}}) = {{-b / (2 * a) : 3}}."
+      - text: "Vì a = {{a}} > 0 nên parabol quay bề lõm lên trên, do đó đây là điểm cực tiểu."
+  m10-quadratic-inequality:
+    prompt: "Với những giá trị nào của x thì (x - {{p}})(x - {{q}}) < 0?"
+    choices:
+      - "Nằm giữa hai nghiệm"
+      - "Nằm ngoài hai nghiệm"
+      - "Với mọi giá trị của x"
+      - "Không với giá trị nào của x"
+    hints:
+      - text: "Hai nghiệm là x = {{p}} và x = {{q}}."
+      - text: "Parabol quay bề lõm lên trên nên nó nằm dưới trục hoành ở khoảng giữa hai nghiệm."
+    solution:
+      - text: "Tích âm đúng khi hai thừa số trái dấu nhau."
+      - text: "Điều đó xảy ra khi {{p}} < x < {{q}} — nằm giữa hai nghiệm."
+  m10-max-area:
+    prompt: >-
+      Một người nông dân có {{p}} m hàng rào để quây một thửa ruộng hình chữ nhật.
+      Diện tích lớn nhất có thể quây được là bao nhiêu mét vuông?
+    hints:
+      - text: "Nếu một cạnh là x thì cạnh kia là {{p}}/2 - x, và diện tích là một hàm bậc hai của x."
+      - text: "Hàm bậc hai đó đạt giá trị lớn nhất tại đỉnh, khi hình chữ nhật trở thành hình vuông."
+    solution:
+      - text: "Diện tích S = x({{p}}/2 - x), là parabol quay bề lõm xuống với đỉnh tại x = {{p / 4 : 2}}."
+      - text: "Vậy thửa ruộng là hình vuông cạnh {{p / 4 : 2}} m."
+      - text: "S = {{p / 4 : 2}}^2 = {{(p / 4) * (p / 4) : 2}} m^2."
+  m10-reducible-equation:
+    prompt: >-
+      Giải phương trình sau với x > 0: x + căn(x) = {{k}}.
+      (Gợi ý: đặt t = căn(x).) Hãy cho biết x.
+    hints:
+      - text: "Đặt t = căn(x) thì phương trình thành t^2 + t = {{k}}."
+      - text: "Giải phương trình bậc hai đó tìm t, rồi bình phương để tìm lại x."
+    solution:
+      - text: "Với t = căn(x), phương trình trở thành t^2 + t - {{k}} = 0."
+      - text: "Nghiệm dương là t = {{t}}."
+      - text: "Vậy x = t^2 = {{t * t}}. (Thử lại: {{t*t}} + {{t}} = {{k}}.)"
+  m10-law-of-sines:
+    prompt: >-
+      Trong một tam giác, cạnh a = {{a}} cm đối diện với góc {{A}} độ.
+      Cạnh đối diện với góc {{B}} độ dài bao nhiêu xentimét?
+    hints:
+      - text: "a / sin A = b / sin B."
+      - text: "Vậy b = a sin B / sin A."
+    solution:
+      - text: "b = {{a}} x sin({{B}}) ÷ sin({{A}}) = {{a * sin(radians(B)) / sin(radians(A)) : 3}} cm."
+  m10-law-of-cosines:
+    prompt: >-
+      Một tam giác có hai cạnh {{a}} cm và {{b}} cm với góc xen giữa bằng {{C}} độ.
+      Cạnh thứ ba dài bao nhiêu xentimét?
+    hints:
+      - text: "c^2 = a^2 + b^2 - 2ab cos C."
+      - text: "cos({{C}} độ) = {{cos(radians(C)) : 4}}."
+    solution:
+      - text: "c^2 = {{a*a}} + {{b*b}} - 2({{a}})({{b}})cos({{C}}) = {{a*a + b*b - 2*a*b*cos(radians(C)) : 3}}."
+      - text: "c = {{sqrt(a*a + b*b - 2*a*b*cos(radians(C))) : 3}} cm."
+      - text: "Khi C = 90 độ thì số hạng côsin biến mất và công thức trở về định lí Pythagore."
+  m10-triangle-area:
+    prompt: >-
+      Tính diện tích tam giác có hai cạnh {{a}} cm và {{b}} cm với góc xen giữa {{C}} độ,
+      theo xentimét vuông.
+    hints:
+      - text: "Diện tích = 1/2 ab sin C."
+    solution:
+      - text: "S = 0,5 x {{a}} x {{b}} x sin({{C}}) = {{0.5 * a * b * sin(radians(C)) : 3}} cm^2."
+  m10-vector-magnitude:
+    prompt: >-
+      Cho hai vectơ u = ({{a}}; {{b}}) và v = ({{c}}; {{d}}).
+      Độ dài của vectơ u + v bằng bao nhiêu?
+    hints:
+      - text: "Trước hết cộng các toạ độ: u + v = ({{a + c}}; {{b + d}})."
+      - text: "Sau đó tính độ dài bằng định lí Pythagore."
+    solution:
+      - text: "u + v = ({{a + c}}; {{b + d}})."
+      - text: "|u + v| = căn({{(a+c)*(a+c)}} + {{(b+d)*(b+d)}}) = {{sqrt((a+c)*(a+c) + (b+d)*(b+d)) : 3}}."
+  m10-dot-product:
+    prompt: "Tính tích vô hướng của u = ({{a}}; {{b}}) và v = ({{c}}; {{d}})."
+    hints:
+      - text: "Nhân các toạ độ tương ứng rồi cộng lại: u.v = a c + b d."
+    solution:
+      - text: "u.v = ({{a}})({{c}}) + ({{b}})({{d}}) = {{a * c}} + {{b * d}} = {{a * c + b * d}}."
+      - text: "Tích vô hướng bằng không sẽ có nghĩa là hai vectơ vuông góc với nhau."
+  m10-counting-rule:
+    prompt: >-
+      Một mật khẩu dài {{n}} kí tự, mỗi kí tự lấy từ {{k}} kí hiệu cho phép.
+      Các kí tự được phép lặp lại. Có bao nhiêu mật khẩu khác nhau?
+    hints:
+      - text: "Mỗi trong {{n}} vị trí có thể điền theo {{k}} cách, độc lập với nhau."
+      - text: "Nhân lại: {{k}} x {{k}} x ... , tất cả {{n}} lần."
+    solution:
+      - text: "Tổng số = {{k}}^{{n}} = {{k ** n}}."
+      - text: "Thêm một kí tự nữa sẽ nhân con số này với {{k}} một lần nữa — vì thế độ dài mật khẩu quan trọng đến vậy."
+  m10-combinations:
+    prompt: >-
+      Có bao nhiêu cách chọn một ban đại diện gồm 3 người từ {{n}} người,
+      khi thứ tự chọn không quan trọng?
+    hints:
+      - text: "Chọn 3 người *có thứ tự* thì có {{n}} x {{n-1}} x {{n-2}} = {{n * (n-1) * (n-2)}} cách."
+      - text: "Mỗi ban 3 người đã bị đếm 3! = 6 lần, ứng với 6 thứ tự khác nhau."
+    solution:
+      - text: "Số cách chọn có thứ tự: {{n}} x {{n-1}} x {{n-2}} = {{n * (n-1) * (n-2)}}."
+      - text: "Mỗi ban xuất hiện 3! = 6 lần, nên chia cho 6."
+      - text: "Số ban đại diện = {{n * (n - 1) * (n - 2) / 6}}."
+  m10-standard-deviation:
+    prompt: >-
+      Tính độ lệch chuẩn của mẫu số liệu {{a}}, {{b}}, {{c}}, {{d}}.
+      Dùng công thức cho tổng thể.
+    hints:
+      - text: "Trước hết tính số trung bình: ({{a}} + {{b}} + {{c}} + {{d}}) ÷ 4 = {{(a+b+c+d)/4 : 2}}."
+      - text: "Sau đó lấy trung bình các bình phương độ lệch, rồi khai căn."
+    solution:
+      - text: "Số trung bình = {{(a+b+c+d)/4 : 2}}."
+      - text: "Trung bình của các bình phương độ lệch chính là phương sai."
+      - text: "Độ lệch chuẩn = {{sqrt(((a - (a+b+c+d)/4)**2 + (b - (a+b+c+d)/4)**2 + (c - (a+b+c+d)/4)**2 + (d - (a+b+c+d)/4)**2) / 4) : 3}}."
+  m10-classical-probability:
+    prompt: >-
+      Một túi có {{r}} viên bi đỏ và {{b}} viên bi xanh. Lấy ngẫu nhiên một viên.
+      Xác suất lấy được bi đỏ bằng bao nhiêu? Hãy trả lời dưới dạng số thập phân.
+    hints:
+      - text: "Tổng cộng có {{r + b}} viên bi, tất cả đều đồng khả năng."
+      - text: "P = số kết quả thuận lợi ÷ tổng số kết quả."
+    solution:
+      - text: "P(đỏ) = {{r}} ÷ {{r + b}} = {{r / (r + b) : 4}}."
+      - text: "P(xanh) = {{b / (r + b) : 4}}, và hai xác suất cộng lại bằng 1."
+
+  # ---------------------------------------------------------------------------- lớp 11
+  m11-degrees-to-radians:
+    prompt: "Đổi {{d}} độ sang radian. Hãy trả lời dưới dạng số thập phân."
+    hints:
+      - text: "180 độ = pi radian, nên hãy nhân với pi/180."
+    solution:
+      - text: "{{d}} x pi ÷ 180 = {{radians(d) : 4}} rad."
+      - text: "Viết theo bội của pi thì đó là {{d / 180 : 4}} pi."
+  m11-trig-period:
+    prompt: "Chu kì của hàm số y = {{a}} sin({{b}}x) bằng bao nhiêu? Hãy trả lời dưới dạng số thập phân."
+    hints:
+      - text: "Với y = a sin(bx), chu kì là 2 pi / b."
+      - text: "Biên độ {{a}} không ảnh hưởng đến chu kì."
+    solution:
+      - text: "Chu kì = 2 pi ÷ {{b}} = {{2 * pi / b : 4}}."
+      - text: "Biên độ là {{a}}, nó kéo giãn đồ thị theo phương thẳng đứng chứ không theo phương ngang."
+  m11-trig-identity:
+    prompt: "Biểu thức nào bằng sin(2x)?"
+    choices:
+      - "2 sin(x) cos(x)"
+      - "sin(x) + sin(x)"
+      - "2 sin(x)"
+      - "sin^2(x) - cos^2(x)"
+    hints:
+      - text: "Đây là công thức nhân đôi của hàm sin."
+      - text: "sin(2x) không bằng 2 sin(x) — hãy thử với x = 90 độ để thấy vì sao."
+    solution:
+      - text: "sin(2x) = 2 sin(x) cos(x)."
+      - text: "Thử với x = 30 độ: sin(60) = 0,866, và 2(0,5)(0,866) = 0,866."
+  m11-solve-trig-equation:
+    prompt: >-
+      Tìm nghiệm dương nhỏ nhất của phương trình sin(x) = {{s}}, tính bằng độ.
+    hints:
+      - text: "Lấy hàm ngược của sin để tìm giá trị chính."
+      - text: "Nghiệm còn lại trong một vòng đầu tiên là 180 trừ đi nghiệm này."
+    solution:
+      - text: "x = arcsin({{s : 4}}) = {{degrees(asin(s)) : 2}} độ."
+      - text: "Nghiệm kế tiếp là 180 - {{degrees(asin(s)) : 2}} = {{180 - degrees(asin(s)) : 2}} độ, rồi cứ cách nhau 360 độ."
+  m11-arithmetic-nth-term:
+    prompt: >-
+      Một cấp số cộng có số hạng đầu {{a}} và công sai {{d}}.
+      Số hạng thứ {{n}} của nó bằng bao nhiêu?
+    hints:
+      - text: "u_n = a + (n - 1)d — chú ý là n trừ 1, vì số hạng đầu chưa cần bước nào."
+    solution:
+      - text: "u_{{n}} = {{a}} + ({{n}} - 1) x {{d}} = {{a}} + {{(n - 1) * d}} = {{a + (n - 1) * d}}."
+  m11-arithmetic-sum:
+    prompt: >-
+      Tính tổng {{n}} số hạng đầu của cấp số cộng có số hạng đầu {{a}} và công sai {{d}}.
+    hints:
+      - text: "S_n = n/2 (2a + (n - 1)d)."
+      - text: "Số hạng cuối là {{a + (n-1)*d}}, và tổng bằng n nhân trung bình cộng của số hạng đầu và cuối."
+    solution:
+      - text: "Số hạng cuối = {{a + (n-1)*d}}."
+      - text: "S = {{n}} x ({{a}} + {{a + (n-1)*d}}) ÷ 2 = {{n * (2 * a + (n - 1) * d) / 2 : 1}}."
+  m11-geometric-nth-term:
+    prompt: >-
+      Một cấp số nhân có số hạng đầu {{a}} và công bội {{r}}.
+      Số hạng thứ {{n}} của nó bằng bao nhiêu?
+    hints:
+      - text: "u_n = a r^(n-1)."
+      - text: "{{r}}^{{n-1}} = {{r ** (n - 1)}}."
+    solution:
+      - text: "u_{{n}} = {{a}} x {{r}}^{{n - 1}} = {{a}} x {{r ** (n - 1)}} = {{a * r ** (n - 1)}}."
+  m11-infinite-geometric-sum:
+    prompt: >-
+      Tính tổng của cấp số nhân lùi vô hạn có số hạng đầu {{a}} và công bội {{r}}.
+    hints:
+      - text: "Tổng vô hạn tồn tại khi |r| < 1, và bằng a / (1 - r)."
+      - text: "1 - {{r}} = {{1 - r : 2}}."
+    solution:
+      - text: "S = {{a}} ÷ {{1 - r : 2}} = {{a / (1 - r) : 4}}."
+      - text: "Các số hạng nhỏ đi đủ nhanh để vô hạn số hạng vẫn cộng lại thành một giá trị hữu hạn."
+  m11-compound-interest:
+    prompt: >-
+      Gửi {{p}} triệu đồng với lãi suất {{r}}% một năm, tính lãi kép hằng năm.
+      Sau {{n}} năm số tiền là bao nhiêu triệu đồng?
+    hints:
+      - text: "Mỗi năm số dư được nhân với 1 + {{r}}/100 = {{1 + r/100 : 4}}."
+      - text: "Sau {{n}} năm, hệ số đó được áp dụng {{n}} lần."
+    solution:
+      - text: "Số tiền = {{p}} x {{1 + r/100 : 4}}^{{n}} = {{p * (1 + r / 100) ** n : 4}} triệu đồng."
+      - text: "Lãi đơn chỉ cho {{p * (1 + r * n / 100) : 4}} triệu — lãi kép sinh lãi trên cả phần lãi đã có."
+  m11-exponential-value:
+    prompt: "Tính giá trị của {{a}} x {{b}}^{{x}}."
+    hints:
+      - text: "Tính lũy thừa trước rồi mới nhân — {{b}}^{{x}} = {{b ** x}}."
+    solution:
+      - text: "{{a}} x {{b ** x}} = {{a * b ** x}}."
+  m11-half-life-model:
+    prompt: >-
+      Một chất có chu kì bán rã {{h}} năm. Sau {{t}} năm còn lại bao nhiêu phần lượng chất ban
+      đầu? Hãy trả lời dưới dạng số thập phân.
+    hints:
+      - text: "Sau mỗi chu kì bán rã, lượng chất được nhân với 1/2."
+      - text: "{{t}} năm tương ứng với {{t / h : 3}} chu kì bán rã."
+    solution:
+      - text: "Số chu kì bán rã = {{t}} ÷ {{h}} = {{t / h : 3}}."
+      - text: "Phần còn lại = 0,5^{{t / h : 3}} = {{0.5 ** (t / h) : 5}}."
+  m11-log-laws:
+    prompt: "Tính lôgarit cơ số {{b}} của {{n}}, biết {{n}} = {{b}}^{{k}}."
+    hints:
+      - text: "Lôgarit đặt câu hỏi: phải nâng {{b}} lên lũy thừa nào để được {{n}}?"
+      - text: "Hãy thử các lũy thừa nhỏ của {{b}}: {{b}}^2 = {{b**2}}, {{b}}^3 = {{b**3}}."
+    solution:
+      - text: "{{b}}^{{k}} = {{n}}, nên lôgarit bằng {{k}}."
+      - text: "Dùng công thức đổi cơ số: log({{n}}) ÷ log({{b}}) = {{log(n) / log(b) : 4}}."
+  m11-log-equation:
+    prompt: >-
+      Giải phương trình {{a}} x {{b}}^x = {{c}} để tìm x. Hãy trả lời dưới dạng số thập phân.
+    hints:
+      - text: "Trước hết chia cho {{a}}: {{b}}^x = {{c / a : 4}}."
+      - text: "Sau đó lấy lôgarit hai vế và dùng log(b^x) = x log(b)."
+    solution:
+      - text: "{{b}}^x = {{c}} ÷ {{a}} = {{c / a : 4}}."
+      - text: "x = log({{c / a : 4}}) ÷ log({{b}}) = {{log(c / a) / log(b) : 4}}."
+  m11-limit-factorising:
+    prompt: >-
+      Tính giới hạn của (x^2 - {{k}}) / (x - {{a}}) khi x tiến tới {{a}},
+      với {{k}} = {{a}}^2.
+    hints:
+      - text: "Thay trực tiếp cho dạng vô định 0/0, nên trước hết hãy phân tích thành nhân tử."
+      - text: "x^2 - {{k}} = (x - {{a}})(x + {{a}})."
+    solution:
+      - text: "x^2 - {{k}} phân tích được thành (x - {{a}})(x + {{a}})."
+      - text: "Thừa số (x - {{a}}) rút gọn được, chỉ còn lại x + {{a}}."
+      - text: "Khi x tiến tới {{a}}, biểu thức tiến tới {{a}} + {{a}} = {{2 * a}}."
+  m11-continuity:
+    prompt: "Hàm số f(x) = 1 / (x - {{a}}) gián đoạn tại đâu?"
+    choices:
+      - "Chỉ tại x = {{a}}"
+      - "Chỉ tại x = 0"
+      - "Chỉ tại x = -{{a}}"
+      - "Không tại đâu cả — hàm số liên tục ở mọi nơi"
+    hints:
+      - text: "Một thương gián đoạn tại mọi chỗ mẫu thức bằng không."
+      - text: "Hãy giải x - {{a}} = 0."
+    solution:
+      - text: "Mẫu thức bằng không khi x = {{a}}, nên hàm số không xác định ở đó."
+      - text: "Nó liên tục tại mọi số thực khác."
+  m11-derivative-at-point:
+    prompt: >-
+      Cho f(x) = {{a}}x^3 + {{b}}x^2 + {{c}}x, hãy tính f'({{p}}).
+    hints:
+      - text: "Lấy đạo hàm từng số hạng bằng quy tắc lũy thừa: d/dx(x^n) = n x^(n-1)."
+      - text: "f'(x) = {{3*a}}x^2 + {{2*b}}x + {{c}}."
+    solution:
+      - text: "f'(x) = {{3*a}}x^2 + {{2*b}}x + {{c}}."
+      - text: "f'({{p}}) = {{3*a}}({{p*p}}) + {{2*b}}({{p}}) + {{c}} = {{3 * a * p * p + 2 * b * p + c}}."
+  m11-tangent-gradient:
+    prompt: >-
+      Hệ số góc của tiếp tuyến với đồ thị y = {{a}}x^2 + {{b}}x tại điểm có hoành độ
+      x = {{p}} bằng bao nhiêu?
+    hints:
+      - text: "Hệ số góc của tiếp tuyến tại một điểm chính là đạo hàm tại điểm đó."
+      - text: "dy/dx = {{2*a}}x + {{b}}."
+    solution:
+      - text: "dy/dx = {{2*a}}x + {{b}}."
+      - text: "Tại x = {{p}}: hệ số góc = {{2*a}}({{p}}) + {{b}} = {{2 * a * p + b}}."
+
+  # ---------------------------------------------------------------------------- lớp 12
+  m12-critical-point:
+    prompt: >-
+      Tìm hoành độ điểm dừng của hàm số f(x) = {{a}}x^2 + {{b}}x + {{c}}.
+    hints:
+      - text: "Điểm dừng là nơi f'(x) = 0."
+      - text: "f'(x) = {{2*a}}x + {{b}}."
+    solution:
+      - text: "f'(x) = {{2*a}}x + {{b}} = 0."
+      - text: "x = -({{b}}) ÷ {{2*a}} = {{-b / (2 * a) : 4}}."
+      - text: "Vì a = {{a}} > 0, hàm nghịch biến trước điểm này và đồng biến sau nó — đây là điểm cực tiểu."
+  m12-max-on-interval:
+    prompt: >-
+      Tìm giá trị lớn nhất của f(x) = {{a}} - (x - {{h}})^2 trên đoạn
+      từ {{h}} - {{d}} đến {{h}} + {{d}}.
+    hints:
+      - text: "Đây là parabol quay bề lõm xuống với đỉnh tại x = {{h}}."
+      - text: "Đỉnh nằm trong đoạn đang xét, nên giá trị lớn nhất đạt tại đó."
+    solution:
+      - text: "f'(x) = -2(x - {{h}}), bằng không tại x = {{h}}."
+      - text: "Điểm đó nằm trong đoạn, và parabol quay bề lõm xuống."
+      - text: "f({{h}}) = {{a}} - 0 = {{a}}, là giá trị lớn nhất."
+  m12-horizontal-asymptote:
+    prompt: >-
+      Tiệm cận ngang của đồ thị hàm số y = ({{a}}x + {{b}}) / ({{c}}x + {{d}}) là đường nào?
+      Hãy cho biết giá trị y.
+    hints:
+      - text: "Khi x rất lớn, các số hạng tự do không còn đáng kể."
+      - text: "Tỉ số tiến tới tỉ số của các hệ số bậc cao nhất."
+    solution:
+      - text: "Chia cả tử và mẫu cho x: ({{a}} + {{b}}/x) / ({{c}} + {{d}}/x)."
+      - text: "Khi x tăng, các số hạng {{b}}/x và {{d}}/x dần về không."
+      - text: "y tiến tới {{a}} ÷ {{c}} = {{a / c : 4}}."
+  m12-optimisation-box:
+    prompt: >-
+      Một chiếc hộp không nắp có đáy hình vuông phải chứa được {{v}} cm^3.
+      Cạnh đáy bằng bao nhiêu xentimét thì tốn ít vật liệu nhất?
+    hints:
+      - text: "Với cạnh đáy x và chiều cao h, thể tích cho h = {{v}}/x^2."
+      - text: "Diện tích toàn phần là S = x^2 + 4xh = x^2 + 4({{v}})/x. Hãy cho dS/dx = 0."
+    solution:
+      - text: "S(x) = x^2 + 4({{v}})/x."
+      - text: "S'(x) = 2x - 4({{v}})/x^2 = 0, nên x^3 = 2({{v}}) = {{2 * v}}."
+      - text: "x = {{(2 * v) ** (1 / 3) : 3}} cm."
+  m12-space-distance:
+    prompt: >-
+      Tính khoảng cách giữa hai điểm ({{x1}}; {{y1}}; {{z1}}) và ({{x2}}; {{y2}}; {{z2}}).
+    hints:
+      - text: "Đó là định lí Pythagore với thêm một số hạng."
+      - text: "Các hiệu toạ độ là {{x2-x1}}, {{y2-y1}} và {{z2-z1}}."
+    solution:
+      - text: "d = căn({{(x2-x1)**2}} + {{(y2-y1)**2}} + {{(z2-z1)**2}})."
+      - text: "d = {{sqrt((x2-x1)**2 + (y2-y1)**2 + (z2-z1)**2) : 4}}."
+  m12-dot-product-3d:
+    prompt: >-
+      Tính tích vô hướng của ({{a}}; {{b}}; {{c}}) và ({{d}}; {{e}}; {{f}}).
+    hints:
+      - text: "Nhân các toạ độ tương ứng rồi cộng cả ba tích lại."
+    solution:
+      - text: "= ({{a}})({{d}}) + ({{b}})({{e}}) + ({{c}})({{f}})"
+      - text: "= {{a*d}} + {{b*e}} + {{c*f}} = {{a*d + b*e + c*f}}."
+  m12-point-to-plane:
+    prompt: >-
+      Tính khoảng cách từ điểm ({{px}}; {{py}}; {{pz}}) đến mặt phẳng
+      {{a}}x + {{b}}y + {{c}}z + {{d}} = 0.
+    hints:
+      - text: "Khoảng cách = |a x0 + b y0 + c z0 + d| ÷ căn(a^2 + b^2 + c^2)."
+      - text: "Tử số là |{{a*px + b*py + c*pz + d}}|."
+    solution:
+      - text: "Tử số = |{{a}}({{px}}) + {{b}}({{py}}) + {{c}}({{pz}}) + {{d}}| = {{abs(a*px + b*py + c*pz + d)}}."
+      - text: "Mẫu số = căn({{a*a + b*b + c*c}}) = {{sqrt(a*a + b*b + c*c) : 4}}."
+      - text: "Khoảng cách = {{abs(a*px + b*py + c*pz + d) / sqrt(a*a + b*b + c*c) : 4}}."
+  m12-sphere-radius:
+    prompt: >-
+      Một mặt cầu có phương trình (x - {{a}})^2 + (y - {{b}})^2 + (z - {{c}})^2 = {{r2}}.
+      Bán kính của nó bằng bao nhiêu?
+    hints:
+      - text: "Ở dạng chính tắc, vế phải là *bình phương* của bán kính."
+    solution:
+      - text: "R^2 = {{r2}}, nên R = {{sqrt(r2) : 3}}."
+      - text: "Tâm mặt cầu là điểm ({{a}}; {{b}}; {{c}})."
+  m12-antiderivative-value:
+    prompt: >-
+      F(x) là nguyên hàm của f(x) = {{a}}x^2 + {{b}} thoả mãn F(0) = 0.
+      Tính F({{p}}).
+    hints:
+      - text: "Lấy nguyên hàm từng số hạng: nguyên hàm của x^n là x^(n+1)/(n+1)."
+      - text: "F(x) = {{a}}x^3/3 + {{b}}x + C, và F(0) = 0 cho C = 0."
+    solution:
+      - text: "F(x) = {{a}}x^3/3 + {{b}}x."
+      - text: "F({{p}}) = {{a}}({{p ** 3}})/3 + {{b}}({{p}}) = {{a * p ** 3 / 3 + b * p : 4}}."
+  m12-definite-integral:
+    prompt: >-
+      Tính tích phân của {{a}}x + {{b}} từ x = 0 đến x = {{p}}.
+    hints:
+      - text: "Nguyên hàm là {{a}}x^2/2 + {{b}}x."
+      - text: "Thay cận trên {{p}} rồi trừ đi giá trị tại 0 (bằng 0)."
+    solution:
+      - text: "F(x) = {{a}}x^2/2 + {{b}}x."
+      - text: "F({{p}}) - F(0) = {{a}}({{p*p}})/2 + {{b}}({{p}}) = {{a * p * p / 2 + b * p : 3}}."
+  m12-area-between-curves:
+    prompt: >-
+      Tính diện tích hình phẳng giới hạn bởi hai đường y = {{k}}x và y = x^2, với {{k}} > 0.
+    hints:
+      - text: "Hai đường cắt nhau khi {{k}}x = x^2, tức tại x = 0 và x = {{k}}."
+      - text: "Hãy tính tích phân của hiệu ({{k}}x - x^2) giữa hai cận đó."
+    solution:
+      - text: "Giao điểm tại x = 0 và x = {{k}}."
+      - text: "S = tích phân của ({{k}}x - x^2) = [{{k}}x^2/2 - x^3/3] từ 0 đến {{k}}."
+      - text: "= {{k ** 3 / 2 : 4}} - {{k ** 3 / 3 : 4}} = {{k ** 3 / 6 : 4}}."
+  m12-grouped-mean:
+    prompt: >-
+      Một bảng tần số ghép nhóm có các giá trị đại diện {{m1}}, {{m2}} và {{m3}} với tần số
+      {{f1}}, {{f2}} và {{f3}}. Hãy ước lượng số trung bình.
+    hints:
+      - text: "Nhân mỗi giá trị đại diện với tần số của nó, cộng lại, rồi chia cho tổng tần số."
+      - text: "Tổng tần số = {{f1 + f2 + f3}}."
+    solution:
+      - text: "Tổng của (giá trị đại diện x tần số) = {{m1*f1 + m2*f2 + m3*f3}}."
+      - text: "Tổng tần số = {{f1 + f2 + f3}}."
+      - text: "Số trung bình = {{(m1*f1 + m2*f2 + m3*f3) / (f1 + f2 + f3) : 3}}. Đây là *ước lượng* — các giá trị gốc trong mỗi nhóm đã không còn."
+  m12-grouped-variance:
+    prompt: >-
+      Hai giá trị đại diện {{m1}} và {{m2}} xuất hiện với tần số {{f1}} và {{f2}}.
+      Hãy ước lượng độ lệch chuẩn.
+    hints:
+      - text: "Trước hết tìm số trung bình: {{(m1*f1 + m2*f2)/(f1+f2) : 3}}."
+      - text: "Sau đó lấy trung bình có trọng số của các bình phương độ lệch, rồi khai căn."
+    solution:
+      - text: "Số trung bình = {{(m1*f1 + m2*f2)/(f1+f2) : 3}}."
+      - text: "Trung bình có trọng số của các bình phương độ lệch cho ta phương sai."
+      - text: "Độ lệch chuẩn = {{sqrt((f1 * (m1 - (m1*f1 + m2*f2)/(f1+f2))**2 + f2 * (m2 - (m1*f1 + m2*f2)/(f1+f2))**2) / (f1 + f2)) : 4}}."
+  m12-conditional-probability:
+    prompt: >-
+      Trong một nhóm {{n}} người, {{ab}} người có cả xe đạp lẫn xe máy, và {{b}} người có xe
+      máy. Chọn ngẫu nhiên một người và biết người đó có xe máy, xác suất người đó cũng có xe
+      đạp bằng bao nhiêu? Hãy trả lời dưới dạng số thập phân.
+    hints:
+      - text: "P(A với điều kiện B) = P(A và B) / P(B)."
+      - text: "Biết người đó có xe máy đã thu hẹp nhóm xuống còn {{b}} người, chứ không phải {{n}}."
+    solution:
+      - text: "Điều kiện thu hẹp không gian mẫu xuống {{b}} người có xe máy."
+      - text: "Trong số đó, {{ab}} người cũng có xe đạp."
+      - text: "P = {{ab}} ÷ {{b}} = {{ab / b : 4}}."
+  m12-bayes-medical-test:
+    prompt: >-
+      Một bệnh có tỉ lệ mắc {{prev}}% dân số. Một xét nghiệm phát hiện được bệnh ở {{sens}}%
+      số người thực sự mắc, nhưng cũng cho kết quả dương tính ở {{fpr}}% số người không mắc.
+      Nếu một người có kết quả dương tính, xác suất người đó thực sự mắc bệnh là bao nhiêu?
+      Hãy trả lời dưới dạng số thập phân.
+    hints:
+      - text: "Hãy hình dung 100000 người. Bao nhiêu người dương tính thật, và bao nhiêu người dương tính giả?"
+      - text: "P(mắc bệnh | dương tính) = số dương tính thật ÷ tổng số dương tính."
+    solution:
+      - text: "Dương tính thật = {{prev / 100 * sens / 100 : 6}} phần dân số."
+      - text: "Dương tính giả = {{(1 - prev / 100) * fpr / 100 : 6}} phần dân số."
+      - text: "P = {{(prev / 100 * sens / 100) / (prev / 100 * sens / 100 + (1 - prev / 100) * fpr / 100) : 5}}."
+      - text: "Kết quả thường thấp hơn nhiều so với người ta tưởng: khi bệnh hiếm, nhóm khỏe mạnh đông đảo tạo ra phần lớn các kết quả dương tính."

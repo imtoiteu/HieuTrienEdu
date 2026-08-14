@@ -195,7 +195,7 @@ def site_stats(db: DbSession) -> SiteStats:
         return db.scalar(query) or 0
 
     grades = db.execute(select(func.min(Course.grade), func.max(Course.grade))).one()
-    grade_range = f"{grades[0]}-{grades[1]}" if grades[0] is not None else "6-9"
+    grade_range = f"{grades[0]}-{grades[1]}" if grades[0] is not None else "6-12"
 
     # Explicit join — filtering TeacherProfile on a User column without one would produce a
     # cross join and badly inflate the count.

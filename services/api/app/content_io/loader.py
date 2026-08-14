@@ -10,7 +10,9 @@ File layout::
     content/<subject>/curriculum/<course>.yaml   subject, course, units, topics, skills
     content/<subject>/lessons/<course>.yaml      lessons (reference topic/skill slugs)
     content/<subject>/questions/<course>.yaml    question templates (reference skill slugs)
+    content/<subject>/resources/<course>.yaml    further reading (reference topic/lesson slugs)
     content/<subject>/i18n/<locale>.yaml         translations, keyed by entity kind and slug
+    content/<subject>/i18n/<locale>/*.yaml       the same, split across files and merged
 
 Translations live in their own files rather than as ``vi:`` blocks inside the authored English,
 for three reasons: the English files carry explanatory comments that a YAML round-trip would
@@ -39,6 +41,7 @@ from app.models import (
     Course,
     Lesson,
     Question,
+    Resource,
     ReviewStatus,
     Skill,
     SkillPrerequisite,
@@ -63,11 +66,12 @@ class LoadReport:
     lessons: int = 0
     questions: int = 0
     videos: int = 0
+    resources: int = 0
     errors: list[str] = field(default_factory=list)
 
     def merge(self, other: LoadReport) -> None:
         for name in ("subjects", "courses", "units", "topics", "skills", "prerequisites",
-                     "lessons", "questions", "videos"):
+                     "lessons", "questions", "videos", "resources"):
             setattr(self, name, getattr(self, name) + getattr(other, name))
         self.errors.extend(other.errors)
 
@@ -75,7 +79,8 @@ class LoadReport:
         return (
             f"{self.subjects} subjects, {self.courses} courses, {self.units} units, "
             f"{self.topics} topics, {self.skills} skills, {self.prerequisites} prerequisite "
-            f"edges, {self.lessons} lessons, {self.questions} questions, {self.videos} videos"
+            f"edges, {self.lessons} lessons, {self.questions} questions, {self.videos} videos, "
+            f"{self.resources} resources"
             + (f", {len(self.errors)} errors" if self.errors else "")
         )
 
@@ -93,17 +98,37 @@ class ContentLoader:
         # {kind: {slug: {locale: {field: value}}}}, populated per subject before its content
         # files are read.
         self._sidecar: dict[str, dict[str, dict[str, Any]]] = {}
+        # Prerequisite and related-skill edges, collected across every curriculum file and
+        # linked once at the end. See ``load_all`` for why they cannot be linked per file.
+        self._pending_prerequisites: list[tuple[str, Any, str]] = []
+        self._pending_relations: list[tuple[str, str, str]] = []
+
+    def _sidecar_files(self, i18n_dir: Path) -> list[tuple[str, Path]]:
+        """Every translation file under ``<subject>/i18n``, paired with its locale.
+
+        Two layouts are accepted. ``i18n/vi.yaml`` is the original one-file-per-locale form.
+        ``i18n/vi/*.yaml`` splits the same content across several files, merged in filename
+        order, which is what keeps a subject spanning seven grades from becoming one
+        several-thousand-line file nobody can review. Both may be used at once.
+        """
+        found: list[tuple[str, Path]] = []
+        for entry in sorted(i18n_dir.iterdir()):
+            locale = entry.stem if entry.is_file() else entry.name
+            if locale not in SUPPORTED_LOCALES or locale == DEFAULT_LOCALE:
+                continue
+            if entry.is_file() and entry.suffix == ".yaml":
+                found.append((locale, entry))
+            elif entry.is_dir():
+                found.extend((locale, path) for path in sorted(entry.glob("*.yaml")))
+        return found
 
     def _load_sidecar(self, subject_dir: Path) -> None:
-        """Read ``<subject>/i18n/<locale>.yaml`` into the translation lookup."""
+        """Read a subject's translation files into the lookup."""
         self._sidecar = {}
         i18n_dir = subject_dir / "i18n"
         if not i18n_dir.is_dir():
             return
-        for path in sorted(i18n_dir.glob("*.yaml")):
-            locale = path.stem
-            if locale not in SUPPORTED_LOCALES or locale == DEFAULT_LOCALE:
-                continue
+        for locale, path in self._sidecar_files(i18n_dir):
             data = _read_yaml(path) or {}
             for kind, entries in data.items():
                 if not isinstance(entries, dict):
@@ -111,7 +136,9 @@ class ContentLoader:
                 bucket = self._sidecar.setdefault(kind, {})
                 for slug, values in entries.items():
                     if isinstance(values, dict):
-                        bucket.setdefault(slug, {})[locale] = values
+                        # A later file may extend an earlier one's entry for the same slug
+                        # rather than replacing it wholesale.
+                        bucket.setdefault(slug, {}).setdefault(locale, {}).update(values)
 
     def _sidecar_for(self, kind: str, slug: str) -> dict[str, Any]:
         """Translations declared for one entity, as ``{locale: {field: value}}``."""
@@ -297,10 +324,8 @@ class ContentLoader:
         if created:
             self.report.courses += 1
 
-        # Prerequisites are resolved in a second pass, because a skill may depend on one
-        # declared later in the file or in another grade's file entirely.
-        pending_prerequisites: list[tuple[str, Any]] = []
-        pending_relations: list[tuple[str, str]] = []
+        # Prerequisites are resolved in a final pass, because a skill may depend on one declared
+        # later in this file, in another grade's file, or in another subject entirely.
 
         for unit_index, unit_data in enumerate(data.get("units") or []):
             unit, created = self._upsert(
@@ -365,16 +390,16 @@ class ContentLoader:
                         self.report.skills += 1
 
                     for prerequisite in skill_data.get("prerequisites") or []:
-                        pending_prerequisites.append((skill_data["slug"], prerequisite))
+                        self._pending_prerequisites.append(
+                            (skill_data["slug"], prerequisite, path.name)
+                        )
                     for related in skill_data.get("related") or []:
-                        pending_relations.append((skill_data["slug"], related))
+                        self._pending_relations.append((skill_data["slug"], related, path.name))
 
         self.db.flush()
-        self._link_prerequisites(pending_prerequisites, path.name)
-        self._link_relations(pending_relations, path.name)
 
-    def _link_prerequisites(self, pending: list[tuple[str, Any]], source: str) -> None:
-        for skill_slug, prerequisite in pending:
+    def _link_prerequisites(self, pending: list[tuple[str, Any, str]]) -> None:
+        for skill_slug, prerequisite, source in pending:
             if isinstance(prerequisite, dict):
                 prerequisite_slug = prerequisite.get("slug")
                 strength = float(prerequisite.get("strength", 1.0))
@@ -411,8 +436,8 @@ class ContentLoader:
                 existing.strength = strength
         self.db.flush()
 
-    def _link_relations(self, pending: list[tuple[str, str]], source: str) -> None:
-        for skill_slug, related_slug in pending:
+    def _link_relations(self, pending: list[tuple[str, str, str]]) -> None:
+        for skill_slug, related_slug, source in pending:
             skill = self.db.scalar(select(Skill).where(Skill.slug == skill_slug))
             related = self.db.scalar(select(Skill).where(Skill.slug == related_slug))
             if skill is None or related is None:
@@ -513,6 +538,83 @@ class ContentLoader:
             )
             if created:
                 self.report.lessons += 1
+        self.db.flush()
+
+    # ---- resources -----------------------------------------------------------------
+
+    def load_resources_file(self, path: Path) -> None:
+        """Load curated further-reading links attached to a topic or a lesson.
+
+        These are pointers *outward* — a PhET simulation, an OpenStax chapter, a NASA page —
+        rather than material hosted here, so what is authored is the link plus the reason a
+        student should follow it. Licence and attribution are carried through to the page
+        because most of these sources are open-licensed on the condition that they are credited.
+        """
+        data = _read_yaml(path)
+        defaults = data.get("defaults") or {}
+
+        for index, resource_data in enumerate(data.get("resources") or []):
+            slug = resource_data.get("slug")
+            if not slug:
+                self.report.errors.append(f"{path.name}: a resource is missing its slug")
+                continue
+            merged = {**defaults, **resource_data}
+
+            # A resource hangs off a lesson when it belongs to that one lesson, and off a topic
+            # when it is useful anywhere in the topic. Exactly one of the two is required: with
+            # neither it would load successfully and then be visible nowhere.
+            topic = lesson = None
+            if merged.get("lesson"):
+                lesson = self.db.scalar(
+                    select(Lesson).where(Lesson.slug == merged["lesson"])
+                )
+                if lesson is None:
+                    self.report.errors.append(
+                        f"{path.name}: resource '{slug}' references unknown lesson "
+                        f"'{merged['lesson']}'"
+                    )
+                    continue
+            if merged.get("topic"):
+                topic = self.db.scalar(select(Topic).where(Topic.slug == merged["topic"]))
+                if topic is None:
+                    self.report.errors.append(
+                        f"{path.name}: resource '{slug}' references unknown topic "
+                        f"'{merged['topic']}'"
+                    )
+                    continue
+            if topic is None and lesson is None:
+                self.report.errors.append(
+                    f"{path.name}: resource '{slug}' names neither a topic nor a lesson, so "
+                    f"nothing would ever display it"
+                )
+                continue
+            if not merged.get("url"):
+                self.report.errors.append(f"{path.name}: resource '{slug}' has no url")
+                continue
+
+            _, created = self._upsert(
+                Resource,
+                slug,
+                **self._with_i18n(
+                    {
+                        "title": merged.get("title", slug),
+                        "description": merged.get("description"),
+                        "resource_type": merged.get("resource_type", "link"),
+                        "url": merged["url"],
+                        "topic_id": topic.id if topic else None,
+                        "lesson_id": lesson.id if lesson else None,
+                        "position": merged.get("position", index),
+                        "is_public": merged.get("is_public", True),
+                        "license": merged.get("license"),
+                        "attribution": merged.get("attribution"),
+                    },
+                    self._translations(
+                        resource_data, ("title", "description"), "resources", slug
+                    ),
+                ),
+            )
+            if created:
+                self.report.resources += 1
         self.db.flush()
 
     # ---- questions -----------------------------------------------------------------
@@ -635,12 +737,22 @@ class ContentLoader:
             for path in sorted((subject_dir / "curriculum").glob("*.yaml")):
                 self.load_curriculum_file(path)
 
+        # Only now is every skill in every subject and grade present. Linking per file would
+        # depend on filename order, and that order is not the curriculum order: "physics-10"
+        # sorts before "physics-6", so grade 10 would look for its grade 6-9 prerequisites
+        # before those files had been read.
+        self._link_prerequisites(self._pending_prerequisites)
+        self._link_relations(self._pending_relations)
+
         for subject_dir in subject_dirs:
             self._load_sidecar(subject_dir)
             for path in sorted((subject_dir / "lessons").glob("*.yaml")):
                 self.load_lessons_file(path)
             for path in sorted((subject_dir / "questions").glob("*.yaml")):
                 self.load_questions_file(path)
+            # Last: a resource may attach to a lesson, which the pass above created.
+            for path in sorted((subject_dir / "resources").glob("*.yaml")):
+                self.load_resources_file(path)
 
         return self.report
 

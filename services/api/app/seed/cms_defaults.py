@@ -116,7 +116,7 @@ SECTIONS: list[tuple[str, str, str, str, dict]] = [
             "title": "About HieuTrienEducation",
             "body": (
                 "We are a Hanoi tutoring centre teaching Mathematics and Physics to students in "
-                "grades 6 to 9, in person and online. Edit this text from Admin → Website."
+                "grades 6 to 12, in person and online. Edit this text from Admin → Website."
             ),
         },
     ),
@@ -190,9 +190,9 @@ SECTIONS_VI: list[tuple[str, str, str, str, dict]] = [
         {
             "title": "Về HieuTrienEducation",
             "body": (
-                "Chúng tôi là trung tâm gia sư tại Hà Nội, dạy Toán và Vật lý cho học sinh lớp 6 "
-                "đến lớp 9, trực tiếp và trực tuyến. Bạn có thể sửa nội dung này tại Quản trị → "
-                "Website."
+                "Chúng tôi là trung tâm gia sư tại TP Vinh, Nghệ An, dạy Toán và Vật lý cho "
+                "học sinh lớp 6 đến lớp 12, trực tiếp và trực tuyến. Bạn có thể sửa nội dung "
+                "này tại Quản trị → Website."
             ),
         },
     ),
@@ -259,13 +259,13 @@ FAQS_VI: list[tuple[str, str, str]] = [
     ),
     (
         "Trung tâm dạy trực tuyến, trực tiếp hay cả hai?",
-        "Cả hai. Lớp học diễn ra tại trung tâm ở Hà Nội và trực tuyến; một số gia đình kết hợp "
+        "Cả hai. Lớp học diễn ra tại trung tâm ở TP Vinh và trực tuyến; một số gia đình kết hợp "
         "cả hai. Khoá tự học quay sẵn có thể học bất cứ lúc nào.",
         "general",
     ),
     (
         "Trung tâm dạy những khối lớp nào?",
-        "Từ lớp 6 đến lớp 9, môn Toán và Vật lý.",
+        "Từ lớp 6 đến lớp 12, môn Toán và Vật lý.",
         "general",
     ),
     (

@@ -1,0 +1,216 @@
+# Mathematics — Math 12
+#
+# The final grade: applying the derivative, coordinates in three dimensions, integration, and
+# the statistics and conditional probability of the GDPT 2018 programme. Grade 12 is the year
+# every earlier thread is used for something — the derivative sketches a curve and minimises a
+# cost, the integral recovers a total from a rate, and conditional probability explains the
+# result that most surprises people who meet it: why a positive test for a rare disease usually
+# is not one.
+subject:
+  slug: mathematics
+  name: Mathematics
+  icon: calculator
+  color: "#FF6B6B"
+  position: 1
+
+course:
+  slug: math-12
+  title: Mathematics — Grade 12
+  grade: 12
+  summary: Curve sketching with derivatives, coordinates in space, integration, and conditional probability.
+  description: >-
+    Grade 12 closes the programme by putting calculus to work. Students use the derivative to
+    describe where a function rises and falls, find its extrema and asymptotes, sketch it, and
+    solve genuine optimisation problems. Coordinates extend to three dimensions with planes and
+    spheres. Integration arrives as the reverse of differentiation and is used to recover
+    distance from speed and to find areas and volumes. The year finishes with grouped data and
+    conditional probability, including the total-probability and Bayes formulas.
+  estimated_hours: 120
+
+units:
+  - slug: math-12-curve-sketching
+    title: Applications of the Derivative
+    icon: chart-line
+    summary: Everything the first derivative tells you about the shape of a curve.
+    topics:
+      - slug: math-12-monotonicity-extrema
+        title: Monotonicity and Extrema
+        summary: Where a function rises, where it falls, and where it turns.
+        skills:
+          - slug: math-12-monotonicity
+            name: Increasing and decreasing intervals
+            description: >-
+              Use the sign of the first derivative to find the intervals on which a function
+              increases or decreases.
+            difficulty: 5
+            prerequisites: [math-11-differentiation-rules]
+            tags: [calculus, core]
+          - slug: math-12-extrema
+            name: Local and global extrema
+            description: >-
+              Locate local maxima and minima, and find the greatest and least value of a
+              function on a closed interval.
+            difficulty: 5
+            prerequisites: [math-12-monotonicity]
+            tags: [calculus, core]
+
+      - slug: math-12-asymptotes-optimisation
+        title: Asymptotes and Optimisation
+        summary: The behaviour far from the origin, and the cheapest possible tin can.
+        skills:
+          - slug: math-12-asymptotes
+            name: Asymptotes of a rational function
+            description: >-
+              Find the vertical, horizontal and oblique asymptotes of a rational function and
+              use them to sketch it.
+            difficulty: 5
+            prerequisites: [math-11-limits, math-9-algebraic-fractions]
+            tags: [calculus]
+          - slug: math-12-optimisation
+            name: Optimisation problems
+            description: >-
+              Translate a worded constraint into a function of one variable and minimise or
+              maximise it with the derivative.
+            difficulty: 5
+            prerequisites: [math-12-extrema]
+            tags: [calculus, core]
+
+  - slug: math-12-space-coordinates
+    title: Coordinates in Space
+    icon: box
+    summary: Geometry with three coordinates instead of two.
+    topics:
+      - slug: math-12-space-vectors
+        title: Vectors in Three Dimensions
+        summary: Everything from grade 10, with one more axis.
+        skills:
+          - slug: math-12-space-vector-ops
+            name: Vectors in three dimensions
+            description: >-
+              Add, scale and take the dot product of vectors in space, and find the angle
+              between them.
+            difficulty: 4
+            prerequisites: [math-10-vector-operations, math-10-dot-product]
+            tags: [geometry, core]
+          - slug: math-12-space-distance
+            name: Distance and midpoint in space
+            description: >-
+              Calculate the distance between two points in space and the midpoint of a segment.
+            difficulty: 4
+            prerequisites: [math-8-distance-formula, math-12-space-vector-ops]
+            tags: [geometry]
+
+      - slug: math-12-planes-spheres
+        title: Planes and Spheres
+        summary: Two surfaces that a single equation describes completely.
+        skills:
+          - slug: math-12-plane-equation
+            name: The equation of a plane
+            description: >-
+              Write the equation of a plane from a point and a normal vector, and find the
+              distance from a point to a plane.
+            difficulty: 5
+            prerequisites: [math-12-space-vector-ops]
+            tags: [geometry, core]
+          - slug: math-12-sphere-equation
+            name: The equation of a sphere
+            description: >-
+              Write and interpret the equation of a sphere, and find its centre and radius by
+              completing the square.
+            difficulty: 4
+            prerequisites: [math-12-space-distance, math-9-quadratic-by-factorising]
+            tags: [geometry]
+
+  - slug: math-12-integration
+    title: Antiderivatives and Integrals
+    icon: sigma
+    summary: Recovering a total from a rate — distance from speed, volume from flow.
+    topics:
+      - slug: math-12-antiderivatives
+        title: Antiderivatives
+        summary: Differentiation run backwards, and why the constant matters.
+        skills:
+          - slug: math-12-antiderivative
+            name: Antiderivatives of standard functions
+            description: >-
+              Find the antiderivative of a power, exponential, logarithmic or trigonometric
+              function, including the constant of integration.
+            difficulty: 5
+            prerequisites: [math-11-differentiation-rules]
+            tags: [calculus, core]
+          - slug: math-12-integration-methods
+            name: Substitution and integration by parts
+            description: >-
+              Evaluate an integral by substitution or by parts, choosing the method from the
+              form of the integrand.
+            difficulty: 5
+            prerequisites: [math-12-antiderivative]
+            tags: [calculus]
+
+      - slug: math-12-definite-integrals
+        title: Definite Integrals and their Applications
+        summary: The area under a curve, and the volume you get by spinning it.
+        skills:
+          - slug: math-12-definite-integral
+            name: Evaluating a definite integral
+            description: >-
+              Apply the fundamental theorem of calculus to evaluate a definite integral and
+              interpret it as a total.
+            difficulty: 5
+            prerequisites: [math-12-antiderivative]
+            tags: [calculus, core]
+          - slug: math-12-area-volume
+            name: Area between curves and volume of revolution
+            description: >-
+              Find the area enclosed between two curves and the volume generated by rotating a
+              region about an axis.
+            difficulty: 5
+            prerequisites: [math-12-definite-integral]
+            tags: [calculus]
+
+  - slug: math-12-statistics-probability
+    title: Statistics and Conditional Probability
+    icon: bar-chart-3
+    summary: Summarising grouped data, and the probability people get wrong most often.
+    topics:
+      - slug: math-12-grouped-data
+        title: Grouped Data
+        summary: What you can still recover once the raw values are gone.
+        skills:
+          - slug: math-12-grouped-mean
+            name: Mean and mode of grouped data
+            description: >-
+              Estimate the mean and identify the modal class of a frequency table with grouped
+              intervals.
+            difficulty: 4
+            prerequisites: [math-6-mean-median-mode]
+            tags: [statistics, core]
+          - slug: math-12-grouped-spread
+            name: Spread of grouped data
+            description: >-
+              Estimate the variance and standard deviation of grouped data and compare the
+              spread of two data sets.
+            difficulty: 5
+            prerequisites: [math-12-grouped-mean, math-10-spread-measures]
+            tags: [statistics]
+
+      - slug: math-12-conditional
+        title: Conditional Probability
+        summary: Why a positive result on an accurate test for a rare disease usually is not one.
+        skills:
+          - slug: math-12-conditional-probability
+            name: Conditional probability
+            description: >-
+              Compute P(A given B), test two events for independence, and apply the
+              multiplication rule.
+            difficulty: 5
+            prerequisites: [math-10-classical-probability]
+            tags: [probability, core]
+          - slug: math-12-bayes
+            name: Total probability and Bayes' formula
+            description: >-
+              Apply the law of total probability and Bayes' formula, using a tree diagram to
+              organise the cases.
+            difficulty: 5
+            prerequisites: [math-12-conditional-probability]
+            tags: [probability, core]

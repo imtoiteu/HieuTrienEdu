@@ -1,0 +1,382 @@
+# Physics — Grade 12 question templates
+#
+# Constants are always given in the prompt (R = 8.31, c = 3e8, k_B = 1.38e-23) rather than left
+# to memory: this grade is about applying the relationship, not recalling a data sheet.
+defaults:
+  license: proprietary
+  source: HieuTrienEducation
+  status: published
+
+questions:
+  - slug: p12-first-law
+    skill: physics-12-internal-energy
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      A gas absorbs {{q}} J of heat and has {{w}} J of work done *on* it.
+      By how much does its internal energy change, in joules?
+    variables:
+      q: {type: int, min: 100, max: 5000, step: 50}
+      w: {type: int, min: 50, max: 3000, step: 50}
+    answer: {expression: "q + w", unit: "J"}
+    options:
+      distractors: ["q - w", "w - q"]
+    hints:
+      - text: "The first law: delta-U = Q + W, where W is the work done *on* the gas."
+      - text: "Both terms add energy to the gas here, so both are positive."
+    solution:
+      - text: "delta-U = {{q}} + {{w}} = {{q + w}} J."
+      - text: "If the gas had instead done {{w}} J of work on its surroundings, W would be negative and the internal energy would rise by only {{q - w}} J."
+
+  - slug: p12-engine-efficiency
+    skill: physics-12-heat-engines
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      A heat engine takes in {{qh}} J from a hot reservoir and rejects {{qc}} J to a cold one.
+      What is its efficiency, as a percentage?
+    variables:
+      qh: {type: int, min: 1000, max: 20000, step: 500}
+      qc: {type: int, min: 400, max: 12000, step: 200}
+    constraints: ["qc < qh"]
+    answer:
+      expression: "(qh - qc) / qh * 100"
+      unit: "%"
+      decimals: 2
+      tolerance: 0.005
+    options:
+      distractors: ["qc / qh * 100", "(qh - qc) / qc * 100"]
+    hints:
+      - text: "Useful work out = heat in - heat rejected."
+      - text: "W = {{qh}} - {{qc}} = {{qh - qc}} J."
+    solution:
+      - text: "W = {{qh - qc}} J."
+      - text: "Efficiency = {{qh - qc}} ÷ {{qh}} x 100 = {{(qh - qc) / qh * 100 : 2}}%."
+      - text: "No engine can reach 100%: some heat must always be rejected to the cold reservoir."
+
+  - slug: p12-kelvin-conversion
+    skill: physics-12-kelvin
+    type: numeric
+    difficulty: 3
+    prompt: "A temperature of {{t}} degrees Celsius is how many kelvin?"
+    variables:
+      t: {type: int, min: -200, max: 400}
+    answer: {expression: "t + 273", unit: "K"}
+    options:
+      distractors: ["t - 273", "273 - t"]
+    hints:
+      - text: "K = degrees C + 273."
+    solution:
+      - text: "{{t}} + 273 = {{t + 273}} K."
+      - text: "Absolute zero is 0 K, or -273 degrees C — the point where particle motion is at its minimum."
+
+  - slug: p12-calorimetry-mixture
+    skill: physics-12-calorimetry
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      {{m1}} kg of water at {{t1}} degrees C is mixed with {{m2}} kg of water at
+      {{t2}} degrees C. What is the final temperature, in degrees C?
+    variables:
+      m1: {type: float, min: 0.2, max: 5.0, decimals: 1}
+      m2: {type: float, min: 0.2, max: 5.0, decimals: 1}
+      t1: {type: int, min: 60, max: 95}
+      t2: {type: int, min: 5, max: 40}
+    answer:
+      expression: "(m1 * t1 + m2 * t2) / (m1 + m2)"
+      unit: "degrees C"
+      decimals: 2
+      tolerance: 0.005
+    options:
+      distractors: ["(t1 + t2) / 2", "t1 - t2"]
+    hints:
+      - text: "The heat lost by the hot water equals the heat gained by the cold water."
+      - text: "Both are water, so the specific heat capacity cancels — it becomes a weighted average by mass."
+    solution:
+      - text: "m1 c (t1 - T) = m2 c (T - t2), and c cancels."
+      - text: "T = ({{m1}} x {{t1}} + {{m2}} x {{t2}}) ÷ ({{m1}} + {{m2}})."
+      - text: "T = {{(m1 * t1 + m2 * t2) / (m1 + m2) : 2}} degrees C."
+
+  - slug: p12-boyles-law
+    skill: physics-12-boyle-charles
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A fixed mass of gas at {{p1}} kPa occupies {{v1}} litres. It is compressed to
+      {{v2}} litres at constant temperature. What is the new pressure, in kPa?
+    variables:
+      p1: {type: int, min: 50, max: 400, step: 10}
+      v1: {type: int, min: 4, max: 40}
+      v2: {type: int, min: 1, max: 20}
+    constraints: ["v2 < v1"]
+    answer: {expression: "p1 * v1 / v2", unit: "kPa", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["p1 * v2 / v1", "p1 * v1 * v2"]
+    hints:
+      - text: "At constant temperature, p1 V1 = p2 V2."
+      - text: "The gas is compressed, so the pressure must rise."
+    solution:
+      - text: "p2 = {{p1}} x {{v1}} ÷ {{v2}} = {{p1 * v1 / v2 : 2}} kPa."
+
+  - slug: p12-charles-law
+    skill: physics-12-boyle-charles
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A balloon holds {{v1}} litres of gas at {{t1}} degrees C. It is warmed to {{t2}} degrees C
+      at constant pressure. What is its new volume, in litres?
+    variables:
+      v1: {type: int, min: 2, max: 40}
+      t1: {type: int, min: 0, max: 40}
+      t2: {type: int, min: 50, max: 150}
+    answer:
+      expression: "v1 * (t2 + 273) / (t1 + 273)"
+      unit: "litres"
+      decimals: 3
+      tolerance: 0.005
+    options:
+      distractors: ["v1 * t2 / t1", "v1 * (t1 + 273) / (t2 + 273)"]
+    hints:
+      - text: "V1 / T1 = V2 / T2 — but T must be in kelvin."
+      - text: "T1 = {{t1 + 273}} K and T2 = {{t2 + 273}} K."
+    solution:
+      - text: "V2 = {{v1}} x {{t2 + 273}} ÷ {{t1 + 273}} = {{v1 * (t2 + 273) / (t1 + 273) : 3}} litres."
+      - text: "Using Celsius directly would give a badly wrong answer — the law only holds on an absolute scale."
+
+  - slug: p12-ideal-gas-equation
+    skill: physics-12-ideal-gas-equation
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      What pressure, in pascals, does {{n}} mol of an ideal gas exert in a {{v}} m^3 container
+      at {{t}} K? Take R = 8.31 J/mol/K.
+    variables:
+      n: {type: float, min: 0.2, max: 20.0, decimals: 1}
+      v: {type: float, min: 0.05, max: 5.0, decimals: 2}
+      t: {type: int, min: 250, max: 600, step: 10}
+    answer:
+      expression: "n * 8.31 * t / v"
+      unit: "Pa"
+      decimals: 1
+      tolerance: 0.005
+    options:
+      distractors: ["n * 8.31 * t * v", "8.31 * t / v"]
+    hints:
+      - text: "pV = nRT, so p = nRT / V."
+    solution:
+      - text: "p = {{n}} x 8.31 x {{t}} ÷ {{v}} = {{n * 8.31 * t / v : 1}} Pa."
+      - text: "This is what lifts a hot-air balloon: heating the air lowers its density at constant pressure."
+
+  - slug: p12-mean-kinetic-energy
+    skill: physics-12-kinetic-theory
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      What is the mean kinetic energy of a gas molecule at {{t}} K, in joules?
+      Take the Boltzmann constant as 1.38 x 10^-23 J/K.
+    variables:
+      t: {type: int, min: 100, max: 900, step: 10}
+    answer:
+      expression: "1.5 * 1.38e-23 * t"
+      unit: "J"
+      decimals: 24
+      tolerance: 0.005
+    options:
+      distractors: ["1.38e-23 * t", "0.5 * 1.38e-23 * t"]
+    hints:
+      - text: "The mean kinetic energy of a molecule is (3/2) k_B T."
+    solution:
+      - text: "E = 1.5 x 1.38e-23 x {{t}} = {{1.5 * 1.38e-23 * t : 24}} J."
+      - text: "Temperature *is* this quantity — it is a direct measure of the average kinetic energy of the particles."
+
+  - slug: p12-moles-to-molecules
+    skill: physics-12-avogadro
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      How many molecules are there in {{n}} mol of a gas? Give your answer in units of
+      10^23 molecules. Take the Avogadro constant as 6.02 x 10^23 per mol.
+    variables:
+      n: {type: float, min: 0.1, max: 12.0, decimals: 1}
+    answer: {expression: "n * 6.02", unit: "x 10^23", decimals: 3, tolerance: 0.005}
+    options:
+      distractors: ["n / 6.02", "6.02 / n"]
+    hints:
+      - text: "One mole contains 6.02 x 10^23 particles."
+      - text: "Working in units of 10^23, you only need {{n}} x 6.02."
+    solution:
+      - text: "N = {{n}} x 6.02 x 10^23 = {{n * 6.02 : 3}} x 10^23 molecules."
+
+  - slug: p12-force-on-conductor
+    skill: physics-12-force-on-conductor
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A wire of length {{l}} m carries {{i}} A at {{theta}} degrees to a magnetic field of
+      {{b}} T. What force acts on it, in newtons?
+    variables:
+      b: {type: float, min: 0.05, max: 2.0, decimals: 2}
+      i: {type: float, min: 0.5, max: 15.0, decimals: 1}
+      l: {type: float, min: 0.1, max: 3.0, decimals: 2}
+      theta: {type: choice, choices: [30, 45, 60, 90]}
+    answer:
+      expression: "b * i * l * sin(radians(theta))"
+      unit: "N"
+      decimals: 4
+      tolerance: 0.005
+    options:
+      distractors: ["b * i * l * cos(radians(theta))", "b * i * l"]
+    hints:
+      - text: "F = B I L sin(theta)."
+      - text: "sin({{theta}} degrees) = {{sin(radians(theta)) : 4}}."
+    solution:
+      - text: "F = {{b}} x {{i}} x {{l}} x {{sin(radians(theta)) : 4}} = {{b * i * l * sin(radians(theta)) : 4}} N."
+      - text: "At 0 degrees — wire parallel to the field — the force would be zero."
+
+  - slug: p12-magnetic-flux
+    skill: physics-12-flux
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      A coil of {{n}} turns and area {{a}} m^2 sits perpendicular to a magnetic field of
+      {{b}} T. What is the flux linkage, in weber-turns?
+    variables:
+      n: {type: int, min: 10, max: 800, step: 10}
+      a: {type: float, min: 0.001, max: 0.5, decimals: 3}
+      b: {type: float, min: 0.01, max: 1.5, decimals: 2}
+    answer: {expression: "n * b * a", unit: "Wb-turns", decimals: 4, tolerance: 0.005}
+    options:
+      distractors: ["b * a", "n * b / a"]
+    hints:
+      - text: "Flux through one turn is Phi = B A when the coil is perpendicular to the field."
+      - text: "Flux linkage multiplies that by the number of turns."
+    solution:
+      - text: "Phi = {{b}} x {{a}} = {{b * a : 5}} Wb."
+      - text: "N Phi = {{n}} x {{b * a : 5}} = {{n * b * a : 4}} Wb-turns."
+
+  - slug: p12-faraday-emf
+    skill: physics-12-faraday-lenz
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      The flux linkage through a coil changes by {{df}} Wb-turns in {{dt}} s.
+      What average EMF is induced, in volts?
+    variables:
+      df: {type: float, min: 0.01, max: 5.0, decimals: 2}
+      dt: {type: float, min: 0.01, max: 2.0, decimals: 2}
+    answer: {expression: "df / dt", unit: "V", decimals: 3, tolerance: 0.005}
+    options:
+      distractors: ["df * dt", "dt / df"]
+    hints:
+      - text: "Faraday's law: the induced EMF equals the rate of change of flux linkage."
+    solution:
+      - text: "EMF = {{df}} ÷ {{dt}} = {{df / dt : 3}} V."
+      - text: "Lenz's law fixes the direction: the induced current always opposes the change that caused it."
+
+  - slug: p12-transformer
+    skill: physics-12-ac-transformers
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      An ideal transformer has {{np}} turns on its primary and {{ns}} turns on its secondary.
+      With {{vp}} V across the primary, what is the secondary voltage, in volts?
+    variables:
+      np: {type: int, min: 100, max: 5000, step: 100}
+      ns: {type: int, min: 20, max: 4000, step: 20}
+      vp: {type: int, min: 50, max: 400, step: 10}
+    answer: {expression: "vp * ns / np", unit: "V", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["vp * np / ns", "vp * np * ns"]
+    hints:
+      - text: "Vs / Vp = Ns / Np."
+    solution:
+      - text: "Vs = {{vp}} x {{ns}} ÷ {{np}} = {{vp * ns / np : 2}} V."
+      - text: "Stepping voltage up for transmission cuts the current, and the heat lost in the cables goes as I^2 R."
+
+  - slug: p12-mass-energy
+    skill: physics-12-mass-defect
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      A nuclear reaction converts {{m}} micrograms of mass into energy.
+      How much energy is released, in joules? Take c = 3 x 10^8 m/s.
+    variables:
+      m: {type: float, min: 0.1, max: 50.0, decimals: 1}
+    answer:
+      expression: "m * 1e-9 * 9e16"
+      unit: "J"
+      decimals: 2
+      tolerance: 0.005
+    options:
+      distractors: ["m * 1e-9 * 3e8", "m * 9e16"]
+    hints:
+      - text: "E = m c^2, and c^2 = 9 x 10^16."
+      - text: "{{m}} micrograms = {{m}} x 10^-9 kg."
+    solution:
+      - text: "E = ({{m}}e-9) x 9e16 = {{m * 1e-9 * 9e16 : 2}} J."
+      - text: "A microgram of mass is worth roughly the energy of 20 tonnes of TNT — this is why nuclear fuel is so concentrated."
+
+  - slug: p12-fission-fusion
+    skill: physics-12-fission-fusion
+    type: multiple_choice
+    difficulty: 5
+    prompt: >-
+      Fission splits heavy nuclei and fusion joins light ones, yet *both* release energy.
+      What explains this?
+    options:
+      choices:
+        - {label: "Both move nuclei towards iron, which has the highest binding energy per nucleon", correct: true}
+        - {label: "Both increase the total mass of the products", correct: false}
+        - {label: "Both convert protons directly into energy", correct: false}
+        - {label: "Both always produce free neutrons, which carry the energy away", correct: false}
+    hints:
+      - text: "Look at the shape of the binding-energy-per-nucleon curve."
+      - text: "It peaks around iron-56."
+    solution:
+      - text: "Binding energy per nucleon rises to a maximum near iron and falls away on both sides."
+      - text: "Splitting a heavy nucleus moves its fragments up the curve; fusing light nuclei also moves them up."
+      - text: "Either way the products are more tightly bound, and the mass difference appears as energy."
+
+  - slug: p12-decay-law
+    skill: physics-12-decay-law
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      A sample has a decay constant of {{lam}} per year. What fraction of the original nuclei
+      remain after {{t}} years? Give your answer as a decimal.
+    variables:
+      lam: {type: float, min: 0.001, max: 0.5, decimals: 3}
+      t: {type: int, min: 1, max: 60}
+    # Past about seven decay constants the fraction rounds to 0.00000 at five decimal places,
+    # and "what fraction remains?" stops being a question a student can meaningfully answer.
+    constraints: ["lam * t < 7"]
+    answer: {expression: "exp(-lam * t)", decimals: 5, tolerance: 0.005}
+    options:
+      distractors: ["exp(lam * t)", "1 - lam * t"]
+    hints:
+      - text: "N / N0 = e^(-lambda t)."
+      - text: "lambda t = {{lam}} x {{t}} = {{lam * t : 4}}."
+    solution:
+      - text: "N / N0 = e^(-{{lam * t : 4}}) = {{exp(-lam * t) : 5}}."
+      - text: "The half-life is ln(2) / lambda = {{log(2) / lam : 2}} years."
+
+  - slug: p12-radiation-medicine
+    skill: physics-12-radiation-safety
+    type: multiple_choice
+    difficulty: 3
+    prompt: >-
+      A radioactive tracer is injected to image a patient's organs. Which property makes an
+      isotope suitable for this?
+    options:
+      choices:
+        - {label: "A gamma emitter with a half-life of a few hours", correct: true}
+        - {label: "An alpha emitter with a half-life of a few hours", correct: false}
+        - {label: "A gamma emitter with a half-life of several years", correct: false}
+        - {label: "An alpha emitter with a half-life of several years", correct: false}
+    hints:
+      - text: "The radiation has to escape the body to reach the detector."
+      - text: "It also has to stop being radioactive reasonably soon after the scan."
+    solution:
+      - text: "Gamma radiation is penetrating enough to leave the body and be detected outside it."
+      - text: "Alpha would be absorbed within millimetres of tissue — useless for imaging and highly damaging internally."
+      - text: "A short half-life means the dose falls away quickly once the scan is done."

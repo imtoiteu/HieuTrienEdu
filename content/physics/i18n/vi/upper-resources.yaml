@@ -1,0 +1,173 @@
+# Vietnamese translations — physics further-reading resources, grades 10-12.
+#
+# Only `title` and `description` are translatable. The URL, licence and attribution are not:
+# a licence name is a legal identifier and an institution's name is the same in every language.
+#
+# Proper names of the simulations and books are kept in English because that is what the student
+# will see when the link opens — translating "Collision Lab" would make the page they land on
+# harder to recognise, not easier.
+
+resources:
+  # ---------------------------------------------------------------------------- lớp 10
+  res-p10-forces-motion-sim:
+    title: "PhET: Forces and Motion — Basics (Lực và chuyển động — cơ bản)"
+    description: >-
+      Đẩy một thùng hàng và xem giản đồ lực cập nhật ngay lập tức. Nút bật/tắt ma sát khiến sự
+      khác nhau giữa lực tác dụng và hợp lực trở nên không thể bỏ qua.
+  res-p10-projectile-sim:
+    title: "PhET: Projectile Motion (Chuyển động ném)"
+    description: >-
+      Bắn một viên đạn với góc và vận tốc tuỳ ý, có hoặc không có lực cản không khí. Tắt lực cản
+      đi và tự kiểm chứng rằng góc 45 độ thật sự cho tầm xa lớn nhất.
+  res-p10-collision-lab:
+    title: "PhET: Collision Lab (Phòng thí nghiệm va chạm)"
+    description: >-
+      Cho hai vật va chạm và xem động lượng giữ nguyên trong khi động năng thì không. Thanh
+      trượt độ đàn hồi biến va chạm nảy thành va chạm dính.
+  res-p10-energy-skate-park:
+    title: "PhET: Energy Skate Park (Công viên trượt ván năng lượng)"
+    description: >-
+      Dựng một đường trượt và xem động năng với thế năng chuyển hoá qua lại theo thời gian thực.
+      Thêm ma sát vào sẽ thấy rõ phần năng lượng "biến mất" đã đi đâu.
+  res-p10-hookes-law-sim:
+    title: "PhET: Hooke's Law (Định luật Hooke)"
+    description: >-
+      Kéo giãn một lò xo và xem đồ thị lực cùng đồ thị thế năng vẽ song song — một đường bậc
+      nhất, một đường bậc hai.
+  res-p10-openstax-mechanics:
+    title: "OpenStax: University Physics Volume 1 (Vật lí đại cương, tập 1)"
+    description: >-
+      Một giáo trình cơ học bậc đại học hoàn chỉnh và miễn phí. Các chương 3 đến 9 bao trùm cả
+      năm học này với độ sâu vượt yêu cầu chương trình, kèm ví dụ giải chi tiết xuyên suốt.
+  res-p10-openstax-college-physics:
+    title: "OpenStax: College Physics 2e (Vật lí đại cương, bản 2e)"
+    description: >-
+      Cách trình bày nhẹ nhàng hơn, ít dùng giải tích hơn so với University Physics. Phần lực
+      cản và tốc độ giới hạn chính là nguồn của các số liệu về người nhảy dù trong bài học.
+
+  # ---------------------------------------------------------------------------- lớp 11
+  res-p11-tacoma-footage:
+    title: "Wikimedia Commons: thước phim cầu Tacoma Narrows sụp đổ (1940)"
+    description: >-
+      Đoạn phim gốc ghi lại mặt cầu xoắn vặn rồi gãy đổ. Đáng xem chỉ riêng vì biên độ dao động
+      — và vì cơn gió trông bình thường đến mức nào.
+  res-p11-tacoma-background:
+    title: "Wikipedia: cầu Tacoma Narrows (1940)"
+    description: >-
+      Bối cảnh kĩ thuật, bao gồm cả lí do vì sao tranh luận về việc đây là cộng hưởng thuần tuý
+      hay hiện tượng rung khí động lại tinh tế hơn nhiều so với những gì hầu hết giáo trình vật
+      lí thừa nhận.
+  res-p11-normal-modes:
+    title: "PhET: Normal Modes (Các mode dao động riêng)"
+    description: >-
+      Cưỡng bức một hệ nhiều vật ở các tần số khác nhau và xem biên độ bùng nổ khi trúng một mode
+      riêng. Đây chính là đường cong cộng hưởng, ở dạng tương tác được.
+  res-p11-pendulum-lab:
+    title: "PhET: Pendulum Lab (Phòng thí nghiệm con lắc)"
+    description: >-
+      Đổi khối lượng và tự xác nhận rằng chu kì không hề thay đổi. Đổi chiều dài và xem nó tuân
+      theo quy luật căn bậc hai. Một thí nghiệm hai phút giải quyết một hiểu lầm phổ biến.
+  res-p11-wave-interference:
+    title: "PhET: Wave Interference (Giao thoa sóng)"
+    description: >-
+      Hai nguồn, một bể nước. Kéo đầu dò vào một dải yên lặng rồi sang một dải to, và đọc hiệu
+      đường đi tạo ra mỗi trường hợp.
+  res-p11-sound-waves:
+    title: "PhET: Sound Waves (Sóng âm)"
+    description: >-
+      Quan sát sự biến thiên áp suất của sóng âm, và thêm loa thứ hai để thấy giao thoa trong
+      không khí chứ không phải trên mặt nước.
+  res-p11-charges-and-fields:
+    title: "PhET: Charges and Fields (Điện tích và điện trường)"
+    description: >-
+      Đặt các điện tích và dò điện trường bằng cảm biến. Dựng một lưỡng cực rồi dựng hệ hai bản
+      song song sẽ làm khái niệm điện trường đều trở nên cụ thể.
+  res-p11-coulombs-law-sim:
+    title: "PhET: Coulomb's Law (Định luật Coulomb)"
+    description: >-
+      Thay đổi độ lớn điện tích và khoảng cách rồi xem lực biến đổi. Giảm khoảng cách một nửa
+      làm lực tăng gấp bốn — đó là định luật tỉ lệ nghịch bình phương mà bạn cảm nhận được.
+  res-p11-circuit-kit:
+    title: "PhET: Circuit Construction Kit — DC (Bộ lắp mạch điện một chiều)"
+    description: >-
+      Lắp bất kì mạch nào trong đơn vị này và đo bằng ampe kế cùng vôn kế ảo. Nguồn điện có điện
+      trở trong điều chỉnh được, và đó chính là điểm mấu chốt.
+  res-p11-openstax-em:
+    title: "OpenStax: University Physics Volume 2 (Vật lí đại cương, tập 2)"
+    description: >-
+      Trình bày đầy đủ và miễn phí về điện trường, điện thế, điện dung và mạch điện một chiều —
+      các chương 5 đến 10 bám khá sát chương trình lớp này.
+
+  # ---------------------------------------------------------------------------- lớp 12
+  res-p12-gas-properties:
+    title: "PhET: Gas Properties (Tính chất chất khí)"
+    description: >-
+      Bơm phân tử vào một bình kín và giữ nguyên áp suất, thể tích hoặc nhiệt độ trong khi thay
+      đổi các đại lượng còn lại. Mọi định luật chất khí trong đơn vị này đều có thể tự khám phá
+      ra ở đây trong khoảng mười phút.
+  res-p12-states-of-matter:
+    title: "PhET: States of Matter (Các trạng thái của chất)"
+    description: >-
+      Quan sát chuyển động phân tử nhanh dần lên khi nhiệt độ tăng. Nó làm cho mối liên hệ giữa
+      nhiệt độ và động năng trung bình trở nên nhìn thấy được thay vì chỉ được khẳng định.
+  res-p12-energy-forms:
+    title: "PhET: Energy Forms and Changes (Các dạng năng lượng và sự chuyển hoá)"
+    description: >-
+      Theo dõi năng lượng qua cả một chuỗi — bếp đun tới nước, tới hơi, tới máy phát, tới bóng
+      đèn — và thấy bao nhiêu bị thải ra ở mỗi khâu.
+  res-p12-faradays-law:
+    title: "PhET: Faraday's Law (Định luật Faraday)"
+    description: >-
+      Đưa nam châm xuyên qua cuộn dây và xem suất điện động cảm ứng chỉ xuất hiện khi nam châm
+      đang chuyển động. Dừng nam châm lại bên trong cuộn dây là thí nghiệm đáng làm nhất.
+  res-p12-generator:
+    title: "PhET: Generator (Máy phát điện)"
+    description: >-
+      Một guồng nước quay nam châm bên trong cuộn dây và thắp sáng bóng đèn. Cả chuỗi chuyển hoá
+      từ cơ năng sang điện năng, gói gọn trong một màn hình.
+  res-p12-magnets-electromagnets:
+    title: "PhET: Magnets and Electromagnets (Nam châm và nam châm điện)"
+    description: >-
+      So sánh từ trường của nam châm thẳng với từ trường của ống dây mang dòng điện, và hiểu vì
+      sao chúng có cùng hình dạng.
+  res-p12-radioactive-dating:
+    title: "PhET: Radioactive Dating Game (Trò chơi xác định niên đại phóng xạ)"
+    description: >-
+      Xác định niên đại các vật thật bằng cách đo lượng cacbon-14 hoặc urani-238 còn lại. Nó
+      cũng cho thấy từng hạt nhân phân rã một cách ngẫu nhiên — chính điều bài học mở đầu bằng.
+  res-p12-build-a-nucleus:
+    title: "PhET: Build a Nucleus (Dựng một hạt nhân)"
+    description: >-
+      Thêm proton và nơtron rồi quan sát độ bền vững thay đổi. Nó xây dựng trực giác về vì sao
+      dải các đồng vị bền lại uốn cong theo cách như vậy.
+  res-p12-nuclear-fission:
+    title: "PhET: Nuclear Fission (Phân hạch hạt nhân)"
+    description: >-
+      Bắn một nơtron vào hạt nhân urani-235, rồi dựng một lò phản ứng và thử kiểm soát phản ứng
+      dây chuyền bằng các thanh điều khiển.
+  res-p12-nasa-sun:
+    title: "NASA: Mặt Trời"
+    description: >-
+      Từ trường của Mặt Trời đảo cực mười một năm một lần và gây ra những cơn bão từ tạo dòng
+      điện cảm ứng trong lưới điện trên Trái Đất. Hiện tượng cảm ứng điện từ ở quy mô lớn nhất
+      mà bạn sẽ gặp.
+  res-p12-nasa-aurora:
+    title: "NASA Space Place: cực quang hình thành như thế nào?"
+    description: >-
+      Các hạt mang điện từ Mặt Trời chuyển động xoắn ốc dọc theo đường sức từ trường Trái Đất —
+      lực từ tác dụng lên điện tích chuyển động, cao vài trăm kilômét.
+  res-p12-mri-images:
+    title: "Wikimedia Commons: ảnh cộng hưởng từ (MRI)"
+    description: >-
+      Ảnh chụp MRI thật. Máy chụp hoạt động nhờ cộng hưởng — một xung vô tuyến có tần số đúng
+      bằng tần số tiến động của hạt nhân hiđrô trong từ trường mạnh.
+  res-p12-openstax-modern:
+    title: "OpenStax: University Physics Volume 3 (Vật lí đại cương, tập 3)"
+    description: >-
+      Trình bày miễn phí về vật lí hạt nhân, năng lượng liên kết, phóng xạ và bức xạ, với nhiều
+      ví dụ giải chi tiết hơn hẳn một sách giáo khoa phổ thông.
+  res-p12-owid-energy:
+    title: "Our World in Data: năng lượng"
+    description: >-
+      Dữ liệu thật của các quốc gia về cách sản xuất điện và lượng năng lượng hao hụt khi chuyển
+      hoá. Hữu ích để đặt con số cụ thể lên các giới hạn hiệu suất mà đơn vị này thiết lập.

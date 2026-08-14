@@ -121,13 +121,16 @@ only correct in the browser.
 
 | Content | Source |
 |---|---|
-| Curriculum (subjects, courses, units, topics, skills, questions, lessons) | `content/<subject>/i18n/vi.yaml` |
+| Curriculum (subjects, courses, units, topics, skills, questions, lessons, resources) | `content/<subject>/i18n/vi.yaml` or `content/<subject>/i18n/vi/*.yaml` |
 | Marketing (tutoring products, classes, testimonials, blog, teachers, site settings) | `services/api/app/seed/marketing_vi.py` |
 | Interface | `apps/web/src/messages/vi.json` |
 | Grading feedback and recommender reasons | `services/api/app/exercise_engine/feedback.py` |
 
 The curriculum sidecars are keyed by slug and mirror the authored English YAML, so the English
-files keep their hand-written comments and structure. Lesson bodies use a **positional overlay**:
+files keep their hand-written comments and structure. A locale may be one file (`i18n/vi.yaml`)
+or a directory of files merged in filename order (`i18n/vi/*.yaml`) — the second form is what
+keeps a subject spanning seven grades from becoming one several-thousand-line file nobody can
+review. Lesson bodies use a **positional overlay**:
 the translation supplies only prose fields, and everything structural — block type, interactive
 widget config, which skill a practice block points at — is copied from the original. An empty `{}`
 leaves a block untouched.
@@ -177,6 +180,15 @@ way to check that Vietnamese prose still reads well with real numbers substitute
 No migration, and no change to any grader, generator or read path.
 
 ## Tests
+
+Three scripts check the content itself rather than the code, and are worth running after any
+authoring change:
+
+| Script | What it proves |
+|---|---|
+| `scripts/check_questions.py` | Every template generates in every language, and the *answer* is identical at the same seed |
+| `scripts/check_lesson_overlays.py` | A translated lesson block changes prose and nothing else — no formula, plot expression or practice skill drifts between languages |
+| `scripts/check_questions.py` (prompt check) | A translated prompt is not byte-identical to the English one, which would mean it was never translated |
 
 `services/api/tests/test_localisation.py` covers the primitives, the public read path, the
 authoring API and the properties that matter most: that a translated question keeps the same

@@ -1,0 +1,805 @@
+# Physics lessons for grades 10-12 — original content authored for HieuTrienEducation.
+#
+# Each lesson opens with a phenomenon the student has already met outside a classroom and works
+# back to the physics, rather than presenting the equation first and appending an application.
+# Facts drawn from open sources (OpenStax, NASA, PhET) are credited in the lesson's attribution;
+# the prose is original.
+lessons:
+  # ------------------------------------------------------------------------------------
+  # Grade 10
+  # ------------------------------------------------------------------------------------
+  - slug: lesson-physics-10-crumple-zones
+    title: Why a Car Is Designed to Break
+    topic: physics-10-impulse-collisions
+    skill: physics-10-impulse
+    estimated_minutes: 22
+    summary: A modern car is built to destroy itself in a crash, and that is what saves you.
+    objectives:
+      - Relate impulse to the change in momentum of an object
+      - Explain why extending a collision time reduces the force
+      - Calculate the force on a passenger from a stopping time
+    attribution: Written for HieuTrienEducation. Background on impulse and collisions informed by OpenStax University Physics Volume 1 (CC BY 4.0).
+    license: proprietary
+    blocks:
+      - type: text
+        markdown: |
+          An old car from the 1960s was built like a tank. It came out of a low-speed crash
+          barely dented — and the people inside were often badly hurt.
+
+          A modern car crumples. The bonnet folds, the engine bay collapses, the whole front of
+          the vehicle is destroyed. And the passengers walk away.
+
+          This is not a decline in build quality. It is the single most important idea in
+          vehicle safety, and it follows directly from one equation.
+      - type: math
+        latex: "F \\Delta t = \\Delta p = m \\Delta v"
+      - type: callout
+        variant: note
+        title: What the equation is saying
+        text: >-
+          The left side is impulse: force multiplied by the time it acts for. The right side is
+          the change in momentum. In a crash the right side is *fixed* — a passenger of a given
+          mass is going to be brought from the car's speed to zero, and nothing changes that.
+          So the only quantity a designer can control is the time.
+      - type: text
+        markdown: |
+          ### The trade
+
+          If Δp is fixed, then F and Δt trade off against each other. Stop in half the time and
+          you double the force. Stretch the stop over four times as long and you quarter it.
+
+          A rigid car stops in perhaps 20 milliseconds. A crumple zone folding progressively
+          stretches that to 100 or 150 milliseconds. That is the difference between a survivable
+          deceleration and a fatal one.
+      - type: example
+        title: The same crash, two cars
+        steps:
+          - text: "A 70 kg passenger is travelling at 20 m/s. The change in momentum is the same either way."
+            math: "\\Delta p = 70 \\times 20 = 1400\\text{ kg m/s}"
+          - text: "Rigid car — the stop takes 0.02 s."
+            math: "F = \\frac{1400}{0.02} = 70\\,000\\text{ N}"
+          - text: "With a crumple zone and an airbag — the stop takes 0.15 s."
+            math: "F = \\frac{1400}{0.15} \\approx 9\\,300\\text{ N}"
+          - text: "Same speed, same mass, same momentum. Roughly one seventh of the force."
+      - type: table
+        headers: ["Safety feature", "What it actually does", "Which quantity it changes"]
+        rows:
+          - ["Crumple zone", "Folds progressively instead of resisting", "Increases Δt"]
+          - ["Airbag", "Lets the head decelerate over a longer distance", "Increases Δt"]
+          - ["Seat belt", "Stretches slightly under load", "Increases Δt"]
+          - ["Helmet padding", "Compresses during the impact", "Increases Δt"]
+      - type: callout
+        variant: tip
+        title: The same idea, everywhere
+        text: >-
+          A gymnast bends their knees on landing. A cricketer draws their hands back while
+          catching. A cardboard box protects a parcel. Every one of them is buying time to cut
+          the force — the same equation, in a different setting.
+      - type: callout
+        variant: warning
+        title: A common mistake
+        text: >-
+          Crumple zones do not "absorb the impact" in the sense of making the momentum
+          disappear. Momentum is conserved. What they change is how long the transfer takes.
+      - type: practice
+        skill: physics-10-impulse
+      - type: summary
+        points:
+          - Impulse F Δt equals the change in momentum m Δv
+          - In a crash the change in momentum is fixed by mass and speed
+          - Extending the collision time is the only way to reduce the force
+          - Crumple zones, airbags, seat belts and padding all extend the time
+
+  - slug: lesson-physics-10-terminal-velocity
+    title: Why a Skydiver Stops Speeding Up
+    topic: physics-10-friction-drag
+    skill: physics-10-terminal-velocity
+    estimated_minutes: 20
+    summary: Falling objects do not accelerate forever — and the reason is a force that grows.
+    objectives:
+      - Describe how drag depends on speed
+      - Explain terminal velocity as the balance of weight and drag
+      - Read terminal velocity from a velocity-time graph
+    attribution: Written for HieuTrienEducation. Skydiving figures informed by OpenStax College Physics 2e (CC BY 4.0).
+    license: proprietary
+    blocks:
+      - type: text
+        markdown: |
+          Drop a stone from a tall building and it accelerates at about 10 m/s² the whole way
+          down. Jump out of an aeroplane, and after about twelve seconds you stop speeding up
+          entirely — you fall the remaining distance at a steady speed, around 55 m/s.
+
+          Why does one keep accelerating and the other not?
+      - type: text
+        markdown: |
+          ### Drag grows with speed
+
+          The upward force from the air is **drag**, and unlike weight it is not constant. The
+          faster you move, the more air you push out of the way each second, and the harder it
+          pushes back. At the speeds involved here, roughly:
+
+          $$F_{\text{drag}} \propto v^2$$
+
+          Double your speed and the drag roughly quadruples.
+      - type: callout
+        variant: note
+        title: The sequence
+        text: >-
+          At the instant you jump, v = 0, so drag = 0 and the only force is weight — you
+          accelerate at the full 10 m/s². As v grows, drag grows, so the *resultant* force
+          shrinks and the acceleration falls. Eventually drag equals weight, the resultant is
+          zero, and the speed stops changing. That speed is the terminal velocity.
+      - type: interactive
+        widget: function-plot
+        config:
+          functions:
+            - {expression: "55*(1 - 2.718281828**(-x/5))", label: "Skydiver — reaches terminal velocity", color: "primary"}
+            - {expression: "10*x", label: "No air resistance — accelerates forever", color: "accent"}
+          xRange: [0, 20]
+          yRange: [0, 120]
+          axisLabels: {x: "time (s)", y: "speed (m/s)"}
+      - type: text
+        markdown: |
+          Notice the shape of the blue curve. It is steepest at the start, where drag is
+          smallest, and flattens as the two forces approach balance. It never quite reaches a
+          corner — it approaches the terminal velocity asymptotically.
+      - type: example
+        title: Finding a terminal velocity
+        steps:
+          - text: "A 80 kg skydiver has weight W = 80 × 10 = 800 N."
+          - text: "At terminal velocity the drag exactly balances it."
+            math: "F_{\\text{drag}} = 800\\text{ N}"
+          - text: "If the drag is modelled as F = kv² with k = 0.25 kg/m, then:"
+            math: "0.25 v^2 = 800 \\;\\Rightarrow\\; v = \\sqrt{3200} \\approx 57\\text{ m/s}"
+      - type: table
+        headers: ["Object", "Terminal velocity (approx.)", "Why"]
+        rows:
+          - ["Skydiver, belly-down", "55 m/s", "Large area, moderate mass"]
+          - ["Skydiver, head-down", "90 m/s", "Same mass, much smaller area"]
+          - ["Open parachute", "5 m/s", "Enormous area"]
+          - ["Raindrop (2 mm)", "6 m/s", "Very small mass"]
+          - ["Mist droplet", "0.01 m/s", "Tiny mass, relatively large drag"]
+      - type: callout
+        variant: tip
+        title: Why a parachute works
+        text: >-
+          Opening a parachute does not add an upward force out of nowhere. It multiplies the
+          area, so the *same* speed now produces far more drag than weight. The resultant force
+          points upwards, you decelerate, and you settle at a new, much lower terminal velocity.
+      - type: callout
+        variant: warning
+        title: Mist does not hurt
+        text: >-
+          If drag did not exist, a raindrop falling from 2 km would arrive at about 200 m/s.
+          Rain would be lethal. Terminal velocity is the reason it merely gets you wet.
+      - type: practice
+        skill: physics-10-terminal-velocity
+      - type: summary
+        points:
+          - Drag increases with speed, roughly as v squared
+          - Acceleration falls as drag grows, because the resultant force shrinks
+          - Terminal velocity is reached when drag equals weight
+          - A larger area gives more drag and therefore a lower terminal velocity
+
+  - slug: lesson-physics-10-projectiles
+    title: A Thrown Ball Is Doing Two Things at Once
+    topic: physics-10-projectile-motion
+    skill: physics-10-projectile-components
+    estimated_minutes: 22
+    summary: The single idea that makes every projectile problem solvable — treat the directions separately.
+    objectives:
+      - Resolve a launch velocity into horizontal and vertical components
+      - Explain why the two components are independent
+      - Calculate time of flight and range for a projectile
+    attribution: Written for HieuTrienEducation. Approach informed by OpenStax University Physics Volume 1 (CC BY 4.0) and the PhET Projectile Motion simulation.
+    license: proprietary
+    blocks:
+      - type: text
+        markdown: |
+          Here is an experiment that surprises almost everyone the first time they see it.
+
+          Take two identical balls. **Drop** one straight down. At exactly the same instant,
+          **fire** the other horizontally at high speed. Which hits the ground first?
+
+          They land together. Every time.
+      - type: callout
+        variant: note
+        title: The key insight
+        text: >-
+          Gravity pulls downwards, so it changes only the *vertical* motion. It does not care
+          what the object is doing horizontally. The two motions are completely independent —
+          and that is what lets you solve them one at a time.
+      - type: text
+        markdown: |
+          ### Resolving the launch
+
+          A ball launched at speed $u$ and angle $\theta$ above the horizontal is really moving
+          in two directions at once:
+
+          $$u_x = u\cos\theta \qquad u_y = u\sin\theta$$
+
+          From that moment on:
+
+          - **Horizontally** there is no force (ignoring air resistance), so $u_x$ never changes.
+          - **Vertically** gravity acts, so $u_y$ decreases, reaches zero at the top, and reverses.
+      - type: table
+        headers: ["", "Horizontal", "Vertical"]
+        rows:
+          - ["Initial velocity", "u cos θ", "u sin θ"]
+          - ["Acceleration", "0", "−g (downwards)"]
+          - ["Velocity later", "unchanged", "u sin θ − gt"]
+          - ["At the highest point", "unchanged", "0"]
+      - type: example
+        title: A ball kicked at 20 m/s and 30°
+        steps:
+          - text: "Resolve the launch velocity."
+            math: "u_x = 20\\cos 30° = 17.3\\text{ m/s},\\quad u_y = 20\\sin 30° = 10\\text{ m/s}"
+          - text: "Time to the top: the vertical velocity falls from 10 m/s to 0 at 10 m/s² —"
+            math: "t_{\\text{up}} = \\frac{10}{10} = 1.0\\text{ s}"
+          - text: "Coming down takes just as long, so the total flight time is 2.0 s."
+          - text: "The horizontal velocity never changed, so the range is:"
+            math: "R = 17.3 \\times 2.0 = 34.6\\text{ m}"
+      - type: callout
+        variant: tip
+        title: Why 45° goes furthest
+        text: >-
+          A shallow launch gives a large u_x but very little time in the air. A steep launch
+          gives plenty of time but almost no horizontal speed. The range is the product of the
+          two, and it peaks exactly in the middle, at 45°.
+      - type: callout
+        variant: warning
+        title: Where this model stops working
+        text: >-
+          All of this assumes air resistance is negligible. For a football or a tennis ball it
+          is not, and a real ball falls short of the predicted range and follows a slightly
+          asymmetric path. The model is still the right place to start — but do not expect it
+          to describe a golf drive precisely.
+      - type: practice
+        skill: physics-10-projectile-components
+      - type: summary
+        points:
+          - Resolve the launch velocity into u cos θ horizontally and u sin θ vertically
+          - The horizontal velocity is constant; only the vertical one changes
+          - The two motions are independent and share only the time
+          - Maximum range on level ground occurs at a launch angle of 45 degrees
+
+  # ------------------------------------------------------------------------------------
+  # Grade 11
+  # ------------------------------------------------------------------------------------
+  - slug: lesson-physics-11-resonance
+    title: The Bridge That Shook Itself Apart
+    topic: physics-11-damping-resonance
+    skill: physics-11-resonance
+    estimated_minutes: 25
+    summary: A moderate wind destroyed a steel suspension bridge. The wind was never the point.
+    objectives:
+      - Define the natural frequency of an oscillating system
+      - Explain resonance in terms of energy added in phase with the motion
+      - Identify resonance in engineering, music and medicine
+    attribution: Written for HieuTrienEducation. Historical detail on the 1940 Tacoma Narrows collapse from public records; footage available on Wikimedia Commons.
+    license: proprietary
+    blocks:
+      - type: text
+        markdown: |
+          On 7 November 1940, the Tacoma Narrows Bridge in Washington State began to twist. The
+          wind was steady and moderate — around 19 m/s, well within what the bridge was built to
+          withstand. It was not a storm.
+
+          Over the next hour the twisting grew. And grew. The deck eventually rotated through
+          nearly 45 degrees in each direction before the structure tore itself apart and fell
+          into the water.
+
+          The wind never got stronger. So where did the energy come from?
+      - type: callout
+        variant: note
+        title: Natural frequency
+        text: >-
+          Every object that can oscillate has a frequency it "prefers" — the rate it vibrates
+          at when disturbed and left alone. A guitar string, a wine glass, a pendulum, a steel
+          bridge deck: each has its own natural frequency, set by its stiffness and its mass.
+      - type: text
+        markdown: |
+          ### Pushing in time
+
+          Think about pushing a child on a swing. The swing has a natural frequency. If you push
+          at random moments, half your pushes help and half fight the motion, and nothing much
+          happens. But if you time each push to arrive exactly as the swing moves away from you,
+          every push adds energy.
+
+          You are not pushing harder. You are pushing **in phase**. And the amplitude grows and
+          grows.
+
+          That is resonance, and it is what happened to the bridge: the wind shed vortices off
+          the deck at a rate that happened to match one of the deck's natural twisting
+          frequencies. Each cycle added a little more energy, in time with the motion.
+      - type: interactive
+        widget: function-plot
+        config:
+          functions:
+            - {expression: "1/((1 - x*x)*(1 - x*x) + 0.02*x*x)", label: "Light damping — huge peak", color: "primary"}
+            - {expression: "1/((1 - x*x)*(1 - x*x) + 0.4*x*x)", label: "Heavy damping — flattened", color: "accent"}
+          xRange: [0, 2.5]
+          yRange: [0, 20]
+          axisLabels: {x: "driving frequency ÷ natural frequency", y: "amplitude"}
+      - type: text
+        markdown: |
+          The peak sits where the driving frequency equals the natural frequency — the ratio of
+          1 on the horizontal axis. Notice what damping does: it does not move the peak much,
+          but it dramatically limits how tall it gets.
+
+          The Tacoma Narrows deck was a solid plate girder. It was stiff, light, and had very
+          little damping. That combination is exactly the blue curve.
+      - type: table
+        headers: ["Where resonance appears", "Driver", "Result"]
+        rows:
+          - ["Swing", "Pushes timed to the motion", "Large amplitude from small pushes"]
+          - ["Guitar body", "Vibrating string", "The sound you actually hear"]
+          - ["Microwave oven", "2.45 GHz radiation", "Water molecules absorb energy, food heats"]
+          - ["MRI scanner", "Radio pulse at the Larmor frequency", "Hydrogen nuclei respond, giving an image"]
+          - ["Building in an earthquake", "Ground motion", "Collapse, if the frequencies match"]
+      - type: callout
+        variant: tip
+        title: How engineers respond
+        text: >-
+          There are only two defences, and both are used. **Shift the natural frequency** away
+          from anything likely to drive it — the replacement bridge used an open truss deck that
+          lets wind through. Or **add damping**, so energy leaves as fast as it arrives: modern
+          tall buildings hang enormous tuned mass dampers near the top for exactly this reason.
+      - type: callout
+        variant: warning
+        title: Not the same as a strong force
+        text: >-
+          The point of the Tacoma Narrows story is that a small periodic force at the right
+          frequency can do what a much larger steady force cannot. Resonance is about timing,
+          not magnitude.
+      - type: practice
+        skill: physics-11-resonance
+      - type: summary
+        points:
+          - Every oscillating system has a natural frequency
+          - Resonance occurs when a driving force matches that frequency
+          - Energy added in phase accumulates, so the amplitude grows far beyond the driving force
+          - Damping limits the peak; changing the natural frequency avoids it entirely
+
+  - slug: lesson-physics-11-noise-cancelling
+    title: Making Silence out of Two Sounds
+    topic: physics-11-wave-properties
+    skill: physics-11-superposition
+    estimated_minutes: 22
+    summary: Noise-cancelling headphones do not block sound. They add more of it.
+    objectives:
+      - Apply the principle of superposition to two overlapping waves
+      - Relate path difference to constructive and destructive interference
+      - Explain how active noise cancellation works and where it fails
+    attribution: Written for HieuTrienEducation. Wave behaviour informed by OpenStax University Physics Volume 1 (CC BY 4.0) and the PhET Wave Interference simulation.
+    license: proprietary
+    blocks:
+      - type: text
+        markdown: |
+          Put on a pair of noise-cancelling headphones on a plane and the engine roar drops
+          away. It feels like the headphones are blocking the sound.
+
+          They are not. There is a microphone on the outside, and the headphones are *playing a
+          sound of their own* — one carefully shaped so that it cancels the noise. They make
+          silence by adding sound to sound.
+      - type: callout
+        variant: note
+        title: The principle of superposition
+        text: >-
+          Where two waves overlap, the resultant displacement at each point is simply the sum
+          of the individual displacements. Waves pass through each other and continue
+          unchanged; they only add where they meet.
+      - type: text
+        markdown: |
+          ### Two extremes
+
+          Because the displacements add, the result depends entirely on the **phase**
+          relationship:
+
+          - **In phase** — crests land on crests. The displacements add to a larger amplitude.
+            This is *constructive* interference.
+          - **In antiphase** — crests land on troughs. Equal and opposite displacements sum to
+            zero. This is *destructive* interference.
+      - type: math
+        latex: "\\text{path difference} = n\\lambda \\;(\\text{constructive}) \\qquad \\text{path difference} = \\left(n + \\tfrac{1}{2}\\right)\\lambda \\;(\\text{destructive})"
+      - type: example
+        title: Two speakers in a room
+        steps:
+          - text: "Two speakers emit the same 340 Hz note in phase. Sound travels at 340 m/s, so λ = 1.0 m."
+          - text: "At a point 3.0 m from one speaker and 4.0 m from the other, the path difference is 1.0 m."
+            math: "\\Delta = 1.0\\text{ m} = 1\\lambda"
+          - text: "A whole number of wavelengths — constructive. The note is loud here."
+          - text: "Move to where the path difference is 1.5 m and it becomes 1.5λ — destructive. The note nearly vanishes."
+      - type: callout
+        variant: tip
+        title: You can walk through this
+        text: >-
+          With two speakers playing the same pure tone in a room, walking slowly across the room
+          takes you through alternating loud and quiet bands. The sound has not changed. Your
+          position relative to the two paths has.
+      - type: text
+        markdown: |
+          ### Back to the headphones
+
+          Active noise cancellation does the same thing deliberately. The external microphone
+          samples the incoming noise; the electronics invert it — shifting it by half a cycle —
+          and the speaker plays the inverted version. Noise plus inverted noise sums to close
+          to zero at your eardrum.
+      - type: table
+        headers: ["Sound", "How well it cancels", "Why"]
+        rows:
+          - ["Aircraft engine hum", "Very well", "Low frequency, steady, predictable"]
+          - ["Air conditioning", "Very well", "Continuous and unchanging"]
+          - ["Speech", "Poorly", "Changes far too fast to predict"]
+          - ["Sudden clatter", "Barely at all", "Over before the inverse can be generated"]
+      - type: callout
+        variant: warning
+        title: Why the high notes survive
+        text: >-
+          Cancellation needs the inverted wave to arrive within a small fraction of a period. At
+          100 Hz a period is 10 ms — plenty of time. At 5 kHz it is 0.2 ms, and any processing
+          delay wrecks the alignment. This is exactly why these headphones kill engine drone but
+          not a crying baby.
+      - type: practice
+        skill: physics-11-superposition
+      - type: summary
+        points:
+          - Superposition means overlapping displacements simply add
+          - A path difference of a whole number of wavelengths gives constructive interference
+          - A path difference of a half-odd number of wavelengths gives destructive interference
+          - Active noise cancellation generates an inverted wave, and works best at low frequencies
+
+  - slug: lesson-physics-11-touchscreen
+    title: How a Screen Knows You Touched It
+    topic: physics-11-potential-capacitance
+    skill: physics-11-capacitance
+    estimated_minutes: 20
+    summary: Your phone screen has no buttons and no pressure sensor. It measures capacitance.
+    objectives:
+      - Apply Q = CV and calculate stored energy
+      - Explain what changes a capacitance
+      - Describe how a capacitive touchscreen detects a finger
+    attribution: Written for HieuTrienEducation. Capacitance treatment informed by OpenStax University Physics Volume 2 (CC BY 4.0).
+    license: proprietary
+    blocks:
+      - type: text
+        markdown: |
+          Try using your phone with gloves on and nothing happens. Tap it with a pencil and
+          nothing happens either. But touch it with a bare finger — no pressure needed, barely a
+          brush — and it responds immediately.
+
+          The screen is not detecting force. It is detecting *you*.
+      - type: text
+        markdown: |
+          ### What a capacitor is
+
+          A capacitor is two conductors separated by an insulator. Connect it to a voltage and
+          charge builds on the plates:
+
+          $$Q = CV$$
+
+          The capacitance $C$ measures how much charge the arrangement holds per volt. It
+          depends only on the geometry and on what sits between the plates — not on the voltage
+          you apply.
+      - type: callout
+        variant: note
+        title: What changes a capacitance
+        text: >-
+          Bigger overlapping area gives more capacitance. A smaller gap gives more capacitance.
+          And putting a material with a high permittivity in the gap gives more capacitance —
+          which is the part that matters here.
+      - type: text
+        markdown: |
+          ### The screen
+
+          Underneath the glass is a grid of transparent electrodes, forming a small capacitor at
+          every intersection. The phone continuously measures the capacitance at each one.
+
+          The human body is largely water, and water has an unusually high permittivity. Bring a
+          finger near an intersection and you change the electric field there — the capacitance
+          at that point shifts by a few percent. The controller reads which intersections
+          changed and where the peak is, and reports a touch position.
+
+          A gloved finger is separated by an insulator and barely registers. A wooden pencil is
+          not conductive and does not disturb the field. A stylus made for touchscreens has a
+          conductive tip connected to your hand, which is why *it* works.
+      - type: example
+        title: Energy in a camera flash capacitor
+        steps:
+          - text: "A 220 μF capacitor is charged to 300 V."
+          - text: "Charge stored:"
+            math: "Q = CV = 220\\times10^{-6} \\times 300 = 0.066\\text{ C}"
+          - text: "Energy stored:"
+            math: "E = \\tfrac{1}{2}CV^2 = 0.5 \\times 220\\times10^{-6} \\times 300^2 = 9.9\\text{ J}"
+          - text: "Released in about 1 ms, that is roughly 10 kW of instantaneous power — from a capacitor charged by a small battery."
+      - type: table
+        headers: ["Capacitor use", "Typical value", "What it exploits"]
+        rows:
+          - ["Touchscreen intersection", "~1 pF", "Change in permittivity near a finger"]
+          - ["Camera flash", "100–500 μF", "Slow charge, very fast discharge"]
+          - ["Power supply smoothing", "1000+ μF", "Stores charge between mains cycles"]
+          - ["Radio tuning", "variable, ~pF", "Changing C changes the resonant frequency"]
+      - type: callout
+        variant: warning
+        title: Charged capacitors stay dangerous
+        text: >-
+          A capacitor holds its energy after the power is disconnected. The flash capacitor in a
+          disposable camera can deliver a serious shock days later. Never open one.
+      - type: practice
+        skill: physics-11-capacitance
+      - type: summary
+        points:
+          - Capacitance is charge stored per volt, Q = CV
+          - Energy stored is half C V squared
+          - Capacitance depends on area, separation and the material between the plates
+          - A touchscreen detects the change in capacitance a finger causes, not pressure
+
+  # ------------------------------------------------------------------------------------
+  # Grade 12
+  # ------------------------------------------------------------------------------------
+  - slug: lesson-physics-12-hot-air-balloon
+    title: Why a Hot-Air Balloon Rises
+    topic: physics-12-gas-laws-adv
+    skill: physics-12-ideal-gas-equation
+    estimated_minutes: 22
+    summary: One equation explains a balloon, a tyre on a hot day and a scuba tank.
+    objectives:
+      - Apply the ideal gas equation pV = nRT
+      - Explain why heating air at constant pressure lowers its density
+      - Use absolute temperature correctly in gas calculations
+    attribution: Written for HieuTrienEducation. Gas law treatment informed by OpenStax University Physics Volume 2 (CC BY 4.0) and the PhET Gas Properties simulation.
+    license: proprietary
+    blocks:
+      - type: text
+        markdown: |
+          A hot-air balloon carries several tonnes of basket, burner, fuel and passengers. It has
+          no wings, no engine and no propeller. It rises because the air inside it is warm.
+
+          That is the whole mechanism — and it follows from one equation.
+      - type: math
+        latex: "pV = nRT"
+      - type: callout
+        variant: warning
+        title: T is always in kelvin
+        text: >-
+          This is the single most common error in gas calculations. Warming air from 20 °C to
+          100 °C does not multiply the temperature by five — it goes from 293 K to 373 K, a
+          factor of 1.27. Using Celsius here gives an answer that is not merely imprecise but
+          meaningless, because the scale has an arbitrary zero.
+      - type: text
+        markdown: |
+          ### Why heating makes air rise
+
+          The envelope of a balloon is open at the bottom, so the pressure inside stays equal to
+          the pressure outside. The volume is fixed by the fabric. So in $pV = nRT$, with $p$ and
+          $V$ both held constant, raising $T$ must reduce $n$ — air is pushed out of the opening.
+
+          Fewer molecules in the same volume means **lower density**. And a body less dense than
+          the fluid around it experiences an upward resultant force.
+      - type: example
+        title: How much lift?
+        steps:
+          - text: "A balloon envelope holds 2800 m³. Outside air at 15 °C (288 K) has a density of about 1.23 kg/m³."
+          - text: "Heat the inside air to 100 °C (373 K). Density scales inversely with absolute temperature at constant pressure:"
+            math: "\\rho_{\\text{in}} = 1.23 \\times \\frac{288}{373} = 0.95\\text{ kg/m}^3"
+          - text: "Mass of air displaced:"
+            math: "m_{\\text{out}} = 1.23 \\times 2800 = 3444\\text{ kg}"
+          - text: "Mass of air inside:"
+            math: "m_{\\text{in}} = 0.95 \\times 2800 = 2660\\text{ kg}"
+          - text: "The difference is the payload the balloon can lift — about 780 kg, including the envelope itself."
+      - type: table
+        headers: ["Situation", "Held constant", "What follows"]
+        rows:
+          - ["Hot-air balloon", "p and V", "Heating drives air out, density falls"]
+          - ["Car tyre on a hot day", "V and n", "Heating raises the pressure"]
+          - ["Scuba tank filled", "V and T", "More moles means more pressure"]
+          - ["Syringe plunger pushed", "n and T", "Less volume means more pressure"]
+      - type: callout
+        variant: tip
+        title: Reading the equation as a tool
+        text: >-
+          Almost every gas question is answered the same way: decide which quantities are held
+          fixed, cancel them from both sides of pV = nRT, and the relationship you need is what
+          is left. Boyle's law and Charles's law are not separate rules to memorise — they are
+          this equation with something held constant.
+      - type: callout
+        variant: note
+        title: Where "ideal" stops being true
+        text: >-
+          The equation assumes molecules have no volume and do not attract each other. Both
+          assumptions hold well for air at everyday pressures. Near liquefaction — a gas under
+          very high pressure or close to its boiling point — real gases deviate noticeably.
+      - type: practice
+        skill: physics-12-ideal-gas-equation
+      - type: summary
+        points:
+          - pV = nRT relates pressure, volume, amount and absolute temperature
+          - Temperature must always be in kelvin
+          - Heating air at constant pressure and volume expels molecules, lowering density
+          - A balloon rises because the air inside is less dense than the air outside
+
+  - slug: lesson-physics-12-transformers
+    title: The Reason Power Lines Run at 500,000 Volts
+    topic: physics-12-induction-ac
+    skill: physics-12-ac-transformers
+    estimated_minutes: 22
+    summary: Transmitting electricity at high voltage is not a design choice. It is arithmetic.
+    objectives:
+      - Apply the transformer turns-ratio equation
+      - Explain why transmission losses fall as voltage rises
+      - Describe why the grid uses alternating current
+    attribution: Written for HieuTrienEducation. Electromagnetic induction treatment informed by OpenStax University Physics Volume 2 (CC BY 4.0).
+    license: proprietary
+    blocks:
+      - type: text
+        markdown: |
+          The cables on a transmission tower carry electricity at hundreds of thousands of volts.
+          The socket in your wall delivers 220 V. Somewhere in between, that voltage is stepped
+          down — several times.
+
+          Why go to all that trouble? Why not generate at 220 V and send it straight to houses?
+      - type: text
+        markdown: |
+          ### The cost of carrying current
+
+          Transmission cables have resistance. Power lost heating them is:
+
+          $$P_{\text{lost}} = I^2 R$$
+
+          Notice it depends on the **current squared**, and not on the voltage at all. Meanwhile
+          the power actually delivered is $P = VI$.
+
+          So for a fixed amount of power delivered, raising V lets you lower I proportionally —
+          and the loss falls as the *square* of that reduction.
+      - type: example
+        title: The same 10 MW, two ways
+        steps:
+          - text: "Deliver 10 MW down a line of resistance 5 Ω at 10 kV."
+            math: "I = \\frac{10^7}{10^4} = 1000\\text{ A} \\;\\Rightarrow\\; P_{\\text{lost}} = 1000^2 \\times 5 = 5\\text{ MW}"
+          - text: "Half the power is wasted as heat in the cable. Now try 400 kV."
+            math: "I = \\frac{10^7}{4\\times10^5} = 25\\text{ A} \\;\\Rightarrow\\; P_{\\text{lost}} = 25^2 \\times 5 = 3.1\\text{ kW}"
+          - text: "The loss has fallen from 5 MW to about 3 kW — a factor of 1600, from a factor of 40 in voltage."
+      - type: callout
+        variant: note
+        title: This is why the grid is AC
+        text: >-
+          A transformer works by electromagnetic induction, and induction requires a *changing*
+          magnetic field. A steady direct current produces a steady field and induces nothing.
+          Alternating current changes continuously, which is exactly what a transformer needs.
+          The grid is AC because transformers only work on AC.
+      - type: math
+        latex: "\\frac{V_s}{V_p} = \\frac{N_s}{N_p}"
+      - type: text
+        markdown: |
+          More turns on the secondary than the primary steps the voltage **up**; fewer steps it
+          **down**. In an ideal transformer no power is lost, so stepping the voltage up
+          necessarily steps the current down by the same factor:
+
+          $$V_p I_p = V_s I_s$$
+      - type: table
+        headers: ["Stage", "Voltage", "Why"]
+        rows:
+          - ["Generator", "25 kV", "Set by the machine design"]
+          - ["Step-up transformer", "500 kV", "Minimise I²R over long distances"]
+          - ["Regional substation", "110 kV", "Shorter distances, safer handling"]
+          - ["Local substation", "22 kV", "Distribution around a district"]
+          - ["Street transformer", "220 V", "Safe for domestic use"]
+      - type: callout
+        variant: tip
+        title: Where the energy actually goes
+        text: >-
+          A transformer does not create energy. It trades voltage against current at constant
+          power. If you step voltage up tenfold, current falls tenfold — which is precisely the
+          trade that makes long-distance transmission viable.
+      - type: callout
+        variant: warning
+        title: Real transformers are not ideal
+        text: >-
+          Real units lose a little to resistance in the windings, to eddy currents in the core
+          (reduced by laminating it), and to repeatedly remagnetising the core. Large grid
+          transformers still manage better than 99% efficiency.
+      - type: practice
+        skill: physics-12-ac-transformers
+      - type: summary
+        points:
+          - Transmission loss is I squared R, so it depends on current, not voltage
+          - Raising the transmission voltage lowers the current and cuts losses as the square
+          - The turns ratio sets the voltage ratio, and current changes inversely
+          - Transformers need a changing field, which is why the grid uses alternating current
+
+  - slug: lesson-physics-12-radiocarbon
+    title: Dating the Past with a Decaying Nucleus
+    topic: physics-12-decay-applications
+    skill: physics-12-decay-law
+    estimated_minutes: 24
+    summary: Radioactive decay is completely random for one atom and perfectly predictable for a trillion.
+    objectives:
+      - Apply the exponential decay law N = N₀e^(−λt)
+      - Relate the decay constant to half-life
+      - Explain radiocarbon dating and the limits of the method
+    attribution: Written for HieuTrienEducation. Decay treatment informed by OpenStax College Physics 2e (CC BY 4.0) and the PhET Radioactive Dating Game.
+    license: proprietary
+    blocks:
+      - type: text
+        markdown: |
+          Take a single carbon-14 nucleus. When will it decay? There is no answer. Not "we do not
+          know yet" — there is genuinely no fact about it. The nucleus does not age, does not
+          become more likely to decay over time, and carries no internal clock.
+
+          Now take a gram of carbon-14, containing some 10²² nuclei. Exactly 5,730 years from
+          now, half of them will have decayed. You can bet a laboratory on it.
+
+          Perfect randomness in the individual; perfect predictability in the aggregate.
+      - type: text
+        markdown: |
+          ### The decay law
+
+          Each nucleus has a fixed probability per second of decaying, called the decay constant
+          λ. The number decaying in a short interval is therefore proportional to how many are
+          left — which gives an exponential:
+
+          $$N = N_0 e^{-\lambda t}$$
+
+          Setting $N = N_0/2$ and solving gives the relationship to half-life:
+
+          $$t_{1/2} = \frac{\ln 2}{\lambda}$$
+      - type: interactive
+        widget: function-plot
+        config:
+          functions:
+            - {expression: "100*0.5**(x/5730)", label: "Carbon-14 remaining (%)", color: "primary"}
+            - {expression: "50", label: "One half-life", color: "muted"}
+          xRange: [0, 30000]
+          yRange: [0, 100]
+          axisLabels: {x: "years", y: "percentage remaining"}
+      - type: callout
+        variant: note
+        title: The curve never reaches zero
+        text: >-
+          Each half-life removes half of what remains, not a fixed amount. After 10 half-lives
+          about 0.1% is left; after 20, about one part in a million. This is why "how long until
+          it is all gone" has no answer — but "how long until it is undetectable" does.
+      - type: text
+        markdown: |
+          ### Dating something that was alive
+
+          Cosmic rays continually produce carbon-14 in the upper atmosphere, keeping its
+          proportion in atmospheric CO₂ roughly constant. A living plant exchanges carbon with
+          the air, so it holds that same proportion. An animal eating the plant does too.
+
+          At death the exchange stops. No new carbon-14 comes in, and what is there decays with
+          a 5,730-year half-life. Measure how much is left relative to stable carbon-12, and the
+          decay law gives the time since death.
+      - type: example
+        title: A piece of charcoal from a hearth
+        steps:
+          - text: "A sample has 25% of the carbon-14 of a living sample."
+          - text: "25% is one half, then half again — two half-lives."
+            math: "N/N_0 = 0.25 = \\left(\\tfrac{1}{2}\\right)^2"
+          - text: "So the age is:"
+            math: "t = 2 \\times 5730 = 11\\,460\\text{ years}"
+          - text: "For a value that is not a neat power of a half, use the logarithm form: t = −ln(N/N₀)/λ."
+      - type: table
+        headers: ["Isotope", "Half-life", "Used to date"]
+        rows:
+          - ["Carbon-14", "5,730 years", "Once-living material, up to ~50,000 years"]
+          - ["Uranium-238", "4.5 billion years", "Rocks, the age of the Earth"]
+          - ["Potassium-40", "1.25 billion years", "Volcanic rock, hominid sites"]
+          - ["Technetium-99m", "6 hours", "Medical imaging, not dating"]
+      - type: callout
+        variant: warning
+        title: What radiocarbon cannot do
+        text: >-
+          It only works on material that was once alive — never on rock or metal. Beyond about
+          ten half-lives (50,000 years) too little carbon-14 remains to measure reliably. And
+          the atmospheric proportion has not been perfectly constant: nuclear weapons testing in
+          the 1950s and fossil fuel burning both shifted it, so real dates are calibrated
+          against tree rings rather than read straight off the equation.
+      - type: practice
+        skill: physics-12-decay-law
+      - type: summary
+        points:
+          - Decay is random for a single nucleus and predictable for a large number
+          - N = N₀e^(−λt), and the half-life is ln 2 divided by λ
+          - Each half-life removes half of what remains, so the curve never reaches zero
+          - Radiocarbon dating works on once-living material up to about 50,000 years

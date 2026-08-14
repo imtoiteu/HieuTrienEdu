@@ -1,0 +1,351 @@
+# Mathematics — Grade 11 question templates
+#
+# Derivatives are asked as "evaluate f'(x) at a point" rather than "write down f'(x)", because
+# the answer has to be a single checkable value. The symbolic step is carried in the solution.
+defaults:
+  license: proprietary
+  source: HieuTrienEducation
+  status: published
+
+questions:
+  - slug: m11-degrees-to-radians
+    skill: math-11-radians
+    type: numeric
+    difficulty: 4
+    prompt: "Convert {{d}} degrees to radians. Give your answer as a decimal."
+    variables:
+      d: {type: choice, choices: [15, 30, 45, 60, 90, 120, 135, 150, 180, 210, 270, 300]}
+    answer: {expression: "radians(d)", unit: "rad", decimals: 4, tolerance: 0.005}
+    options:
+      distractors: ["degrees(d)", "d * pi"]
+    hints:
+      - text: "180 degrees = pi radians, so multiply by pi/180."
+    solution:
+      - text: "{{d}} x pi ÷ 180 = {{radians(d) : 4}} rad."
+      - text: "As a multiple of pi that is {{d / 180 : 4}} pi."
+
+  - slug: m11-trig-period
+    skill: math-11-trig-graphs
+    type: numeric
+    difficulty: 4
+    prompt: "What is the period of y = {{a}} sin({{b}}x)? Give your answer as a decimal."
+    variables:
+      a: {type: int, min: 1, max: 9}
+      b: {type: int, min: 1, max: 8}
+    answer: {expression: "2 * pi / b", decimals: 4, tolerance: 0.005}
+    options:
+      distractors: ["2 * pi * b", "2 * pi / a"]
+    hints:
+      - text: "For y = a sin(bx) the period is 2 pi / b."
+      - text: "The amplitude {{a}} has no effect on the period."
+    solution:
+      - text: "Period = 2 pi ÷ {{b}} = {{2 * pi / b : 4}}."
+      - text: "The amplitude is {{a}}, which stretches the graph vertically but not horizontally."
+
+  - slug: m11-trig-identity
+    skill: math-11-trig-identities
+    type: multiple_choice
+    difficulty: 5
+    prompt: "Which expression is equal to sin(2x)?"
+    options:
+      choices:
+        - {label: "2 sin(x) cos(x)", correct: true}
+        - {label: "sin(x) + sin(x)", correct: false}
+        - {label: "2 sin(x)", correct: false}
+        - {label: "sin^2(x) - cos^2(x)", correct: false}
+    hints:
+      - text: "This is the double-angle identity for sine."
+      - text: "sin(2x) is not the same as 2 sin(x) — try x = 90 degrees to see why."
+    solution:
+      - text: "sin(2x) = 2 sin(x) cos(x)."
+      - text: "Check at x = 30 degrees: sin(60) = 0.866, and 2(0.5)(0.866) = 0.866."
+
+  - slug: m11-solve-trig-equation
+    skill: math-11-solve-trig-equations
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      Find the smallest positive solution of sin(x) = {{s}}, in degrees.
+    variables:
+      d: {type: choice, choices: [10, 20, 30, 40, 50, 60, 70, 80]}
+      s: {type: derived, expression: "sin(radians(d))"}
+    answer: {expression: "degrees(asin(s))", unit: "degrees", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["degrees(acos(s))", "180 - degrees(asin(s))"]
+    hints:
+      - text: "Take the inverse sine to find the principal value."
+      - text: "The other solution in the first turn is 180 minus this one."
+    solution:
+      - text: "x = arcsin({{s : 4}}) = {{degrees(asin(s)) : 2}} degrees."
+      - text: "The next solution is 180 - {{degrees(asin(s)) : 2}} = {{180 - degrees(asin(s)) : 2}} degrees, then every 360 degrees after each."
+
+  - slug: m11-arithmetic-nth-term
+    skill: math-11-arithmetic-progression
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      An arithmetic progression starts at {{a}} with a common difference of {{d}}.
+      What is its {{n}}th term?
+    variables:
+      a: {type: int, min: -20, max: 40}
+      d: {type: int, min: -9, max: 12}
+      n: {type: int, min: 5, max: 40}
+    constraints: ["d != 0"]
+    answer: {expression: "a + (n - 1) * d"}
+    options:
+      distractors: ["a + n * d", "a * d ** (n - 1)"]
+    hints:
+      - text: "u_n = a + (n - 1)d — note it is n minus 1, because the first term needs no step."
+    solution:
+      - text: "u_{{n}} = {{a}} + ({{n}} - 1) x {{d}} = {{a}} + {{(n - 1) * d}} = {{a + (n - 1) * d}}."
+
+  - slug: m11-arithmetic-sum
+    skill: math-11-arithmetic-progression
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      Find the sum of the first {{n}} terms of an arithmetic progression that starts at
+      {{a}} with a common difference of {{d}}.
+    variables:
+      a: {type: int, min: -10, max: 30}
+      d: {type: int, min: 1, max: 10}
+      n: {type: int, min: 4, max: 40}
+    answer: {expression: "n * (2 * a + (n - 1) * d) / 2", decimals: 1, tolerance: 0.005}
+    options:
+      distractors: ["n * (a + d)", "n * a + d"]
+    hints:
+      - text: "S_n = n/2 (2a + (n - 1)d)."
+      - text: "The last term is {{a + (n-1)*d}}, and the sum is n times the average of first and last."
+    solution:
+      - text: "Last term = {{a + (n-1)*d}}."
+      - text: "S = {{n}} x ({{a}} + {{a + (n-1)*d}}) ÷ 2 = {{n * (2 * a + (n - 1) * d) / 2 : 1}}."
+
+  - slug: m11-geometric-nth-term
+    skill: math-11-geometric-progression
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A geometric progression starts at {{a}} with a common ratio of {{r}}.
+      What is its {{n}}th term?
+    variables:
+      a: {type: int, min: 1, max: 20}
+      r: {type: int, min: 2, max: 4}
+      n: {type: int, min: 3, max: 10}
+    answer: {expression: "a * r ** (n - 1)"}
+    options:
+      distractors: ["a * r ** n", "a + (n - 1) * r"]
+    hints:
+      - text: "u_n = a r^(n-1)."
+      - text: "{{r}}^{{n-1}} = {{r ** (n - 1)}}."
+    solution:
+      - text: "u_{{n}} = {{a}} x {{r}}^{{n - 1}} = {{a}} x {{r ** (n - 1)}} = {{a * r ** (n - 1)}}."
+
+  - slug: m11-infinite-geometric-sum
+    skill: math-11-geometric-progression
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      Find the sum to infinity of a geometric series with first term {{a}} and
+      common ratio {{r}}.
+    variables:
+      a: {type: int, min: 1, max: 40}
+      r: {type: choice, choices: [0.1, 0.2, 0.25, 0.4, 0.5, 0.6, 0.75, 0.8]}
+    answer: {expression: "a / (1 - r)", decimals: 4, tolerance: 0.005}
+    options:
+      distractors: ["a / (1 + r)", "a * (1 - r)"]
+    hints:
+      - text: "The sum to infinity exists when |r| < 1, and equals a / (1 - r)."
+      - text: "1 - {{r}} = {{1 - r : 2}}."
+    solution:
+      - text: "S = {{a}} ÷ {{1 - r : 2}} = {{a / (1 - r) : 4}}."
+      - text: "The terms shrink fast enough that infinitely many of them still add to a finite total."
+
+  - slug: m11-compound-interest
+    skill: math-11-compound-growth
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      {{p}} million dong is deposited at {{r}}% interest compounded annually.
+      What is it worth after {{n}} years, in million dong?
+    variables:
+      p: {type: int, min: 10, max: 500, step: 10}
+      r: {type: choice, choices: [3, 4, 4.5, 5, 6, 7, 8]}
+      n: {type: int, min: 2, max: 25}
+    answer:
+      expression: "p * (1 + r / 100) ** n"
+      unit: "million dong"
+      decimals: 4
+      tolerance: 0.005
+    options:
+      distractors: ["p * (1 + r * n / 100)", "p * r ** n / 100"]
+    hints:
+      - text: "Each year multiplies the balance by 1 + {{r}}/100 = {{1 + r/100 : 4}}."
+      - text: "After {{n}} years that factor is applied {{n}} times."
+    solution:
+      - text: "Value = {{p}} x {{1 + r/100 : 4}}^{{n}} = {{p * (1 + r / 100) ** n : 4}} million dong."
+      - text: "Simple interest would have given only {{p * (1 + r * n / 100) : 4}} million — compounding earns interest on the interest."
+
+  - slug: m11-exponential-value
+    skill: math-11-exponential-function
+    type: numeric
+    difficulty: 4
+    prompt: "Evaluate {{a}} x {{b}}^{{x}}."
+    variables:
+      a: {type: int, min: 1, max: 12}
+      b: {type: int, min: 2, max: 5}
+      x: {type: int, min: 2, max: 9}
+    answer: {expression: "a * b ** x"}
+    options:
+      distractors: ["a * b * x", "(a * b) ** x"]
+    hints:
+      - text: "Apply the exponent first, then multiply — {{b}}^{{x}} = {{b ** x}}."
+    solution:
+      - text: "{{a}} x {{b ** x}} = {{a * b ** x}}."
+
+  - slug: m11-half-life-model
+    skill: math-11-exponential-models
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      A substance has a half-life of {{h}} years. What fraction of the original amount
+      remains after {{t}} years? Give your answer as a decimal.
+    variables:
+      h: {type: int, min: 2, max: 60}
+      t: {type: int, min: 1, max: 200}
+    # Beyond about ten half-lives the fraction rounds to 0.00000 at five decimal places, which
+    # is not a question a student can answer meaningfully.
+    constraints: ["t < 10 * h"]
+    answer: {expression: "0.5 ** (t / h)", decimals: 5, tolerance: 0.005}
+    options:
+      distractors: ["0.5 * t / h", "2 ** (t / h)"]
+    hints:
+      - text: "After each half-life the amount is multiplied by 1/2."
+      - text: "{{t}} years is {{t / h : 3}} half-lives."
+    solution:
+      - text: "Number of half-lives = {{t}} ÷ {{h}} = {{t / h : 3}}."
+      - text: "Fraction remaining = 0.5^{{t / h : 3}} = {{0.5 ** (t / h) : 5}}."
+
+  - slug: m11-log-laws
+    skill: math-11-log-laws
+    type: numeric
+    difficulty: 4
+    prompt: "Evaluate log base {{b}} of {{n}}, where {{n}} = {{b}}^{{k}}."
+    variables:
+      b: {type: int, min: 2, max: 6}
+      k: {type: int, min: 2, max: 8}
+      n: {type: derived, expression: "b ** k"}
+    answer: {expression: "log(n) / log(b)", decimals: 4, tolerance: 0.005}
+    options:
+      distractors: ["log(b) / log(n)", "n / b"]
+    hints:
+      - text: "A logarithm asks: to what power must {{b}} be raised to give {{n}}?"
+      - text: "Try small powers of {{b}}: {{b}}^2 = {{b**2}}, {{b}}^3 = {{b**3}}."
+    solution:
+      - text: "{{b}}^{{k}} = {{n}}, so the logarithm is {{k}}."
+      - text: "Using the change of base rule: log({{n}}) ÷ log({{b}}) = {{log(n) / log(b) : 4}}."
+
+  - slug: m11-log-equation
+    skill: math-11-log-equations
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      Solve {{a}} x {{b}}^x = {{c}} for x. Give your answer as a decimal.
+    variables:
+      a: {type: int, min: 1, max: 10}
+      b: {type: int, min: 2, max: 5}
+      c: {type: int, min: 20, max: 5000}
+    constraints: ["c > a"]
+    answer: {expression: "log(c / a) / log(b)", decimals: 4, tolerance: 0.005}
+    options:
+      distractors: ["log(c) / log(b)", "c / (a * b)"]
+    hints:
+      - text: "Divide by {{a}} first: {{b}}^x = {{c / a : 4}}."
+      - text: "Then take logs of both sides and use log(b^x) = x log(b)."
+    solution:
+      - text: "{{b}}^x = {{c}} ÷ {{a}} = {{c / a : 4}}."
+      - text: "x = log({{c / a : 4}}) ÷ log({{b}}) = {{log(c / a) / log(b) : 4}}."
+
+  - slug: m11-limit-factorising
+    skill: math-11-limits
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      Evaluate the limit of (x^2 - {{k}}) / (x - {{a}}) as x approaches {{a}},
+      where {{k}} = {{a}}^2.
+    variables:
+      a: {type: int, min: 2, max: 12}
+      k: {type: derived, expression: "a * a"}
+    answer: {expression: "2 * a"}
+    options:
+      distractors: ["a", "a * a"]
+    hints:
+      - text: "Substituting directly gives 0/0, so factorise first."
+      - text: "x^2 - {{k}} = (x - {{a}})(x + {{a}})."
+    solution:
+      - text: "x^2 - {{k}} factorises as (x - {{a}})(x + {{a}})."
+      - text: "The (x - {{a}}) cancels, leaving x + {{a}}."
+      - text: "As x approaches {{a}}, this approaches {{a}} + {{a}} = {{2 * a}}."
+
+  - slug: m11-continuity
+    skill: math-11-continuity
+    type: multiple_choice
+    difficulty: 4
+    prompt: "Where is f(x) = 1 / (x - {{a}}) discontinuous?"
+    variables:
+      # a = 0 would make "at x = {{a}}" and "at x = -{{a}}" the same choice twice.
+      a: {type: int, min: -8, max: 8}
+    constraints: ["a != 0"]
+    options:
+      choices:
+        - {label: "At x = {{a}} only", correct: true}
+        - {label: "At x = 0 only", correct: false}
+        - {label: "At x = -{{a}} only", correct: false}
+        - {label: "Nowhere — it is continuous everywhere", correct: false}
+    hints:
+      - text: "A quotient is discontinuous wherever its denominator is zero."
+      - text: "Solve x - {{a}} = 0."
+    solution:
+      - text: "The denominator is zero when x = {{a}}, so the function is undefined there."
+      - text: "It is continuous at every other real number."
+
+  - slug: m11-derivative-at-point
+    skill: math-11-differentiation-rules
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      Given f(x) = {{a}}x^3 + {{b}}x^2 + {{c}}x, find f'({{p}}).
+    variables:
+      a: {type: int, min: 1, max: 6}
+      b: {type: int, min: -8, max: 8}
+      c: {type: int, min: -10, max: 10}
+      p: {type: int, min: -4, max: 5}
+    answer: {expression: "3 * a * p * p + 2 * b * p + c"}
+    options:
+      distractors: ["a * p * p * p + b * p * p + c * p", "3 * a * p + 2 * b + c"]
+    hints:
+      - text: "Differentiate term by term with the power rule: d/dx(x^n) = n x^(n-1)."
+      - text: "f'(x) = {{3*a}}x^2 + {{2*b}}x + {{c}}."
+    solution:
+      - text: "f'(x) = {{3*a}}x^2 + {{2*b}}x + {{c}}."
+      - text: "f'({{p}}) = {{3*a}}({{p*p}}) + {{2*b}}({{p}}) + {{c}} = {{3 * a * p * p + 2 * b * p + c}}."
+
+  - slug: m11-tangent-gradient
+    skill: math-11-tangent-line
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      What is the gradient of the tangent to y = {{a}}x^2 + {{b}}x at the point where
+      x = {{p}}?
+    variables:
+      a: {type: int, min: 1, max: 8}
+      b: {type: int, min: -10, max: 10}
+      p: {type: int, min: -5, max: 6}
+    answer: {expression: "2 * a * p + b"}
+    options:
+      distractors: ["a * p * p + b * p", "2 * a + b"]
+    hints:
+      - text: "The gradient of the tangent at a point is the derivative there."
+      - text: "dy/dx = {{2*a}}x + {{b}}."
+    solution:
+      - text: "dy/dx = {{2*a}}x + {{b}}."
+      - text: "At x = {{p}}: gradient = {{2*a}}({{p}}) + {{b}} = {{2 * a * p + b}}."

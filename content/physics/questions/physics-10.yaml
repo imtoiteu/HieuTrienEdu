@@ -1,0 +1,377 @@
+# Physics — Grade 10 question templates
+#
+# g = 10 m/s^2 throughout, matching grades 6-9. Angles are given in degrees in the prompt and
+# converted inside the expression with radians(), because a student reading "30 degrees" should
+# not have to think about which unit the marking scheme expects.
+defaults:
+  license: proprietary
+  source: HieuTrienEducation
+  status: published
+
+questions:
+  - slug: p10-resultant-displacement
+    skill: physics-10-displacement-velocity
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      A student walks {{a}} m due east, then {{b}} m due north.
+      What is the magnitude of their displacement, in metres?
+    variables:
+      a: {type: int, min: 3, max: 40}
+      b: {type: int, min: 3, max: 40}
+    answer: {expression: "sqrt(a*a + b*b)", unit: "m", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["a + b", "abs(a - b)"]
+    hints:
+      - text: "Displacement is a vector: the two legs are at right angles."
+      - text: "Use Pythagoras on a right-angled triangle with sides {{a}} and {{b}}."
+    solution:
+      - text: "The two legs are perpendicular, so the displacement is the hypotenuse."
+      - text: "s = sqrt({{a}}^2 + {{b}}^2) = {{sqrt(a*a + b*b) : 2}} m."
+      - text: "The distance walked is {{a + b}} m — larger, because distance ignores direction."
+
+  - slug: p10-distance-vs-displacement
+    skill: physics-10-displacement-velocity
+    type: multiple_choice
+    difficulty: 3
+    prompt: >-
+      A runner completes exactly one lap of a 400 m track and stops where they started.
+      Which statement is correct?
+    options:
+      choices:
+        - {label: "Distance is 400 m and displacement is 0 m", correct: true}
+        - {label: "Distance is 0 m and displacement is 400 m", correct: false}
+        - {label: "Both distance and displacement are 400 m", correct: false}
+        - {label: "Both distance and displacement are 0 m", correct: false}
+    hints:
+      - text: "Displacement measures only the straight line from start to finish."
+    solution:
+      - text: "The path length is 400 m, so the distance travelled is 400 m."
+      - text: "The finish point is the start point, so the displacement is zero."
+
+  - slug: p10-vt-graph-area
+    skill: physics-10-motion-graphs
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      On a velocity-time graph an object accelerates uniformly from rest to {{v}} m/s
+      over {{t}} s. What distance does it travel, in metres?
+    variables:
+      v: {type: int, min: 4, max: 40, step: 2}
+      t: {type: int, min: 2, max: 20}
+    answer: {expression: "0.5 * v * t", unit: "m", decimals: 1, tolerance: 0.005}
+    options:
+      distractors: ["v * t", "v / t"]
+    hints:
+      - text: "On a velocity-time graph, the area underneath is the distance travelled."
+      - text: "The shape here is a triangle of base {{t}} and height {{v}}."
+    solution:
+      - text: "Area of the triangle = 1/2 x base x height."
+      - text: "s = 0.5 x {{t}} x {{v}} = {{0.5*v*t : 1}} m."
+      - text: "Note this is half of {{v*t}} m — the distance at the *final* speed the whole way."
+
+  - slug: p10-projectile-horizontal
+    skill: physics-10-projectile-components
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      A ball is launched at {{u}} m/s at {{theta}} degrees above the horizontal.
+      What is the horizontal component of its velocity, in m/s?
+    variables:
+      u: {type: int, min: 10, max: 45}
+      theta: {type: choice, choices: [20, 25, 30, 40, 45, 50, 60, 65]}
+    answer: {expression: "u * cos(radians(theta))", unit: "m/s", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["u * sin(radians(theta))", "u * tan(radians(theta))"]
+    hints:
+      - text: "Resolve the launch velocity into horizontal and vertical components."
+      - text: "The horizontal component uses cosine: u cos(theta)."
+    solution:
+      - text: "u_x = {{u}} x cos({{theta}} degrees) = {{u * cos(radians(theta)) : 2}} m/s."
+      - text: "This component never changes during the flight — gravity acts vertically only."
+
+  - slug: p10-projectile-time-of-flight
+    skill: physics-10-projectile-range
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      A ball is launched from ground level at {{u}} m/s at {{theta}} degrees above the
+      horizontal. How long is it in the air, in seconds? Use g = 10 m/s^2.
+    variables:
+      u: {type: int, min: 10, max: 40}
+      theta: {type: choice, choices: [20, 30, 40, 45, 50, 60]}
+    answer:
+      expression: "2 * u * sin(radians(theta)) / 10"
+      unit: "s"
+      decimals: 2
+      tolerance: 0.005
+    options:
+      distractors: ["u * sin(radians(theta)) / 10", "2 * u * cos(radians(theta)) / 10"]
+    hints:
+      - text: "The vertical component of the launch velocity is u sin(theta)."
+      - text: "It takes as long to come down as it took to go up."
+    solution:
+      - text: "u_y = {{u}} x sin({{theta}} degrees) = {{u * sin(radians(theta)) : 2}} m/s."
+      - text: "Time to the top = u_y / g = {{u * sin(radians(theta)) / 10 : 2}} s."
+      - text: "Total flight time is twice that: {{2 * u * sin(radians(theta)) / 10 : 2}} s."
+
+  - slug: p10-free-body-constant-velocity
+    skill: physics-10-free-body
+    type: multiple_choice
+    difficulty: 4
+    prompt: >-
+      A crate is being pushed across a floor at a *constant velocity*.
+      What can you say about the horizontal forces on it?
+    options:
+      choices:
+        - {label: "The push and the friction are equal in size and opposite in direction", correct: true}
+        - {label: "The push is larger than the friction", correct: false}
+        - {label: "The friction is larger than the push", correct: false}
+        - {label: "There is no friction acting", correct: false}
+    hints:
+      - text: "Constant velocity means zero acceleration."
+      - text: "Zero acceleration means zero *resultant* force, not zero force."
+    solution:
+      - text: "By Newton's first law, constant velocity requires a resultant force of zero."
+      - text: "The push and friction must therefore cancel exactly."
+
+  - slug: p10-slope-component
+    skill: physics-10-resolving-forces
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      A {{m}} kg block rests on a frictionless slope inclined at {{theta}} degrees.
+      What is the component of its weight acting down the slope, in newtons? Use g = 10 m/s^2.
+    variables:
+      m: {type: int, min: 2, max: 60}
+      theta: {type: choice, choices: [10, 15, 20, 25, 30, 35, 40, 45]}
+    answer:
+      expression: "m * 10 * sin(radians(theta))"
+      unit: "N"
+      decimals: 2
+      tolerance: 0.005
+    options:
+      distractors: ["m * 10 * cos(radians(theta))", "m * 10"]
+    hints:
+      - text: "The weight is {{m}} x 10 = {{m*10}} N, straight down."
+      - text: "Resolve it parallel to the slope — that component uses sine."
+    solution:
+      - text: "W = {{m}} x 10 = {{m*10}} N."
+      - text: "Component down the slope = W sin(theta) = {{m * 10 * sin(radians(theta)) : 2}} N."
+      - text: "The perpendicular component, W cos(theta), is balanced by the normal force."
+
+  - slug: p10-friction-force
+    skill: physics-10-friction
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A {{m}} kg box sits on a level floor with a coefficient of friction of {{mu}}.
+      What is the maximum friction force, in newtons? Use g = 10 m/s^2.
+    variables:
+      m: {type: int, min: 2, max: 50}
+      mu: {type: choice, choices: [0.1, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6]}
+    answer: {expression: "mu * m * 10", unit: "N", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["m * 10", "mu * m"]
+    hints:
+      - text: "On a level floor the normal force equals the weight."
+      - text: "Friction = mu x N."
+    solution:
+      - text: "N = {{m}} x 10 = {{m*10}} N."
+      - text: "F = {{mu}} x {{m*10}} = {{mu * m * 10 : 2}} N."
+
+  - slug: p10-terminal-velocity
+    skill: physics-10-terminal-velocity
+    type: true_false
+    difficulty: 4
+    prompt: >-
+      True or false: a skydiver at terminal velocity has no forces acting on them.
+    answer: {value: false}
+    hints:
+      - text: "Terminal velocity means constant velocity, so zero *resultant* force."
+      - text: "Zero resultant is not the same as zero forces."
+    solution:
+      - text: "Two large forces still act: weight downwards and drag upwards."
+      - text: "They are equal in size, so they cancel and the skydiver stops accelerating."
+
+  - slug: p10-work-at-angle
+    skill: physics-10-work-done
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A rope pulls a sledge {{s}} m along the ground with a force of {{f}} N,
+      at {{theta}} degrees to the horizontal. How much work is done, in joules?
+    variables:
+      f: {type: int, min: 20, max: 300, step: 5}
+      s: {type: int, min: 2, max: 40}
+      theta: {type: choice, choices: [0, 20, 30, 40, 45, 60]}
+    answer:
+      expression: "f * s * cos(radians(theta))"
+      unit: "J"
+      decimals: 2
+      tolerance: 0.005
+    options:
+      distractors: ["f * s", "f * s * sin(radians(theta))"]
+    hints:
+      - text: "Only the component of the force *along* the motion does work."
+      - text: "W = F s cos(theta)."
+    solution:
+      - text: "Component along the ground = {{f}} x cos({{theta}} degrees) = {{f * cos(radians(theta)) : 2}} N."
+      - text: "W = {{f * cos(radians(theta)) : 2}} x {{s}} = {{f * s * cos(radians(theta)) : 2}} J."
+
+  - slug: p10-work-energy-braking
+    skill: physics-10-work-energy-theorem
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      A {{m}} kg car travelling at {{v}} m/s brakes to a stop with a constant force of {{f}} N.
+      How far does it travel while stopping, in metres?
+    variables:
+      m: {type: int, min: 800, max: 2000, step: 100}
+      v: {type: int, min: 10, max: 30, step: 2}
+      f: {type: int, min: 3000, max: 9000, step: 500}
+    answer:
+      expression: "0.5 * m * v * v / f"
+      unit: "m"
+      decimals: 2
+      tolerance: 0.005
+    options:
+      distractors: ["m * v / f", "0.5 * m * v / f"]
+    hints:
+      - text: "All the kinetic energy has to be removed by the work the brakes do."
+      - text: "Set 1/2 m v^2 equal to F x s and solve for s."
+    solution:
+      - text: "KE = 0.5 x {{m}} x {{v}}^2 = {{0.5 * m * v * v}} J."
+      - text: "Work done by the brakes = F s, so s = KE / F."
+      - text: "s = {{0.5 * m * v * v}} ÷ {{f}} = {{0.5 * m * v * v / f : 2}} m."
+      - text: "Note the v^2: doubling the speed quadruples the stopping distance."
+
+  - slug: p10-power-force-velocity
+    skill: physics-10-power-calc
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A train moves at a steady {{v}} m/s against a total resistive force of {{f}} N.
+      What power must its engine deliver, in watts?
+    variables:
+      f: {type: int, min: 2000, max: 40000, step: 500}
+      v: {type: int, min: 5, max: 60}
+    answer: {expression: "f * v", unit: "W"}
+    options:
+      distractors: ["f / v", "f * v * v"]
+    hints:
+      - text: "At constant speed the engine force equals the resistive force."
+      - text: "Power = force x velocity."
+    solution:
+      - text: "P = {{f}} x {{v}} = {{f*v}} W."
+      - text: "That is {{f*v/1000 : 2}} kW."
+
+  - slug: p10-efficiency-chain
+    skill: physics-10-efficiency-chains
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A power station supplies {{ein}} J of chemical energy. The boiler is {{e1}}% efficient
+      and the turbine that follows it is {{e2}}% efficient. How much useful energy comes out
+      of the turbine, in joules?
+    variables:
+      ein: {type: int, min: 10000, max: 100000, step: 5000}
+      e1: {type: choice, choices: [40, 50, 60, 80]}
+      e2: {type: choice, choices: [25, 40, 50, 75]}
+    answer:
+      expression: "ein * e1 / 100 * e2 / 100"
+      unit: "J"
+      decimals: 1
+      tolerance: 0.005
+    options:
+      distractors: ["ein * (e1 + e2) / 100", "ein * e1 / 100"]
+    hints:
+      - text: "Efficiencies in a chain multiply — they do not add."
+      - text: "After the boiler: {{ein}} x {{e1}}/100 = {{ein * e1 / 100 : 1}} J."
+    solution:
+      - text: "After the boiler: {{ein * e1 / 100 : 1}} J."
+      - text: "After the turbine: {{ein * e1 / 100 : 1}} x {{e2}}/100 = {{ein * e1 / 100 * e2 / 100 : 1}} J."
+      - text: "Overall efficiency is {{e1 * e2 / 100 : 1}}%, not {{e1 + e2}}%."
+
+  - slug: p10-impulse-force
+    skill: physics-10-impulse
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A {{m}} kg crash-test dummy moving at {{v}} m/s is brought to rest in {{t}} s by an airbag.
+      What average force acts on it, in newtons?
+    variables:
+      m: {type: int, min: 40, max: 90, step: 5}
+      v: {type: int, min: 8, max: 30, step: 2}
+      t: {type: choice, choices: [0.1, 0.2, 0.25, 0.4, 0.5]}
+    answer: {expression: "m * v / t", unit: "N", decimals: 1, tolerance: 0.005}
+    options:
+      distractors: ["m * v * t", "m * v"]
+    hints:
+      - text: "Impulse = F t = change in momentum."
+      - text: "The change in momentum is {{m}} x {{v}} = {{m*v}} kg m/s."
+    solution:
+      - text: "Change in momentum = {{m}} x {{v}} = {{m*v}} kg m/s."
+      - text: "F = {{m*v}} ÷ {{t}} = {{m * v / t : 1}} N."
+      - text: "Without the airbag the stop would take far less time, so the force would be far larger — that is the whole point of it."
+
+  - slug: p10-collision-type
+    skill: physics-10-collision-types
+    type: multiple_choice
+    difficulty: 5
+    prompt: >-
+      Two trolleys collide and stick together. Which quantity is definitely *not* conserved?
+    options:
+      choices:
+        - {label: "Kinetic energy", correct: true}
+        - {label: "Momentum", correct: false}
+        - {label: "Total energy", correct: false}
+        - {label: "Total mass", correct: false}
+    hints:
+      - text: "Sticking together makes this a perfectly inelastic collision."
+      - text: "Momentum is conserved in every collision; kinetic energy is not."
+    solution:
+      - text: "Momentum is always conserved when no external force acts."
+      - text: "In an inelastic collision some kinetic energy becomes heat, sound and deformation."
+      - text: "Total energy is still conserved — it has just changed store."
+
+  - slug: p10-centripetal-force
+    skill: physics-10-centripetal
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      A {{m}} kg car goes round a bend of radius {{r}} m at {{v}} m/s.
+      What centripetal force is needed, in newtons?
+    variables:
+      m: {type: int, min: 800, max: 1600, step: 100}
+      r: {type: int, min: 20, max: 200, step: 10}
+      v: {type: int, min: 5, max: 30}
+    answer: {expression: "m * v * v / r", unit: "N", decimals: 1, tolerance: 0.005}
+    options:
+      distractors: ["m * v / r", "m * v * v * r"]
+    hints:
+      - text: "F = m v^2 / r."
+      - text: "{{v}}^2 = {{v*v}}."
+    solution:
+      - text: "F = {{m}} x {{v*v}} ÷ {{r}} = {{m * v * v / r : 1}} N."
+      - text: "This force comes from friction between the tyres and the road — which is why an icy bend is dangerous."
+
+  - slug: p10-elastic-energy
+    skill: physics-10-hookes-law
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A bungee cord has a spring constant of {{k}} N/m and is stretched by {{x}} m.
+      How much elastic potential energy is stored in it, in joules?
+    variables:
+      k: {type: int, min: 20, max: 400, step: 10}
+      x: {type: float, min: 0.5, max: 8.0, decimals: 1}
+    answer: {expression: "0.5 * k * x * x", unit: "J", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["k * x", "0.5 * k * x"]
+    hints:
+      - text: "E = 1/2 k x^2."
+      - text: "{{x}}^2 = {{x*x : 2}}."
+    solution:
+      - text: "E = 0.5 x {{k}} x {{x*x : 2}} = {{0.5 * k * x * x : 2}} J."
+      - text: "The force at that extension is {{k*x : 1}} N, but the *average* force during the stretch is half of it — which is where the 1/2 comes from."

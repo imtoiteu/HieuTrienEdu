@@ -1,0 +1,214 @@
+# Physics — Physics 10
+#
+# The first year of the upper-secondary programme (GDPT 2018). Grades 6-9 built the vocabulary;
+# grade 10 makes it quantitative and vectorial. Every unit here is anchored to a phenomenon a
+# student has already met outside a classroom — a car crash, a thrown ball, a fairground ride —
+# because the jump from "force causes motion" to "resolve the force along the slope" is where
+# physics starts to feel like arbitrary algebra unless the phenomenon stays in view.
+subject:
+  slug: physics
+  name: Physics
+  icon: atom
+  color: "#00B8A9"
+  position: 2
+
+course:
+  slug: physics-10
+  title: Physics — Grade 10
+  grade: 10
+  summary: Motion in two dimensions, forces on real objects, energy, momentum and circular motion.
+  description: >-
+    Grade 10 opens upper-secondary physics. Motion becomes two-dimensional and vectorial:
+    students resolve projectiles into components, draw free-body diagrams for objects on slopes,
+    and explain why a skydiver stops accelerating. Energy and momentum are then used as
+    accounting tools — why a crumple zone saves a life, why a roller-coaster loop has to be
+    fast enough at the top, and how much energy a stretched rope stores.
+  estimated_hours: 105
+
+units:
+  - slug: physics-10-kinematics
+    title: Kinematics
+    icon: activity
+    summary: Motion described properly — as vectors, in two dimensions, and read off a graph.
+    topics:
+      - slug: physics-10-describing-motion
+        title: Describing Motion
+        summary: Why a 5 km run that ends where it started counts as zero displacement.
+        skills:
+          - slug: physics-10-displacement-velocity
+            name: Displacement and velocity as vectors
+            description: >-
+              Distinguish distance from displacement and speed from velocity, and combine
+              displacements that point in different directions.
+            difficulty: 3
+            prerequisites: [physics-7-average-speed]
+            tags: [motion, core]
+          - slug: physics-10-motion-graphs
+            name: Reading motion graphs
+            description: >-
+              Extract velocity from the gradient of a displacement-time graph and displacement
+              from the area under a velocity-time graph.
+            difficulty: 4
+            prerequisites: [physics-7-distance-time-graphs, physics-7-velocity-time-graphs, math-8-gradient]
+            tags: [motion, graphs, core]
+
+      - slug: physics-10-projectile-motion
+        title: Projectile Motion
+        summary: A thrown ball is two independent motions happening at once.
+        skills:
+          - slug: physics-10-projectile-components
+            name: Resolving projectile motion
+            description: >-
+              Split a launch velocity into horizontal and vertical components and treat the two
+              motions independently.
+            difficulty: 5
+            prerequisites: [physics-9-suvat, math-9-trig-ratios]
+            tags: [motion]
+          - slug: physics-10-projectile-range
+            name: Time of flight and range
+            description: >-
+              Calculate how long a projectile stays in the air and how far it travels, ignoring
+              air resistance.
+            difficulty: 5
+            prerequisites: [physics-10-projectile-components]
+            tags: [motion]
+
+  - slug: physics-10-dynamics
+    title: Dynamics
+    icon: move
+    summary: What forces actually do to an object once you account for all of them.
+    topics:
+      - slug: physics-10-newton-laws
+        title: Newton's Laws in Two Dimensions
+        summary: Drawing every force on an object, then adding them as vectors.
+        skills:
+          - slug: physics-10-free-body
+            name: Free-body diagrams
+            description: >-
+              Identify every force acting on an object and represent it as a labelled vector on
+              a free-body diagram.
+            difficulty: 4
+            prerequisites: [physics-6-force-diagrams, physics-8-first-law]
+            tags: [forces, core]
+          - slug: physics-10-resolving-forces
+            name: Resolving forces on a slope
+            description: >-
+              Resolve weight into components parallel and perpendicular to an inclined plane and
+              find the resultant force.
+            difficulty: 5
+            prerequisites: [physics-10-free-body, math-9-trig-ratios]
+            tags: [forces]
+
+      - slug: physics-10-friction-drag
+        title: Friction and Drag
+        summary: Why a skydiver stops speeding up long before they reach the ground.
+        skills:
+          - slug: physics-10-friction
+            name: Friction and the normal force
+            description: >-
+              Apply F = mu N to static and kinetic friction, and predict whether an object
+              starts to slide.
+            difficulty: 4
+            prerequisites: [physics-6-friction, physics-10-free-body]
+            tags: [forces]
+          - slug: physics-10-terminal-velocity
+            name: Drag and terminal velocity
+            description: >-
+              Explain terminal velocity as the point where drag balances weight, and read it off
+              a velocity-time graph.
+            difficulty: 4
+            prerequisites: [physics-10-friction, physics-10-motion-graphs]
+            tags: [forces, core]
+
+  - slug: physics-10-energy
+    title: Work, Energy and Power
+    icon: zap
+    summary: Energy accounting, applied to machines that really exist.
+    topics:
+      - slug: physics-10-work-energy
+        title: Work and Energy
+        summary: Only the part of a force along the motion does any work.
+        skills:
+          - slug: physics-10-work-done
+            name: Work done by a force at an angle
+            description: >-
+              Apply W = F s cos(theta), and explain why a force perpendicular to the motion does
+              no work at all.
+            difficulty: 4
+            prerequisites: [physics-8-work-done, math-9-trig-ratios]
+            tags: [energy, core]
+          - slug: physics-10-work-energy-theorem
+            name: The work-energy theorem
+            description: >-
+              Relate the net work done on an object to its change in kinetic energy, and use it
+              to find a braking distance.
+            difficulty: 5
+            prerequisites: [physics-10-work-done, physics-8-kinetic-energy]
+            tags: [energy]
+
+      - slug: physics-10-power-machines
+        title: Power and Efficiency
+        summary: How quickly the energy moves, and how much of it arrives where you wanted.
+        skills:
+          - slug: physics-10-power-calc
+            name: Power in real machines
+            description: >-
+              Calculate power as work per unit time and as force times velocity, for lifts,
+              engines and cyclists.
+            difficulty: 4
+            prerequisites: [physics-8-power]
+            tags: [energy, core]
+          - slug: physics-10-efficiency-chains
+            name: Efficiency through a chain of transfers
+            description: >-
+              Track efficiency through several stages and explain where the missing energy went.
+            difficulty: 4
+            prerequisites: [physics-8-efficiency]
+            tags: [energy]
+
+  - slug: physics-10-momentum-circular
+    title: Momentum, Circular Motion and Deformation
+    icon: refresh-cw
+    summary: Crumple zones, fairground loops and the energy stored in a stretched rope.
+    topics:
+      - slug: physics-10-impulse-collisions
+        title: Impulse and Collisions
+        summary: Why spreading a collision over a longer time is what saves you.
+        skills:
+          - slug: physics-10-impulse
+            name: Impulse and change of momentum
+            description: >-
+              Apply impulse = F t = change in momentum, and explain how airbags and crumple
+              zones reduce the force on a passenger.
+            difficulty: 4
+            prerequisites: [physics-9-momentum-calc]
+            tags: [momentum, core]
+          - slug: physics-10-collision-types
+            name: Elastic and inelastic collisions
+            description: >-
+              Distinguish elastic from inelastic collisions by checking whether kinetic energy
+              is conserved as well as momentum.
+            difficulty: 5
+            prerequisites: [physics-9-conservation-momentum, physics-8-kinetic-energy]
+            tags: [momentum]
+
+      - slug: physics-10-circular-elastic
+        title: Circular Motion and Elasticity
+        summary: The force that keeps you on the track, and the energy stored in a stretch.
+        skills:
+          - slug: physics-10-centripetal
+            name: Centripetal acceleration and force
+            description: >-
+              Apply a = v^2 / r and F = m v^2 / r, and identify which real force is providing
+              the centripetal force in a given situation.
+            difficulty: 5
+            prerequisites: [physics-10-displacement-velocity, physics-8-second-law]
+            tags: [motion, forces]
+          - slug: physics-10-hookes-law
+            name: Hooke's law and elastic energy
+            description: >-
+              Apply F = k x to a spring or rope and calculate the elastic potential energy
+              stored in it.
+            difficulty: 4
+            prerequisites: [physics-6-types-of-forces, math-8-slope-intercept]
+            tags: [forces, energy]

@@ -88,9 +88,7 @@ export async function SubjectPage({
       <Section className="bg-white pt-4">
         <Container>
           <h2 className="font-display text-3xl sm:text-4xl">{t('subject.curriculum')}</h2>
-          <p className="mt-3 max-w-2xl text-ink-600">
-            Every unit below is fully built: skills, prerequisites, lessons and generated practice.
-          </p>
+          <p className="mt-3 max-w-2xl text-ink-600">{t('subject.curriculumIntro')}</p>
 
           {courses.length === 0 ? (
             <Card className="mt-8 text-center">

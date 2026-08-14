@@ -1,0 +1,377 @@
+# Vietnamese translations — mathematics curriculum, grades 10-12.
+#
+# Merged with ../vi.yaml by the loader. Terminology follows the Vietnamese upper-secondary
+# programme (GDPT 2018): mệnh đề, tập hợp, hàm số bậc hai, định lí sin, tích vô hướng, tổ hợp,
+# độ lệch chuẩn, cấp số cộng, cấp số nhân, lôgarit, đạo hàm, nguyên hàm, tích phân, tiệm cận,
+# xác suất có điều kiện.
+
+courses:
+  math-10:
+    title: Toán học — Lớp 10
+    summary: Mệnh đề và tập hợp, hàm số bậc hai, hệ thức lượng trong tam giác, vectơ và đại số tổ hợp.
+    description: >-
+      Lớp 10 mở đầu chương trình toán THPT. Học sinh học cách phát biểu và phủ định một khẳng
+      định toán học một cách chính xác, giải hệ bất phương trình và dùng nó để tối ưu một ràng
+      buộc thực tế, làm việc với hàm số bậc hai như một đối tượng chứ không chỉ là phương trình
+      cần giải, mở rộng lượng giác ra mọi tam giác nhờ định lí sin và định lí côsin, làm quen
+      với vectơ và tích vô hướng, và đếm được số cách sắp xếp đủ tốt để tính ra xác suất thật.
+  math-11:
+    title: Toán học — Lớp 11
+    summary: Hàm số lượng giác, dãy số và cấp số, hàm số mũ và lôgarit, cùng đạo hàm.
+    description: >-
+      Lớp 11 giới thiệu toán học của sự biến thiên. Góc thoát khỏi tam giác để trở thành số đo
+      radian trên đường tròn, sinh ra các hàm tuần hoàn đứng sau mọi loại sóng. Dãy số và cấp
+      số mô tả mọi thứ tăng trưởng theo từng bước, từ khoản tiết kiệm đến một dịch bệnh đang lan
+      rộng, còn hàm số mũ và lôgarit mô tả sự tăng trưởng không ngừng. Năm học khép lại với giới
+      hạn và đạo hàm — tốc độ biến thiên tức thời mà cả đơn vị đầu tiên của lớp 12 dành để ứng dụng.
+  math-12:
+    title: Toán học — Lớp 12
+    summary: Khảo sát hàm số bằng đạo hàm, toạ độ trong không gian, tích phân và xác suất có điều kiện.
+    description: >-
+      Lớp 12 khép lại chương trình bằng cách đưa giải tích vào sử dụng. Học sinh dùng đạo hàm để
+      mô tả khoảng đồng biến, nghịch biến, tìm cực trị và tiệm cận, vẽ đồ thị và giải những bài
+      toán tối ưu có thật. Hệ toạ độ mở rộng ra ba chiều với mặt phẳng và mặt cầu. Tích phân
+      xuất hiện như phép toán ngược của đạo hàm và được dùng để tìm lại quãng đường từ vận tốc,
+      cùng diện tích và thể tích. Năm học kết thúc với mẫu số liệu ghép nhóm và xác suất có điều
+      kiện, bao gồm công thức xác suất toàn phần và công thức Bayes.
+
+units:
+  math-10-logic-sets:
+    title: Mệnh đề, tập hợp và bất phương trình
+    summary: Nói đúng điều mình muốn nói, và mô tả một miền trên mặt phẳng.
+  math-10-quadratic-functions:
+    title: Hàm số bậc hai
+    summary: Parabol như một công cụ mô hình hóa, không chỉ là phương trình cần giải.
+  math-10-trig-vectors:
+    title: Hệ thức lượng trong tam giác và vectơ
+    summary: Lượng giác vượt ra ngoài góc vuông, và những đại lượng mang theo hướng.
+  math-10-counting-probability:
+    title: Đại số tổ hợp, thống kê và xác suất
+    summary: Đếm số trường hợp đủ cẩn thận để đặt được một con số lên khả năng xảy ra.
+  math-11-trigonometry:
+    title: Hàm số lượng giác
+    summary: Góc đo bằng độ dài cung, và những hàm số lặp lại mãi mãi.
+  math-11-sequences:
+    title: Dãy số và cấp số
+    summary: Tăng trưởng từng bước một — và tổng của tất cả những bước ấy.
+  math-11-exponentials-logs:
+    title: Hàm số mũ và lôgarit
+    summary: Những hàm mô tả mọi thứ có tốc độ biến thiên tỉ lệ với chính nó.
+  math-11-limits-derivatives:
+    title: Giới hạn và đạo hàm
+    summary: Vận tốc tại một thời điểm, từ một phép tính chỉ biết đến những khoảng thời gian.
+  math-12-curve-sketching:
+    title: Ứng dụng của đạo hàm
+    summary: Tất cả những gì đạo hàm cấp một cho ta biết về hình dạng của đồ thị.
+  math-12-space-coordinates:
+    title: Toạ độ trong không gian
+    summary: Hình học với ba toạ độ thay vì hai.
+  math-12-integration:
+    title: Nguyên hàm và tích phân
+    summary: Tìm lại tổng từ một tốc độ — quãng đường từ vận tốc, thể tích từ lưu lượng.
+  math-12-statistics-probability:
+    title: Thống kê và xác suất có điều kiện
+    summary: Tóm tắt mẫu số liệu ghép nhóm, và loại xác suất người ta hay nhầm nhất.
+
+topics:
+  math-10-statements-sets:
+    title: Mệnh đề và tập hợp
+    summary: Ngữ pháp của toán học — và chỗ "không phải tất cả" khác với "không một ai".
+  math-10-inequalities-2d:
+    title: Bất phương trình hai ẩn
+    summary: Một khoản ngân sách, một thời khóa biểu hay năng lực của một xưởng sản xuất, vẽ thành một miền.
+  math-10-quadratic-graphs:
+    title: Hàm số bậc hai và đồ thị
+    summary: Đỉnh, trục đối xứng, và vị trí của đường cong so với trục hoành.
+  math-10-quadratic-applications:
+    title: Mô hình hóa bằng hàm bậc hai
+    summary: Diện tích lớn nhất, lợi nhuận lớn nhất, độ cao lớn nhất.
+  math-10-triangle-relations:
+    title: Hệ thức lượng trong tam giác
+    summary: Cách người đo đạc tìm ra một khoảng cách mà họ không thể đi qua.
+  math-10-vectors:
+    title: Vectơ trong mặt phẳng
+    summary: Cộng vận tốc gió vào hướng bay của máy bay.
+  math-10-counting:
+    title: Quy tắc đếm
+    summary: Vì sao mật khẩu sáu kí tự không chỉ khó gấp sáu lần mật khẩu một kí tự.
+  math-10-statistics-probability:
+    title: Độ phân tán và xác suất
+    summary: Chỉ riêng số trung bình che giấu mọi điều quan trọng của một mẫu số liệu.
+  math-11-trig-functions:
+    title: Radian và đồ thị hàm lượng giác
+    summary: Vì sao các nhà toán học từ bỏ đơn vị độ.
+  math-11-trig-equations:
+    title: Công thức và phương trình lượng giác
+    summary: Biến đổi biểu thức cho đến khi phương trình giải được.
+  math-11-sequences-basics:
+    title: Dãy số và cấp số cộng
+    summary: Một quy tắc cho số hạng kế tiếp, và một lối tắt để tính tổng tất cả.
+  math-11-geometric:
+    title: Cấp số nhân và sự tăng trưởng
+    summary: Công thức lãi kép, và vì sao nó vượt xa trực giác.
+  math-11-exponentials:
+    title: Hàm số mũ
+    summary: Thời gian nhân đôi, chu kì bán rã và số e.
+  math-11-logarithms:
+    title: Lôgarit
+    summary: Phép toán ngược biến nhân thành cộng — và biến số mũ chưa biết thành đại số giải được.
+  math-11-limits-continuity:
+    title: Giới hạn và tính liên tục
+    summary: Giá trị mà hàm số tiến tới, dù nó có bao giờ đạt được hay không.
+  math-11-derivatives:
+    title: Đạo hàm
+    summary: Hệ số góc của đường cong tại một điểm duy nhất.
+  math-12-monotonicity-extrema:
+    title: Tính đơn điệu và cực trị
+    summary: Hàm số đồng biến ở đâu, nghịch biến ở đâu, và đổi chiều ở đâu.
+  math-12-asymptotes-optimisation:
+    title: Tiệm cận và bài toán tối ưu
+    summary: Hành vi ở xa gốc toạ độ, và chiếc vỏ hộp rẻ nhất có thể.
+  math-12-space-vectors:
+    title: Vectơ trong không gian
+    summary: Mọi thứ đã học ở lớp 10, thêm một trục nữa.
+  math-12-planes-spheres:
+    title: Mặt phẳng và mặt cầu
+    summary: Hai mặt mà chỉ một phương trình mô tả được trọn vẹn.
+  math-12-antiderivatives:
+    title: Nguyên hàm
+    summary: Đạo hàm chạy ngược, và vì sao hằng số C lại quan trọng.
+  math-12-definite-integrals:
+    title: Tích phân xác định và ứng dụng
+    summary: Diện tích dưới đường cong, và thể tích thu được khi quay nó quanh một trục.
+  math-12-grouped-data:
+    title: Mẫu số liệu ghép nhóm
+    summary: Những gì ta vẫn tìm lại được sau khi các giá trị gốc đã mất.
+  math-12-conditional:
+    title: Xác suất có điều kiện
+    summary: Vì sao kết quả dương tính của một xét nghiệm chính xác cho một bệnh hiếm thường lại là sai.
+
+skills:
+  # --- Lớp 10 ---
+  math-10-statements:
+    name: Mệnh đề toán học và phủ định
+    description: >-
+      Nhận biết một mệnh đề toán học, lập mệnh đề phủ định của nó, và dùng đúng các lượng từ
+      "với mọi" và "tồn tại".
+  math-10-set-operations:
+    name: Các phép toán trên tập hợp
+    description: >-
+      Tính hợp, giao, hiệu và phần bù của các tập hợp, và biểu diễn chúng bằng biểu đồ Ven.
+  math-10-linear-inequality-2d:
+    name: Bất phương trình bậc nhất hai ẩn
+    description: >-
+      Vẽ miền nghiệm của một bất phương trình bậc nhất hai ẩn và của một hệ bất phương trình.
+  math-10-linear-programming:
+    name: Tối ưu trên miền nghiệm
+    description: >-
+      Tìm giá trị lớn nhất hoặc nhỏ nhất của một biểu thức bậc nhất tại các đỉnh của miền nghiệm.
+  math-10-quadratic-graph:
+    name: Hàm số bậc hai và đồ thị của nó
+    description: >-
+      Tìm đỉnh, trục đối xứng và giao điểm với các trục của một parabol, và lập bảng biến thiên.
+  math-10-quadratic-inequalities:
+    name: Bất phương trình bậc hai
+    description: >-
+      Giải bất phương trình bậc hai bằng bảng xét dấu hoặc dựa vào hình dạng của parabol.
+  math-10-quadratic-optimisation:
+    name: Bài toán giá trị lớn nhất và nhỏ nhất
+    description: >-
+      Chuyển một tình huống có lời văn thành hàm bậc hai và dùng toạ độ đỉnh để tìm giá trị tối ưu.
+  math-10-quadratic-reducible:
+    name: Phương trình quy về bậc hai
+    description: >-
+      Giải phương trình chứa căn thức hoặc một biểu thức lặp lại bằng cách đưa về bậc hai, và
+      kiểm tra nghiệm ngoại lai.
+  math-10-law-of-sines:
+    name: Định lí sin
+    description: >-
+      Áp dụng a/sin A = b/sin B = c/sin C để tìm cạnh hoặc góc chưa biết trong một tam giác bất kì.
+  math-10-law-of-cosines:
+    name: Định lí côsin
+    description: >-
+      Áp dụng c^2 = a^2 + b^2 - 2ab cos C, và nhận ra đó chính là định lí Pythagore được tổng quát hóa.
+  math-10-triangle-area:
+    name: Diện tích tam giác
+    description: >-
+      Tính diện tích tam giác khi biết hai cạnh và góc xen giữa, và bằng công thức Heron.
+  math-10-vector-operations:
+    name: Cộng và nhân vectơ với một số
+    description: >-
+      Cộng, trừ và nhân vectơ với một số, cả theo cách hình học lẫn theo toạ độ.
+  math-10-dot-product:
+    name: Tích vô hướng
+    description: >-
+      Tính tích vô hướng, dùng nó để tìm góc giữa hai vectơ và để kiểm tra tính vuông góc.
+  math-10-counting-rules:
+    name: Quy tắc cộng và quy tắc nhân
+    description: >-
+      Đếm số kết quả bằng quy tắc cộng và quy tắc nhân, kể cả trong các trường hợp có ràng buộc.
+  math-10-permutations-combinations:
+    name: Chỉnh hợp và tổ hợp
+    description: >-
+      Phân biệt cách sắp xếp với cách chọn, và tính được số chỉnh hợp cùng số tổ hợp.
+  math-10-spread-measures:
+    name: Phương sai và độ lệch chuẩn
+    description: >-
+      Tính phương sai và độ lệch chuẩn của một mẫu số liệu và hiểu chúng như mức phân tán quanh
+      số trung bình.
+  math-10-classical-probability:
+    name: Xác suất cổ điển
+    description: >-
+      Tính xác suất của một biến cố bằng cách đếm các kết quả đồng khả năng, và áp dụng quy tắc
+      biến cố đối cùng quy tắc cộng.
+
+  # --- Lớp 11 ---
+  math-11-radians:
+    name: Số đo radian và đường tròn lượng giác
+    description: >-
+      Đổi giữa độ và radian, và đọc được sin, côsin, tang của một góc trên đường tròn lượng giác
+      ở mọi góc phần tư.
+  math-11-trig-graphs:
+    name: Đồ thị các hàm số lượng giác
+    description: >-
+      Vẽ đồ thị y = a sin(bx + c) + d và xác định biên độ, chu kì cùng độ dịch pha của nó.
+  math-11-trig-identities:
+    name: Công thức lượng giác
+    description: >-
+      Áp dụng các công thức cơ bản, công thức nhân đôi và công thức cộng để rút gọn một biểu thức.
+  math-11-solve-trig-equations:
+    name: Giải phương trình lượng giác
+    description: >-
+      Tìm mọi nghiệm của một phương trình lượng giác trên một khoảng cho trước, và viết công
+      thức nghiệm tổng quát.
+  math-11-sequence-rules:
+    name: Dãy số và hệ thức truy hồi
+    description: >-
+      Lập các số hạng từ công thức tổng quát hoặc từ hệ thức truy hồi, và mô tả dãy là tăng,
+      giảm hay bị chặn.
+  math-11-arithmetic-progression:
+    name: Cấp số cộng
+    description: >-
+      Tìm số hạng tổng quát và tổng n số hạng đầu của một cấp số cộng.
+  math-11-geometric-progression:
+    name: Cấp số nhân
+    description: >-
+      Tìm số hạng tổng quát và tổng của một cấp số nhân, cùng giới hạn của cấp số nhân lùi vô hạn.
+  math-11-compound-growth:
+    name: Tăng trưởng kép và lãi kép
+    description: >-
+      Mô hình hóa tiền tiết kiệm, khoản vay và dân số bằng cấp số nhân, rồi giải để tìm thời
+      gian hoặc lãi suất.
+  math-11-exponential-function:
+    name: Hàm số mũ
+    description: >-
+      Vẽ đồ thị và tính giá trị của hàm số mũ, kể cả cơ số e, và mô tả hành vi của nó khi x rất
+      lớn hoặc rất nhỏ.
+  math-11-exponential-models:
+    name: Mô hình tăng trưởng và phân rã theo hàm mũ
+    description: >-
+      Xây dựng mô hình hàm mũ từ thời gian nhân đôi hoặc chu kì bán rã và dùng nó để dự đoán một
+      giá trị trong tương lai hay quá khứ.
+  math-11-log-laws:
+    name: Các quy tắc lôgarit
+    description: >-
+      Áp dụng quy tắc lôgarit của tích, thương, lũy thừa và công thức đổi cơ số để rút gọn một
+      biểu thức lôgarit.
+  math-11-log-equations:
+    name: Phương trình mũ và phương trình lôgarit
+    description: >-
+      Giải phương trình có ẩn ở số mũ hoặc trong dấu lôgarit, và loại các nghiệm nằm ngoài tập
+      xác định.
+  math-11-limits:
+    name: Giới hạn của dãy số và hàm số
+    description: >-
+      Tính giới hạn, kể cả các dạng vô định xử lí bằng phân tích thành nhân tử hoặc nhân liên
+      hợp, và giới hạn tại vô cực.
+  math-11-continuity:
+    name: Tính liên tục
+    description: >-
+      Xét tính liên tục của hàm số tại một điểm và trên một khoảng, và tìm các điểm gián đoạn.
+  math-11-derivative-definition:
+    name: Đạo hàm là tốc độ biến thiên
+    description: >-
+      Định nghĩa đạo hàm là giới hạn của tỉ số gia và hiểu nó như tốc độ biến thiên tức thời.
+  math-11-differentiation-rules:
+    name: Các quy tắc tính đạo hàm
+    description: >-
+      Tính đạo hàm bằng quy tắc lũy thừa, quy tắc tích, quy tắc thương và quy tắc hàm hợp.
+  math-11-tangent-line:
+    name: Tiếp tuyến của đồ thị
+    description: >-
+      Viết phương trình tiếp tuyến và pháp tuyến của một đường cong tại một điểm cho trước.
+
+  # --- Lớp 12 ---
+  math-12-monotonicity:
+    name: Khoảng đồng biến và nghịch biến
+    description: >-
+      Dùng dấu của đạo hàm cấp một để tìm các khoảng trên đó hàm số đồng biến hoặc nghịch biến.
+  math-12-extrema:
+    name: Cực trị và giá trị lớn nhất, nhỏ nhất
+    description: >-
+      Tìm cực đại và cực tiểu địa phương, cùng giá trị lớn nhất và nhỏ nhất của hàm số trên một
+      đoạn.
+  math-12-asymptotes:
+    name: Tiệm cận của hàm phân thức
+    description: >-
+      Tìm tiệm cận đứng, tiệm cận ngang và tiệm cận xiên của một hàm phân thức và dùng chúng để
+      vẽ đồ thị.
+  math-12-optimisation:
+    name: Bài toán tối ưu
+    description: >-
+      Chuyển một ràng buộc bằng lời thành hàm số một biến rồi tìm giá trị nhỏ nhất hoặc lớn nhất
+      bằng đạo hàm.
+  math-12-space-vector-ops:
+    name: Vectơ trong không gian
+    description: >-
+      Cộng, nhân với một số và tính tích vô hướng của các vectơ trong không gian, và tìm góc
+      giữa chúng.
+  math-12-space-distance:
+    name: Khoảng cách và trung điểm trong không gian
+    description: >-
+      Tính khoảng cách giữa hai điểm trong không gian và toạ độ trung điểm của một đoạn thẳng.
+  math-12-plane-equation:
+    name: Phương trình mặt phẳng
+    description: >-
+      Viết phương trình mặt phẳng khi biết một điểm và một vectơ pháp tuyến, và tính khoảng cách
+      từ một điểm đến mặt phẳng.
+  math-12-sphere-equation:
+    name: Phương trình mặt cầu
+    description: >-
+      Viết và đọc phương trình mặt cầu, và tìm tâm cùng bán kính bằng cách hoàn thành bình phương.
+  math-12-antiderivative:
+    name: Nguyên hàm của các hàm số cơ bản
+    description: >-
+      Tìm nguyên hàm của hàm lũy thừa, hàm mũ, hàm lôgarit và hàm lượng giác, kể cả hằng số tích phân.
+  math-12-integration-methods:
+    name: Đổi biến số và tích phân từng phần
+    description: >-
+      Tính tích phân bằng phương pháp đổi biến số hoặc tích phân từng phần, chọn phương pháp
+      dựa vào dạng của biểu thức dưới dấu tích phân.
+  math-12-definite-integral:
+    name: Tính tích phân xác định
+    description: >-
+      Áp dụng định lí cơ bản của giải tích để tính tích phân xác định và hiểu nó như một tổng.
+  math-12-area-volume:
+    name: Diện tích hình phẳng và thể tích khối tròn xoay
+    description: >-
+      Tính diện tích hình phẳng giới hạn bởi hai đường cong và thể tích khối tròn xoay khi quay
+      một hình quanh một trục.
+  math-12-grouped-mean:
+    name: Số trung bình và mốt của mẫu ghép nhóm
+    description: >-
+      Ước lượng số trung bình và xác định nhóm chứa mốt của một bảng tần số ghép nhóm.
+  math-12-grouped-spread:
+    name: Độ phân tán của mẫu ghép nhóm
+    description: >-
+      Ước lượng phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm và so sánh độ phân tán của
+      hai mẫu.
+  math-12-conditional-probability:
+    name: Xác suất có điều kiện
+    description: >-
+      Tính P(A với điều kiện B), xét tính độc lập của hai biến cố, và áp dụng quy tắc nhân xác suất.
+  math-12-bayes:
+    name: Xác suất toàn phần và công thức Bayes
+    description: >-
+      Áp dụng công thức xác suất toàn phần và công thức Bayes, dùng sơ đồ hình cây để sắp xếp
+      các trường hợp.

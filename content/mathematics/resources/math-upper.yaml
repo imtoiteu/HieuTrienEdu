@@ -1,0 +1,252 @@
+# Further reading for mathematics grades 10-12 — curated links to open repositories.
+#
+# Same conventions as the physics file: every URL was fetched and confirmed before committing,
+# and licence and attribution are recorded because these sources are open on that condition.
+defaults:
+  resource_type: link
+  is_public: true
+
+resources:
+  # ---------------------------------------------------------------------------- grade 10
+  - slug: res-m10-openstax-algtrig
+    topic: math-10-quadratic-graphs
+    resource_type: reading
+    title: "OpenStax: Algebra and Trigonometry 2e"
+    description: >-
+      A complete free textbook covering quadratic functions, the sine and cosine rules and
+      systems of inequalities. Every section ends with worked solutions.
+    url: https://openstax.org/details/books/algebra-and-trigonometry-2e
+    license: CC BY 4.0
+    attribution: OpenStax, Rice University
+    position: 0
+
+  - slug: res-m10-graphing-quadratics
+    lesson: lesson-math-10-optimisation
+    resource_type: simulation
+    title: "PhET: Graphing Quadratics"
+    description: >-
+      Drag the coefficients of ax² + bx + c and watch the vertex, axis of symmetry and roots
+      move. The fastest way to see what each coefficient actually controls.
+    url: https://phet.colorado.edu/en/simulations/graphing-quadratics
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-m10-vector-addition
+    topic: math-10-vectors
+    resource_type: simulation
+    title: "PhET: Vector Addition"
+    description: >-
+      Add vectors head-to-tail and read the components and resultant simultaneously. The angle
+      and magnitude readouts update as you drag.
+    url: https://phet.colorado.edu/en/simulations/vector-addition
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-m10-plinko
+    topic: math-10-counting
+    resource_type: simulation
+    title: "PhET: Plinko Probability"
+    description: >-
+      Drop hundreds of balls through a pin board and watch a binomial distribution build itself
+      out of individual random events.
+    url: https://phet.colorado.edu/en/simulations/plinko-probability
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-m10-center-variability
+    lesson: lesson-math-10-spread
+    resource_type: simulation
+    title: "PhET: Center and Variability"
+    description: >-
+      Move data points and watch the mean, median and standard deviation respond. Dragging one
+      value far out shows exactly how much an outlier moves each measure.
+    url: https://phet.colorado.edu/en/simulations/center-and-variability
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-m10-openstax-stats
+    lesson: lesson-math-10-spread
+    resource_type: reading
+    title: "OpenStax: Introductory Statistics 2e"
+    description: >-
+      Free and thorough on descriptive statistics and probability, with more real data sets than
+      a school textbook usually offers.
+    url: https://openstax.org/details/books/introductory-statistics-2e
+    license: CC BY 4.0
+    attribution: OpenStax, Rice University
+    position: 1
+
+  - slug: res-m10-owid
+    topic: math-10-statistics-probability
+    resource_type: dataset
+    title: "Our World in Data"
+    description: >-
+      Thousands of free, downloadable, well-documented data sets on population, health, energy
+      and economics. Real numbers to compute a real standard deviation from.
+    url: https://ourworldindata.org/
+    license: CC BY 4.0
+    attribution: Our World in Data
+    position: 2
+
+  # ---------------------------------------------------------------------------- grade 11
+  - slug: res-m11-trig-tour
+    lesson: lesson-math-11-radians
+    resource_type: simulation
+    title: "PhET: Trig Tour"
+    description: >-
+      Walk a point around the unit circle and watch the sine, cosine and tangent graphs trace
+      themselves out beside it, in degrees or radians.
+    url: https://phet.colorado.edu/en/simulations/trig-tour
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-m11-openstax-precalc
+    topic: math-11-trig-equations
+    resource_type: reading
+    title: "OpenStax: Precalculus 2e"
+    description: >-
+      Free coverage of trigonometric identities and equations, sequences, and exponential and
+      logarithmic functions — essentially this entire grade.
+    url: https://openstax.org/details/books/precalculus-2e
+    license: CC BY 4.0
+    attribution: OpenStax, Rice University
+    position: 0
+
+  - slug: res-m11-owid-growth
+    lesson: lesson-math-11-compound-growth
+    resource_type: dataset
+    title: "Our World in Data: how the world's electricity is produced"
+    description: >-
+      Decades of real production data. Fitting a geometric model to the solar column is a
+      genuinely startling exercise in exponential growth.
+    url: https://ourworldindata.org/grapher/electricity-prod-source-stacked
+    license: CC BY 4.0
+    attribution: Our World in Data
+    position: 0
+
+  - slug: res-m11-worldbank
+    topic: math-11-geometric
+    resource_type: dataset
+    title: "World Bank Open Data"
+    description: >-
+      Free national statistics on population, GDP and inflation. Good raw material for compound
+      growth problems using figures for Vietnam.
+    url: https://data.worldbank.org/
+    license: CC BY 4.0
+    attribution: The World Bank
+    position: 1
+
+  - slug: res-m11-calculus-grapher
+    lesson: lesson-math-11-derivative
+    resource_type: simulation
+    title: "PhET: Calculus Grapher"
+    description: >-
+      Draw any curve and watch its derivative appear underneath in real time. Sketching a
+      function with a flat section and seeing the derivative hit zero is the fastest way to make
+      the relationship click.
+    url: https://phet.colorado.edu/en/simulations/calculus-grapher
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-m11-openstax-calc1
+    topic: math-11-derivatives
+    resource_type: reading
+    title: "OpenStax: Calculus Volume 1"
+    description: >-
+      A full free calculus course. Chapters 2 to 4 cover limits, the definition of the
+      derivative and the differentiation rules with unusual care over the limit argument.
+    url: https://openstax.org/details/books/calculus-volume-1
+    license: CC BY 4.0
+    attribution: OpenStax, Rice University
+    position: 0
+
+  # ---------------------------------------------------------------------------- grade 12
+  - slug: res-m12-calculus-grapher-12
+    topic: math-12-monotonicity-extrema
+    resource_type: simulation
+    title: "PhET: Calculus Grapher"
+    description: >-
+      Use the derivative view to check your sign analysis: where your table says the function
+      increases, the derivative curve should sit above the axis.
+    url: https://phet.colorado.edu/en/simulations/calculus-grapher
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-m12-openstax-calc1-apps
+    lesson: lesson-math-12-optimisation
+    resource_type: reading
+    title: "OpenStax: Calculus Volume 1 — applications of differentiation"
+    description: >-
+      Chapter 4 is entirely optimisation, curve sketching and related rates, with dozens of
+      worked problems of the same shape as the tin can.
+    url: https://openstax.org/details/books/calculus-volume-1
+    license: CC BY 4.0
+    attribution: OpenStax, Rice University
+    position: 0
+
+  - slug: res-m12-openstax-calc2
+    lesson: lesson-math-12-integral
+    resource_type: reading
+    title: "OpenStax: Calculus Volume 2"
+    description: >-
+      Integration techniques, areas between curves and volumes of revolution, well beyond what
+      the syllabus requires but written to be readable.
+    url: https://openstax.org/details/books/calculus-volume-2
+    license: CC BY 4.0
+    attribution: OpenStax, Rice University
+    position: 0
+
+  - slug: res-m12-curve-fitting
+    topic: math-12-grouped-data
+    resource_type: simulation
+    title: "PhET: Curve Fitting"
+    description: >-
+      Place data points and fit polynomials of increasing order. A memorable demonstration of
+      why a curve that passes through every point is usually the wrong model.
+    url: https://phet.colorado.edu/en/simulations/curve-fitting
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0
+
+  - slug: res-m12-openstax-stats-bayes
+    lesson: lesson-math-12-bayes
+    resource_type: reading
+    title: "OpenStax: Introductory Statistics 2e — probability topics"
+    description: >-
+      Conditional probability, tree diagrams and independence, with the contingency-table
+      approach used in our lesson worked through in detail.
+    url: https://openstax.org/details/books/introductory-statistics-2e
+    license: CC BY 4.0
+    attribution: OpenStax, Rice University
+    position: 0
+
+  - slug: res-m12-contemporary-math
+    topic: math-12-conditional
+    resource_type: reading
+    title: "OpenStax: Contemporary Mathematics"
+    description: >-
+      A more applied treatment aimed at general readers, with sections on how conditional
+      probability is misread in medicine and in courtrooms.
+    url: https://openstax.org/details/books/contemporary-mathematics
+    license: CC BY 4.0
+    attribution: OpenStax, Rice University
+    position: 1
+
+  - slug: res-m12-gravity-orbits
+    topic: math-12-space-vectors
+    resource_type: simulation
+    title: "PhET: Gravity and Orbits"
+    description: >-
+      Vectors in space, applied. Watch the velocity and force vectors on an orbiting body and
+      see why the force can be perpendicular to the motion indefinitely.
+    url: https://phet.colorado.edu/en/simulations/gravity-and-orbits
+    license: CC BY 4.0
+    attribution: PhET Interactive Simulations, University of Colorado Boulder
+    position: 0

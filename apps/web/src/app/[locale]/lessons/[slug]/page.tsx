@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { Alert, Badge, Button, Card, Spinner } from '@hietedu/ui';
 
 import { LessonBlocks } from '@/components/lesson/lesson-blocks';
+import { LessonResources } from '@/components/lesson/lesson-resources';
 import { MarketingShell } from '@/components/site/marketing-shell';
 import { api, type LessonDetail } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
@@ -139,6 +140,8 @@ export default function LessonPage({
             <div className="mt-8">
               <LessonBlocks blocks={lesson.blocks} locale={locale} />
             </div>
+
+            <LessonResources resources={lesson.resources ?? []} />
 
             {lesson.attribution && (
               <p className="mt-10 border-t-2 border-ink-100 pt-4 text-xs text-ink-500">

@@ -124,7 +124,7 @@ export default function RegisterPage() {
             {form.role === 'student' && (
               <Field label={t('auth.grade')} htmlFor="grade" required>
                 <Select id="grade" name="grade" value={form.grade} onChange={update('grade')}>
-                  {[6, 7, 8, 9].map((grade) => (
+                  {[6, 7, 8, 9, 10, 11, 12].map((grade) => (
                     <option key={grade} value={grade}>
                       {t('common.grade')} {grade}
                     </option>

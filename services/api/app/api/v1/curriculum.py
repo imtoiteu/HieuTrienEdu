@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 from typing import Annotated
+from urllib.parse import urlparse
 
 from fastapi import APIRouter, HTTPException, Query, status
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import selectinload
 
 from app.core.deps import CurrentUser, DbSession, OptionalUser, RequestLocale
@@ -15,6 +16,7 @@ from app.models import (
     Lesson,
     LessonProgress,
     Question,
+    Resource,
     ReviewStatus,
     Skill,
     SkillPrerequisite,
@@ -30,6 +32,7 @@ from app.schemas.curriculum import (
     LessonDetail,
     LessonProgressUpdate,
     LessonSummary,
+    ResourceRead,
     SkillDetail,
     SkillRead,
     SubjectRead,
@@ -40,6 +43,39 @@ from app.schemas.curriculum import (
 from app.services.storage import playback_url
 
 router = APIRouter(prefix="/curriculum", tags=["curriculum"])
+
+
+def _lesson_resources(db, lesson: Lesson, locale: str) -> list[ResourceRead]:
+    """Further reading for a lesson: its own resources plus its topic's.
+
+    A resource attached to the topic is relevant to every lesson in it — a simulation of the
+    phenomenon, the textbook chapter behind it — so it appears under each, after the ones
+    attached to this lesson specifically.
+    """
+    conditions = [Resource.lesson_id == lesson.id]
+    if lesson.topic_id is not None:
+        conditions.append(Resource.topic_id == lesson.topic_id)
+
+    rows = db.scalars(
+        select(Resource)
+        .where(Resource.is_public.is_(True), or_(*conditions))
+        # Lesson-specific first, then topic-wide; authored position breaks ties within each.
+        .order_by(Resource.lesson_id.is_(None), Resource.position, Resource.id)
+    ).all()
+
+    return [
+        ResourceRead(
+            id=row.id,
+            title=localise(row, "title", locale),
+            description=localise(row, "description", locale),
+            resource_type=row.resource_type,
+            url=row.url,
+            host=urlparse(row.url).hostname,
+            license=row.license,
+            attribution=row.attribution,
+        )
+        for row in rows
+    ]
 
 
 def _skill_read(skill: Skill, locale: str) -> SkillRead:
@@ -345,7 +381,8 @@ def get_lesson(
         topic_title=localise(lesson.topic, 'title', locale) if lesson.topic else None,
         skill_slug=lesson.skill.slug if lesson.skill else None,
         skill_name=localise(lesson.skill, 'name', locale) if lesson.skill else None,
-        video=video, attribution=lesson.attribution, license=lesson.license,
+        video=video, resources=_lesson_resources(db, lesson, locale),
+        attribution=lesson.attribution, license=lesson.license,
     )
 
     if user is not None and user.student_profile is not None:
@@ -367,6 +404,7 @@ def update_lesson_progress(
     lesson_slug: str,
     payload: LessonProgressUpdate,
     db: DbSession,
+    locale: RequestLocale,
     user: CurrentUser,
 ) -> LessonDetail:
     """Record how far a student has read/watched. Also used to resume video playback."""
@@ -410,4 +448,6 @@ def update_lesson_progress(
         check_achievements(db, student)
 
     db.commit()
-    return get_lesson(lesson_slug, db, user)
+    # Keyword arguments: ``locale`` sits before ``user`` in the signature, and passing them
+    # positionally once bound the User object to the locale and quietly returned English.
+    return get_lesson(lesson_slug, db=db, locale=locale, user=user)

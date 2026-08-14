@@ -1,0 +1,356 @@
+# Physics — Grade 11 question templates
+#
+# g = 10 m/s^2 and the speed of sound is 340 m/s, both stated in the prompt wherever they are
+# used. Coulomb's constant is given as 9e9 rather than left for the student to recall.
+defaults:
+  license: proprietary
+  source: HieuTrienEducation
+  status: published
+
+questions:
+  - slug: p11-shm-period
+    skill: physics-11-shm-basics
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A mass on a spring completes {{n}} full oscillations in {{t}} s.
+      What is the period of the motion, in seconds?
+    variables:
+      n: {type: int, min: 5, max: 60}
+      t: {type: int, min: 4, max: 90}
+    answer: {expression: "t / n", unit: "s", decimals: 3, tolerance: 0.005}
+    options:
+      distractors: ["n / t", "n * t"]
+    hints:
+      - text: "The period is the time for *one* complete oscillation."
+      - text: "Divide the total time by the number of oscillations."
+    solution:
+      - text: "T = {{t}} ÷ {{n}} = {{t / n : 3}} s."
+      - text: "The frequency is the reciprocal: {{n / t : 3}} Hz."
+
+  - slug: p11-shm-max-acceleration
+    skill: physics-11-shm-basics
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      An object moves in simple harmonic motion with amplitude {{a}} m and
+      angular frequency {{w}} rad/s. What is its maximum acceleration, in m/s^2?
+    variables:
+      a: {type: float, min: 0.05, max: 2.0, decimals: 2}
+      w: {type: int, min: 2, max: 30}
+    answer: {expression: "a * w * w", unit: "m/s^2", decimals: 3, tolerance: 0.005}
+    options:
+      distractors: ["a * w", "a / (w * w)"]
+    hints:
+      - text: "In simple harmonic motion, a_max = omega^2 x amplitude."
+      - text: "omega^2 = {{w*w}}."
+    solution:
+      - text: "a_max = {{w*w}} x {{a}} = {{a * w * w : 3}} m/s^2."
+      - text: "It occurs at maximum displacement, where the restoring force is largest."
+
+  - slug: p11-pendulum-period
+    skill: physics-11-pendulum-spring
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      A simple pendulum has a length of {{l}} m. What is its period, in seconds?
+      Use g = 10 m/s^2.
+    variables:
+      l: {type: float, min: 0.1, max: 4.0, decimals: 2}
+    answer:
+      expression: "2 * pi * sqrt(l / 10)"
+      unit: "s"
+      decimals: 3
+      tolerance: 0.005
+    options:
+      distractors: ["2 * pi * sqrt(10 / l)", "2 * pi * l / 10"]
+    hints:
+      - text: "T = 2 pi sqrt(L / g)."
+      - text: "L / g = {{l}} ÷ 10 = {{l / 10 : 4}}."
+    solution:
+      - text: "T = 2 pi x sqrt({{l / 10 : 4}}) = {{2 * pi * sqrt(l / 10) : 3}} s."
+      - text: "Notice the mass of the bob does not appear — a heavy pendulum swings at the same rate as a light one of the same length."
+
+  - slug: p11-damping-suspension
+    skill: physics-11-damping
+    type: multiple_choice
+    difficulty: 4
+    prompt: >-
+      A car suspension is designed to return to its rest position as quickly as possible
+      without oscillating. Which type of damping is this?
+    options:
+      choices:
+        - {label: "Critical damping", correct: true}
+        - {label: "Light damping", correct: false}
+        - {label: "Heavy damping", correct: false}
+        - {label: "No damping", correct: false}
+    hints:
+      - text: "Light damping still oscillates; heavy damping returns slowly."
+    solution:
+      - text: "Critical damping is the boundary case: the fastest return with no overshoot."
+      - text: "A worn shock absorber becomes lightly damped, which is why a bad car keeps bouncing."
+
+  - slug: p11-resonance-bridge
+    skill: physics-11-resonance
+    type: multiple_choice
+    difficulty: 5
+    prompt: >-
+      A steady, moderate wind destroyed the Tacoma Narrows bridge in 1940 even though it was
+      far too weak to push the bridge over. What best explains this?
+    options:
+      choices:
+        - {label: "The wind drove the bridge at a frequency close to one of its natural frequencies", correct: true}
+        - {label: "The wind exerted a force larger than the bridge could withstand", correct: false}
+        - {label: "The bridge's steel fatigued because of the change in temperature", correct: false}
+        - {label: "The wind reduced the air pressure until the deck was lifted", correct: false}
+    hints:
+      - text: "The amplitude grew steadily over hours, from a driving force that never grew."
+      - text: "That is the signature of resonance."
+    solution:
+      - text: "When a system is driven at its natural frequency, each push adds energy in step with the motion."
+      - text: "The amplitude grows far beyond what the size of the driving force alone would suggest."
+      - text: "It is the same effect that lets a singer break a glass, and why soldiers break step on a bridge."
+
+  - slug: p11-wave-speed
+    skill: physics-11-wave-equation-adv
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A wave has a frequency of {{f}} Hz and a wavelength of {{lam}} m.
+      What is its speed, in m/s?
+    variables:
+      f: {type: int, min: 5, max: 800}
+      lam: {type: float, min: 0.05, max: 6.0, decimals: 2}
+    answer: {expression: "f * lam", unit: "m/s", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["f / lam", "lam / f"]
+    hints:
+      - text: "v = f lambda."
+    solution:
+      - text: "v = {{f}} x {{lam}} = {{f * lam : 2}} m/s."
+
+  - slug: p11-path-difference
+    skill: physics-11-superposition
+    type: multiple_choice
+    difficulty: 5
+    prompt: >-
+      Two loudspeakers emit identical sound waves in phase. At a certain point the path
+      difference is exactly half a wavelength. What does a listener there hear?
+    options:
+      choices:
+        - {label: "Almost nothing — the waves cancel", correct: true}
+        - {label: "A sound twice as loud as from one speaker", correct: false}
+        - {label: "A sound of twice the frequency", correct: false}
+        - {label: "The same as from one speaker alone", correct: false}
+    hints:
+      - text: "A path difference of half a wavelength puts the waves exactly out of phase."
+    solution:
+      - text: "Out-of-phase waves of equal amplitude interfere destructively and cancel."
+      - text: "This is exactly how noise-cancelling headphones work: they generate the inverted wave deliberately."
+
+  - slug: p11-standing-wave-fundamental
+    skill: physics-11-standing-waves
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      A string of length {{l}} m is fixed at both ends. Waves travel along it at {{v}} m/s.
+      What is its fundamental frequency, in Hz?
+    variables:
+      l: {type: float, min: 0.2, max: 2.0, decimals: 2}
+      v: {type: int, min: 40, max: 500, step: 10}
+    answer: {expression: "v / (2 * l)", unit: "Hz", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["v / l", "2 * v / l"]
+    hints:
+      - text: "In the fundamental mode the string holds exactly half a wavelength."
+      - text: "So lambda = 2L = {{2*l : 2}} m."
+    solution:
+      - text: "lambda = 2 x {{l}} = {{2*l : 2}} m."
+      - text: "f = v / lambda = {{v}} ÷ {{2*l : 2}} = {{v / (2 * l) : 2}} Hz."
+      - text: "Shortening the string raises the pitch — which is what a guitarist's fingers are doing."
+
+  - slug: p11-doppler-approaching
+    skill: physics-11-doppler
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      An ambulance siren emits {{f}} Hz and the ambulance drives towards you at {{vs}} m/s.
+      What frequency do you hear, in Hz? Take the speed of sound as 340 m/s.
+    variables:
+      f: {type: int, min: 400, max: 1200, step: 20}
+      vs: {type: int, min: 10, max: 40, step: 2}
+    answer:
+      expression: "f * 340 / (340 - vs)"
+      unit: "Hz"
+      decimals: 2
+      tolerance: 0.005
+    options:
+      distractors: ["f * 340 / (340 + vs)", "f * (340 - vs) / 340"]
+    hints:
+      - text: "An approaching source compresses the wavefronts, so the pitch rises."
+      - text: "f' = f v / (v - v_s) for an approaching source."
+    solution:
+      - text: "f' = {{f}} x 340 ÷ (340 - {{vs}}) = {{f * 340 / (340 - vs) : 2}} Hz."
+      - text: "As it passes and moves away the denominator becomes 340 + {{vs}}, and the pitch drops below {{f}} Hz — the sudden fall you hear."
+
+  - slug: p11-coulombs-law
+    skill: physics-11-coulombs-law
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      Two point charges of {{q1}} microcoulombs and {{q2}} microcoulombs are {{r}} m apart.
+      What is the force between them, in newtons? Take k = 9 x 10^9 N m^2/C^2.
+    variables:
+      q1: {type: int, min: 1, max: 40}
+      q2: {type: int, min: 1, max: 40}
+      r: {type: float, min: 0.1, max: 3.0, decimals: 1}
+    answer:
+      expression: "9e9 * q1 * 1e-6 * q2 * 1e-6 / (r * r)"
+      unit: "N"
+      decimals: 4
+      tolerance: 0.005
+    options:
+      distractors: ["9e9 * q1 * 1e-6 * q2 * 1e-6 / r", "9e9 * q1 * q2 / (r * r)"]
+    hints:
+      - text: "F = k q1 q2 / r^2. Convert microcoulombs to coulombs first."
+      - text: "{{q1}} microcoulombs = {{q1}} x 10^-6 C."
+    solution:
+      - text: "F = 9e9 x ({{q1}}e-6) x ({{q2}}e-6) ÷ {{r*r : 2}}."
+      - text: "F = {{9e9 * q1 * 1e-6 * q2 * 1e-6 / (r * r) : 4}} N."
+
+  - slug: p11-field-strength
+    skill: physics-11-field-strength
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A charge of {{q}} microcoulombs experiences a force of {{f}} N in an electric field.
+      What is the field strength, in N/C?
+    variables:
+      q: {type: int, min: 2, max: 50}
+      f: {type: float, min: 0.01, max: 5.0, decimals: 2}
+    answer:
+      expression: "f / (q * 1e-6)"
+      unit: "N/C"
+      decimals: 1
+      tolerance: 0.005
+    options:
+      distractors: ["f * q * 1e-6", "q * 1e-6 / f"]
+    hints:
+      - text: "Field strength is force *per unit charge*: E = F / q."
+    solution:
+      - text: "q = {{q}} x 10^-6 C."
+      - text: "E = {{f}} ÷ ({{q}}e-6) = {{f / (q * 1e-6) : 1}} N/C."
+
+  - slug: p11-work-on-charge
+    skill: physics-11-potential-difference
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      How much work, in joules, is done moving a charge of {{q}} millicoulombs
+      through a potential difference of {{v}} V?
+    variables:
+      q: {type: int, min: 1, max: 50}
+      v: {type: int, min: 5, max: 400, step: 5}
+    answer: {expression: "q * 1e-3 * v", unit: "J", decimals: 4, tolerance: 0.005}
+    options:
+      distractors: ["q * v", "v / (q * 1e-3)"]
+    hints:
+      - text: "W = q V."
+      - text: "{{q}} millicoulombs = {{q}} x 10^-3 C."
+    solution:
+      - text: "W = ({{q}}e-3) x {{v}} = {{q * 1e-3 * v : 4}} J."
+      - text: "Potential difference is exactly this: the work done per coulomb moved."
+
+  - slug: p11-capacitor-energy
+    skill: physics-11-capacitance
+    type: numeric
+    difficulty: 4
+    prompt: >-
+      A camera flash uses a {{c}} microfarad capacitor charged to {{v}} V.
+      How much energy is stored in it, in joules?
+    variables:
+      c: {type: int, min: 10, max: 1000, step: 10}
+      v: {type: int, min: 50, max: 400, step: 10}
+    answer:
+      expression: "0.5 * c * 1e-6 * v * v"
+      unit: "J"
+      decimals: 4
+      tolerance: 0.005
+    options:
+      distractors: ["c * 1e-6 * v", "0.5 * c * 1e-6 * v"]
+    hints:
+      - text: "E = 1/2 C V^2."
+      - text: "{{c}} microfarads = {{c}} x 10^-6 F, and V^2 = {{v*v}}."
+    solution:
+      - text: "E = 0.5 x ({{c}}e-6) x {{v*v}} = {{0.5 * c * 1e-6 * v * v : 4}} J."
+      - text: "The flash releases that energy in a few milliseconds, which is why the power is so high."
+
+  - slug: p11-internal-resistance
+    skill: physics-11-emf-internal-resistance
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      A battery of EMF {{e}} V has an internal resistance of {{r}} ohms and is connected to a
+      {{rex}} ohm resistor. What current flows, in amps?
+    variables:
+      e: {type: int, min: 3, max: 24}
+      r: {type: float, min: 0.2, max: 3.0, decimals: 1}
+      rex: {type: int, min: 2, max: 40}
+    answer: {expression: "e / (rex + r)", unit: "A", decimals: 3, tolerance: 0.005}
+    options:
+      distractors: ["e / rex", "e / r"]
+    hints:
+      - text: "The internal resistance is in series with the external one."
+      - text: "E = I (rex + r), so I = E / (rex + r)."
+    solution:
+      - text: "Total resistance = {{rex}} + {{r}} = {{rex + r : 1}} ohms."
+      - text: "I = {{e}} ÷ {{rex + r : 1}} = {{e / (rex + r) : 3}} A."
+      - text: "The terminal voltage is only {{e - e / (rex + r) * r : 3}} V — the rest is lost inside the battery."
+
+  - slug: p11-kirchhoff-junction
+    skill: physics-11-kirchhoff
+    type: numeric
+    difficulty: 5
+    prompt: >-
+      At a junction, currents of {{i1}} A and {{i2}} A flow in, and currents of {{i3}} A and
+      one unknown current flow out. What is the unknown current, in amps?
+    variables:
+      i1: {type: float, min: 0.5, max: 8.0, decimals: 1}
+      i2: {type: float, min: 0.5, max: 8.0, decimals: 1}
+      i3: {type: float, min: 0.2, max: 4.0, decimals: 1}
+    constraints: ["i1 + i2 > i3"]
+    answer: {expression: "i1 + i2 - i3", unit: "A", decimals: 2, tolerance: 0.005}
+    options:
+      distractors: ["i1 + i2 + i3", "i3 - i1 + i2"]
+    hints:
+      - text: "Charge is conserved: the current into a junction equals the current out."
+      - text: "In: {{i1}} + {{i2}} = {{i1 + i2 : 1}} A."
+    solution:
+      - text: "Total in = {{i1 + i2 : 1}} A."
+      - text: "Out so far = {{i3}} A, so the unknown is {{i1 + i2 - i3 : 2}} A."
+
+  - slug: p11-energy-cost
+    skill: physics-11-energy-cost
+    type: numeric
+    difficulty: 3
+    prompt: >-
+      An air conditioner rated at {{p}} W runs for {{h}} hours a day for 30 days.
+      At {{c}} dong per kWh, what does it cost to run for the month, in dong?
+    variables:
+      p: {type: int, min: 500, max: 2500, step: 100}
+      h: {type: int, min: 2, max: 12}
+      c: {type: choice, choices: [1800, 2000, 2300, 2600, 3000]}
+    answer:
+      expression: "p / 1000 * h * 30 * c"
+      unit: "dong"
+      decimals: 0
+      tolerance: 0.005
+    options:
+      distractors: ["p * h * 30 * c", "p / 1000 * h * c"]
+    hints:
+      - text: "Convert the power to kilowatts first: {{p}} W = {{p/1000 : 3}} kW."
+      - text: "Energy in kWh = power in kW x hours."
+    solution:
+      - text: "Energy per day = {{p/1000 : 3}} x {{h}} = {{p / 1000 * h : 3}} kWh."
+      - text: "Over 30 days: {{p / 1000 * h * 30 : 2}} kWh."
+      - text: "Cost = {{p / 1000 * h * 30 : 2}} x {{c}} = {{p / 1000 * h * 30 * c : 0}} dong."

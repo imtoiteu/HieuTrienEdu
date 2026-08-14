@@ -150,7 +150,7 @@ export default function ContactPage() {
                     <Field label={`${t('contact.form.grade')} (${t('common.optional')})`} htmlFor="grade">
                       <Select id="grade" value={form.grade} onChange={update('grade')}>
                         <option value="">—</option>
-                        {[6, 7, 8, 9].map((grade) => (
+                        {[6, 7, 8, 9, 10, 11, 12].map((grade) => (
                           <option key={grade} value={grade}>
                             {t('common.grade')} {grade}
                           </option>

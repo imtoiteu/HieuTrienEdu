@@ -1,0 +1,218 @@
+# Mathematics — Math 11
+#
+# Trigonometric functions, sequences, exponentials and the first derivative. This is the grade
+# where mathematics turns from "solve for x" to "describe how something changes", so the
+# examples lean on things that genuinely change over time: compound interest, a population, the
+# decay of a radioactive sample, the speed of a moving object at one instant.
+subject:
+  slug: mathematics
+  name: Mathematics
+  icon: calculator
+  color: "#FF6B6B"
+  position: 1
+
+course:
+  slug: math-11
+  title: Mathematics — Grade 11
+  grade: 11
+  summary: Trigonometric functions, sequences and series, exponentials and logarithms, and the derivative.
+  description: >-
+    Grade 11 introduces the mathematics of change. Angles escape the triangle and become radian
+    measure on a circle, generating the periodic functions behind every wave. Sequences and
+    progressions describe anything that grows step by step, from savings to a spreading
+    infection, and exponentials and logarithms describe growth that never stops. The year ends
+    with limits and the derivative — the instantaneous rate of change that grade 12 spends its
+    whole first unit applying.
+  estimated_hours: 120
+
+units:
+  - slug: math-11-trigonometry
+    title: Trigonometric Functions
+    icon: waves
+    summary: Angles measured by arc length, and the functions that repeat forever.
+    topics:
+      - slug: math-11-trig-functions
+        title: Radians and Trigonometric Graphs
+        summary: Why mathematicians abandoned the degree.
+        skills:
+          - slug: math-11-radians
+            name: Radian measure and the unit circle
+            description: >-
+              Convert between degrees and radians, and read the sine, cosine and tangent of an
+              angle off the unit circle in any quadrant.
+            difficulty: 4
+            prerequisites: [math-9-trig-ratios, math-7-circumference]
+            tags: [trigonometry, core]
+          - slug: math-11-trig-graphs
+            name: Graphs of the trigonometric functions
+            description: >-
+              Sketch y = a sin(bx + c) + d and identify its amplitude, period and phase shift.
+            difficulty: 4
+            prerequisites: [math-11-radians]
+            tags: [trigonometry, core]
+
+      - slug: math-11-trig-equations
+        title: Identities and Equations
+        summary: Rewriting an expression until the equation becomes solvable.
+        skills:
+          - slug: math-11-trig-identities
+            name: Trigonometric identities
+            description: >-
+              Apply the Pythagorean, double-angle and sum-and-difference identities to simplify
+              an expression.
+            difficulty: 5
+            prerequisites: [math-11-radians]
+            tags: [trigonometry]
+          - slug: math-11-solve-trig-equations
+            name: Solving trigonometric equations
+            description: >-
+              Find every solution of a trigonometric equation in a given interval, and give the
+              general solution.
+            difficulty: 5
+            prerequisites: [math-11-trig-identities, math-11-trig-graphs]
+            tags: [trigonometry, core]
+
+  - slug: math-11-sequences
+    title: Sequences and Progressions
+    icon: list-ordered
+    summary: Growth one step at a time — and what it adds up to.
+    topics:
+      - slug: math-11-sequences-basics
+        title: Sequences and Arithmetic Progressions
+        summary: A rule for the next term, and a shortcut for the sum of all of them.
+        skills:
+          - slug: math-11-sequence-rules
+            name: Sequences and recurrence
+            description: >-
+              Generate terms from an explicit formula or a recurrence relation, and describe a
+              sequence as increasing, decreasing or bounded.
+            difficulty: 3
+            tags: [algebra, foundation]
+          - slug: math-11-arithmetic-progression
+            name: Arithmetic progressions
+            description: >-
+              Find the nth term and the sum of the first n terms of an arithmetic progression.
+            difficulty: 4
+            prerequisites: [math-11-sequence-rules, math-7-multi-step-equations]
+            tags: [algebra, core]
+
+      - slug: math-11-geometric
+        title: Geometric Progressions and Growth
+        summary: The compound-interest formula, and why it beats intuition.
+        skills:
+          - slug: math-11-geometric-progression
+            name: Geometric progressions
+            description: >-
+              Find the nth term and the sum of a geometric progression, and the limit of an
+              infinite one when the ratio is small enough.
+            difficulty: 4
+            prerequisites: [math-11-sequence-rules, math-8-index-laws]
+            tags: [algebra, core]
+          - slug: math-11-compound-growth
+            name: Compound growth and interest
+            description: >-
+              Model savings, loans and populations with a geometric progression and solve for
+              the time or the rate.
+            difficulty: 4
+            prerequisites: [math-11-geometric-progression, math-7-simple-interest]
+            tags: [algebra]
+
+  - slug: math-11-exponentials-logs
+    title: Exponentials and Logarithms
+    icon: trending-up
+    summary: The functions that describe anything whose rate of change is proportional to itself.
+    topics:
+      - slug: math-11-exponentials
+        title: Exponential Functions
+        summary: Doubling times, half-lives and the number e.
+        skills:
+          - slug: math-11-exponential-function
+            name: The exponential function
+            description: >-
+              Sketch and evaluate exponential functions, including base e, and describe their
+              behaviour for large and small x.
+            difficulty: 4
+            prerequisites: [math-8-index-laws, math-8-negative-indices]
+            tags: [functions, core]
+          - slug: math-11-exponential-models
+            name: Exponential growth and decay models
+            description: >-
+              Fit an exponential model to a doubling time or a half-life and use it to predict a
+              future or past value.
+            difficulty: 5
+            prerequisites: [math-11-exponential-function]
+            tags: [functions]
+
+      - slug: math-11-logarithms
+        title: Logarithms
+        summary: The inverse that turns multiplication into addition — and unknown exponents into algebra.
+        skills:
+          - slug: math-11-log-laws
+            name: The laws of logarithms
+            description: >-
+              Apply the product, quotient, power and change-of-base laws to simplify a
+              logarithmic expression.
+            difficulty: 4
+            prerequisites: [math-11-exponential-function]
+            tags: [functions, core]
+          - slug: math-11-log-equations
+            name: Exponential and logarithmic equations
+            description: >-
+              Solve equations with the unknown in an exponent or inside a logarithm, and reject
+              solutions outside the domain.
+            difficulty: 5
+            prerequisites: [math-11-log-laws]
+            tags: [functions, core]
+
+  - slug: math-11-limits-derivatives
+    title: Limits and Derivatives
+    icon: activity
+    summary: Speed at an instant, from a calculation that only knows about intervals.
+    topics:
+      - slug: math-11-limits-continuity
+        title: Limits and Continuity
+        summary: What a function approaches, whether or not it ever gets there.
+        skills:
+          - slug: math-11-limits
+            name: Limits of sequences and functions
+            description: >-
+              Evaluate limits, including indeterminate forms resolved by factorising or
+              rationalising, and limits at infinity.
+            difficulty: 5
+            prerequisites: [math-9-algebraic-fractions, math-11-sequence-rules]
+            tags: [calculus, core]
+          - slug: math-11-continuity
+            name: Continuity
+            description: >-
+              Decide whether a function is continuous at a point and on an interval, and locate
+              its discontinuities.
+            difficulty: 4
+            prerequisites: [math-11-limits]
+            tags: [calculus]
+
+      - slug: math-11-derivatives
+        title: The Derivative
+        summary: The gradient of a curve at a single point.
+        skills:
+          - slug: math-11-derivative-definition
+            name: The derivative as a rate of change
+            description: >-
+              Define the derivative as the limit of a difference quotient and interpret it as an
+              instantaneous rate of change.
+            difficulty: 5
+            prerequisites: [math-11-limits, math-8-gradient]
+            tags: [calculus, core]
+          - slug: math-11-differentiation-rules
+            name: Rules of differentiation
+            description: >-
+              Differentiate using the power, product, quotient and chain rules.
+            difficulty: 5
+            prerequisites: [math-11-derivative-definition]
+            tags: [calculus, core]
+          - slug: math-11-tangent-line
+            name: The tangent to a curve
+            description: >-
+              Find the equation of the tangent and the normal to a curve at a given point.
+            difficulty: 5
+            prerequisites: [math-11-differentiation-rules, math-8-write-linear-equations]
+            tags: [calculus]
