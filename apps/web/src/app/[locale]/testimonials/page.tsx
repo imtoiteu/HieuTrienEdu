@@ -82,7 +82,7 @@ export default async function TestimonialsPage({
                   </blockquote>
                   <div
                     className="mt-5 flex items-center gap-1"
-                    aria-label={`${testimonial.rating} out of 5`}
+                    aria-label={t('a11y.ratingOutOf5', { rating: testimonial.rating })}
                   >
                     {Array.from({ length: 5 }, (_, index) => (
                       <Star

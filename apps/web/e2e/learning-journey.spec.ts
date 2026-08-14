@@ -225,18 +225,70 @@ test.describe('staff areas', () => {
 });
 
 /** Fill in whatever input the current question type requires and submit. */
+/**
+ * Answer whatever the recommender served, whichever type it is.
+ *
+ * Which question a new student gets is chosen by the adaptive recommender, so this has to cover
+ * every input shape the exercise engine can produce — "Check answer" stays disabled until the
+ * answer is complete, and a type this helper cannot fill makes the most valuable test in the
+ * suite fail at random. Matching questions in particular use one `<select>` per left-hand item
+ * and are only complete once *every* one of them is set.
+ */
 async function answerCurrentQuestion(page: Page) {
+  // "Question 1 of N" appears with the question card, but the variant's inputs arrive a beat
+  // later. Branching on `count()` before then finds nothing anywhere and falls through to the
+  // ordering case, which waits twenty seconds for a button that was never going to be there —
+  // an intermittent failure in the most valuable test in the suite, with a misleading message.
+  // An ordering question has no input at all — its controls are the reorder buttons — so it has
+  // to be part of what we wait for, or this wait becomes its own timeout.
+  await expect(
+    page
+      .locator('main input, main select, main textarea')
+      .or(page.getByRole('button', { name: /Move .* down/i }))
+      .first(),
+  ).toBeVisible({ timeout: 30_000 });
+
   const radio = page.locator('input[type="radio"]').first();
   const checkbox = page.locator('input[type="checkbox"]').first();
-  const textbox = page.getByRole('textbox').first();
+  const selects = page.locator('select');
+  const textboxes = page.getByRole('textbox');
 
   if (await radio.count()) {
     await radio.click({ force: true });
   } else if (await checkbox.count()) {
     await checkbox.click({ force: true });
-  } else if (await textbox.count()) {
-    await textbox.fill('4');
+  } else if (await selects.count()) {
+    // matching: every pair must be chosen, and index 0 is the empty placeholder.
+    for (let i = 0; i < (await selects.count()); i += 1) {
+      const options = selects.nth(i).locator('option');
+      await selects.nth(i).selectOption({ index: Math.min(1, (await options.count()) - 1) });
+    }
+  } else if (await textboxes.count()) {
+    // fill_blank has one box per blank and needs all of them.
+    for (let i = 0; i < (await textboxes.count()); i += 1) {
+      await textboxes.nth(i).fill('4');
+    }
+  } else {
+    // ordering: the list starts in an arbitrary order, which already counts as an answer once
+    // it has been touched. Nudging the first item down is the smallest interaction that does it.
+    const move = page.getByRole('button', { name: /Move .* down/i });
+    if (!(await move.count())) {
+      // Any other shape means this helper has fallen behind the exercise engine. Saying so beats
+      // a twenty-second timeout on a locator that was never going to appear.
+      const controls = await page
+        .locator('main input, main select, main textarea')
+        .evaluateAll((nodes) =>
+          nodes.map((node) => `${node.tagName.toLowerCase()}[${(node as HTMLInputElement).type ?? ''}]`),
+        );
+      const prompt = (await page.locator('main').innerText()).slice(0, 300);
+      throw new Error(
+        `answerCurrentQuestion cannot fill the served question. Controls: ${controls.join(', ') || 'none'}\n${prompt}`,
+      );
+    }
+    await move.first().click();
   }
 
-  await page.getByRole('button', { name: /Check answer/i }).click();
+  const check = page.getByRole('button', { name: /Check answer/i });
+  await expect(check).toBeEnabled({ timeout: 15_000 });
+  await check.click();
 }

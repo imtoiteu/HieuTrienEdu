@@ -228,9 +228,14 @@ export default function TeacherDashboardPage({
                   <table className="w-full min-w-[44rem] text-left text-sm">
                     <thead className="bg-ink-50">
                       <tr>
-                        {['Student', t('common.grade'), t('dashboard.overallMastery'),
-                          t('dashboard.skillsMastered'), t('dashboard.accuracy'),
-                          'Last active'].map((heading) => (
+                        {[
+                          t('teacher.student'),
+                          t('common.grade'),
+                          t('dashboard.overallMastery'),
+                          t('dashboard.skillsMastered'),
+                          t('dashboard.accuracy'),
+                          t('teacher.lastActive'),
+                        ].map((heading) => (
                           <th key={heading} scope="col" className="px-4 py-3 font-display">
                             {heading}
                           </th>

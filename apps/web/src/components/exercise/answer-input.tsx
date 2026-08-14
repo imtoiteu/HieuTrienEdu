@@ -393,7 +393,7 @@ function OrderingInput({ question, value, onChange, disabled }: AnswerInputProps
                 type="button"
                 disabled={disabled || index === 0}
                 onClick={() => move(index, -1)}
-                aria-label={`Move ${labelOf(id)} up`}
+                aria-label={t('exercise.moveUp', { name: labelOf(id) })}
                 className="rounded-lg border-2 border-ink-200 p-1.5 text-ink-600 transition-colors hover:bg-ink-100 disabled:opacity-30"
               >
                 <ArrowUp className="h-4 w-4" aria-hidden="true" />
@@ -402,7 +402,7 @@ function OrderingInput({ question, value, onChange, disabled }: AnswerInputProps
                 type="button"
                 disabled={disabled || index === order.length - 1}
                 onClick={() => move(index, 1)}
-                aria-label={`Move ${labelOf(id)} down`}
+                aria-label={t('exercise.moveDown', { name: labelOf(id) })}
                 className="rounded-lg border-2 border-ink-200 p-1.5 text-ink-600 transition-colors hover:bg-ink-100 disabled:opacity-30"
               >
                 <ArrowDown className="h-4 w-4" aria-hidden="true" />

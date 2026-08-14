@@ -395,7 +395,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-ink-700">
                     “{testimonial.quote}”
                   </blockquote>
-                  <div className="mt-5 flex items-center gap-1" aria-label={`${testimonial.rating} out of 5`}>
+                  <div className="mt-5 flex items-center gap-1" aria-label={t('a11y.ratingOutOf5', { rating: testimonial.rating })}>
                     {Array.from({ length: 5 }, (_, index) => (
                       <Star
                         key={index}

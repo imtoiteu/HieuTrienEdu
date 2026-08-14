@@ -182,7 +182,14 @@ export default function QuestionBankPage({ params }: { params: Promise<{ locale:
                 <table className="w-full min-w-[40rem] text-left text-sm">
                   <thead className="bg-ink-50">
                     <tr>
-                      {['Question', 'Type', 'Diff', 'Served', 'Success', ''].map(
+                      {[
+                        t('teacher.qPrompt'),
+                        t('teacher.qType'),
+                        t('teacher.qDiff'),
+                        t('teacher.qServed'),
+                        t('teacher.qSuccess'),
+                        '',
+                      ].map(
                         (heading, index) => (
                           <th key={index} scope="col" className="px-4 py-3 font-display">
                             {heading}
@@ -202,14 +209,16 @@ export default function QuestionBankPage({ params }: { params: Promise<{ locale:
                             >
                               {question.grade}
                             </Badge>
-                            {question.is_parametric && <Badge tone="sun">parametric</Badge>}
+                            {question.is_parametric && (
+                              <Badge tone="sun">{t('teacher.parametric')}</Badge>
+                            )}
                             {question.status !== 'published' && (
-                              <Badge tone="danger">{question.status}</Badge>
+                              <Badge tone="danger">{t(`admin.st.${question.status}`)}</Badge>
                             )}
                           </div>
                         </td>
                         <td className="px-4 py-3 text-xs text-ink-600">
-                          {question.question_type.replace(/_/g, ' ')}
+                          {t(`admin.st.${question.question_type}`)}
                         </td>
                         <td className="px-4 py-3 tabular-nums">{question.difficulty}</td>
                         <td className="px-4 py-3 tabular-nums">{question.times_served}</td>

@@ -51,8 +51,10 @@ Password `HietEdu2026!` for all:
 | Teacher | `hieu@hietrieneducation.vn` | `/en/teacher` |
 | Admin | `admin@hietrieneducation.vn` | `/en/admin` |
 
-The login page lists these and fills the form when you click one — it is a demo build, and a
-reviewer who cannot get in is worse than an exposed demo password.
+These are seeded accounts for local work; the login page does **not** advertise them. It used to
+list them and fill the form on click, which is convenient for a reviewer and wrong for anything
+facing real visitors — a public sign-in page that prints working credentials is an open door, not
+a demo affordance. Change the passwords before putting the seed anywhere public.
 
 ## Common tasks
 
