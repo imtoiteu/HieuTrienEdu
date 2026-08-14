@@ -227,7 +227,7 @@ export default async function TutoringFormatPage({
                   locale={locale}
                 />
                 <p className="mt-4 text-center text-sm text-ink-500">
-                  Prefer to talk first?{' '}
+                  {t('tutoring.preferToTalk')}{' '}
                   <Link
                     href={`/${locale}/contact`}
                     className="font-bold text-brand-700 hover:underline"

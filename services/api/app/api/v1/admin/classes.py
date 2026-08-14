@@ -339,6 +339,9 @@ def get_class(
         {
             "id": s.id,
             "title": s.title,
+            # The session editor round-trips both languages, so the row carries both — the same
+            # shape the sessions listing returns.
+            "translations": read_translations(s),
             "starts_at": s.starts_at,
             "ends_at": s.ends_at,
             "status": s.status,

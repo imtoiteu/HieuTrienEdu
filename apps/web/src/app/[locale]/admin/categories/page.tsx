@@ -219,7 +219,7 @@ export default function CategoriesPage() {
             kindFilter === '' ? 'border-brand-500 bg-brand-500 text-white' : 'border-ink-200'
           }`}
         >
-          All ({rows.length})
+          {t('admin.a.allCount', { count: rows.length })}
         </button>
         {KINDS.map((kind) => {
           const count = rows.filter((row) => row.kind === kind).length;
@@ -479,8 +479,7 @@ export default function CategoriesPage() {
         title={t('admin.a.deleteQ', { name: deleting?.name ?? '' })}
         message={
           <>
-            This removes the category from the site. Courses and programmes in it are not deleted,
-            but they lose this grouping.
+            {t('admin.cat.deleteBody')}
             {rows.some((row) => row.parent_id === deleting?.id) && (
               <span className="mt-2 block font-semibold">{t('admin.cat.deleteChildren')}</span>
             )}

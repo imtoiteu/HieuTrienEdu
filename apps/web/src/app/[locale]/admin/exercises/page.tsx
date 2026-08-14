@@ -615,7 +615,11 @@ export default function ExercisesPage() {
               >
                 <Plus className="h-4 w-4" aria-hidden="true" />{t('admin.ex.addOption')}</Button>
               <p className="mt-1.5 text-xs text-ink-500">
-                Tick the correct answer{form.question_type === 'multiple_select' ? '(s)' : ''}.
+                {t(
+                  form.question_type === 'multiple_select'
+                    ? 'admin.ex.tickCorrectMulti'
+                    : 'admin.ex.tickCorrect',
+                )}
               </p>
             </div>
           )}
@@ -835,8 +839,9 @@ export default function ExercisesPage() {
             <code className="text-xs">
               question, type, options, correct_answer, explanation, difficulty, skill_slug, tags
             </code>
-            <p className="mt-1 text-xs">{t('admin.ex.pipeHint')}<code>4|5|6|7</code>. Imported
-              exercises always arrive as drafts for review.
+            <p className="mt-1 text-xs">
+              {t('admin.ex.pipeHint')}
+              <code>4|5|6|7</code>. {t('admin.ex.importDraftNote')}
             </p>
           </Alert>
 

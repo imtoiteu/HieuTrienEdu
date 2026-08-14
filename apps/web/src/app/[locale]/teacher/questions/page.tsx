@@ -84,7 +84,7 @@ export default function QuestionBankPage({ params }: { params: Promise<{ locale:
         <header className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <h1 className="font-display text-3xl sm:text-4xl">{t('teacher.questionBank')}</h1>
-            <p className="mt-1 text-ink-600">{total} questions</p>
+            <p className="mt-1 text-ink-600">{t('teacher.questionCount', { count: total })}</p>
           </div>
         </header>
 
@@ -304,7 +304,7 @@ export default function QuestionBankPage({ params }: { params: Promise<{ locale:
 
                     <div className="rounded-xl bg-ink-50 p-3">
                       <p className="text-xs font-bold uppercase tracking-widest text-ink-500">
-                        Variables (seed {preview.data.seed})
+                        {t('teacher.variablesSeed', { seed: String(preview.data.seed) })}
                       </p>
                       <pre className="mt-1 whitespace-pre-wrap break-words font-mono text-xs text-ink-700">
                         {JSON.stringify(preview.data.variable_values, null, 2)}

@@ -183,7 +183,11 @@ export default function ConsultationsPage() {
               !filters.status ? 'border-brand-500 bg-brand-500 text-white' : 'border-ink-200'
             }`}
           >
-            All ({stats.by_status ? Object.values(stats.by_status).reduce((a, b) => a + b, 0) : 0})
+            {t('admin.a.allCount', {
+              count: stats.by_status
+                ? Object.values(stats.by_status).reduce((a, b) => a + b, 0)
+                : 0,
+            })}
           </button>
           {STATUSES.map((status) => {
             const count = stats.by_status?.[status] ?? 0;

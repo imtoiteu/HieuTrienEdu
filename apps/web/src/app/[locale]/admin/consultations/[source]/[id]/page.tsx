@@ -174,7 +174,7 @@ export default function ConsultationDetailPage({
           <div className="min-w-0 space-y-6">
             {lead.converted_student_id && (
               <Alert tone="success" title={t('admin.con.converted')}>
-                This enquiry became{' '}
+                {t('admin.con.convertedLeadIn')}{' '}
                 <Link
                   href={href(`/admin/students/${lead.converted_student_id}`)}
                   className="font-bold underline"

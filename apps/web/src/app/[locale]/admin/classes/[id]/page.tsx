@@ -116,7 +116,7 @@ export default function ClassDetailPage({
       breadcrumbs={[
         { label: t('admin.a.adminCrumb'), href: '/admin' },
         { label: t('admin.cls.classes'), href: '/admin/classes' },
-        { label: group?.name ?? '…' },
+        { label: group ? label(group, 'name') : '…' },
       ]}
       actions={
         group && (
@@ -159,7 +159,10 @@ export default function ClassDetailPage({
                           {row.name}
                         </Link>
                         <p className="truncate text-xs text-ink-500">
-                          {row.email} · Grade {row.grade}
+                          {t('admin.stu.metaLine', {
+                            email: row.email ?? '',
+                            grade: row.grade ?? '',
+                          })}
                         </p>
                       </div>
                       <StatusBadge value={row.status} kind="enrollment" />

@@ -245,7 +245,10 @@ export default function TeacherDetailPage({
             <div className="min-w-0">
               <p className="font-display text-xl">{teacher.full_name}</p>
               <p className="text-sm text-ink-500">
-                {teacher.email} · {teacher.years_experience} years
+                {t('admin.tea.metaLine', {
+                  email: teacher.email ?? '',
+                  count: teacher.years_experience ?? 0,
+                })}
               </p>
             </div>
             <div className="ml-auto flex flex-wrap gap-2">

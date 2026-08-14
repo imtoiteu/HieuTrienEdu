@@ -694,7 +694,9 @@ function PreviewBlock({ block }: { block: LessonBlock }) {
           )}
           {((block.question_ids as number[]) ?? []).length > 0 && (
             <p className="mt-1 text-xs text-ink-600">
-              {((block.question_ids as number[]) ?? []).length} exercise(s)
+              {t('admin.les.exerciseCount', {
+                count: ((block.question_ids as number[]) ?? []).length,
+              })}
             </p>
           )}
         </div>

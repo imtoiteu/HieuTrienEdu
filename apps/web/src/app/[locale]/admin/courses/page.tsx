@@ -180,8 +180,11 @@ export default function CoursesPage() {
       hideOnMobile: true,
       render: (row) => (
         <span className="text-xs text-ink-600">
-          {row.unit_count ?? 0} modules · {row.topic_count ?? 0} topics ·{' '}
-          {row.lesson_count ?? 0} lessons
+          {t('admin.crs.structureSummary', {
+            units: row.unit_count ?? 0,
+            topics: row.topic_count ?? 0,
+            lessons: row.lesson_count ?? 0,
+          })}
         </span>
       ),
     },

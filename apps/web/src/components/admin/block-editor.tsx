@@ -169,7 +169,7 @@ export function BlockEditor({
               <h3 id={`section-${section}`} className="font-display text-lg">
                 {t(SECTION_LABEL_KEYS[section])}
                 <span className="ml-2 text-xs font-normal text-ink-400">
-                  {sectionBlocks.length} block{sectionBlocks.length === 1 ? '' : 's'}
+                  {t('admin.a.blockCount', { count: sectionBlocks.length })}
                 </span>
               </h3>
               <Button size="sm" variant="outline" onClick={() => setAdding(section)}>
