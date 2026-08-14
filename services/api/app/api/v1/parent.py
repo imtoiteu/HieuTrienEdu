@@ -253,7 +253,9 @@ def child_progress(
 
 
 @router.get("/children/{student_id}/attendance")
-def child_attendance(student_id: int, db: DbSession, parent: CurrentParent) -> dict[str, Any]:
+def child_attendance(
+    student_id: int, db: DbSession, parent: CurrentParent, locale: RequestLocale
+) -> dict[str, Any]:
     _require_linked(db, parent.id, student_id)
 
     rows = list(
@@ -274,8 +276,8 @@ def child_attendance(student_id: int, db: DbSession, parent: CurrentParent) -> d
         "attendance_rate": round(present / len(rows), 3) if rows else None,
         "records": [
             {
-                "session_title": live.title,
-                "class_name": group.name,
+                "session_title": localise(live, "title", locale),
+                "class_name": localise(group, "name", locale),
                 "starts_at": live.starts_at,
                 "status": attendance.status,
                 "minutes_attended": attendance.minutes_attended,
@@ -287,7 +289,9 @@ def child_attendance(student_id: int, db: DbSession, parent: CurrentParent) -> d
 
 
 @router.get("/children/{student_id}/schedule")
-def child_schedule(student_id: int, db: DbSession, parent: CurrentParent) -> list[dict[str, Any]]:
+def child_schedule(
+    student_id: int, db: DbSession, parent: CurrentParent, locale: RequestLocale
+) -> list[dict[str, Any]]:
     _require_linked(db, parent.id, student_id)
     now = dt.datetime.now(dt.UTC)
 
@@ -310,8 +314,8 @@ def child_schedule(student_id: int, db: DbSession, parent: CurrentParent) -> lis
     return [
         {
             "session_id": live.id,
-            "title": live.title,
-            "class_name": group.name,
+            "title": localise(live, "title", locale),
+            "class_name": localise(group, "name", locale),
             "starts_at": live.starts_at,
             "ends_at": live.ends_at,
             "teacher_name": (

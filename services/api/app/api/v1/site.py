@@ -411,6 +411,7 @@ def public_announcements(
 @router.get("/categories")
 def public_categories(
     db: DbSession,
+    locale: RequestLocale,
     kind: Annotated[str | None, Query(max_length=20)] = None,
     nav_only: Annotated[bool, Query()] = False,
 ) -> list[dict[str, Any]]:
@@ -435,14 +436,14 @@ def public_categories(
             {
                 "id": row.id,
                 "slug": row.slug,
-                "name": row.name,
-                "description": row.description,
+                "name": localise(row, "name", locale),
+                "description": localise(row, "description", locale),
                 "image_url": row.image_url,
                 "icon": row.icon,
                 "color": row.color,
                 "kind": row.kind,
-                "seo_title": row.seo_title,
-                "seo_description": row.seo_description,
+                "seo_title": localise(row, "seo_title", locale),
+                "seo_description": localise(row, "seo_description", locale),
                 "children": build(row.id),
             }
             for row in by_parent.get(parent_id, [])

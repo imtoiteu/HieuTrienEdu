@@ -30,6 +30,7 @@ import {
   translationsPayload,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
+import { useContentLabel } from '@/lib/content-label';
 import {
   adminApi,
   type AdminCourse,
@@ -88,6 +89,9 @@ export default function CourseStructurePage({
   const { id } = use(params);
   const courseId = Number(id);
   const { t, locale } = useI18n();
+  // Content carries its English column plus its translations; which one this screen shows
+  // depends on the language the administrator is working in, not on the row.
+  const label = useContentLabel();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
   const { run, notify } = useToast();
 
@@ -198,7 +202,7 @@ export default function CourseStructurePage({
   async function setStatus(status: ReviewStatus) {
     const ok = await run(
       () => adminApi.courses.setStatus(courseId, status),
-      status === 'published' ? 'Course published — students can now see it' : `Course set to ${status}`,
+      status === 'published' ? t('admin.crs.publishedToast') : t('admin.crs.statusToast', { status: status }),
     );
     if (ok) await load();
   }
@@ -254,7 +258,7 @@ export default function CourseStructurePage({
       return node.id
         ? adminApi.lessons.update(node.id, body)
         : adminApi.lessons.create({ ...body, topic_id: node.parentId });
-    }, node.id ? 'Saved' : 'Created');
+    }, t(node.id ? 'admin.a.saved' : 'admin.a.created'));
 
     setSaving(false);
     if (ok) {
@@ -294,16 +298,22 @@ export default function CourseStructurePage({
 
   return (
     <AdminShell
-      title={course?.title ?? 'Course'}
+      title={course ? label(course, 'title') : t('admin.a.course')}
       description={
         course
-          ? `${course.subject_name} · Grade ${course.grade} · ${course.units.length} module(s)`
+          ? t('admin.crs.courseMeta', {
+              // `subject_name` is borrowed from the parent row, so the API already localised
+              // it; the course's own title has to be picked here, where both languages are.
+              subject: course.subject_name ?? '',
+              grade: course.grade,
+              modules: course.units.length,
+            })
           : undefined
       }
       breadcrumbs={[
         { label: t('admin.a.adminCrumb'), href: '/admin' },
         { label: t('admin.crs.title'), href: '/admin/courses' },
-        { label: course?.title ?? '…' },
+        { label: course ? label(course, 'title') : '…' },
       ]}
       actions={
         course && (
@@ -382,10 +392,10 @@ export default function CourseStructurePage({
                         )}
                       </button>
                       <div className="min-w-0 flex-1">
-                        <p className="font-display text-lg">{unit.title}</p>
+                        <p className="font-display text-lg">{label(unit, 'title')}</p>
                         <p className="truncate text-xs text-ink-500">
-                          {unit.topics.length} topic(s)
-                          {unit.summary ? ` · ${unit.summary}` : ''}
+                          {t('admin.crs.topicCount', { count: unit.topics.length })}
+                          {unit.summary ? ` · ${label(unit, 'summary')}` : ''}
                         </p>
                       </div>
                       <NodeControls
@@ -409,9 +419,9 @@ export default function CourseStructurePage({
                           })
                         }
                         onDelete={() =>
-                          setDeleting({ kind: 'unit', id: unit.id, label: unit.title })
+                          setDeleting({ kind: 'unit', id: unit.id, label: label(unit, 'title') })
                         }
-                        label={unit.title}
+                        label={label(unit, 'title')}
                       />
                       <Button
                         size="sm"
@@ -455,7 +465,7 @@ export default function CourseStructurePage({
                                 })
                               }
                               onDelete={() =>
-                                setDeleting({ kind: 'topic', id: topic.id, label: topic.title })
+                                setDeleting({ kind: 'topic', id: topic.id, label: label(topic, 'title') })
                               }
                               onAddSkill={() =>
                                 setNode({ ...BLANK_NODE, kind: 'skill', parentId: topic.id })
@@ -475,7 +485,7 @@ export default function CourseStructurePage({
                                 })
                               }
                               onDeleteSkill={(skill) =>
-                                setDeleting({ kind: 'skill', id: skill.id, label: skill.name })
+                                setDeleting({ kind: 'skill', id: skill.id, label: label(skill, 'name') })
                               }
                               onReorderSkills={(ids) => void reorder('skills', ids)}
                               onReorderLessons={(ids) => void reorder('lessons', ids)}
@@ -498,16 +508,16 @@ export default function CourseStructurePage({
         onClose={() => setNode(null)}
         title={
           node
-            ? `${node.id ? 'Edit' : 'New'} ${
-                node.kind === 'unit' ? 'module' : node.kind
-              }`
+            ? t(node.id ? 'admin.crs.editNode' : 'admin.crs.newNode', {
+                kind: t(`admin.crs.kind.${node.kind}`),
+              })
             : ''
         }
         footer={
           <>
             <Button variant="ghost" onClick={() => setNode(null)}>{t('admin.a.cancel')}</Button>
             <Button loading={saving} onClick={saveNode}>
-              {node?.id ? 'Save changes' : 'Create'}
+              {node?.id ? t('admin.a.saveChanges') : t('admin.a.create')}
             </Button>
           </>
         }
@@ -515,7 +525,7 @@ export default function CourseStructurePage({
         {node && (
           <div className="space-y-4">
             <FormRow
-              label={node.kind === 'skill' ? 'Skill name' : 'Title'}
+              label={node.kind === 'skill' ? t('admin.crs.skillName') : t('admin.a.title')}
               required
               htmlFor="node-title"
             >
@@ -525,12 +535,12 @@ export default function CourseStructurePage({
                 onChange={(event) => setNode({ ...node, title: event.target.value })}
                 placeholder={
                   node.kind === 'unit'
-                    ? 'e.g. Đại số'
+                    ? t('admin.crs.placeholderModule')
                     : node.kind === 'topic'
-                      ? 'e.g. Phương trình bậc nhất'
+                      ? t('admin.crs.placeholderTopic')
                       : node.kind === 'skill'
-                        ? 'e.g. Giải phương trình một ẩn'
-                        : 'e.g. Bài 1: Mở đầu về phương trình'
+                        ? t('admin.crs.placeholderSkill')
+                        : t('admin.crs.placeholderLesson')
                 }
               />
             </FormRow>
@@ -726,7 +736,7 @@ export default function CourseStructurePage({
                         : 'border-ink-200 text-ink-700'
                     }`}
                   >
-                    {category.name}
+                    {label(category, 'name')}
                   </button>
                 );
               })}
@@ -745,13 +755,13 @@ export default function CourseStructurePage({
       <ConfirmDialog
         open={deleting !== null}
         onClose={() => setDeleting(null)}
-        title={`Delete “${deleting?.label}”?`}
+        title={t('admin.a.deleteQ', { name: deleting?.label ?? '' })}
         message={
           deleting?.kind === 'skill'
-            ? 'Skills with exercises attached cannot be deleted — move or delete the exercises first.'
+            ? t('admin.crs.deleteSkillBody')
             : deleting?.kind === 'lesson'
-              ? 'The lesson and its content blocks will be deleted. A snapshot is kept in the activity log.'
-              : 'Everything inside it is deleted too. This cannot be undone.'
+              ? t('admin.crs.deleteLessonBody')
+              : t('admin.crs.deleteContainerBody')
         }
         onConfirm={removeNode}
       />
@@ -778,7 +788,7 @@ function NodeControls({
       <button
         type="button"
         onClick={onUp}
-        aria-label={`Move ${label} up`}
+        aria-label={t('admin.a.moveUpAria', { name: label })}
         className="rounded-lg p-1.5 text-ink-400 hover:bg-ink-100 hover:text-ink-700"
       >
         <ArrowUp className="h-4 w-4" aria-hidden="true" />
@@ -786,7 +796,7 @@ function NodeControls({
       <button
         type="button"
         onClick={onDown}
-        aria-label={`Move ${label} down`}
+        aria-label={t('admin.a.moveDownAria', { name: label })}
         className="rounded-lg p-1.5 text-ink-400 hover:bg-ink-100 hover:text-ink-700"
       >
         <ArrowDown className="h-4 w-4" aria-hidden="true" />
@@ -794,7 +804,7 @@ function NodeControls({
       <button
         type="button"
         onClick={onEdit}
-        aria-label={`Edit ${label}`}
+        aria-label={t('admin.a.editAria', { name: label })}
         className="rounded-lg p-1.5 text-ink-400 hover:bg-ink-100 hover:text-ink-700"
       >
         <Pencil className="h-4 w-4" aria-hidden="true" />
@@ -802,7 +812,7 @@ function NodeControls({
       <button
         type="button"
         onClick={onDelete}
-        aria-label={`Delete ${label}`}
+        aria-label={t('admin.a.deleteAria', { name: label })}
         className="rounded-lg p-1.5 text-coral-500 hover:bg-coral-50"
       >
         <Trash2 className="h-4 w-4" aria-hidden="true" />
@@ -839,15 +849,19 @@ function TopicRow({
   onReorderSkills: (ids: number[]) => void;
 }) {
   const { t } = useI18n();
+  const label = useContentLabel();
   const href = (path: string) => `/${locale}${path}`;
 
   return (
     <div className="bg-ink-50/30 p-4 pl-10">
       <div className="flex flex-wrap items-center gap-2">
         <div className="min-w-0 flex-1">
-          <p className="font-bold text-ink-900">{topic.title}</p>
+          <p className="font-bold text-ink-900">{label(topic, 'title')}</p>
           <p className="truncate text-xs text-ink-500">
-            {topic.lessons.length} lesson(s) · {topic.skills.length} skill(s)
+            {t('admin.crs.lessonSkillCount', {
+              lessons: topic.lessons.length,
+              skills: topic.skills.length,
+            })}
           </p>
         </div>
         <NodeControls
@@ -855,7 +869,7 @@ function TopicRow({
           onDown={onDown}
           onEdit={onEdit}
           onDelete={onDelete}
-          label={topic.title}
+          label={label(topic, 'title')}
         />
         <Button size="sm" variant="ghost" onClick={onAddSkill}>
           <Target className="h-4 w-4" aria-hidden="true" />{t('admin.crs.skill')}</Button>
@@ -875,15 +889,17 @@ function TopicRow({
                 href={href(`/admin/lessons/${lesson.id}`)}
                 className="min-w-0 flex-1 truncate text-sm font-semibold text-ink-800 hover:text-brand-700 hover:underline"
               >
-                {lesson.title}
+                {label(lesson, 'title')}
               </Link>
-              <span className="text-xs text-ink-400">{lesson.block_count} blocks</span>
+              <span className="text-xs text-ink-400">
+                {t('admin.a.blockCount', { count: lesson.block_count })}
+              </span>
               {lesson.has_draft && <Badge tone="sun">{t('admin.crs.unpublishedEdits')}</Badge>}
               <StatusBadge value={lesson.status} />
               <div className="flex gap-0.5">
                 <button
                   type="button"
-                  aria-label={`Move ${lesson.title} up`}
+                  aria-label={t('admin.a.moveUpAria', { name: label(lesson, 'title') })}
                   onClick={() => {
                     if (index === 0) return;
                     const ids = topic.lessons.map((l) => l.id);
@@ -896,7 +912,7 @@ function TopicRow({
                 </button>
                 <button
                   type="button"
-                  aria-label={`Move ${lesson.title} down`}
+                  aria-label={t('admin.a.moveDownAria', { name: label(lesson, 'title') })}
                   onClick={() => {
                     if (index === topic.lessons.length - 1) return;
                     const ids = topic.lessons.map((l) => l.id);
@@ -921,7 +937,7 @@ function TopicRow({
               className="inline-flex items-center gap-1.5 rounded-full bg-white py-1 pl-3 pr-1 text-xs"
             >
               <Target className="h-3 w-3 text-teal-600" aria-hidden="true" />
-              <span className="font-semibold text-ink-800">{skill.name}</span>
+              <span className="font-semibold text-ink-800">{label(skill, 'name')}</span>
               <Link
                 href={href(`/admin/exercises?skill_id=${skill.id}`)}
                 className="rounded-full bg-ink-100 px-1.5 font-bold text-ink-600 hover:bg-brand-100"
@@ -931,7 +947,7 @@ function TopicRow({
               </Link>
               <button
                 type="button"
-                aria-label={`Move ${skill.name} up`}
+                aria-label={t('admin.a.moveUpAria', { name: label(skill, 'name') })}
                 onClick={() => {
                   if (index === 0) return;
                   const ids = topic.skills.map((s) => s.id);
@@ -945,7 +961,7 @@ function TopicRow({
               <button
                 type="button"
                 onClick={() => onEditSkill(skill)}
-                aria-label={`Edit ${skill.name}`}
+                aria-label={t('admin.a.editAria', { name: label(skill, 'name') })}
                 className="rounded-full p-0.5 text-ink-400 hover:bg-ink-100"
               >
                 <Pencil className="h-3 w-3" aria-hidden="true" />
@@ -953,7 +969,7 @@ function TopicRow({
               <button
                 type="button"
                 onClick={() => onDeleteSkill(skill)}
-                aria-label={`Delete ${skill.name}`}
+                aria-label={t('admin.a.deleteAria', { name: label(skill, 'name') })}
                 className="rounded-full p-0.5 text-coral-500 hover:bg-coral-50"
               >
                 <Trash2 className="h-3 w-3" aria-hidden="true" />

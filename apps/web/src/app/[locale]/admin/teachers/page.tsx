@@ -96,7 +96,7 @@ export default function TeachersPage() {
             </Badge>
           ))}
           {(row.grades ?? []).length > 0 && (
-            <Badge tone="neutral">Grades {row.grades.join(', ')}</Badge>
+            <Badge tone="neutral">{t('admin.tea.gradesLabel', { grades: row.grades.join(', ') })}</Badge>
           )}
         </div>
       ),
@@ -106,11 +106,15 @@ export default function TeachersPage() {
       header: t('admin.tea.experience'),
       sortKey: 'experience',
       hideOnMobile: true,
-      render: (row) => <span className="text-sm">{row.years_experience} years</span>,
+      render: (row) => (
+        <span className="text-sm">
+          {t('admin.tea.experienceYears', { count: row.years_experience })}
+        </span>
+      ),
     },
     {
       key: 'classes',
-      header: 'Classes',
+      header: t('admin.tea.classesHeader'),
       hideOnMobile: true,
       render: (row) => <span className="tabular-nums">{row.class_count ?? 0}</span>,
     },
@@ -138,14 +142,14 @@ export default function TeachersPage() {
       render: (row) => (
         <button
           type="button"
-          aria-label={row.is_published ? `Hide ${row.full_name}` : `Publish ${row.full_name}`}
+          aria-label={row.is_published ? t('admin.a.hideAria', { name: row.full_name ?? '' }) : t('admin.a.publishAria', { name: row.full_name ?? '' })}
           onClick={async () => {
             const ok = await run(
               () =>
                 row.is_published
                   ? adminApi.teachers.unpublish(row.id)
                   : adminApi.teachers.publish(row.id),
-              row.is_published ? 'Profile hidden' : 'Profile published',
+              row.is_published ? t('admin.tea.hiddenToast') : t('admin.tea.publishedToast'),
             );
             if (ok) await load();
           }}
@@ -344,7 +348,10 @@ export default function TeachersPage() {
         {created && (
           <div className="space-y-3">
             <p className="text-sm">
-              <strong>{created.full_name}</strong> can sign in with {created.email}.
+              {t('admin.tea.canSignIn', {
+                name: created.full_name ?? '',
+                email: created.email ?? '',
+              })}
             </p>
             {created.temporary_password && (
               <Alert tone="warning" title={t('admin.a.tempPassword')}>

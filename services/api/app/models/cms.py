@@ -26,12 +26,17 @@ from app.models.base import Base, TimestampMixin, TranslatableMixin
 from app.models.enums import CategoryKind, MediaKind, ReviewStatus
 
 
-class ContentCategory(Base, TimestampMixin):
-    """An admin-defined grouping — "Toán", "Lớp 8", "Luyện thi vào 10", "Học thêm".
+class ContentCategory(Base, TimestampMixin, TranslatableMixin):
+    """An admin-defined grouping — "Mathematics", "Grade 8", "Exam preparation".
 
-    Self-referencing so the centre can nest ("Luyện thi" → "Luyện thi vào 10") without a second
-    table. ``kind`` is advisory: it drives which admin filter the category shows up under, and
-    deliberately does *not* constrain what a category may be attached to.
+    Self-referencing so the centre can nest ("Exam preparation" → "Grade 10 entrance") without a
+    second table. ``kind`` is advisory: it drives which admin filter the category shows up under,
+    and deliberately does *not* constrain what a category may be attached to.
+
+    Translatable because these names are public: they label courses, drive the site navigation and
+    are what a visitor filters by. They were single-valued at first, and the seed happened to write
+    Vietnamese into the English column — which read correctly on ``/vi`` and put Vietnamese
+    category names on the English site.
     """
 
     __tablename__ = "content_categories"

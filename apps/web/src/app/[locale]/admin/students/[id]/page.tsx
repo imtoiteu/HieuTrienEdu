@@ -13,7 +13,7 @@ import {
   StatusBadge,
   StringListField,
   TextField,
-  humanise,
+  useEnumLabel,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
 import { adminApi } from '@/lib/admin-api';
@@ -41,6 +41,7 @@ export default function StudentDetailPage({
   const { id } = use(params);
   const studentId = Number(id);
   const { t, locale, formatDate, formatDateTime, formatCurrency } = useI18n();
+  const enumLabel = useEnumLabel();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
   const { run, notify } = useToast();
 
@@ -88,9 +89,11 @@ export default function StudentDetailPage({
 
   return (
     <AdminShell
-      title={student?.full_name ?? 'Student'}
+      title={student?.full_name ?? t('admin.st.student')}
       description={
-        student ? `${student.email} · Grade ${student.grade}` : undefined
+        student
+          ? t('admin.stu.metaLine', { email: student.email, grade: student.grade ?? '' })
+          : undefined
       }
       breadcrumbs={[
         { label: t('admin.a.adminCrumb'), href: '/admin' },
@@ -108,7 +111,7 @@ export default function StudentDetailPage({
                 const result = await run(() => adminApi.students.resetPassword(studentId));
                 if (result?.temporary_password) {
                   notify(
-                    `Temporary password: ${result.temporary_password}`,
+                    t('admin.stu.tempPasswordToast', { password: result.temporary_password }),
                     'info',
                     t('admin.stu.copyNow'),
                   );
@@ -121,13 +124,13 @@ export default function StudentDetailPage({
               onClick={async () => {
                 const ok = await run(
                   () => adminApi.students.setActive(studentId, !student.is_active),
-                  student.is_active ? 'Account disabled' : 'Account enabled',
+                  student.is_active ? t('admin.stu.accountDisabled') : t('admin.stu.accountEnabled'),
                 );
                 if (ok) await load();
               }}
             >
               <UserX className="h-4 w-4" aria-hidden="true" />
-              {student.is_active ? 'Deactivate' : 'Activate'}
+              {student.is_active ? t('admin.a.deactivate') : 'Activate'}
             </Button>
           </>
         )
@@ -150,7 +153,7 @@ export default function StudentDetailPage({
             <StatCard
               label={t('admin.stu.accuracy')}
               value={stats.accuracy != null ? `${Math.round(stats.accuracy * 100)}%` : '—'}
-              sub={`${stats.total_attempts ?? 0} attempts`}
+              sub={t('admin.stu.attemptCount', { count: stats.total_attempts ?? 0 })}
             />
             <StatCard
               label={t('admin.stu.attendance')}
@@ -159,7 +162,7 @@ export default function StudentDetailPage({
                   ? `${Math.round(student.attendance_rate * 100)}%`
                   : '—'
               }
-              sub={`${(student.attendance ?? []).length} session(s)`}
+              sub={t('admin.stu.sessionCount', { count: (student.attendance ?? []).length })}
             />
           </div>
 
@@ -189,7 +192,7 @@ export default function StudentDetailPage({
                   <Field label={t('admin.stu.fullName')} value={student.full_name} />
                   <Field label={t('admin.a.email')} value={student.email} />
                   <Field label={t('admin.a.phone')} value={student.phone ?? '—'} />
-                  <Field label={t('admin.a.grade')} value={`Grade ${student.grade}`} />
+                  <Field label={t('admin.a.grade')} value={t('admin.a.gradeN', { n: student.grade })} />
                   <Field label={t('admin.stu.school')} value={student.school ?? '—'} />
                   <Field
                     label={t('admin.stu.dob')}
@@ -198,7 +201,7 @@ export default function StudentDetailPage({
                   <Field label={t('admin.stu.joined')} value={formatDate(student.created_at)} />
                   <Field
                     label={t('admin.stu.lastSignIn')}
-                    value={student.last_login_at ? formatDateTime(student.last_login_at) : 'Never'}
+                    value={student.last_login_at ? formatDateTime(student.last_login_at) : t('admin.a.never')}
                   />
                   <Field
                     label={t('admin.stu.lastActivity')}
@@ -206,7 +209,7 @@ export default function StudentDetailPage({
                       student.last_activity_date ? formatDate(student.last_activity_date) : '—'
                     }
                   />
-                  <Field label={t('admin.stu.streak')} value={`${student.streak_days} day(s)`} />
+                  <Field label={t('admin.stu.streak')} value={t('admin.stu.streakValue', { count: student.streak_days })} />
                 </dl>
                 {(student.learning_goals ?? []).length > 0 && (
                   <div className="mt-4">
@@ -232,7 +235,7 @@ export default function StudentDetailPage({
                       <li key={guardian.parent_id} className="py-2">
                         <p className="font-semibold text-ink-900">{guardian.name}</p>
                         <p className="text-xs text-ink-500">
-                          {guardian.email} · {humanise(guardian.relationship)}
+                          {guardian.email} · {enumLabel(guardian.relationship)}
                         </p>
                       </li>
                     ))}
@@ -251,7 +254,7 @@ export default function StudentDetailPage({
                           {formatCurrency(order.total)}
                         </span>
                         <Badge tone={order.status === 'paid' ? 'teal' : 'sun'}>
-                          {humanise(order.status)}
+                          {enumLabel(order.status)}
                         </Badge>
                       </li>
                     ))}
@@ -274,7 +277,7 @@ export default function StudentDetailPage({
                         <div className="min-w-0 flex-1">
                           <p className="truncate font-semibold text-ink-900">{entry.class_name}</p>
                           <p className="text-xs text-ink-500">
-                            {humanise(entry.format ?? '')} · {humanise(entry.delivery_mode ?? '')}
+                            {enumLabel(entry.format ?? '')} · {enumLabel(entry.delivery_mode ?? '')}
                           </p>
                         </div>
                         <StatusBadge value={entry.status} kind="enrollment" />
@@ -295,7 +298,7 @@ export default function StudentDetailPage({
                       <li key={course.course_id} className="flex items-center gap-3 py-3">
                         <div className="min-w-0 flex-1">
                           <p className="truncate font-semibold text-ink-900">{course.title}</p>
-                          <p className="text-xs text-ink-500">Grade {course.grade}</p>
+                          <p className="text-xs text-ink-500">{t('admin.a.gradeN', { n: course.grade })}</p>
                         </div>
                         {course.last_activity_at && (
                           <span className="text-xs text-ink-500">
@@ -367,13 +370,13 @@ export default function StudentDetailPage({
                         <div className="min-w-0 flex-1">
                           <p className="truncate font-semibold">{entry.title}</p>
                           <p className="text-xs text-ink-500">
-                            {entry.due_at ? `Due ${formatDate(entry.due_at)}` : 'No due date'}
+                            {entry.due_at ? t('admin.stu.due', { date: formatDate(entry.due_at) }) : t('admin.stu.noDueDate')}
                           </p>
                         </div>
                         {entry.score_percent != null && (
                           <Badge tone="teal">{Math.round(entry.score_percent)}%</Badge>
                         )}
-                        <Badge tone="neutral">{humanise(entry.status)}</Badge>
+                        <Badge tone="neutral">{enumLabel(entry.status)}</Badge>
                       </li>
                     ))}
                   </ul>
@@ -397,7 +400,8 @@ export default function StudentDetailPage({
                           {attempt.skill_name}
                         </span>
                         <span className="text-xs text-ink-500">
-                          {attempt.hints_used > 0 && `${attempt.hints_used} hint(s) · `}
+                          {attempt.hints_used > 0 &&
+                            `${t('admin.stu.hintsUsed', { count: attempt.hints_used })} · `}
                           {formatDate(attempt.created_at)}
                         </span>
                       </li>
@@ -433,7 +437,7 @@ export default function StudentDetailPage({
                                 : 'coral'
                         }
                       >
-                        {humanise(entry.status)}
+                        {enumLabel(entry.status)}
                       </Badge>
                     </li>
                   ))}
@@ -454,10 +458,10 @@ export default function StudentDetailPage({
                       className="flex flex-wrap items-center gap-3 px-4 py-3"
                     >
                       <Badge tone="neutral">
-                        {entry.source === 'tutoring' ? 'Tutoring request' : 'Contact form'}
+                        {entry.source === 'tutoring' ? t('admin.stu.tutoringRequest') : t('admin.stu.contactForm')}
                       </Badge>
                       <p className="min-w-0 flex-1 truncate text-sm">
-                        {entry.message ?? humanise(entry.interest ?? '')}
+                        {entry.message ?? enumLabel(entry.interest ?? '')}
                       </p>
                       <StatusBadge value={entry.status} kind="lead" />
                       <span className="text-xs text-ink-500">{formatDate(entry.created_at)}</span>

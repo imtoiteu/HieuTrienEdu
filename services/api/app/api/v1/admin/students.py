@@ -21,6 +21,8 @@ from app.api.v1.admin._common import (
     paginate,
     record_audit,
 )
+from app.core.deps import RequestLocale
+from app.core.i18n import localise
 from app.core.security import hash_password
 from app.models import (
     AssignmentSubmission,
@@ -233,7 +235,9 @@ def create_student(
 
 
 @router.get("/{student_id}")
-def get_student(student_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
+def get_student(
+    student_id: int, db: DbSession, admin: CurrentAdmin, locale: RequestLocale
+) -> dict[str, Any]:
     """Everything about one student, on one screen."""
     profile = db.scalar(
         select(StudentProfile)
@@ -275,7 +279,7 @@ def get_student(student_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str
     data["courses"] = [
         {
             "course_id": course.id,
-            "title": course.title,
+            "title": localise(course, "title", locale),
             "slug": course.slug,
             "grade": course.grade,
             "is_active": enrollment.is_active,
@@ -294,7 +298,7 @@ def get_student(student_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str
     data["mastery"] = [
         {
             "skill_id": skill.id,
-            "skill_name": skill.name,
+            "skill_name": localise(skill, "name", locale),
             "skill_slug": skill.slug,
             "mastery": round(mastery.mastery_probability, 4),
             "attempts": mastery.attempts,
@@ -335,7 +339,7 @@ def get_student(student_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str
     data["recent_attempts"] = [
         {
             "id": attempt.id,
-            "skill_name": skill.name,
+            "skill_name": localise(skill, "name", locale),
             "question_id": attempt.question_id,
             "is_correct": attempt.is_correct,
             "score": attempt.score,

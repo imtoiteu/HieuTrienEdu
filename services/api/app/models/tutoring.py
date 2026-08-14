@@ -180,8 +180,13 @@ class ClassEnrollment(Base, TimestampMixin):
     student: Mapped[StudentProfile] = relationship()
 
 
-class LiveSession(Base, TimestampMixin):
-    """One scheduled meeting. ``provider`` is resolved by ``services/live_class.py``."""
+class LiveSession(Base, TimestampMixin, TranslatableMixin):
+    """One scheduled meeting. ``provider`` is resolved by ``services/live_class.py``.
+
+    Translatable because the title and topic summary are what a student and their parent read on
+    the class schedule — the times and the join link are the same in every language, the sentence
+    describing the lesson is not.
+    """
 
     __tablename__ = "live_sessions"
 

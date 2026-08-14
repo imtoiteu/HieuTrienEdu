@@ -6,7 +6,7 @@ import { Badge } from '@hietedu/ui';
 
 import { AdminShell } from '@/components/admin/admin-shell';
 import { DataTable, type Column } from '@/components/admin/data-table';
-import { humanise } from '@/components/admin/form';
+import { useEnumLabel } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
 import { adminApi, type AuditRow } from '@/lib/admin-api';
 import { useRequireAuth } from '@/lib/auth';
@@ -25,6 +25,7 @@ const ACTION_TONES: Record<string, 'brand' | 'coral' | 'teal' | 'sun' | 'neutral
 
 export default function AuditPage() {
   const { t, locale, formatDateTime } = useI18n();
+  const enumLabel = useEnumLabel();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
   const { notify } = useToast();
 
@@ -62,7 +63,7 @@ export default function AuditPage() {
       key: 'action',
       header: t('admin.aud.action'),
       render: (row) => (
-        <Badge tone={ACTION_TONES[row.action] ?? 'neutral'}>{humanise(row.action)}</Badge>
+        <Badge tone={ACTION_TONES[row.action] ?? 'neutral'}>{enumLabel(row.action)}</Badge>
       ),
     },
     {
@@ -88,7 +89,7 @@ export default function AuditPage() {
       hideOnMobile: true,
       render: (row) => (
         <span className="text-xs text-ink-500">
-          {humanise(row.entity_type)}
+          {enumLabel(row.entity_type)}
           {row.entity_id ? ` #${row.entity_id}` : ''}
         </span>
       ),
@@ -96,7 +97,7 @@ export default function AuditPage() {
     {
       key: 'actor',
       header: t('admin.aud.by'),
-      render: (row) => <span className="text-xs text-ink-600">{row.actor_email ?? 'system'}</span>,
+      render: (row) => <span className="text-xs text-ink-600">{row.actor_email ?? t('admin.aud.system')}</span>,
     },
     {
       key: 'when',
@@ -144,7 +145,7 @@ export default function AuditPage() {
               'archive',
               'convert',
               'reset_password',
-            ].map((action) => ({ value: action, label: humanise(action) })),
+            ].map((action) => ({ value: action, label: enumLabel(action) })),
           },
           {
             key: 'entity_type',
@@ -160,7 +161,7 @@ export default function AuditPage() {
               'category',
               'site_section',
               'media',
-            ].map((type) => ({ value: type, label: humanise(type) })),
+            ].map((type) => ({ value: type, label: enumLabel(type) })),
           },
         ]}
         filterValues={filters}

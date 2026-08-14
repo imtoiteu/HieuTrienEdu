@@ -183,7 +183,9 @@ export function BlockEditor({
                 className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-ink-200 bg-ink-50/40 py-6 text-sm font-semibold text-ink-500 hover:border-brand-300 hover:text-brand-600"
               >
                 <Plus className="h-4 w-4" aria-hidden="true" />
-                Add a block to {t(SECTION_LABEL_KEYS[section]).toLowerCase()}
+                {t('admin.blk.addTo', {
+                  section: t(SECTION_LABEL_KEYS[section]).toLowerCase(),
+                })}
               </button>
             ) : (
               <ul className="space-y-2">
@@ -549,7 +551,7 @@ function BlockFields({
                   </div>
                   <button
                     type="button"
-                    aria-label={`Remove step ${index + 1}`}
+                    aria-label={t('admin.blk.f.removeStep', { n: index + 1 })}
                     onClick={() => onChange({ steps: steps.filter((_, i) => i !== index) })}
                     className="mt-1 rounded-lg p-1.5 text-coral-500 hover:bg-coral-50"
                   >
@@ -611,7 +613,7 @@ function BlockFields({
                     <td className="p-1">
                       <button
                         type="button"
-                        aria-label={`Remove row ${rowIndex + 1}`}
+                        aria-label={t('admin.blk.f.removeRow', { n: rowIndex + 1 })}
                         onClick={() => onChange({ rows: rows.filter((_, i) => i !== rowIndex) })}
                         className="rounded-lg p-1.5 text-coral-500 hover:bg-coral-50"
                       >
@@ -706,7 +708,7 @@ function BlockFields({
     case 'homework':
       return (
         <div className="grid gap-3">
-          <FormRow label={block.type === 'quiz' ? 'Title' : 'Instructions'}>
+          <FormRow label={block.type === 'quiz' ? 'Title' : t('admin.blk.f.instructions')}>
             {block.type === 'quiz' ? (
               <TextField
                 value={str('title')}

@@ -156,7 +156,7 @@ export function StringListField({
               <button
                 type="button"
                 onClick={() => onChange(values.filter((_, i) => i !== index))}
-                aria-label={`Remove ${value}`}
+                aria-label={t('admin.a.removeAria', { name: value })}
                 className="rounded-full p-0.5 hover:bg-ink-200"
               >
                 <X className="h-3 w-3" aria-hidden="true" />

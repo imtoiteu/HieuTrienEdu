@@ -17,11 +17,12 @@ import {
   TextAreaField,
   TextField,
   TranslationPanel,
-  humanise,
+  useEnumLabel,
   translationDraft,
   translationsPayload,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
+import { useContentLabel } from '@/lib/content-label';
 import { adminApi, type AdminTeacher, type Category, type ProgramRow } from '@/lib/admin-api';
 import { useRequireAuth } from '@/lib/auth';
 import { useI18n } from '@/lib/i18n';
@@ -61,6 +62,8 @@ const BLANK = {
 
 export default function ProgramsPage() {
   const { t, locale, formatCurrency } = useI18n();
+  const enumLabel = useEnumLabel();
+  const label = useContentLabel();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
   const { run, notify } = useToast();
 
@@ -182,7 +185,7 @@ export default function ProgramsPage() {
             onClick={() => openEdit(row)}
             className="block truncate text-left font-bold text-ink-900 hover:text-brand-700 hover:underline"
           >
-            {row.name}
+            {label(row, 'name')}
           </button>
           <p className="truncate text-xs text-ink-500">{row.tagline ?? `/${row.slug}`}</p>
         </div>
@@ -193,8 +196,8 @@ export default function ProgramsPage() {
       header: t('admin.a.format'),
       render: (row) => (
         <div className="flex flex-wrap gap-1">
-          <Badge tone="brand">{humanise(row.format)}</Badge>
-          <Badge tone="neutral">{humanise(row.delivery_mode)}</Badge>
+          <Badge tone="brand">{enumLabel(row.format)}</Badge>
+          <Badge tone="neutral">{enumLabel(row.delivery_mode)}</Badge>
         </div>
       ),
     },
@@ -205,7 +208,7 @@ export default function ProgramsPage() {
       render: (row) => (
         <span className="text-sm">
           {row.grade_min === row.grade_max
-            ? `Grade ${row.grade_min}`
+            ? t('admin.a.gradeN', { n: row.grade_min })
             : `${row.grade_min}–${row.grade_max}`}
         </span>
       ),
@@ -258,7 +261,7 @@ export default function ProgramsPage() {
           )}
           <button
             type="button"
-            aria-label={`Edit ${row.name}`}
+            aria-label={t('admin.a.editAria', { name: label(row, 'name') })}
             onClick={() => openEdit(row)}
             className="rounded-lg p-2 text-ink-500 hover:bg-ink-100"
           >
@@ -266,7 +269,7 @@ export default function ProgramsPage() {
           </button>
           <button
             type="button"
-            aria-label={`Delete ${row.name}`}
+            aria-label={t('admin.a.deleteAria', { name: label(row, 'name') })}
             onClick={() => setDeleting(row)}
             className="rounded-lg p-2 text-coral-600 hover:bg-coral-50"
           >
@@ -283,7 +286,7 @@ export default function ProgramsPage() {
     <AdminShell
       title={t('admin.pro.title')}
       description={t('admin.pro.subtitle')}
-      breadcrumbs={[{ label: t('admin.a.adminCrumb'), href: '/admin' }, { label: 'Programs' }]}
+      breadcrumbs={[{ label: t('admin.a.adminCrumb'), href: '/admin' }, { label: t('admin.pro.title2') }]}
       actions={
         <Button
           onClick={() => {
@@ -313,7 +316,7 @@ export default function ProgramsPage() {
           {
             key: 'format',
             label: t('admin.a.format'),
-            options: FORMATS.map((f) => ({ value: f, label: humanise(f) })),
+            options: FORMATS.map((f) => ({ value: f, label: enumLabel(f) })),
           },
           {
             key: 'status',
@@ -340,7 +343,7 @@ export default function ProgramsPage() {
           setCreating(false);
           setEditing(null);
         }}
-        title={editing ? `Edit “${editing.name}”` : 'New programme'}
+        title={editing ? t('admin.a.editQ', { name: editing.name }) : 'New programme'}
         size="lg"
         footer={
           <>
@@ -352,7 +355,7 @@ export default function ProgramsPage() {
               }}
             >{t('admin.a.cancel')}</Button>
             <Button loading={saving} onClick={save}>
-              {editing ? 'Save changes' : 'Create programme'}
+              {editing ? t('admin.a.saveChanges') : t('admin.pro.create')}
             </Button>
           </>
         }
@@ -399,7 +402,7 @@ export default function ProgramsPage() {
             >
               {FORMATS.map((f) => (
                 <option key={f} value={f}>
-                  {humanise(f)}
+                  {enumLabel(f)}
                 </option>
               ))}
             </SelectField>
@@ -412,7 +415,7 @@ export default function ProgramsPage() {
             >
               {MODES.map((m) => (
                 <option key={m} value={m}>
-                  {humanise(m)}
+                  {enumLabel(m)}
                 </option>
               ))}
             </SelectField>
@@ -452,9 +455,9 @@ export default function ProgramsPage() {
               value={form.price_unit}
               onChange={(e) => setForm({ ...form, price_unit: e.target.value })}
             >
-              <option value="session">per session</option>
-              <option value="month">per month</option>
-              <option value="course">per course</option>
+              <option value="session">{t('admin.pro.perSession')}</option>
+              <option value="month">{t('admin.pro.perMonth')}</option>
+              <option value="course">{t('admin.pro.perCourse')}</option>
             </SelectField>
           </FormRow>
           <FormRow label={t('admin.pro.sessionsIncluded')} htmlFor="p-sessions">
@@ -558,7 +561,7 @@ export default function ProgramsPage() {
                         : 'border-ink-200 text-ink-700'
                     }`}
                   >
-                    {category.name}
+                    {label(category, 'name')}
                   </button>
                 );
               })}
@@ -577,7 +580,7 @@ export default function ProgramsPage() {
       <ConfirmDialog
         open={deleting !== null}
         onClose={() => setDeleting(null)}
-        title={`Delete “${deleting?.name}”?`}
+        title={t('admin.a.deleteQ', { name: deleting?.name ?? '' })}
         message={t('admin.pro.deleteBody')}
         onConfirm={async () => {
           if (!deleting) return;

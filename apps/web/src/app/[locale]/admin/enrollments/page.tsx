@@ -10,14 +10,17 @@ import { Badge, Button } from '@hietedu/ui';
 import { AdminShell } from '@/components/admin/admin-shell';
 import { DataTable, type Column } from '@/components/admin/data-table';
 import { ConfirmDialog, Modal } from '@/components/admin/dialog';
-import { FormRow, SelectField, StatusBadge, TextAreaField, humanise } from '@/components/admin/form';
+import { FormRow, SelectField, StatusBadge, TextAreaField, useEnumLabel } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
+import { useContentLabel } from '@/lib/content-label';
 import { adminApi, type AdminClass, type AdminEnrollment, type AdminStudent } from '@/lib/admin-api';
 import { useRequireAuth } from '@/lib/auth';
 import { useI18n } from '@/lib/i18n';
 
 export default function EnrollmentsPage() {
   const { t, locale, formatDate } = useI18n();
+  const enumLabel = useEnumLabel();
+  const label = useContentLabel();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
   const { run, notify } = useToast();
   const params = useSearchParams();
@@ -84,7 +87,7 @@ export default function EnrollmentsPage() {
             href={href(`/admin/students/${row.student_id}`)}
             className="block truncate font-bold text-ink-900 hover:text-brand-700 hover:underline"
           >
-            {row.student_name ?? `Student #${row.student_id}`}
+            {row.student_name ?? t('admin.a.studentRef', { id: row.student_id })}
           </Link>
           <p className="truncate text-xs text-ink-500">{row.student_email}</p>
         </div>
@@ -102,7 +105,7 @@ export default function EnrollmentsPage() {
             {row.class_name}
           </Link>
           <p className="truncate text-xs text-ink-500">
-            {humanise(row.format ?? '')} · {row.teacher_name ?? 'No teacher'}
+            {enumLabel(row.format ?? '')} · {row.teacher_name ?? t('admin.enr.noTeacher')}
           </p>
         </div>
       ),
@@ -231,7 +234,7 @@ export default function EnrollmentsPage() {
             label: t('admin.a.status'),
             options: ['pending', 'confirmed', 'active', 'completed', 'cancelled'].map((s) => ({
               value: s,
-              label: humanise(s),
+              label: enumLabel(s),
             })),
           },
           {
@@ -239,7 +242,7 @@ export default function EnrollmentsPage() {
             label: t('admin.enr.payment'),
             options: ['unpaid', 'partial', 'paid', 'refunded', 'waived'].map((s) => ({
               value: s,
-              label: humanise(s),
+              label: enumLabel(s),
             })),
           },
           {
@@ -311,10 +314,10 @@ export default function EnrollmentsPage() {
               <option value={0}>{t('admin.enr.chooseClass')}</option>
               {classes.map((group) => (
                 <option key={group.id} value={group.id} disabled={group.seats_available === 0}>
-                  {group.name} —{' '}
+                  {label(group, 'name')} —{' '}
                   {group.seats_available === 0
-                    ? 'full'
-                    : `${group.seats_available} place(s) left`}
+                    ? t('admin.enr.full')
+                    : t('admin.enr.placesLeft', { count: group.seats_available })}
                 </option>
               ))}
             </SelectField>
@@ -347,8 +350,10 @@ export default function EnrollmentsPage() {
         confirmLabel={t('admin.enr.cancelLabel')}
         message={
           <>
-            <strong>{rejecting?.student_name}</strong> will lose their place in{' '}
-            <strong>{rejecting?.class_name}</strong>. The record is kept, so this can be reversed.
+            {t('admin.enr.cancelBody', {
+              student: rejecting?.student_name ?? '',
+              class: rejecting?.class_name ?? '',
+            })}
           </>
         }
         onConfirm={async () => {

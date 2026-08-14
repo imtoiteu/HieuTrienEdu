@@ -14,11 +14,12 @@ import {
   TextAreaField,
   TextField,
   TranslationPanel,
-  humanise,
+  useEnumLabel,
   translationDraft,
   translationsPayload,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
+import { useContentLabel } from '@/lib/content-label';
 import {
   adminApi,
   type AnnouncementRow,
@@ -44,6 +45,8 @@ type TabId = (typeof TABS)[number]['id'];
 
 export default function WebsitePage() {
   const { t, locale, formatDateTime } = useI18n();
+  const enumLabel = useEnumLabel();
+  const label = useContentLabel();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
   const { run, notify } = useToast();
 
@@ -161,9 +164,17 @@ export default function WebsitePage() {
                 return (
                   <Card key={page} className="p-0">
                     <div className="flex flex-wrap items-center gap-3 border-b-2 border-ink-100 p-4">
-                      <h2 className="font-display text-lg capitalize">{page} page</h2>
-                      <Badge tone="neutral">{pageSections.length} section(s)</Badge>
-                      {pending > 0 && <Badge tone="sun">{pending} unpublished</Badge>}
+                      <h2 className="font-display text-lg capitalize">
+                        {t('admin.web.pageName', { page })}
+                      </h2>
+                      <Badge tone="neutral">
+                        {t('admin.web.sectionCount', { count: pageSections.length })}
+                      </Badge>
+                      {pending > 0 && (
+                        <Badge tone="sun">
+                          {t('admin.web.unpublishedCount', { count: pending })}
+                        </Badge>
+                      )}
                       {pending > 0 && (
                         <Button
                           size="sm"
@@ -199,7 +210,7 @@ export default function WebsitePage() {
                           </div>
                           {section.has_unpublished_changes && <Badge tone="sun">{t('admin.web.draftEdits')}</Badge>}
                           <Badge tone={section.status === 'published' ? 'teal' : 'neutral'}>
-                            {humanise(section.status)}
+                            {enumLabel(section.status)}
                           </Badge>
                           <Button size="sm" variant="outline" onClick={() => openSection(section)}>{t('admin.a.edit')}</Button>
                         </li>
@@ -241,7 +252,7 @@ export default function WebsitePage() {
                                       adminApi.cms.setSetting(setting.key, {
                                         markdown: event.target.value,
                                       }),
-                                    `${setting.label} saved`,
+                                    t('admin.web.settingSaved', { label: setting.label }),
                                   );
                                   if (ok) await load();
                                 }}
@@ -257,7 +268,7 @@ export default function WebsitePage() {
                                       adminApi.cms.setSetting(setting.key, {
                                         text: event.target.value,
                                       }),
-                                    `${setting.label} saved`,
+                                    t('admin.web.settingSaved', { label: setting.label }),
                                   );
                                   if (ok) await load();
                                 }}
@@ -304,7 +315,7 @@ export default function WebsitePage() {
                         <p className="mt-0.5 line-clamp-2 text-sm text-ink-600">{faq.answer}</p>
                       </div>
                       <Badge tone="brand">{faq.locale === 'vi' ? 'VI' : 'EN'}</Badge>
-                      <Badge tone="neutral">{humanise(faq.category)}</Badge>
+                      <Badge tone="neutral">{enumLabel(faq.category)}</Badge>
                       {!faq.is_published && <Badge tone="coral">{t('admin.a.hidden')}</Badge>}
                       <Button size="sm" variant="ghost" onClick={() => setEditingFaq(faq)}>{t('admin.a.edit')}</Button>
                       <button
@@ -356,9 +367,13 @@ export default function WebsitePage() {
                       <div className="min-w-0 flex-1">
                         <p className="font-semibold text-ink-900">{item.title}</p>
                         <p className="truncate text-xs text-ink-500">
-                          {humanise(item.kind)}
-                          {item.starts_at ? ` · from ${formatDateTime(item.starts_at)}` : ''}
-                          {item.ends_at ? ` until ${formatDateTime(item.ends_at)}` : ''}
+                          {enumLabel(item.kind)}
+                          {item.starts_at
+                            ? ` · ${t('admin.web.fromDate', { date: formatDateTime(item.starts_at) })}`
+                            : ''}
+                          {item.ends_at
+                            ? ` ${t('admin.web.untilDate', { date: formatDateTime(item.ends_at) })}`
+                            : ''}
                         </p>
                       </div>
                       {item.is_live ? (
@@ -375,7 +390,7 @@ export default function WebsitePage() {
                       >{t('admin.a.edit')}</Button>
                       <button
                         type="button"
-                        aria-label={`Delete ${item.title}`}
+                        aria-label={t('admin.a.deleteAria', { name: item.title })}
                         onClick={() =>
                           setDeleting({ kind: 'announcement', id: item.id, label: item.title })
                         }
@@ -422,7 +437,7 @@ export default function WebsitePage() {
                           {item.author_name}{' '}
                           <span className="font-normal text-ink-500">— {item.author_role}</span>
                         </p>
-                        <p className="mt-0.5 line-clamp-2 text-sm text-ink-600">“{item.quote}”</p>
+                        <p className="mt-0.5 line-clamp-2 text-sm text-ink-600">“{label(item, 'quote')}”</p>
                       </div>
                       <Badge tone="sun">{'★'.repeat(item.rating)}</Badge>
                       {item.is_featured && <Badge tone="brand">{t('admin.a.featured')}</Badge>}
@@ -443,7 +458,7 @@ export default function WebsitePage() {
                       >{t('admin.a.edit')}</Button>
                       <button
                         type="button"
-                        aria-label={`Delete testimonial from ${item.author_name}`}
+                        aria-label={t('admin.web.deleteTestimonialAria', { name: item.author_name })}
                         onClick={() =>
                           setDeleting({
                             kind: 'testimonial',
@@ -515,7 +530,7 @@ export default function WebsitePage() {
               <p className="text-sm text-ink-500">{t('admin.web.noFields')}</p>
             )}
             {Object.entries(sectionDraft).map(([key, value]) => (
-              <FormRow key={key} label={humanise(key)} htmlFor={`sec-${key}`}>
+              <FormRow key={key} label={enumLabel(key)} htmlFor={`sec-${key}`}>
                 {value.length > 80 || key.includes('body') || key.includes('subtitle') ? (
                   <TextAreaField
                     id={`sec-${key}`}
@@ -914,7 +929,7 @@ export default function WebsitePage() {
       <ConfirmDialog
         open={deleting !== null}
         onClose={() => setDeleting(null)}
-        title={`Delete “${deleting?.label}”?`}
+        title={t('admin.a.deleteQ', { name: deleting?.label ?? '' })}
         message={t('admin.web.deleteBody')}
         onConfirm={async () => {
           if (!deleting) return;

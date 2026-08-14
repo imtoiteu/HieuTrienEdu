@@ -31,6 +31,8 @@ from app.api.v1.admin._common import (
     record_audit,
 )
 from app.core.config import settings
+from app.core.deps import RequestLocale
+from app.core.i18n import localise
 from app.core.text import slugify
 from app.models import Lesson, MediaAsset, MediaKind, Resource
 
@@ -306,7 +308,9 @@ def update_media(
 
 
 @router.get("/{asset_id}/usage")
-def media_usage(asset_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
+def media_usage(
+    asset_id: int, db: DbSession, admin: CurrentAdmin, locale: RequestLocale
+) -> dict[str, Any]:
     """Where a file is referenced, so an admin can see what deleting it would break."""
     asset = get_or_404(db, MediaAsset, asset_id, "File")
 
@@ -321,10 +325,14 @@ def media_usage(asset_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, 
     ]
     return {
         "asset_id": asset.id,
-        "resources": [{"id": r.id, "title": r.title, "lesson_id": r.lesson_id}
-                      for r in resources],
-        "lessons": [{"id": lesson.id, "title": lesson.title, "slug": lesson.slug}
-                    for lesson in lessons],
+        "resources": [
+            {"id": r.id, "title": localise(r, "title", locale), "lesson_id": r.lesson_id}
+            for r in resources
+        ],
+        "lessons": [
+            {"id": lesson.id, "title": localise(lesson, "title", locale), "slug": lesson.slug}
+            for lesson in lessons
+        ],
         "in_use": bool(resources or lessons),
     }
 

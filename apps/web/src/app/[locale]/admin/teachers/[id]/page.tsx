@@ -17,11 +17,12 @@ import {
   TextAreaField,
   TextField,
   TranslationPanel,
-  humanise,
+  useEnumLabel,
   translationDraft,
   translationsPayload,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
+import { useContentLabel } from '@/lib/content-label';
 import { adminApi, type AdminClass, type AdminCourse, type TeacherCredential } from '@/lib/admin-api';
 import { useRequireAuth } from '@/lib/auth';
 import { useI18n } from '@/lib/i18n';
@@ -62,6 +63,8 @@ export default function TeacherDetailPage({
   const { id } = use(params);
   const teacherId = Number(id);
   const { t, locale, formatDateTime } = useI18n();
+  const enumLabel = useEnumLabel();
+  const label = useContentLabel();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
   const { run, notify } = useToast();
 
@@ -183,7 +186,7 @@ export default function TeacherDetailPage({
 
   return (
     <AdminShell
-      title={teacher?.full_name ?? 'Teacher'}
+      title={teacher?.full_name ?? t('admin.st.teacher')}
       description={teacher?.headline ?? undefined}
       breadcrumbs={[
         { label: t('admin.a.adminCrumb'), href: '/admin' },
@@ -204,7 +207,11 @@ export default function TeacherDetailPage({
               onClick={async () => {
                 const result = await run(() => adminApi.teachers.resetPassword(teacherId));
                 if (result?.temporary_password) {
-                  notify(`Temporary password: ${result.temporary_password}`, 'info', 'Shown once.');
+                  notify(
+                    t('admin.a.tempPassword', { password: result.temporary_password }),
+                    'info',
+                    t('admin.a.shownOnce'),
+                  );
                 }
               }}
             >
@@ -217,12 +224,12 @@ export default function TeacherDetailPage({
                     teacher.is_published
                       ? adminApi.teachers.unpublish(teacherId)
                       : adminApi.teachers.publish(teacherId),
-                  teacher.is_published ? 'Profile hidden' : 'Profile published',
+                  teacher.is_published ? t('admin.tea.hiddenToast') : t('admin.tea.publishedToast'),
                 );
                 if (ok) await load();
               }}
             >
-              {teacher.is_published ? 'Unpublish' : 'Publish profile'}
+              {teacher.is_published ? 'Unpublish' : t('admin.tea.publishProfile')}
             </Button>
             <Button loading={saving} onClick={saveProfile}>{t('admin.a.save')}</Button>
           </>
@@ -501,7 +508,7 @@ export default function TeacherDetailPage({
                   {CREDENTIAL_KINDS.filter((kind) => credentialsByKind[kind]?.length).map(
                     (kind) => (
                       <section key={kind}>
-                        <h3 className="font-display text-base">{humanise(kind)}</h3>
+                        <h3 className="font-display text-base">{enumLabel(kind)}</h3>
                         <ul className="mt-2 divide-y divide-ink-100">
                           {credentialsByKind[kind].map((item) => (
                             <li key={item.id} className="flex flex-wrap items-center gap-3 py-3">
@@ -511,7 +518,14 @@ export default function TeacherDetailPage({
                                   {[
                                     item.organisation,
                                     item.year_start &&
-                                      `${item.year_start}${item.year_end ? `–${item.year_end}` : ''}`,
+                                      (item.year_end
+                                        ? t('admin.tea.credentialYears', {
+                                            from: item.year_start,
+                                            to: item.year_end,
+                                          })
+                                        : t('admin.tea.credentialSince', {
+                                            from: item.year_start,
+                                          })),
                                   ]
                                     .filter(Boolean)
                                     .join(' · ')}
@@ -523,13 +537,13 @@ export default function TeacherDetailPage({
                               {!item.is_published && <Badge tone="neutral">{t('admin.a.hidden')}</Badge>}
                               <button
                                 type="button"
-                                aria-label={`Edit ${item.title}`}
+                                aria-label={t('admin.a.editAria', { name: item.title })}
                                 onClick={() => setCredential(item)}
                                 className="rounded-lg px-2 py-1 text-xs font-bold text-brand-600 hover:bg-brand-50"
                               >{t('admin.a.edit')}</button>
                               <button
                                 type="button"
-                                aria-label={`Delete ${item.title}`}
+                                aria-label={t('admin.a.deleteAria', { name: item.title })}
                                 onClick={() => setDeletingCredential(item)}
                                 className="rounded-lg p-1.5 text-coral-500 hover:bg-coral-50"
                               >
@@ -562,8 +576,8 @@ export default function TeacherDetailPage({
                     {teacher.assignments.map((item: Detail) => (
                       <li key={item.id} className="flex items-center gap-3 py-2">
                         <span className="min-w-0 flex-1 truncate text-sm">
-                          {item.course_title ?? item.subject_name ?? 'Subject'}
-                          {item.grade ? ` · Grade ${item.grade}` : ''}
+                          {item.course_title ?? item.subject_name ?? t('admin.tea.subjectFallback')}
+                          {item.grade ? ` · ${t('admin.a.gradeN', { n: item.grade })}` : ''}
                         </span>
                         {item.is_lead && <Badge tone="brand">{t('admin.tea.lead')}</Badge>}
                         <button
@@ -598,10 +612,13 @@ export default function TeacherDetailPage({
                           href={href(`/admin/classes/${group.id}`)}
                           className="min-w-0 flex-1 truncate font-semibold text-ink-900 hover:text-brand-700 hover:underline"
                         >
-                          {group.name}
+                          {label(group, 'name')}
                         </Link>
                         <Badge tone="neutral">
-                          {group.active}/{group.capacity} students
+                          {t('admin.tea.studentCount', {
+                            active: group.active,
+                            capacity: group.capacity,
+                          })}
                         </Badge>
                       </li>
                     ))}
@@ -619,7 +636,7 @@ export default function TeacherDetailPage({
                           href={href(`/admin/courses/${course.id}`)}
                           className="min-w-0 flex-1 truncate text-sm font-semibold hover:underline"
                         >
-                          {course.title}
+                          {label(course, 'title')}
                         </Link>
                         <StatusBadge value={course.status} />
                       </li>
@@ -642,7 +659,8 @@ export default function TeacherDetailPage({
                         >
                           <p className="truncate font-semibold text-ink-900">{student.name}</p>
                           <p className="truncate text-xs text-ink-500">
-                            Grade {student.grade} · {humanise(student.status)}
+                            {t('admin.a.gradeN', { n: student.grade })} ·{' '}
+                          {enumLabel(student.status)}
                           </p>
                         </Link>
                       </li>
@@ -702,7 +720,7 @@ export default function TeacherDetailPage({
       <Modal
         open={credential !== null}
         onClose={() => setCredential(null)}
-        title={credential?.id ? 'Edit entry' : 'Add entry'}
+        title={credential?.id ? t('admin.tea.editEntry') : 'Add entry'}
         footer={
           <>
             <Button variant="ghost" onClick={() => setCredential(null)}>{t('admin.a.cancel')}</Button>
@@ -748,7 +766,7 @@ export default function TeacherDetailPage({
               >
                 {CREDENTIAL_KINDS.map((kind) => (
                   <option key={kind} value={kind}>
-                    {humanise(kind)}
+                    {enumLabel(kind)}
                   </option>
                 ))}
               </SelectField>
@@ -869,7 +887,7 @@ export default function TeacherDetailPage({
               <option value={0}>{t('admin.a.none')}</option>
               {courses.map((course) => (
                 <option key={course.id} value={course.id}>
-                  {course.title}
+                  {label(course, 'title')}
                 </option>
               ))}
             </SelectField>
@@ -885,8 +903,10 @@ export default function TeacherDetailPage({
               <option value={0}>{t('admin.a.none')}</option>
               {classes.map((group) => (
                 <option key={group.id} value={group.id}>
-                  {group.name}
-                  {group.teacher_name ? ` (currently ${group.teacher_name})` : ''}
+                  {label(group, 'name')}
+                  {group.teacher_name
+                    ? ` ${t('admin.tea.currentlyTeacher', { name: group.teacher_name })}`
+                    : ''}
                 </option>
               ))}
             </SelectField>
@@ -897,7 +917,7 @@ export default function TeacherDetailPage({
       <ConfirmDialog
         open={deletingCredential !== null}
         onClose={() => setDeletingCredential(null)}
-        title={`Delete “${deletingCredential?.title}”?`}
+        title={t('admin.a.deleteQ', { name: deletingCredential?.title ?? '' })}
         message={t('admin.tea.deleteEntryBody')}
         onConfirm={async () => {
           if (!deletingCredential) return;

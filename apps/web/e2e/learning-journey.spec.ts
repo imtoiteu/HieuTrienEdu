@@ -61,10 +61,16 @@ test.describe('public site', () => {
     await expect(page.getByRole('heading', { name: 'Khóa học', exact: true })).toBeVisible();
   });
 
-  test('an unknown page returns a proper 404', async ({ page }) => {
+  test('an unknown page returns a proper 404 in both languages', async ({ page }) => {
     const response = await page.goto('/en/no-such-page');
     expect(response?.status()).toBe(404);
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('cannot find that page');
+
+    // A URL that matched no route has no locale to read, so the root 404 cannot pick a language
+    // from the request. It leads with Vietnamese because that is the product's primary language,
+    // and carries the English line beside it rather than guessing.
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('Không tìm thấy trang');
+    await expect(page.getByText(/cannot find that page/i)).toBeVisible();
+    await expect(page.getByRole('link', { name: 'English' })).toBeVisible();
   });
 });
 

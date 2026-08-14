@@ -21,7 +21,7 @@ import inspect
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
-from app.models import Achievement, Announcement, TeacherProfile
+from app.models import Achievement, Announcement, StudentProfile, TeacherProfile
 
 # --------------------------------------------------------------------------------------
 # unpublishing must actually hide things
@@ -304,6 +304,8 @@ def test_every_publicly_localised_model_has_an_admin_write_path() -> None:
         "Testimonial": "cms", "BlogPost": "cms", "SiteSetting": "cms",
         "TutoringProduct": "cms",
         "ClassGroup": "classes",
+        "LiveSession": "classes",
+        "ContentCategory": "categories",
     }
 
     unmapped = [model.__name__ for model in TRANSLATABLE if model.__name__ not in OWNER]
@@ -322,3 +324,237 @@ def test_every_publicly_localised_model_has_an_admin_write_path() -> None:
         "public reads localise these, but their admin module neither stores nor returns "
         f"translations: {unwritable}"
     )
+
+
+# --------------------------------------------------------------------------------------
+# the admin screen has a language of its own
+# --------------------------------------------------------------------------------------
+
+
+def test_a_category_can_be_written_in_vietnamese(
+    client: TestClient, db: Session, admin_headers: dict
+) -> None:
+    """Categories label courses and fill the public navigation, in both languages.
+
+    The table had no ``i18n`` column at all, so there was one name for both sites — and the seed
+    wrote Vietnamese into it, which put Vietnamese category names on ``/en``.
+    """
+    created = client.post(
+        "/api/v1/admin/categories",
+        headers=admin_headers,
+        json={
+            "name": "Exam preparation",
+            "kind": "program",
+            "is_published": True,
+            "translations": {"vi": {"name": "Luyện thi"}},
+        },
+    )
+    assert created.status_code == 201
+    assert created.json()["translations"]["vi"]["name"] == "Luyện thi"
+
+    assert [row["name"] for row in client.get("/api/v1/site/categories?locale=vi").json()] == [
+        "Luyện thi"
+    ]
+    assert [row["name"] for row in client.get("/api/v1/site/categories?locale=en").json()] == [
+        "Exam preparation"
+    ]
+
+
+def test_the_admin_reads_borrowed_parent_names_in_its_own_language(
+    client: TestClient, db: Session, curriculum: dict, admin_headers: dict
+) -> None:
+    """A row's own fields round-trip as English plus a blob; a parent's name is display only.
+
+    The course list showed "Mathematics · Grade 7" to an administrator working entirely in
+    Vietnamese, because ``subject_name`` is copied off the parent row and nothing localised it.
+    There is no subject field on the course form to round-trip, so it is served ready to read.
+    """
+    subject = curriculum["subject"]
+    patched = client.patch(
+        f"/api/v1/admin/subjects/{subject.id}",
+        headers=admin_headers,
+        json={"name": subject.name, "translations": {"vi": {"name": "Toán học"}}},
+    )
+    assert patched.status_code == 200
+
+    course_id = curriculum["course"].id
+    vietnamese = client.get(
+        f"/api/v1/admin/courses/{course_id}", headers={**admin_headers, "X-Locale": "vi"}
+    ).json()
+    english = client.get(
+        f"/api/v1/admin/courses/{course_id}", headers={**admin_headers, "X-Locale": "en"}
+    ).json()
+
+    assert vietnamese["subject_name"] == "Toán học"
+    assert english["subject_name"] == "Mathematics"
+    # The course's *own* title stays the English column in both, because that is the field the
+    # form edits; the Vietnamese travels beside it.
+    assert vietnamese["title"] == english["title"] == "Mathematics — Grade 7"
+
+
+def test_the_exercise_list_carries_both_languages(
+    client: TestClient, db: Session, curriculum: dict, admin_headers: dict
+) -> None:
+    """The exercise list shows the prompt, so it has to know the prompt in both languages.
+
+    Every other translatable listing returned ``translations``; this one did not, which left the
+    review queue English-only with no way to tell a translated question from an untranslated one.
+    """
+    question_id = client.get(
+        "/api/v1/admin/questions?limit=1", headers=admin_headers
+    ).json()["items"][0]["id"]
+    client.patch(
+        f"/api/v1/admin/questions/{question_id}",
+        headers=admin_headers,
+        json={"translations": {"vi": {"prompt": "{{a}} + {{b}} bằng bao nhiêu?"}}},
+    )
+
+    row = next(
+        item
+        for item in client.get("/api/v1/admin/questions", headers=admin_headers).json()["items"]
+        if item["id"] == question_id
+    )
+    assert row["translations"]["vi"]["prompt"] == "{{a}} + {{b}} bằng bao nhiêu?"
+
+
+# --------------------------------------------------------------------------------------
+# duplicating must not quietly drop a language
+# --------------------------------------------------------------------------------------
+
+
+def test_duplicating_a_course_keeps_its_vietnamese(
+    client: TestClient, db: Session, curriculum: dict, admin_headers: dict
+) -> None:
+    """Duplication built the clone field by field and forgot ``i18n``.
+
+    The copy arrived English-only on ``/vi`` while the original was fine, and nothing in the admin
+    said why — so the fix has to reach the nested rows too, not just the course.
+    """
+    course = curriculum["course"]
+    for path, payload in (
+        (f"/api/v1/admin/courses/{course.id}", {"translations": {"vi": {"title": "Toán — Lớp 7"}}}),
+        (
+            f"/api/v1/admin/units/{curriculum['unit'].id}",
+            {"translations": {"vi": {"title": "Phân số"}}},
+        ),
+        (
+            f"/api/v1/admin/topics/{curriculum['topic'].id}",
+            {"translations": {"vi": {"title": "Làm việc với phân số"}}},
+        ),
+    ):
+        assert client.patch(path, headers=admin_headers, json=payload).status_code == 200
+
+    clone = client.post(
+        f"/api/v1/admin/courses/{course.id}/duplicate", headers=admin_headers
+    ).json()
+    assert clone["title"] == "Mathematics — Grade 7 (copy)"
+    # The marker is a word the administrator reads, so it is translated too.
+    assert clone["translations"]["vi"]["title"] == "Toán — Lớp 7 (bản sao)"
+
+    tree = client.get(f"/api/v1/admin/courses/{clone['id']}", headers=admin_headers).json()
+    unit = tree["units"][0]
+    assert unit["translations"]["vi"]["title"] == "Phân số"
+    assert unit["topics"][0]["translations"]["vi"]["title"] == "Làm việc với phân số"
+
+
+def test_duplicating_a_lesson_keeps_its_vietnamese_body_as_a_draft(
+    client: TestClient, db: Session, curriculum: dict, admin_headers: dict
+) -> None:
+    """The clone starts with an empty live body; each translation must follow the same rule.
+
+    Copying the ``i18n`` blob verbatim would leave the Vietnamese body live on a lesson whose
+    English body is still a draft — the two languages disagreeing about what is published.
+    """
+    created = client.post(
+        "/api/v1/admin/lessons",
+        headers=admin_headers,
+        json={
+            "title": "Adding fractions",
+            "topic_id": curriculum["topic"].id,
+            "status": "published",
+            "blocks": [{"type": "text", "markdown": "Find a common denominator."}],
+            "translations": {
+                "vi": {
+                    "title": "Cộng phân số",
+                    "blocks": [{"type": "text", "markdown": "Tìm mẫu số chung."}],
+                }
+            },
+        },
+    )
+    assert created.status_code == 201
+
+    clone = client.post(
+        f"/api/v1/admin/lessons/{created.json()['id']}/duplicate", headers=admin_headers
+    ).json()
+    assert clone["title"] == "Adding fractions (copy)"
+    assert clone["translations"]["vi"]["title"] == "Cộng phân số (bản sao)"
+
+    detail = client.get(f"/api/v1/admin/lessons/{clone['id']}", headers=admin_headers).json()
+    vietnamese = detail["translations"]["vi"]
+    assert vietnamese["draft_blocks"], "the Vietnamese body should survive as a draft"
+    assert "blocks" not in vietnamese, "and must not be live while the English body is not"
+    assert detail["blocks"] == []
+
+
+def test_a_class_session_can_be_written_in_vietnamese_and_a_student_reads_it_that_way(
+    client: TestClient, db: Session, student: StudentProfile, admin_headers: dict,
+    student_headers: dict,
+) -> None:
+    """The two lines a student reads on their schedule: what the class is, and what it covers.
+
+    ``live_sessions`` had no ``i18n`` column at all, so a Vietnamese student's timetable was in
+    English however the rest of the site was set — and the class *name* beside it was English on
+    the public read even though ``ClassGroup`` has been translatable all along.
+    """
+    group = client.post(
+        "/api/v1/admin/classes",
+        headers=admin_headers,
+        json={
+            "name": "Mathematics Grade 7 — Tuesday",
+            "format": "group",
+            "delivery_mode": "online_live",
+            "capacity": 10,
+            "translations": {"vi": {"name": "Toán lớp 7 — Thứ Ba"}},
+        },
+    )
+    assert group.status_code == 201
+    group_id = group.json()["id"]
+
+    session = client.post(
+        "/api/v1/admin/live-sessions",
+        headers=admin_headers,
+        json={
+            "class_group_id": group_id,
+            "title": "Session 1 — Fractions",
+            "topic_summary": "Adding fractions with unlike denominators.",
+            "starts_at": "2030-01-08T10:00:00Z",
+            "ends_at": "2030-01-08T11:30:00Z",
+            "translations": {
+                "vi": {
+                    "title": "Buổi 1 — Phân số",
+                    "topic_summary": "Cộng phân số khác mẫu.",
+                }
+            },
+        },
+    )
+    assert session.status_code == 201
+    assert session.json()["translations"]["vi"]["title"] == "Buổi 1 — Phân số"
+
+    enrolled = client.post(
+        "/api/v1/admin/enrollments",
+        headers=admin_headers,
+        json={"student_id": student.id, "class_group_id": group_id, "status": "active"},
+    )
+    assert enrolled.status_code == 201
+
+    schedule = client.get(
+        "/api/v1/progress/dashboard", headers={**student_headers, "X-Locale": "vi"}
+    ).json()["upcoming_sessions"]
+    assert [row["title"] for row in schedule] == ["Buổi 1 — Phân số"]
+    assert [row["class_name"] for row in schedule] == ["Toán lớp 7 — Thứ Ba"]
+
+    english = client.get(
+        "/api/v1/progress/dashboard", headers={**student_headers, "X-Locale": "en"}
+    ).json()["upcoming_sessions"]
+    assert [row["title"] for row in english] == ["Session 1 — Fractions"]
+    assert [row["class_name"] for row in english] == ["Mathematics Grade 7 — Tuesday"]

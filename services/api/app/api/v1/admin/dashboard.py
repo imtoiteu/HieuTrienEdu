@@ -10,6 +10,8 @@ from sqlalchemy import func, or_, select
 from sqlalchemy.orm import selectinload
 
 from app.api.v1.admin._common import CurrentAdmin, DbSession
+from app.core.deps import RequestLocale
+from app.core.i18n import localise
 from app.models import (
     Attempt,
     AuditLog,
@@ -127,7 +129,7 @@ def overview(db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
 
 
 @router.get("/dashboard")
-def dashboard(db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
+def dashboard(db: DbSession, admin: CurrentAdmin, locale: RequestLocale) -> dict[str, Any]:
     """Work queues and activity feeds shown beneath the tiles."""
     now = dt.datetime.now(dt.UTC)
 
@@ -181,8 +183,8 @@ def dashboard(db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
         "upcoming_classes": [
             {
                 "id": session.id,
-                "title": session.title,
-                "class_name": group.name,
+                "title": localise(session, "title", locale),
+                "class_name": localise(group, "name", locale),
                 "class_id": group.id,
                 "starts_at": session.starts_at,
                 "ends_at": session.ends_at,
@@ -238,7 +240,11 @@ def dashboard(db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
                     if enrollment.student and enrollment.student.user
                     else None
                 ),
-                "class_name": enrollment.class_group.name if enrollment.class_group else None,
+                "class_name": (
+                    localise(enrollment.class_group, "name", locale)
+                    if enrollment.class_group
+                    else None
+                ),
                 "status": enrollment.status,
                 "payment_status": enrollment.payment_status,
                 "created_at": enrollment.created_at,
@@ -263,7 +269,7 @@ def dashboard(db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
 
 @router.get("/search")
 def global_search(
-    db: DbSession, admin: CurrentAdmin, q: str = "", limit: int = 5
+    db: DbSession, admin: CurrentAdmin, locale: RequestLocale, q: str = "", limit: int = 5
 ) -> dict[str, Any]:
     """Cross-entity lookup for the admin header search box."""
     term = q.strip()
@@ -308,8 +314,12 @@ def global_search(
             {"id": t.id, "name": t.user.full_name if t.user else "", "slug": t.slug}
             for t in teachers
         ],
-        "courses": [{"id": c.id, "title": c.title, "slug": c.slug} for c in courses],
-        "lessons": [{"id": lesson.id, "title": lesson.title, "slug": lesson.slug}
-                    for lesson in lessons],
+        "courses": [
+            {"id": c.id, "title": localise(c, "title", locale), "slug": c.slug} for c in courses
+        ],
+        "lessons": [
+            {"id": lesson.id, "title": localise(lesson, "title", locale), "slug": lesson.slug}
+            for lesson in lessons
+        ],
         "leads": [{"id": lead.id, "name": lead.name, "status": lead.status} for lead in leads],
     }

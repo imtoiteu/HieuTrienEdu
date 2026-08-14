@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Badge, Button, Card, EmptyState } from '@hietedu/ui';
 
 import { AdminShell } from '@/components/admin/admin-shell';
-import { humanise } from '@/components/admin/form';
+import { useEnumLabel } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
 import { adminApi, type NotificationRow } from '@/lib/admin-api';
 import { useRequireAuth } from '@/lib/auth';
@@ -15,6 +15,7 @@ import { useI18n } from '@/lib/i18n';
 
 export default function NotificationsPage() {
   const { t, locale, formatDateTime } = useI18n();
+  const enumLabel = useEnumLabel();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
   const { run, notify } = useToast();
 
@@ -83,7 +84,7 @@ export default function NotificationsPage() {
             setPage(1);
           }}
         >
-          Unread ({unread})
+          {t('admin.not.unread', { count: unread })}
         </Button>
       </div>
 
@@ -94,7 +95,7 @@ export default function NotificationsPage() {
           <EmptyState
             className="border-0"
             icon={<Bell className="h-8 w-8" />}
-            title={unreadOnly ? 'Nothing unread' : 'No notifications yet'}
+            title={unreadOnly ? t('admin.not.nothingUnread') : t('admin.not.empty')}
             description={t('admin.not.emptyBody')}
           />
         ) : (
@@ -127,11 +128,11 @@ export default function NotificationsPage() {
                   {row.body && <p className="mt-0.5 text-sm text-ink-600">{row.body}</p>}
                   <p className="mt-1 text-xs text-ink-400">{formatDateTime(row.created_at)}</p>
                 </div>
-                <Badge tone="neutral">{humanise(row.kind)}</Badge>
+                <Badge tone="neutral">{enumLabel(row.kind)}</Badge>
                 {!row.is_read && (
                   <button
                     type="button"
-                    aria-label={`Mark "${row.title}" as read`}
+                    aria-label={t('admin.not.markRead', { title: row.title })}
                     onClick={async () => {
                       const ok = await run(() => adminApi.notifications.markRead(row.id));
                       if (ok) await load();
@@ -143,7 +144,7 @@ export default function NotificationsPage() {
                 )}
                 <button
                   type="button"
-                  aria-label={`Delete "${row.title}"`}
+                  aria-label={t('admin.not.deleteAria', { title: row.title })}
                   onClick={async () => {
                     const ok = await run(() => adminApi.notifications.remove(row.id));
                     if (ok !== undefined) await load();

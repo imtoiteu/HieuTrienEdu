@@ -15,9 +15,12 @@ import {
   StatusBadge,
   TextAreaField,
   TextField,
-  humanise,
+  TranslationPanel,
+  translationsPayload,
+  useEnumLabel,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
+import { useContentLabel } from '@/lib/content-label';
 import { adminApi, type AdminStudent, type AdminTeacher } from '@/lib/admin-api';
 import { useRequireAuth } from '@/lib/auth';
 import { useI18n } from '@/lib/i18n';
@@ -34,6 +37,8 @@ export default function ClassDetailPage({
   const { id } = use(params);
   const classId = Number(id);
   const { t, locale, formatDate, formatDateTime } = useI18n();
+  const enumLabel = useEnumLabel();
+  const label = useContentLabel();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
   const { run, notify } = useToast();
 
@@ -46,6 +51,7 @@ export default function ClassDetailPage({
   const [generating, setGenerating] = useState(false);
   const [range, setRange] = useState({ from_date: '', to_date: '' });
   const [addingSession, setAddingSession] = useState(false);
+  const [sessionVi, setSessionVi] = useState<Record<string, string>>({});
   const [sessionForm, setSessionForm] = useState({
     title: '',
     starts_at: '',
@@ -101,10 +107,10 @@ export default function ClassDetailPage({
 
   return (
     <AdminShell
-      title={group?.name ?? 'Class'}
+      title={group ? label(group, 'name') : t('admin.a.class')}
       description={
         group
-          ? `${humanise(group.format)} · ${humanise(group.delivery_mode)} · ${group.seats_taken}/${group.capacity} places taken`
+          ? t('admin.cls.metaLine', { format: enumLabel(group.format), mode: enumLabel(group.delivery_mode), taken: group.seats_taken, capacity: group.capacity })
           : undefined
       }
       breadcrumbs={[
@@ -132,9 +138,11 @@ export default function ClassDetailPage({
           <div className="min-w-0 space-y-6">
             <Card className="p-0">
               <div className="flex items-center justify-between border-b-2 border-ink-100 p-4">
-                <h2 className="font-display text-lg">Roster ({group.roster?.length ?? 0})</h2>
+                <h2 className="font-display text-lg">
+                  {t('admin.cls.rosterCount', { count: group.roster?.length ?? 0 })}
+                </h2>
                 <Badge tone={group.seats_available === 0 ? 'coral' : 'neutral'}>
-                  {group.seats_available} place(s) left
+                  {t('admin.cls.placesLeft', { count: group.seats_available })}
                 </Badge>
               </div>
               {(group.roster ?? []).length === 0 ? (
@@ -176,7 +184,9 @@ export default function ClassDetailPage({
 
             <Card className="p-0">
               <div className="flex items-center justify-between border-b-2 border-ink-100 p-4">
-                <h2 className="font-display text-lg">Sessions ({group.sessions?.length ?? 0})</h2>
+                <h2 className="font-display text-lg">
+                  {t('admin.cls.sessionsCount', { count: group.sessions?.length ?? 0 })}
+                </h2>
               </div>
               {(group.sessions ?? []).length === 0 ? (
                 <p className="p-6 text-center text-sm text-ink-500">{t('admin.cls.noSessionsYet')}</p>
@@ -185,10 +195,10 @@ export default function ClassDetailPage({
                   {group.sessions.map((session: Detail) => (
                     <li key={session.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
                       <div className="min-w-0 flex-1">
-                        <p className="truncate font-semibold text-ink-900">{session.title}</p>
+                        <p className="truncate font-semibold text-ink-900">{label(session, 'title')}</p>
                         <p className="truncate text-xs text-ink-500">
                           {formatDateTime(session.starts_at)}
-                          {session.topic_summary ? ` · ${session.topic_summary}` : ''}
+                          {session.topic_summary ? ` · ${label(session, 'topic_summary')}` : ''}
                         </p>
                       </div>
                       {session.join_url && (
@@ -201,10 +211,10 @@ export default function ClassDetailPage({
                           Join
                         </a>
                       )}
-                      <Badge tone="neutral">{humanise(session.status)}</Badge>
+                      <Badge tone="neutral">{enumLabel(session.status)}</Badge>
                       <button
                         type="button"
-                        aria-label={`Delete ${session.title}`}
+                        aria-label={t('admin.a.deleteAria', { name: label(session, 'title') })}
                         onClick={() => setDeletingSession(session)}
                         className="rounded-lg p-1.5 text-coral-500 hover:bg-coral-50"
                       >
@@ -269,7 +279,7 @@ export default function ClassDetailPage({
                   onChange={(value) =>
                     patch(
                       { is_open_for_enrollment: value },
-                      value ? 'Enrolment opened' : 'Enrolment closed',
+                      value ? t('admin.cls.enrolmentOpened') : t('admin.cls.enrolmentClosed'),
                     )
                   }
                 />
@@ -383,7 +393,7 @@ export default function ClassDetailPage({
                 );
                 if (result) {
                   setGenerating(false);
-                  notify(`${result.created} session(s) created`, 'success');
+                  notify(t('admin.cls.sessionsCreated', { count: result.created }), 'success');
                   await load();
                 }
               }}
@@ -400,7 +410,7 @@ export default function ClassDetailPage({
               onChange={(e) => setRange({ ...range, from_date: e.target.value })}
             />
           </FormRow>
-          <FormRow label="To" required htmlFor="gen-to">
+          <FormRow label={t('admin.cls.to')} required htmlFor="gen-to">
             <TextField
               id="gen-to"
               type="date"
@@ -437,6 +447,9 @@ export default function ClassDetailPage({
                       ends_at: new Date(sessionForm.ends_at).toISOString(),
                       join_url: sessionForm.join_url || null,
                       topic_summary: sessionForm.topic_summary || null,
+                      // A student reads the title and the summary on their schedule, so both
+                      // are authored in both languages at the point they are written.
+                      translations: translationsPayload(sessionVi),
                     }),
                   t('admin.cls.sessionScheduled'),
                 );
@@ -449,6 +462,7 @@ export default function ClassDetailPage({
                     join_url: '',
                     topic_summary: '',
                   });
+                  setSessionVi({});
                   await load();
                 }
               }}
@@ -495,6 +509,16 @@ export default function ClassDetailPage({
               onChange={(e) => setSessionForm({ ...sessionForm, topic_summary: e.target.value })}
             />
           </FormRow>
+          <div className="sm:col-span-2">
+            <TranslationPanel
+              fields={[
+                { name: 'title', label: t('admin.a.title') },
+                { name: 'topic_summary', label: t('admin.cls.whatCovered'), multiline: true },
+              ]}
+              value={sessionVi}
+              onChange={setSessionVi}
+            />
+          </div>
         </div>
       </Modal>
 

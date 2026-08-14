@@ -18,9 +18,10 @@ import {
   TextAreaField,
   TextField,
   TranslationPanel,
-  humanise,
+  useEnumLabel,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
+import { contentLabel, useContentLabel } from '@/lib/content-label';
 import { adminApi, type AdminCourse, type AdminQuestion } from '@/lib/admin-api';
 import { useRequireAuth } from '@/lib/auth';
 import { useI18n } from '@/lib/i18n';
@@ -66,6 +67,8 @@ const BLANK_FORM = {
 
 export default function ExercisesPage() {
   const { t, locale } = useI18n();
+  const enumLabel = useEnumLabel();
+  const label = useContentLabel();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
   const { run, notify } = useToast();
   const params = useSearchParams();
@@ -133,8 +136,10 @@ export default function ExercisesPage() {
                 unit.topics.flatMap((topic) =>
                   topic.skills.map((skill) => ({
                     id: skill.id,
-                    name: `${topic.title} → ${skill.name}`,
-                    course: course.title,
+                    // Flattened for the picker at load time, so the label is resolved here
+                    // rather than at render — the option is a plain string either way.
+                    name: `${contentLabel(topic, 'title', locale)} → ${contentLabel(skill, 'name', locale)}`,
+                    course: contentLabel(course, 'title', locale),
                   })),
                 ),
               )
@@ -147,7 +152,9 @@ export default function ExercisesPage() {
         }));
       })
       .catch(() => undefined);
-  }, [user]);
+    // `locale` is a dependency because the option labels are baked in above: switching language
+    // has to rebuild them, or the picker keeps the language the page was first opened in.
+  }, [user, locale]);
 
   useEffect(() => {
     if (params.get('new')) setCreating(true);
@@ -242,10 +249,10 @@ export default function ExercisesPage() {
       header: t('admin.ex.exercise'),
       render: (row) => (
         <div className="min-w-0">
-          <p className="line-clamp-2 font-semibold text-ink-900">{row.prompt}</p>
+          <p className="line-clamp-2 font-semibold text-ink-900">{label(row, 'prompt')}</p>
           <p className="truncate text-xs text-ink-500">
             #{row.id} · {row.skill_name ?? row.topic_slug}
-            {row.is_parametric && ' · parametric'}
+            {row.is_parametric && ` · ${t('admin.ex.parametric')}`}
           </p>
         </div>
       ),
@@ -255,7 +262,7 @@ export default function ExercisesPage() {
       header: t('admin.ex.type'),
       sortKey: 'type',
       hideOnMobile: true,
-      render: (row) => <Badge tone="neutral">{humanise(row.question_type)}</Badge>,
+      render: (row) => <Badge tone="neutral">{enumLabel(row.question_type)}</Badge>,
     },
     {
       key: 'difficulty',
@@ -273,8 +280,11 @@ export default function ExercisesPage() {
       render: (row) => (
         <span className="text-xs text-ink-600">
           {row.times_served > 0
-            ? `${row.times_served} served · ${Math.round((row.success_rate ?? 0) * 100)}% correct`
-            : 'Not yet served'}
+            ? t('admin.ex.usageValue', {
+                served: row.times_served,
+                rate: Math.round((row.success_rate ?? 0) * 100),
+              })
+            : t('admin.ex.notServed')}
         </span>
       ),
     },
@@ -292,7 +302,7 @@ export default function ExercisesPage() {
         <div className="flex justify-end gap-1">
           <button
             type="button"
-            aria-label={`Preview exercise ${row.id}`}
+            aria-label={t('admin.ex.previewAria', { id: row.id })}
             onClick={() => showPreview(row.id, true)}
             className="rounded-lg p-2 text-ink-500 hover:bg-ink-100"
           >
@@ -325,7 +335,7 @@ export default function ExercisesPage() {
           )}
           <button
             type="button"
-            aria-label={`Delete exercise ${row.id}`}
+            aria-label={t('admin.ex.deleteAria', { id: row.id })}
             onClick={() => setDeleting(row)}
             className="rounded-lg p-2 text-coral-600 hover:bg-coral-50"
           >
@@ -392,14 +402,14 @@ export default function ExercisesPage() {
           {
             key: 'question_type',
             label: t('admin.tea.typeLabel'),
-            options: TYPES.map((type) => ({ value: type, label: humanise(type) })),
+            options: TYPES.map((type) => ({ value: type, label: enumLabel(type) })),
           },
           {
             key: 'difficulty',
             label: t('admin.ex.difficultyLabel'),
             options: [1, 2, 3, 4, 5].map((value) => ({
               value: String(value),
-              label: `Level ${value}`,
+              label: t('admin.ex.levelN', { n: value }),
             })),
           },
           {
@@ -407,7 +417,7 @@ export default function ExercisesPage() {
             label: t('admin.a.grade'),
             options: Array.from({ length: 12 }, (_, index) => ({
               value: String(index + 1),
-              label: `Grade ${index + 1}`,
+              label: t('admin.a.gradeN', { n: index + 1 }),
             })),
           },
         ]}
@@ -419,14 +429,16 @@ export default function ExercisesPage() {
         actions={
           selected.length > 0 && (
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-ink-600">{selected.length} selected</span>
+              <span className="text-xs font-bold text-ink-600">
+                {t('admin.a.selected', { count: selected.length })}
+              </span>
               <Button
                 size="sm"
                 variant="outline"
                 onClick={async () => {
                   const ok = await run(
                     () => adminApi.questions.bulkStatus(selected, 'published'),
-                    `${selected.length} exercise(s) published`,
+                    t('admin.ex.bulkPublished', { count: selected.length }),
                   );
                   if (ok) {
                     setSelected([]);
@@ -440,7 +452,7 @@ export default function ExercisesPage() {
                 onClick={async () => {
                   const ok = await run(
                     () => adminApi.questions.bulkStatus(selected, 'archived'),
-                    `${selected.length} exercise(s) archived`,
+                    t('admin.ex.bulkArchived', { count: selected.length }),
                   );
                   if (ok) {
                     setSelected([]);
@@ -499,7 +511,7 @@ export default function ExercisesPage() {
             >
               {TYPES.map((type) => (
                 <option key={type} value={type}>
-                  {humanise(type)}
+                  {enumLabel(type)}
                 </option>
               ))}
             </SelectField>
@@ -538,7 +550,7 @@ export default function ExercisesPage() {
                       type={form.question_type === 'multiple_choice' ? 'radio' : 'checkbox'}
                       name="correct-choice"
                       checked={choice.is_correct}
-                      aria-label={`Option ${choice.id} is correct`}
+                      aria-label={t('admin.ex.optionCorrect', { id: choice.id })}
                       onChange={(event) =>
                         setForm({
                           ...form,
@@ -555,7 +567,7 @@ export default function ExercisesPage() {
                     />
                     <TextField
                       value={choice.label}
-                      placeholder={`Option ${choice.id.toUpperCase()}`}
+                      placeholder={t('admin.ex.option', { id: choice.id.toUpperCase() })}
                       onChange={(event) =>
                         setForm({
                           ...form,
@@ -568,7 +580,7 @@ export default function ExercisesPage() {
                     {form.choices.length > 2 && (
                       <button
                         type="button"
-                        aria-label={`Remove option ${choice.id}`}
+                        aria-label={t('admin.ex.removeOption', { id: choice.id })}
                         onClick={() =>
                           setForm({
                             ...form,
@@ -812,7 +824,7 @@ export default function ExercisesPage() {
                   }
                 }}
               >
-                Import {String(importResult.parsed)} exercise(s)
+                {t('admin.ex.importCount', { count: String(importResult.parsed) })}
               </Button>
             )}
           </>
@@ -847,14 +859,14 @@ export default function ExercisesPage() {
               {Array.isArray(importResult.errors) && importResult.errors.length > 0 && (
                 <div className="mt-3">
                   <p className="text-xs font-bold text-coral-700">
-                    {importResult.errors.length} row(s) could not be read:
+                    {t('admin.ex.importErrors', { count: importResult.errors.length })}
                   </p>
                   <ul className="mt-1 max-h-40 space-y-0.5 overflow-y-auto text-xs text-ink-600">
                     {(importResult.errors as { row: number; error: string }[])
                       .slice(0, 20)
                       .map((entry) => (
                         <li key={entry.row}>
-                          Row {entry.row}: {entry.error}
+                          {t('admin.ex.importRow', { n: entry.row, error: entry.error })}
                         </li>
                       ))}
                   </ul>
@@ -867,7 +879,7 @@ export default function ExercisesPage() {
                     {(importResult.preview as { row: number; prompt: string; type: string }[]).map(
                       (entry) => (
                         <li key={entry.row} className="truncate">
-                          {entry.prompt} ({humanise(entry.type)})
+                          {entry.prompt} ({enumLabel(entry.type)})
                         </li>
                       ),
                     )}
@@ -885,13 +897,9 @@ export default function ExercisesPage() {
         title={t('admin.ex.deleteQ')}
         message={
           <>
-            {deleting && deleting.times_served > 0 ? (
-              <>{t('admin.ex.servedTimes')}<strong>{deleting.times_served}</strong> time(s).
-                Deleting it would erase those student attempts — archive it instead.
-              </>
-            ) : (
-              'The exercise is permanently removed from the question bank.'
-            )}
+            {deleting && deleting.times_served > 0
+              ? t('admin.ex.deleteServedBody', { count: deleting.times_served })
+              : t('admin.ex.deleteBody')}
           </>
         }
         onConfirm={async () => {
@@ -912,15 +920,18 @@ function QuestionPreview({
   reveal: boolean;
 }) {
   const { t } = useI18n();
+  const enumLabel = useEnumLabel();
   const view = (data.student_view ?? {}) as Record<string, unknown>;
   const choices = (view.choices ?? []) as { id: string; label: string }[];
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
-        <Badge tone="neutral">{humanise(String(data.question_type))}</Badge>
-        <Badge tone="neutral">Level {String(data.difficulty)}</Badge>
-        <span className="text-xs text-ink-500">seed {String(data.seed)}</span>
+        <Badge tone="neutral">{enumLabel(String(data.question_type))}</Badge>
+        <Badge tone="neutral">{t('admin.ex.levelN', { n: String(data.difficulty) })}</Badge>
+        <span className="text-xs text-ink-500">
+          {t('admin.ex.seed')} {String(data.seed)}
+        </span>
       </div>
 
       <div className="rounded-2xl border-2 border-ink-900 bg-white p-5 shadow-pop-sm">
@@ -944,7 +955,7 @@ function QuestionPreview({
 
         {Boolean(view.blanks) && (
           <p className="mt-4 text-sm text-ink-500">
-            {((view.blanks as unknown[]) ?? []).length} blank(s) to fill in.
+            {t('admin.ex.blanksCount', { count: ((view.blanks as unknown[]) ?? []).length })}
           </p>
         )}
         {Boolean(view.items) && (
@@ -965,7 +976,7 @@ function QuestionPreview({
       {Number(data.hint_count ?? 0) > 0 && (
         <div className="rounded-2xl bg-brand-50 p-3">
           <p className="text-xs font-bold text-brand-800">
-            {String(data.hint_count)} hint(s) available to the student
+            {t('admin.ex.hintsAvailable', { count: String(data.hint_count) })}
           </p>
           {reveal && (
             <ul className="mt-1 list-disc pl-5 text-xs text-brand-900">

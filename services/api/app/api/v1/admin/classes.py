@@ -31,6 +31,8 @@ from app.api.v1.admin._translations import (
     apply_translations,
     read_translations,
 )
+from app.core.deps import RequestLocale
+from app.core.i18n import DEFAULT_LOCALE, SUPPORTED_LOCALES, localise
 from app.core.text import unique_slug
 from app.models import (
     Attendance,
@@ -98,7 +100,7 @@ class ClassUpdate(TranslationsPayload):
     schedule: list[ScheduleSlotIn] | None = None
 
 
-class SessionIn(BaseModel):
+class SessionIn(TranslationsPayload):
     class_group_id: int
     title: str = Field(min_length=1, max_length=250)
     starts_at: dt.datetime
@@ -117,7 +119,7 @@ class SessionIn(BaseModel):
         return value
 
 
-class SessionUpdate(BaseModel):
+class SessionUpdate(TranslationsPayload):
     title: str | None = Field(default=None, min_length=1, max_length=250)
     starts_at: dt.datetime | None = None
     ends_at: dt.datetime | None = None
@@ -135,7 +137,7 @@ class GenerateSessionsRequest(BaseModel):
     title_template: str = Field(default="{class_name} — {date}", max_length=200)
 
 
-def _class_row(group: ClassGroup) -> dict[str, Any]:
+def _class_row(group: ClassGroup, locale: str = DEFAULT_LOCALE) -> dict[str, Any]:
     active = sum(
         1
         for e in group.enrollments
@@ -146,7 +148,9 @@ def _class_row(group: ClassGroup) -> dict[str, Any]:
         "slug": group.slug,
         "name": group.name,
         "course_id": group.course_id,
-        "course_title": group.course.title if group.course else None,
+        # Display only — the class form picks a course by id, so this is the parent's name in
+        # the administrator's language rather than a field to round-trip.
+        "course_title": localise(group.course, "title", locale) if group.course else None,
         "product_id": group.product_id,
         "teacher_id": group.teacher_id,
         "teacher_name": (
@@ -214,6 +218,7 @@ def _replace_schedule(db, group: ClassGroup, slots: list[ScheduleSlotIn]) -> Non
 @router.get("")
 def list_classes(
     db: DbSession,
+    locale: RequestLocale,
     admin: CurrentAdmin,
     teacher_id: Annotated[int | None, Query()] = None,
     course_id: Annotated[int | None, Query()] = None,
@@ -263,11 +268,13 @@ def list_classes(
         },
     )
     rows, total = paginate(db, query, params)
-    return build_page([_class_row(row) for row in rows], total, params)
+    return build_page([_class_row(row, locale) for row in rows], total, params)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED)
-def create_class(payload: ClassIn, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
+def create_class(
+    payload: ClassIn, db: DbSession, admin: CurrentAdmin, locale: RequestLocale
+) -> dict[str, Any]:
     if payload.course_id is not None:
         get_or_404(db, Course, payload.course_id, "Course")
     if payload.product_id is not None:
@@ -298,13 +305,15 @@ def create_class(payload: ClassIn, db: DbSession, admin: CurrentAdmin) -> dict[s
 
     record_audit(db, admin, "create", "class", group.id, f"Created class “{group.name}”")
     db.commit()
-    return _class_row(_loaded(db, group.id))
+    return _class_row(_loaded(db, group.id), locale)
 
 
 @router.get("/{class_id}")
-def get_class(class_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
+def get_class(
+    class_id: int, db: DbSession, admin: CurrentAdmin, locale: RequestLocale
+) -> dict[str, Any]:
     group = _loaded(db, class_id)
-    data = _class_row(group)
+    data = _class_row(group, locale)
 
     roster = db.execute(
         select(ClassEnrollment, StudentProfile)
@@ -345,7 +354,11 @@ def get_class(class_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, An
 
 @router.patch("/{class_id}")
 def update_class(
-    class_id: int, payload: ClassUpdate, db: DbSession, admin: CurrentAdmin
+    class_id: int,
+    payload: ClassUpdate,
+    db: DbSession,
+    admin: CurrentAdmin,
+    locale: RequestLocale,
 ) -> dict[str, Any]:
     group = _loaded(db, class_id)
     fields = payload.model_dump(exclude_unset=True, exclude={"schedule", "translations"})
@@ -392,7 +405,7 @@ def update_class(
         {k: str(v) for k, v in fields.items()},
     )
     db.commit()
-    return _class_row(_loaded(db, class_id))
+    return _class_row(_loaded(db, class_id), locale)
 
 
 @router.delete("/{class_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -428,6 +441,7 @@ sessions_router = APIRouter(prefix="/live-sessions", tags=["admin:sessions"])
 def list_sessions(
     db: DbSession,
     admin: CurrentAdmin,
+    locale: RequestLocale,
     class_group_id: Annotated[int | None, Query()] = None,
     teacher_id: Annotated[int | None, Query()] = None,
     session_status: Annotated[SessionStatus | None, Query(alias="status")] = None,
@@ -468,8 +482,11 @@ def list_sessions(
         {
             "id": s.id,
             "title": s.title,
+            "translations": read_translations(s),
             "class_group_id": s.class_group_id,
-            "class_name": s.class_group.name if s.class_group else None,
+            "class_name": (
+                localise(s.class_group, "name", locale) if s.class_group else None
+            ),
             "teacher_name": (
                 s.class_group.teacher.user.full_name
                 if s.class_group and s.class_group.teacher and s.class_group.teacher.user
@@ -525,6 +542,7 @@ def create_session(payload: SessionIn, db: DbSession, admin: CurrentAdmin) -> di
 
     db.add(session)
     db.flush()
+    apply_translations(session, payload.translations)
     record_audit(
         db, admin, "create", "live_session", session.id,
         f"Scheduled “{session.title}” for “{group.name}”",
@@ -534,6 +552,7 @@ def create_session(payload: SessionIn, db: DbSession, admin: CurrentAdmin) -> di
     return {
         "id": session.id,
         "title": session.title,
+        "translations": read_translations(session),
         "class_group_id": session.class_group_id,
         "starts_at": session.starts_at,
         "ends_at": session.ends_at,
@@ -548,7 +567,8 @@ def update_session(
     session_id: int, payload: SessionUpdate, db: DbSession, admin: CurrentAdmin
 ) -> dict[str, Any]:
     session = get_or_404(db, LiveSession, session_id, "Session")
-    fields = payload.model_dump(exclude_unset=True)
+    # ``translations`` is not a column: it is merged into ``i18n`` below.
+    fields = payload.model_dump(exclude_unset=True, exclude={"translations"})
 
     starts = fields.get("starts_at", session.starts_at)
     ends = fields.get("ends_at", session.ends_at)
@@ -560,6 +580,7 @@ def update_session(
 
     for key, value in fields.items():
         setattr(session, key, value)
+    apply_translations(session, payload.translations)
     record_audit(
         db, admin, "update", "live_session", session.id, f"Updated session “{session.title}”"
     )
@@ -568,6 +589,7 @@ def update_session(
     return {
         "id": session.id,
         "title": session.title,
+        "translations": read_translations(session),
         "starts_at": session.starts_at,
         "ends_at": session.ends_at,
         "status": session.status,
@@ -660,6 +682,20 @@ def generate_sessions(
                     title=payload.title_template.format(
                         class_name=group.name, date=day.isoformat()
                     )[:250],
+                    # The generated title is built from the class name, so it exists in every
+                    # language the class name does — filling those in here is the only chance,
+                    # since nobody is going to retype a year of session titles by hand.
+                    i18n={
+                        code: {
+                            "title": payload.title_template.format(
+                                class_name=localise(group, "name", code),
+                                date=day.isoformat(),
+                            )[:250]
+                        }
+                        for code in SUPPORTED_LOCALES
+                        if code != DEFAULT_LOCALE
+                        and localise(group, "name", code) != group.name
+                    },
                     starts_at=starts_at,
                     ends_at=ends_at,
                     status=SessionStatus.SCHEDULED,

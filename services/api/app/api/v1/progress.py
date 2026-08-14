@@ -205,8 +205,8 @@ def dashboard(
     upcoming = [
         UpcomingSession(
             id=live.id,
-            title=live.title,
-            class_name=group.name,
+            title=localise(live, "title", locale),
+            class_name=localise(group, "name", locale),
             starts_at=live.starts_at,
             ends_at=live.ends_at,
             join_url=live.join_url,

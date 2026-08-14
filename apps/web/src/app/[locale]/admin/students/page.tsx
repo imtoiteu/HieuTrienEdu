@@ -78,7 +78,7 @@ export default function StudentsPage() {
       key: 'grade',
       header: t('admin.a.grade'),
       sortKey: 'grade',
-      render: (row) => <Badge tone="neutral">Grade {row.grade}</Badge>,
+      render: (row) => <Badge tone="neutral">{t('admin.a.gradeN', { n: row.grade })}</Badge>,
     },
     {
       key: 'school',
@@ -93,7 +93,11 @@ export default function StudentsPage() {
       hideOnMobile: true,
       render: (row) => (
         <span className="text-xs text-ink-600">
-          Level {row.level} · {row.xp_total} XP · {row.streak_days}d streak
+          {t('admin.stu.progressValue', {
+            level: row.level,
+            xp: row.xp_total,
+            streak: row.streak_days,
+          })}
         </span>
       ),
     },
@@ -118,12 +122,12 @@ export default function StudentsPage() {
         <div className="flex justify-end gap-1">
           <button
             type="button"
-            aria-label={`Reset password for ${row.full_name}`}
+            aria-label={t('admin.stu.resetAria', { name: row.full_name ?? '' })}
             onClick={async () => {
               const result = await run(() => adminApi.students.resetPassword(row.id));
               if (result?.temporary_password) {
                 notify(
-                  `Temporary password: ${result.temporary_password}`,
+                  t('admin.stu.tempPasswordToast', { password: result.temporary_password }),
                   'info',
                   t('admin.stu.copyNow'),
                 );
@@ -139,7 +143,7 @@ export default function StudentsPage() {
             onClick={async () => {
               const ok = await run(
                 () => adminApi.students.setActive(row.id, !row.is_active),
-                row.is_active ? 'Account disabled' : 'Account enabled',
+                row.is_active ? t('admin.stu.accountDisabled') : t('admin.stu.accountEnabled'),
               );
               if (ok) await load();
             }}
@@ -190,7 +194,7 @@ export default function StudentsPage() {
             label: t('admin.a.grade'),
             options: Array.from({ length: 12 }, (_, index) => ({
               value: String(index + 1),
-              label: `Grade ${index + 1}`,
+              label: t('admin.a.gradeN', { n: index + 1 }),
             })),
           },
           {
@@ -303,7 +307,10 @@ export default function StudentsPage() {
         {created && (
           <div className="space-y-3">
             <p className="text-sm">
-              <strong>{created.full_name}</strong> can now sign in with {created.email}.
+              {t('admin.stu.canSignIn', {
+                name: created.full_name ?? '',
+                email: created.email ?? '',
+              })}
             </p>
             {created.temporary_password && (
               <Alert tone="warning" title={t('admin.a.tempPassword')}>

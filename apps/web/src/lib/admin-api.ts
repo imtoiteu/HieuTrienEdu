@@ -157,6 +157,7 @@ export interface Category {
   course_count?: number;
   product_count?: number;
   children?: Category[];
+  translations?: Translations;
 }
 
 export interface AdminCourse {
@@ -305,6 +306,7 @@ export interface AdminQuestion {
   source: string | null;
   created_at: string;
   updated_at: string;
+  translations?: Translations;
 }
 
 export interface QuestionDetail extends AdminQuestion {
@@ -376,6 +378,7 @@ export interface AdminTeacher {
   position: number;
   class_count?: number;
   temporary_password?: string;
+  translations?: Translations;
 }
 
 export interface TeacherCredential {
@@ -491,6 +494,7 @@ export interface AdminClass {
   }[];
   session_count: number;
   created_at: string;
+  translations?: Translations;
 }
 
 export interface AdminSession {
@@ -593,6 +597,7 @@ export interface TestimonialRow {
   is_published: boolean;
   is_featured: boolean;
   position: number;
+  translations?: Translations;
 }
 
 export interface ProgramRow {
@@ -622,6 +627,7 @@ export interface ProgramRow {
   is_featured: boolean;
   position: number;
   categories: { id: number; name: string; slug: string }[];
+  translations?: Translations;
 }
 
 export interface NotificationRow {

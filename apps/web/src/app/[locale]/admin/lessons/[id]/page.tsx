@@ -18,6 +18,7 @@ import {
   TranslationPanel,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
+import { useContentLabel } from '@/lib/content-label';
 import { adminApi, type LessonBlock, type LessonDetail } from '@/lib/admin-api';
 import { useRequireAuth } from '@/lib/auth';
 import { useI18n } from '@/lib/i18n';
@@ -30,6 +31,7 @@ export default function LessonEditorPage({
   const { id } = use(params);
   const lessonId = Number(id);
   const { t, locale, formatDateTime } = useI18n();
+  const label = useContentLabel();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
   const { run, notify } = useToast();
 
@@ -190,14 +192,14 @@ export default function LessonEditorPage({
 
   return (
     <AdminShell
-      title={lesson?.title ?? 'Lesson'}
+      title={lesson ? label(lesson, 'title') : t('admin.a.lesson')}
       breadcrumbs={[
         { label: t('admin.a.adminCrumb'), href: '/admin' },
         { label: t('admin.les.title'), href: '/admin/lessons' },
         ...(lesson?.breadcrumb.course_id
           ? [
               {
-                label: lesson.breadcrumb.course_title ?? 'Course',
+                label: lesson.breadcrumb.course_title ?? t('admin.a.course'),
                 href: `/admin/courses/${lesson.breadcrumb.course_id}`,
               },
             ]
@@ -229,12 +231,12 @@ export default function LessonEditorPage({
         <>
           <div className="mb-6 flex flex-wrap items-center gap-3">
             <StatusBadge value={lesson.status} />
-            <Badge tone="neutral">Version {lesson.version}</Badge>
+            <Badge tone="neutral">{t('admin.les.versionN', { n: lesson.version })}</Badge>
             {lesson.has_draft && <Badge tone="sun">{t('admin.les.unpublishedChanges')}</Badge>}
             {dirty && <Badge tone="coral">{t('admin.les.unsavedEdits')}</Badge>}
             {lesson.published_at && (
               <span className="text-xs text-ink-500">
-                Published {formatDateTime(lesson.published_at)}
+                {t('admin.les.publishedOn', { date: formatDateTime(lesson.published_at) })}
               </span>
             )}
             <div className="ml-auto flex flex-wrap gap-2">
@@ -276,7 +278,7 @@ export default function LessonEditorPage({
           </div>
 
           {lesson.has_draft && (
-            <Alert tone="info" className="mb-6" title={t('admin.les.draftAlert')}>{t('admin.les.draftNotice')}<strong>{t('admin.a.publish')}</strong> to make them live.
+            <Alert tone="info" className="mb-6" title={t('admin.les.draftAlert')}>{t('admin.les.draftNotice')}<strong>{t('admin.a.publish')}</strong> {t('admin.les.toMakeLive')}
             </Alert>
           )}
 
@@ -506,9 +508,12 @@ export default function LessonEditorPage({
             {revisions.map((revision) => (
               <li key={revision.id} className="flex flex-wrap items-center gap-3 py-3">
                 <div className="min-w-0 flex-1">
-                  <p className="font-bold">Version {revision.version}</p>
+                  <p className="font-bold">{t('admin.les.versionN', { n: revision.version })}</p>
                   <p className="text-xs text-ink-500">
-                    {revision.block_count} blocks · {formatDateTime(revision.created_at)}
+                    {t('admin.les.revisionMeta', {
+                      count: revision.block_count,
+                      date: formatDateTime(revision.created_at),
+                    })}
                     {revision.note ? ` · ${revision.note}` : ''}
                   </p>
                 </div>
@@ -518,7 +523,7 @@ export default function LessonEditorPage({
                   onClick={async () => {
                     const ok = await run(
                       () => adminApi.lessons.restore(lessonId, revision.id),
-                      `Version ${revision.version} loaded into the draft`,
+                      t('admin.les.restored', { n: revision.version }),
                     );
                     if (ok) {
                       setShowRevisions(false);
@@ -537,21 +542,25 @@ export default function LessonEditorPage({
         onClose={() => setConfirming(null)}
         title={
           confirming === 'delete'
-            ? 'Delete this lesson?'
+            ? t('admin.les.deleteQ')
             : confirming === 'discard'
-              ? 'Discard draft changes?'
-              : 'Archive this lesson?'
+              ? t('admin.les.discardQ')
+              : t('admin.les.archiveQ')
         }
         confirmLabel={
-          confirming === 'delete' ? 'Delete' : confirming === 'discard' ? 'Discard' : 'Archive'
+          confirming === 'delete'
+            ? t('admin.a.delete')
+            : confirming === 'discard'
+              ? t('admin.a.discard')
+              : t('admin.a.archive')
         }
         tone={confirming === 'archive' ? 'default' : 'danger'}
         message={
           confirming === 'delete'
-            ? 'The lesson and all its blocks are removed. A snapshot is kept in the activity log.'
+            ? t('admin.les.deleteAllBody')
             : confirming === 'discard'
-              ? 'Unpublished edits are thrown away and the draft resets to the published version.'
-              : 'Archived lessons stay in the database but are no longer shown to students.'
+              ? t('admin.les.discardBody')
+              : t('admin.les.archiveBody')
         }
         onConfirm={async () => {
           if (confirming === 'delete') {
@@ -676,10 +685,12 @@ function PreviewBlock({ block }: { block: LessonBlock }) {
         <div className="rounded-2xl border-2 border-brand-300 bg-brand-50 p-4">
           <Badge tone="brand">{block.type}</Badge>
           <p className="mt-1 text-sm">
-            {text('prompt') || text('title') || text('instructions') || 'Assessment block'}
+            {text('prompt') || text('title') || text('instructions') || t('admin.blk.new.assessment')}
           </p>
           {Boolean(block.skill) && (
-            <p className="mt-1 text-xs text-ink-600">Skill: {text('skill')}</p>
+            <p className="mt-1 text-xs text-ink-600">
+              {t('admin.les.skillLabel')} {text('skill')}
+            </p>
           )}
           {((block.question_ids as number[]) ?? []).length > 0 && (
             <p className="mt-1 text-xs text-ink-600">

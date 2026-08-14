@@ -28,10 +28,14 @@ from app.api.v1.admin._common import (
     snapshot,
 )
 from app.api.v1.admin._translations import (
+    COPY_SUFFIX,
     TranslationsPayload,
     apply_translations,
+    duplicate_translations,
     read_translations,
 )
+from app.core.deps import RequestLocale
+from app.core.i18n import DEFAULT_LOCALE, localise
 from app.core.text import unique_slug
 from app.models import (
     ContentCategory,
@@ -220,14 +224,18 @@ class CourseUpdate(TranslationsPayload):
     category_ids: list[int] | None = None
 
 
-def _course_row(db, course: Course, category_map: dict[int, list[dict[str, Any]]]) -> dict:
+def _course_row(
+    db, course: Course, category_map: dict[int, list[dict[str, Any]]], locale: str = DEFAULT_LOCALE
+) -> dict:
     return {
         "id": course.id,
         "slug": course.slug,
         "title": course.title,
         "grade": course.grade,
         "subject_id": course.subject_id,
-        "subject_name": course.subject.name if course.subject else None,
+        # Borrowed from the parent row for display only — there is no subject field on this
+        # form to round-trip, so it arrives ready to read rather than as English plus a blob.
+        "subject_name": localise(course.subject, "name", locale) if course.subject else None,
         "summary": course.summary,
         "description": course.description,
         "estimated_hours": course.estimated_hours,
@@ -246,7 +254,9 @@ def _course_row(db, course: Course, category_map: dict[int, list[dict[str, Any]]
     }
 
 
-def _categories_for_courses(db, course_ids: list[int]) -> dict[int, list[dict[str, Any]]]:
+def _categories_for_courses(
+    db, course_ids: list[int], locale: str = DEFAULT_LOCALE
+) -> dict[int, list[dict[str, Any]]]:
     if not course_ids:
         return {}
     rows = db.execute(
@@ -257,8 +267,8 @@ def _categories_for_courses(db, course_ids: list[int]) -> dict[int, list[dict[st
     mapping: dict[int, list[dict[str, Any]]] = {}
     for course_id, category in rows:
         mapping.setdefault(course_id, []).append(
-            {"id": category.id, "slug": category.slug, "name": category.name,
-             "kind": category.kind}
+            {"id": category.id, "slug": category.slug,
+             "name": localise(category, "name", locale), "kind": category.kind}
         )
     return mapping
 
@@ -284,6 +294,7 @@ def _set_course_categories(db, course: Course, category_ids: list[int]) -> None:
 def list_courses(
     db: DbSession,
     admin: CurrentAdmin,
+    locale: RequestLocale,
     subject_id: Annotated[int | None, Query()] = None,
     grade: Annotated[int | None, Query(ge=1, le=12)] = None,
     course_status: Annotated[ReviewStatus | None, Query(alias="status")] = None,
@@ -330,11 +341,11 @@ def list_courses(
     )
     rows, total = paginate(db, query, params)
 
-    category_map = _categories_for_courses(db, [row.id for row in rows])
+    category_map = _categories_for_courses(db, [row.id for row in rows], locale)
     counts = _structure_counts(db, [row.id for row in rows])
     items = []
     for row in rows:
-        data = _course_row(db, row, category_map)
+        data = _course_row(db, row, category_map, locale)
         data.update(
             counts.get(
                 row.id,
@@ -391,7 +402,9 @@ def _structure_counts(db, course_ids: list[int]) -> dict[int, dict[str, int]]:
 
 
 @router.post("/courses", status_code=status.HTTP_201_CREATED)
-def create_course(payload: CourseIn, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
+def create_course(
+    payload: CourseIn, db: DbSession, admin: CurrentAdmin, locale: RequestLocale
+) -> dict[str, Any]:
     get_or_404(db, Subject, payload.subject_id, "Subject")
     if payload.teacher_id is not None:
         get_or_404(db, TeacherProfile, payload.teacher_id, "Teacher")
@@ -424,11 +437,13 @@ def create_course(payload: CourseIn, db: DbSession, admin: CurrentAdmin) -> dict
     record_audit(db, admin, "create", "course", course.id, f"Created course “{course.title}”")
     db.commit()
     db.refresh(course)
-    return _course_row(db, course, _categories_for_courses(db, [course.id]))
+    return _course_row(db, course, _categories_for_courses(db, [course.id], locale), locale)
 
 
 @router.get("/courses/{course_id}")
-def get_course(course_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
+def get_course(
+    course_id: int, db: DbSession, admin: CurrentAdmin, locale: RequestLocale
+) -> dict[str, Any]:
     """One course with its full module → topic → skill → lesson tree.
 
     This is the payload the structure builder screen renders, so it is assembled in one request:
@@ -470,7 +485,7 @@ def get_course(course_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, 
             ).all()
         )
 
-    data = _course_row(db, course, _categories_for_courses(db, [course.id]))
+    data = _course_row(db, course, _categories_for_courses(db, [course.id], locale), locale)
     data["units"] = [
         {
             "id": unit.id,
@@ -525,7 +540,11 @@ def get_course(course_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, 
 
 @router.patch("/courses/{course_id}")
 def update_course(
-    course_id: int, payload: CourseUpdate, db: DbSession, admin: CurrentAdmin
+    course_id: int,
+    payload: CourseUpdate,
+    db: DbSession,
+    admin: CurrentAdmin,
+    locale: RequestLocale,
 ) -> dict[str, Any]:
     course = get_or_404(db, Course, course_id, "Course")
     fields = payload.model_dump(
@@ -581,7 +600,7 @@ def update_course(
     )
     db.commit()
     db.refresh(course)
-    return _course_row(db, course, _categories_for_courses(db, [course.id]))
+    return _course_row(db, course, _categories_for_courses(db, [course.id], locale), locale)
 
 
 @router.post("/courses/{course_id}/status")
@@ -589,6 +608,7 @@ def set_course_status(
     course_id: int,
     db: DbSession,
     admin: CurrentAdmin,
+    locale: RequestLocale,
     value: Annotated[ReviewStatus, Query(alias="status")],
 ) -> dict[str, Any]:
     course = get_or_404(db, Course, course_id, "Course")
@@ -600,11 +620,13 @@ def set_course_status(
     )
     db.commit()
     db.refresh(course)
-    return _course_row(db, course, _categories_for_courses(db, [course.id]))
+    return _course_row(db, course, _categories_for_courses(db, [course.id], locale), locale)
 
 
 @router.post("/courses/{course_id}/duplicate", status_code=status.HTTP_201_CREATED)
-def duplicate_course(course_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
+def duplicate_course(
+    course_id: int, db: DbSession, admin: CurrentAdmin, locale: RequestLocale
+) -> dict[str, Any]:
     """Deep-copy a course, including modules, topics, skills and lessons.
 
     The copy always lands as a draft: duplicating a live course and having the clone appear on the
@@ -638,7 +660,8 @@ def duplicate_course(course_id: int, db: DbSession, admin: CurrentAdmin) -> dict
     clone = Course(
         subject_id=course.subject_id,
         slug=_make_slug(db, Course, f"{course.title} copy", 80),
-        title=f"{course.title} (copy)",
+        title=f"{course.title} {COPY_SUFFIX[DEFAULT_LOCALE]}",
+        i18n=duplicate_translations(course, suffix_field="title"),
         grade=free_grade,
         summary=course.summary,
         description=course.description,
@@ -665,6 +688,7 @@ def duplicate_course(course_id: int, db: DbSession, admin: CurrentAdmin) -> dict
             course_id=clone.id,
             slug=_make_slug(db, Unit, f"{unit.title} copy", 120),
             title=unit.title,
+            i18n=duplicate_translations(unit),
             summary=unit.summary,
             icon=unit.icon,
             position=unit.position,
@@ -678,6 +702,7 @@ def duplicate_course(course_id: int, db: DbSession, admin: CurrentAdmin) -> dict
                 unit_id=new_unit.id,
                 slug=_make_slug(db, Topic, f"{topic.title} copy", 140),
                 title=topic.title,
+                i18n=duplicate_translations(topic),
                 summary=topic.summary,
                 position=topic.position,
             )
@@ -691,6 +716,7 @@ def duplicate_course(course_id: int, db: DbSession, admin: CurrentAdmin) -> dict
                         topic_id=new_topic.id,
                         slug=_make_slug(db, Skill, f"{skill.name} copy", 160),
                         name=skill.name,
+                        i18n=duplicate_translations(skill),
                         description=skill.description,
                         difficulty=skill.difficulty,
                         position=skill.position,
@@ -708,6 +734,7 @@ def duplicate_course(course_id: int, db: DbSession, admin: CurrentAdmin) -> dict
                     Lesson(
                         slug=_make_slug(db, Lesson, f"{lesson.title} copy", 180),
                         title=lesson.title,
+                        i18n=duplicate_translations(lesson),
                         topic_id=new_topic.id,
                         summary=lesson.summary,
                         objectives=list(lesson.objectives or []),
@@ -729,7 +756,7 @@ def duplicate_course(course_id: int, db: DbSession, admin: CurrentAdmin) -> dict
     )
     db.commit()
     db.refresh(clone)
-    result = _course_row(db, clone, {})
+    result = _course_row(db, clone, {}, locale)
     result["copied"] = copied
     return result
 

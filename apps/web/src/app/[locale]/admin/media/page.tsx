@@ -7,7 +7,7 @@ import { Badge, Button, Card, EmptyState } from '@hietedu/ui';
 
 import { AdminShell } from '@/components/admin/admin-shell';
 import { ConfirmDialog, Modal } from '@/components/admin/dialog';
-import { FormRow, TextAreaField, TextField, humanise } from '@/components/admin/form';
+import { FormRow, TextAreaField, TextField, useEnumLabel } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
 import { API_BASE } from '@/lib/api';
 import { adminApi, type MediaAsset, type MediaKind } from '@/lib/admin-api';
@@ -36,6 +36,7 @@ function absoluteUrl(url: string): string {
 
 export default function MediaPage() {
   const { t, locale, formatDate } = useI18n();
+  const enumLabel = useEnumLabel();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
   const { run, notify } = useToast();
   const fileInput = useRef<HTMLInputElement>(null);
@@ -84,13 +85,13 @@ export default function MediaPage() {
       if (result) {
         uploaded += 1;
         if (result.deduplicated) {
-          notify(`${file.name} was already in the library`, 'info');
+          notify(t('admin.med.alreadyExists', { name: file.name }), 'info');
         }
       }
     }
     setUploading(false);
     if (uploaded) {
-      notify(`${uploaded} file(s) uploaded`, 'success');
+      notify(t('admin.med.uploaded', { count: uploaded }), 'success');
       await load();
     }
   }
@@ -121,10 +122,14 @@ export default function MediaPage() {
     >
       {stats && (
         <Card className="mb-4 flex flex-wrap items-center gap-4 p-3 text-sm">
-          <span className="font-bold">{String(stats.total_files ?? 0)} files</span>
+          <span className="font-bold">
+            {t('admin.med.fileCount', { count: Number(stats.total_files ?? 0) })}
+          </span>
           <span className="text-ink-500">{formatBytes(Number(stats.total_bytes ?? 0))}</span>
           <span className="ml-auto text-xs text-ink-500">
-            Allowed: {(stats.allowed_extensions as string[])?.join(' ')}
+            {t('admin.med.allowed', {
+              list: (stats.allowed_extensions as string[])?.join(' ') ?? '',
+            })}
           </span>
         </Card>
       )}
@@ -160,7 +165,7 @@ export default function MediaPage() {
               kind === value ? 'border-brand-500 bg-brand-500 text-white' : 'border-ink-200'
             }`}
           >
-            {humanise(value)}
+            {enumLabel(value)}
           </button>
         ))}
       </div>
@@ -213,7 +218,7 @@ export default function MediaPage() {
                     <div className="mt-auto flex items-center gap-1 pt-2">
                       <button
                         type="button"
-                        aria-label={`Copy URL for ${asset.original_name}`}
+                        aria-label={t('admin.med.copyAria', { name: asset.original_name })}
                         onClick={() => {
                           void navigator.clipboard.writeText(asset.url);
                           notify(t('admin.a.urlCopied'), 'success');
@@ -229,7 +234,7 @@ export default function MediaPage() {
                       >{t('admin.a.details')}</button>
                       <button
                         type="button"
-                        aria-label={`Delete ${asset.original_name}`}
+                        aria-label={t('admin.a.deleteAria', { name: asset.original_name })}
                         onClick={async () => {
                           const result = await run(() => adminApi.media.usage(asset.id));
                           setUsage(result ?? null);
@@ -330,7 +335,7 @@ export default function MediaPage() {
               />
             </FormRow>
             <div className="flex flex-wrap gap-2 text-xs text-ink-500">
-              <Badge tone="neutral">{humanise(editing.kind)}</Badge>
+              <Badge tone="neutral">{enumLabel(editing.kind)}</Badge>
               <span>{editing.content_type}</span>
               <span>{formatBytes(editing.size_bytes)}</span>
             </div>
@@ -344,11 +349,11 @@ export default function MediaPage() {
           setDeleting(null);
           setUsage(null);
         }}
-        title={`Delete “${deleting?.original_name}”?`}
+        title={t('admin.a.deleteQ', { name: deleting?.original_name ?? '' })}
         message={
           usage?.in_use ? (
-            <>{t('admin.med.usedBy')}<strong>{usage.lessons.length}</strong> lesson(s). Deleting it
-              will leave broken references.
+            <>
+              {t('admin.med.inUse', { count: usage.lessons.length })}
               <ul className="mt-2 list-disc pl-5">
                 {usage.lessons.slice(0, 5).map((lesson) => (
                   <li key={lesson.id}>{lesson.title}</li>
@@ -356,7 +361,7 @@ export default function MediaPage() {
               </ul>
             </>
           ) : (
-            'The file is permanently removed from disk and from the library.'
+            t('admin.med.deleteBody')
           )
         }
         onConfirm={async () => {

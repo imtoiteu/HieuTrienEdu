@@ -10,10 +10,9 @@ from __future__ import annotations
 
 import datetime as dt
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.core.text import slugify
 from app.models import (
     Announcement,
     CategoryKind,
@@ -24,20 +23,32 @@ from app.models import (
     SiteSetting,
 )
 
-# (name, kind, parent name or None)
-CATEGORIES: list[tuple[str, CategoryKind, str | None]] = [
-    ("Toán", CategoryKind.SUBJECT, None),
-    ("Vật lý", CategoryKind.SUBJECT, None),
-    ("Lớp 6", CategoryKind.GRADE, None),
-    ("Lớp 7", CategoryKind.GRADE, None),
-    ("Lớp 8", CategoryKind.GRADE, None),
-    ("Lớp 9", CategoryKind.GRADE, None),
-    ("Luyện thi", CategoryKind.PROGRAM, None),
-    ("Luyện thi vào 10", CategoryKind.PROGRAM, "Luyện thi"),
-    ("Học thêm", CategoryKind.PROGRAM, None),
-    ("Ôn tập", CategoryKind.PROGRAM, None),
-    ("Học 1-1", CategoryKind.PROGRAM, None),
-    ("Học nhóm", CategoryKind.PROGRAM, None),
+# (slug, English name, Vietnamese name, kind, parent slug or None)
+#
+# The slug is given explicitly rather than derived from the name. It was originally derived from
+# the Vietnamese name, which is what every existing row and every migration keys off; deriving it
+# from the English name now would create a second copy of every category rather than translating
+# the ones that exist.
+#
+# Grades run to 12 because the courses do — the list stopped at 9 while the curriculum grew, so
+# the two halves of the site disagreed about which grades the centre teaches.
+CATEGORIES: list[tuple[str, str, str, CategoryKind, str | None]] = [
+    ("toan", "Mathematics", "Toán", CategoryKind.SUBJECT, None),
+    ("vat-ly", "Physics", "Vật lý", CategoryKind.SUBJECT, None),
+    ("lop-6", "Grade 6", "Lớp 6", CategoryKind.GRADE, None),
+    ("lop-7", "Grade 7", "Lớp 7", CategoryKind.GRADE, None),
+    ("lop-8", "Grade 8", "Lớp 8", CategoryKind.GRADE, None),
+    ("lop-9", "Grade 9", "Lớp 9", CategoryKind.GRADE, None),
+    ("lop-10", "Grade 10", "Lớp 10", CategoryKind.GRADE, None),
+    ("lop-11", "Grade 11", "Lớp 11", CategoryKind.GRADE, None),
+    ("lop-12", "Grade 12", "Lớp 12", CategoryKind.GRADE, None),
+    ("luyen-thi", "Exam preparation", "Luyện thi", CategoryKind.PROGRAM, None),
+    ("luyen-thi-vao-10", "Grade 10 entrance", "Luyện thi vào 10", CategoryKind.PROGRAM,
+     "luyen-thi"),
+    ("hoc-them", "Supplementary classes", "Học thêm", CategoryKind.PROGRAM, None),
+    ("on-tap", "Revision", "Ôn tập", CategoryKind.PROGRAM, None),
+    ("hoc-1-1", "One-to-one", "Học 1-1", CategoryKind.PROGRAM, None),
+    ("hoc-nhom", "Group classes", "Học nhóm", CategoryKind.PROGRAM, None),
 ]
 
 # (key, group, label, value, value_type)
@@ -73,7 +84,7 @@ SECTIONS: list[tuple[str, str, str, str, dict]] = [
     (
         "home", "hero", "Homepage hero", "hero",
         {
-            "eyebrow": "Grades 6–9 · Mathematics & Physics",
+            "eyebrow": "Grades 6–12 · Mathematics & Physics",
             "title": "Every student can be good at maths.",
             "title_accent": "Ours prove it.",
             "subtitle": (
@@ -148,7 +159,7 @@ SECTIONS_VI: list[tuple[str, str, str, str, dict]] = [
     (
         "home", "hero", "Hero trang chủ", "hero",
         {
-            "eyebrow": "Lớp 6–9 · Toán & Vật lý",
+            "eyebrow": "Lớp 6–12 · Toán & Vật lý",
             "title": "Học sinh nào cũng có thể giỏi Toán.",
             "title_accent": "Học sinh của chúng tôi chứng minh điều đó.",
             "subtitle": (
@@ -289,28 +300,39 @@ def seed_cms(db: Session) -> dict[str, int]:
     now = dt.datetime.now(dt.UTC)
 
     # --- categories ------------------------------------------------------------------
-    by_name: dict[str, ContentCategory] = {}
-    for position, (name, kind, _parent) in enumerate(CATEGORIES, start=1):
-        slug = slugify(name, max_length=140)
+    by_slug: dict[str, ContentCategory] = {}
+    # A category added to this list later goes to the end rather than taking a position an
+    # existing row already holds — two categories sharing a position order arbitrarily, and
+    # dragging them apart in the admin is the administrator's call, not the seed's.
+    next_slot = (db.scalar(select(func.max(ContentCategory.position))) or 0) + 1
+    for slug, name, name_vi, kind, _parent in CATEGORIES:
         category = db.scalar(select(ContentCategory).where(ContentCategory.slug == slug))
         if category is None:
             category = ContentCategory(
                 slug=slug,
                 name=name,
+                i18n={"vi": {"name": name_vi}},
                 kind=kind,
-                position=position,
+                position=next_slot,
                 is_published=True,
                 is_visible_in_nav=kind in {CategoryKind.SUBJECT, CategoryKind.GRADE},
             )
             db.add(category)
             db.flush()
+            next_slot += 1
             created["categories"] += 1
-        by_name[name] = category
+        elif category.name == name_vi and not category.i18n:
+            # A row seeded before categories were translatable: the Vietnamese name is sitting in
+            # the English column. Move it, so /en stops showing Vietnamese. Anything an
+            # administrator has since renamed is left alone.
+            category.name = name
+            category.i18n = {"vi": {"name": name_vi}}
+        by_slug[slug] = category
 
-    # Second pass so a parent named later in the list still resolves.
-    for name, _kind, parent_name in CATEGORIES:
-        if parent_name and by_name[name].parent_id is None:
-            by_name[name].parent_id = by_name[parent_name].id
+    # Second pass so a parent listed later still resolves.
+    for slug, _name, _name_vi, _kind, parent_slug in CATEGORIES:
+        if parent_slug and by_slug[slug].parent_id is None:
+            by_slug[slug].parent_id = by_slug[parent_slug].id
 
     # --- settings --------------------------------------------------------------------
     for position, (key, group, label, value, value_type) in enumerate(SETTINGS, start=1):
@@ -387,7 +409,7 @@ def seed_cms(db: Session) -> dict[str, int]:
         db.add(
             Announcement(
                 title=title,
-                body="Places are open for grade 6–9 Mathematics and Physics classes.",
+                body="Places are open for grade 6–12 Mathematics and Physics classes.",
                 kind="banner",
                 tone="brand",
                 link_url="/contact",

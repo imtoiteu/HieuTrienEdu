@@ -9,7 +9,7 @@ import { Badge, Card } from '@hietedu/ui';
 
 import { AdminShell } from '@/components/admin/admin-shell';
 import { DataTable, type Column } from '@/components/admin/data-table';
-import { StatusBadge, humanise } from '@/components/admin/form';
+import { StatusBadge, useEnumLabel } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
 import { adminApi, type LeadRow, type StaffMember } from '@/lib/admin-api';
 import { useRequireAuth } from '@/lib/auth';
@@ -28,6 +28,7 @@ const STATUSES = [
 
 export default function ConsultationsPage() {
   const { t, locale, formatDate } = useI18n();
+  const enumLabel = useEnumLabel();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
   const { notify } = useToast();
   const params = useSearchParams();
@@ -122,8 +123,12 @@ export default function ConsultationsPage() {
       hideOnMobile: true,
       render: (row) => (
         <div className="min-w-0">
-          <Badge tone="neutral">{humanise(row.interest)}</Badge>
-          {row.grade && <span className="ml-1 text-xs text-ink-500">Grade {row.grade}</span>}
+          <Badge tone="neutral">{enumLabel(row.interest)}</Badge>
+          {row.grade && (
+            <span className="ml-1 text-xs text-ink-500">
+              {t('admin.a.gradeN', { n: row.grade })}
+            </span>
+          )}
         </div>
       ),
     },
@@ -194,7 +199,7 @@ export default function ConsultationsPage() {
                     : 'border-ink-200'
                 }`}
               >
-                {humanise(status)} ({count})
+                {enumLabel(status)} ({count})
               </button>
             );
           })}
@@ -225,7 +230,7 @@ export default function ConsultationsPage() {
           {
             key: 'status',
             label: t('admin.a.status'),
-            options: STATUSES.map((status) => ({ value: status, label: humanise(status) })),
+            options: STATUSES.map((status) => ({ value: status, label: enumLabel(status) })),
           },
           {
             key: 'source',
@@ -248,7 +253,7 @@ export default function ConsultationsPage() {
             label: t('admin.a.grade'),
             options: Array.from({ length: 12 }, (_, index) => ({
               value: String(index + 1),
-              label: `Grade ${index + 1}`,
+              label: t('admin.a.gradeN', { n: index + 1 }),
             })),
           },
           {

@@ -12,12 +12,14 @@ import { DataTable, type Column } from '@/components/admin/data-table';
 import { ConfirmDialog, Modal } from '@/components/admin/dialog';
 import { FormRow, SelectField, StatusBadge, TextField } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
+import { useContentLabel } from '@/lib/content-label';
 import { adminApi, type AdminCourse, type AdminLesson, type StructureUnit } from '@/lib/admin-api';
 import { useRequireAuth } from '@/lib/auth';
 import { useI18n } from '@/lib/i18n';
 
 export default function LessonsPage() {
   const { t, locale, formatDate } = useI18n();
+  const label = useContentLabel();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
   const { run, notify } = useToast();
   const router = useRouter();
@@ -121,7 +123,7 @@ export default function LessonsPage() {
             href={href(`/admin/lessons/${row.id}`)}
             className="block truncate font-bold text-ink-900 hover:text-brand-700 hover:underline"
           >
-            {row.title}
+            {label(row, 'title')}
           </Link>
           <p className="truncate text-xs text-ink-500">{row.topic_title ?? '—'}</p>
         </div>
@@ -133,7 +135,10 @@ export default function LessonsPage() {
       hideOnMobile: true,
       render: (row) => (
         <span className="text-xs text-ink-600">
-          {row.block_count} block{row.block_count === 1 ? '' : 's'} · {row.estimated_minutes} min
+          {t('admin.les.blockAndMinutes', {
+            count: row.block_count,
+            minutes: row.estimated_minutes,
+          })}
         </span>
       ),
     },
@@ -163,7 +168,7 @@ export default function LessonsPage() {
         <div className="flex justify-end gap-1">
           <button
             type="button"
-            aria-label={`Duplicate ${row.title}`}
+            aria-label={t('admin.a.duplicateAria', { name: label(row, 'title') })}
             onClick={async () => {
               const copy = await run(() => adminApi.lessons.duplicate(row.id), t('admin.les.duplicated'));
               if (copy) await load();
@@ -174,7 +179,7 @@ export default function LessonsPage() {
           </button>
           <button
             type="button"
-            aria-label={`Delete ${row.title}`}
+            aria-label={t('admin.a.deleteAria', { name: label(row, 'title') })}
             onClick={() => setDeleting(row)}
             className="rounded-lg p-2 text-coral-600 hover:bg-coral-50"
           >
@@ -188,7 +193,7 @@ export default function LessonsPage() {
   if (authLoading || !user) return <AdminShell loading />;
 
   const topics = units.flatMap((unit) =>
-    unit.topics.map((topic) => ({ ...topic, unitTitle: unit.title })),
+    unit.topics.map((topic) => ({ ...topic, unitTitle: label(unit, 'title') })),
   );
 
   return (
@@ -277,7 +282,7 @@ export default function LessonsPage() {
               <option value={0}>{t('admin.les.chooseCourse')}</option>
               {courses.map((course) => (
                 <option key={course.id} value={course.id}>
-                  {course.title}
+                  {label(course, 'title')}
                 </option>
               ))}
             </SelectField>
@@ -291,11 +296,11 @@ export default function LessonsPage() {
               onChange={(event) => setForm({ ...form, topic_id: Number(event.target.value) })}
             >
               <option value={0}>
-                {form.course_id ? 'Choose a topic…' : 'Choose a course first'}
+                {form.course_id ? t('admin.les.chooseTopic') : t('admin.les.chooseCourseFirst')}
               </option>
               {topics.map((topic) => (
                 <option key={topic.id} value={topic.id}>
-                  {topic.unitTitle} → {topic.title}
+                  {topic.unitTitle} → {label(topic, 'title')}
                 </option>
               ))}
             </SelectField>
@@ -333,8 +338,8 @@ export default function LessonsPage() {
       <ConfirmDialog
         open={deleting !== null}
         onClose={() => setDeleting(null)}
-        title={`Delete “${deleting?.title}”?`}
-        message="The lesson and its content blocks will be deleted. A snapshot is kept in the activity log."
+        title={t('admin.a.deleteQ', { name: deleting ? label(deleting, 'title') : '' })}
+        message={t('admin.les.deleteBody')}
         onConfirm={async () => {
           if (!deleting) return;
           const ok = await run(() => adminApi.lessons.remove(deleting.id), t('admin.les.deletedToast'));

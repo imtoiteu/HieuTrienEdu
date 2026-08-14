@@ -33,6 +33,7 @@ from app.api.v1.admin._translations import (
     apply_translations,
     read_translations,
 )
+from app.core.deps import RequestLocale
 from app.core.i18n import DEFAULT_LOCALE, SUPPORTED_LOCALES, localise, normalise_locale
 from app.core.text import unique_slug
 from app.exercise_engine.generator import (
@@ -92,7 +93,9 @@ class QuestionUpdate(TranslationsPayload):
     status: ReviewStatus | None = None
 
 
-def _question_row(question: Question, skill: Skill | None = None) -> dict[str, Any]:
+def _question_row(
+    question: Question, skill: Skill | None = None, locale: str = DEFAULT_LOCALE
+) -> dict[str, Any]:
     return {
         "id": question.id,
         "slug": question.slug,
@@ -100,7 +103,7 @@ def _question_row(question: Question, skill: Skill | None = None) -> dict[str, A
         "question_type": question.question_type,
         "difficulty": question.difficulty,
         "skill_id": question.skill_id,
-        "skill_name": skill.name if skill else None,
+        "skill_name": localise(skill, "name", locale) if skill else None,
         "subject_slug": question.subject_slug,
         "topic_slug": question.topic_slug,
         "grade": question.grade,
@@ -113,6 +116,9 @@ def _question_row(question: Question, skill: Skill | None = None) -> dict[str, A
         "success_rate": question.success_rate,
         "generated_by_ai": question.generated_by_ai,
         "source": question.source,
+        # The listing shows the prompt, and the editor needs both languages to round-trip, so
+        # the row carries them here exactly as every other translatable listing does.
+        "translations": read_translations(question),
         "created_at": question.created_at,
         "updated_at": question.updated_at,
     }
@@ -237,6 +243,7 @@ def _validate_answerable(payload_type: str, answer_spec: dict, options: dict) ->
 def list_questions(
     db: DbSession,
     admin: CurrentAdmin,
+    locale: RequestLocale,
     skill_id: Annotated[int | None, Query()] = None,
     topic_slug: Annotated[str | None, Query(max_length=140)] = None,
     subject: Annotated[str | None, Query(max_length=60)] = None,
@@ -284,11 +291,13 @@ def list_questions(
         },
     )
     rows, total = paginate(db, query, params)
-    return build_page([_question_row(row, row.skill) for row in rows], total, params)
+    return build_page([_question_row(row, row.skill, locale) for row in rows], total, params)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED)
-def create_question(payload: QuestionIn, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
+def create_question(
+    payload: QuestionIn, db: DbSession, admin: CurrentAdmin, locale: RequestLocale
+) -> dict[str, Any]:
     skill, subject_slug, grade, topic_slug = _resolve_taxonomy(db, payload.skill_id)
     _validate_answerable(payload.question_type, payload.answer_spec, payload.options)
 
@@ -323,17 +332,19 @@ def create_question(payload: QuestionIn, db: DbSession, admin: CurrentAdmin) -> 
     )
     db.commit()
     db.refresh(question)
-    return _question_row(question, skill)
+    return _question_row(question, skill, locale)
 
 
 @router.get("/{question_id}")
-def get_question(question_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
+def get_question(
+    question_id: int, db: DbSession, admin: CurrentAdmin, locale: RequestLocale
+) -> dict[str, Any]:
     question = db.scalar(
         select(Question).where(Question.id == question_id).options(selectinload(Question.skill))
     )
     if question is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Exercise not found")
-    data = _question_row(question, question.skill)
+    data = _question_row(question, question.skill, locale)
     data.update(
         {
             "variables": question.variables or {},
@@ -344,7 +355,6 @@ def get_question(question_id: int, db: DbSession, admin: CurrentAdmin) -> dict[s
             "solution": question.solution or [],
             "license": question.license,
             "attribution": question.attribution,
-            "translations": read_translations(question),
         }
     )
     return data
@@ -352,7 +362,11 @@ def get_question(question_id: int, db: DbSession, admin: CurrentAdmin) -> dict[s
 
 @router.patch("/{question_id}")
 def update_question(
-    question_id: int, payload: QuestionUpdate, db: DbSession, admin: CurrentAdmin
+    question_id: int,
+    payload: QuestionUpdate,
+    db: DbSession,
+    admin: CurrentAdmin,
+    locale: RequestLocale,
 ) -> dict[str, Any]:
     question = get_or_404(db, Question, question_id, "Exercise")
     fields = payload.model_dump(exclude_unset=True, exclude={"translations"})
@@ -386,7 +400,7 @@ def update_question(
     )
     db.commit()
     db.refresh(question)
-    return _question_row(question)
+    return _question_row(question, locale=locale)
 
 
 @router.get("/{question_id}/preview")
@@ -457,21 +471,29 @@ def preview_question(
 
 
 @router.post("/{question_id}/publish")
-def publish_question(question_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
-    return _set_status(db, admin, question_id, ReviewStatus.PUBLISHED)
+def publish_question(
+    question_id: int, db: DbSession, admin: CurrentAdmin, locale: RequestLocale
+) -> dict[str, Any]:
+    return _set_status(db, admin, question_id, ReviewStatus.PUBLISHED, locale)
 
 
 @router.post("/{question_id}/unpublish")
-def unpublish_question(question_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
-    return _set_status(db, admin, question_id, ReviewStatus.DRAFT)
+def unpublish_question(
+    question_id: int, db: DbSession, admin: CurrentAdmin, locale: RequestLocale
+) -> dict[str, Any]:
+    return _set_status(db, admin, question_id, ReviewStatus.DRAFT, locale)
 
 
 @router.post("/{question_id}/archive")
-def archive_question(question_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
-    return _set_status(db, admin, question_id, ReviewStatus.ARCHIVED)
+def archive_question(
+    question_id: int, db: DbSession, admin: CurrentAdmin, locale: RequestLocale
+) -> dict[str, Any]:
+    return _set_status(db, admin, question_id, ReviewStatus.ARCHIVED, locale)
 
 
-def _set_status(db, admin, question_id: int, value: ReviewStatus) -> dict[str, Any]:
+def _set_status(
+    db, admin, question_id: int, value: ReviewStatus, locale: str = DEFAULT_LOCALE
+) -> dict[str, Any]:
     question = get_or_404(db, Question, question_id, "Exercise")
     question.status = value
     record_audit(
@@ -480,12 +502,12 @@ def _set_status(db, admin, question_id: int, value: ReviewStatus) -> dict[str, A
     )
     db.commit()
     db.refresh(question)
-    return _question_row(question)
+    return _question_row(question, locale=locale)
 
 
 @router.post("/bulk-status")
 def bulk_status(
-    payload: dict[str, Any], db: DbSession, admin: CurrentAdmin
+    payload: dict[str, Any], db: DbSession, admin: CurrentAdmin,
 ) -> dict[str, Any]:
     """Publish or archive many exercises at once — the review queue needs this."""
     ids = payload.get("ids") or []

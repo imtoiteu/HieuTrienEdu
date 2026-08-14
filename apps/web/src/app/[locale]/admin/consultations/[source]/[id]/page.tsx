@@ -14,9 +14,10 @@ import {
   StatusBadge,
   TextAreaField,
   TextField,
-  humanise,
+  useEnumLabel,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
+import { useContentLabel } from '@/lib/content-label';
 import {
   adminApi,
   type AdminClass,
@@ -48,6 +49,8 @@ export default function ConsultationDetailPage({
   const { source, id } = use(params);
   const leadId = Number(id);
   const { t, locale, formatDateTime } = useI18n();
+  const enumLabel = useEnumLabel();
+  const label = useContentLabel();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
   const { run, notify } = useToast();
 
@@ -134,10 +137,15 @@ export default function ConsultationDetailPage({
 
   return (
     <AdminShell
-      title={lead?.name ?? 'Consultation'}
+      title={lead?.name ?? t('admin.a.consultation')}
       description={
         lead
-          ? `${humanise(lead.interest)}${lead.grade ? ` · Grade ${lead.grade}` : ''} · received ${formatDateTime(lead.created_at)}`
+          ? t('admin.con.metaLine', {
+              interest:
+                enumLabel(lead.interest) +
+                (lead.grade ? ` · ${t('admin.a.gradeN', { n: lead.grade })}` : ''),
+              date: formatDateTime(lead.created_at),
+            })
           : undefined
       }
       breadcrumbs={[
@@ -171,9 +179,12 @@ export default function ConsultationDetailPage({
                   href={href(`/admin/students/${lead.converted_student_id}`)}
                   className="font-bold underline"
                 >
-                  {lead.converted_student_name ?? `student #${lead.converted_student_id}`}
+                  {lead.converted_student_name ??
+                    t('admin.a.studentRef', { id: lead.converted_student_id ?? '' })}
                 </Link>
-                {lead.converted_at && ` on ${formatDateTime(lead.converted_at)}`}.
+                {lead.converted_at &&
+                  ` ${t('admin.con.convertedOn', { date: formatDateTime(lead.converted_at) })}`}
+                .
               </Alert>
             )}
 
@@ -206,14 +217,14 @@ export default function ConsultationDetailPage({
                 <Detail label={t('admin.con.parent')} value={lead.parent_name ?? '—'} />
                 <Detail label={t('admin.con.parentPhone')} value={lead.parent_phone ?? '—'} />
                 <Detail label={t('admin.a.subject')} value={lead.subject_slug ?? '—'} />
-                <Detail label={t('admin.a.grade')} value={lead.grade ? `Grade ${lead.grade}` : '—'} />
+                <Detail label={t('admin.a.grade')} value={lead.grade ? t('admin.a.gradeN', { n: lead.grade }) : '—'} />
                 <Detail
                   label={t('admin.con.preferredFormat')}
-                  value={lead.preferred_format ? humanise(lead.preferred_format) : '—'}
+                  value={lead.preferred_format ? enumLabel(lead.preferred_format) : '—'}
                 />
                 <Detail
                   label={t('admin.con.preferredDelivery')}
-                  value={lead.preferred_delivery ? humanise(lead.preferred_delivery) : '—'}
+                  value={lead.preferred_delivery ? enumLabel(lead.preferred_delivery) : '—'}
                 />
                 {lead.school !== undefined && <Detail label={t('admin.con.schoolLabel')} value={lead.school ?? '—'} />}
                 {lead.sessions_requested !== undefined && (
@@ -273,7 +284,7 @@ export default function ConsultationDetailPage({
                 rows={4}
                 value={result}
                 onChange={(event) => setResult(event.target.value)}
-                placeholder="e.g. Spoke with the mother. Student is weak on quadratic equations; recommended the Tuesday group class starting in September."
+                placeholder={t('admin.con.resultPlaceholder')}
               />
               <div className="mt-2 flex justify-end">
                 <Button
@@ -300,7 +311,7 @@ export default function ConsultationDetailPage({
                           : 'border-ink-200 text-ink-700'
                       }`}
                     >
-                      {humanise(kind)}
+                      {enumLabel(kind)}
                     </button>
                   ))}
                 </div>
@@ -329,10 +340,10 @@ export default function ConsultationDetailPage({
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
                           <Badge tone={note.kind === 'status_change' ? 'neutral' : 'brand'}>
-                            {humanise(note.kind)}
+                            {enumLabel(note.kind)}
                           </Badge>
                           <span className="text-xs text-ink-500">
-                            {note.author_name ?? 'System'} · {formatDateTime(note.created_at)}
+                            {note.author_name ?? t('admin.con.system')} · {formatDateTime(note.created_at)}
                           </span>
                         </div>
                         <p className="mt-1 whitespace-pre-wrap text-sm text-ink-800">
@@ -358,12 +369,12 @@ export default function ConsultationDetailPage({
                   id="lead-status"
                   value={lead.status}
                   onChange={(event) =>
-                    patch({ status: event.target.value }, `Moved to ${humanise(event.target.value)}`)
+                    patch({ status: event.target.value }, t('admin.con.movedTo', { status: enumLabel(event.target.value) }))
                   }
                 >
                   {STATUSES.map((status) => (
                     <option key={status} value={status}>
-                      {humanise(status)}
+                      {enumLabel(status)}
                     </option>
                   ))}
                 </SelectField>
@@ -409,7 +420,9 @@ export default function ConsultationDetailPage({
 
               {lead.last_contacted_at && (
                 <p className="mt-3 text-xs text-ink-500">
-                  Last contacted {formatDateTime(lead.last_contacted_at)}
+                  {t('admin.con.lastContacted', {
+                    date: formatDateTime(lead.last_contacted_at),
+                  })}
                 </p>
               )}
             </Card>
@@ -535,7 +548,7 @@ export default function ConsultationDetailPage({
               <option value={0}>{t('admin.con.dontEnrol')}</option>
               {classes.map((group) => (
                 <option key={group.id} value={group.id}>
-                  {group.name} ({group.seats_available} place(s) left)
+                  {label(group, 'name')} ({t('admin.con.placesLeft', { count: group.seats_available })})
                 </option>
               ))}
             </SelectField>
@@ -562,7 +575,7 @@ export default function ConsultationDetailPage({
         {converted && (
           <div className="space-y-3">
             <p className="text-sm">
-              <strong>{converted.student_name}</strong> now has a student account.
+              {t('admin.con.nowHasAccount', { name: converted.student_name ?? '' })}
             </p>
             {converted.enrollment_id && (
               <p className="text-sm">{t('admin.con.alsoEnrolled')}</p>
@@ -588,7 +601,7 @@ export default function ConsultationDetailPage({
         open={deleting}
         onClose={() => setDeleting(false)}
         title={t('admin.con.deleteQ')}
-        message="The enquiry and its notes are permanently removed. Consider setting it to “Rejected” or “No response” instead, so the history is kept."
+        message={t('admin.con.deleteBody')}
         onConfirm={async () => {
           const ok = await run(() => adminApi.leads.remove(source, leadId), t('admin.con.deletedToast'));
           if (ok !== undefined) window.location.href = href('/admin/consultations');

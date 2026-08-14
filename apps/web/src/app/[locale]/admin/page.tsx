@@ -20,13 +20,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { Alert, Badge, Button, Card, EmptyState, Spinner } from '@hietedu/ui';
 
 import { AdminShell } from '@/components/admin/admin-shell';
-import { StatusBadge, humanise } from '@/components/admin/form';
+import { StatusBadge, useEnumLabel } from '@/components/admin/form';
 import { adminApi, type AdminOverview, type DashboardFeed } from '@/lib/admin-api';
 import { useRequireAuth } from '@/lib/auth';
 import { useI18n } from '@/lib/i18n';
 
 export default function AdminDashboardPage() {
   const { t, locale, formatCurrency, formatDateTime, formatDate } = useI18n();
+  const enumLabel = useEnumLabel();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
 
   const [overview, setOverview] = useState<AdminOverview | null>(null);
@@ -50,20 +51,20 @@ export default function AdminDashboardPage() {
   const tiles = overview
     ? [
         { icon: Users, label: t('admin.tea.students'), value: overview.students,
-          sub: `${overview.active_students} active`, href: '/admin/students' },
+          sub: t('admin.dash.activeCount', { count: overview.active_students }), href: '/admin/students' },
         { icon: GraduationCap, label: t('admin.tea.title'), value: overview.teachers,
           href: '/admin/teachers' },
         { icon: BookOpen, label: t('admin.crs.title'), value: overview.courses,
-          sub: `${overview.published_courses} published`, href: '/admin/courses' },
+          sub: t('admin.dash.publishedCount', { count: overview.published_courses }), href: '/admin/courses' },
         { icon: FileText, label: t('admin.les.title'), value: overview.lessons,
-          sub: `${overview.draft_lessons} draft`, href: '/admin/lessons' },
+          sub: t('admin.dash.draftCount', { count: overview.draft_lessons }), href: '/admin/lessons' },
         { icon: ClipboardList, label: t('admin.ex.title'), value: overview.exercises,
-          sub: `${overview.published_exercises} published`, href: '/admin/exercises' },
+          sub: t('admin.dash.publishedCount', { count: overview.published_exercises }), href: '/admin/exercises' },
         { icon: UserCheck, label: t('admin.dash.activeEnrollments'), value: overview.active_enrollments,
-          sub: `${overview.pending_enrollments} pending`, href: '/admin/enrollments' },
+          sub: t('admin.dash.pendingCount', { count: overview.pending_enrollments }), href: '/admin/enrollments' },
         { icon: MessageSquare, label: t('admin.dash.openConsultations'),
           value: overview.pending_consultations + overview.pending_registrations,
-          sub: `${overview.new_consultations + overview.new_registrations} new`,
+          sub: t('admin.dash.newCount', { count: overview.new_consultations + overview.new_registrations }),
           href: '/admin/consultations' },
         { icon: CalendarDays, label: t('admin.dash.upcomingClasses'), value: overview.upcoming_classes,
           href: '/admin/classes' },
@@ -94,7 +95,7 @@ export default function AdminDashboardPage() {
       {!overview && !error && (
         <div className="flex justify-center py-24">
           <Spinner className="h-8 w-8 text-brand-500" />
-          <span className="sr-only">Loading</span>
+          <span className="sr-only">{t('admin.dash.loading')}</span>
         </div>
       )}
 
@@ -217,7 +218,7 @@ export default function AdminDashboardPage() {
                           <div className="min-w-0 flex-1">
                             <p className="truncate font-bold text-ink-900">{lead.name}</p>
                             <p className="truncate text-xs text-ink-500">
-                              {lead.email} · {humanise(lead.interest)}
+                              {lead.email} · {enumLabel(lead.interest)}
                             </p>
                           </div>
                           <StatusBadge value={lead.status} kind="lead" />
@@ -256,7 +257,7 @@ export default function AdminDashboardPage() {
                       >
                         <div className="min-w-0 flex-1">
                           <p className="truncate font-bold text-ink-900">
-                            {enrollment.student_name ?? 'Unknown student'}
+                            {enrollment.student_name ?? t('admin.dash.unknownStudent')}
                           </p>
                           <p className="truncate text-xs text-ink-500">{enrollment.class_name}</p>
                         </div>
@@ -330,7 +331,7 @@ export default function AdminDashboardPage() {
                             <p className="truncate font-bold text-ink-900">{student.name}</p>
                             <p className="truncate text-xs text-ink-500">{student.email}</p>
                           </div>
-                          <Badge tone="neutral">Grade {student.grade}</Badge>
+                          <Badge tone="neutral">{t('admin.a.gradeN', { n: student.grade })}</Badge>
                           {!student.is_active && <Badge tone="coral">{t('admin.dash.inactive')}</Badge>}
                         </Link>
                       </li>
@@ -361,12 +362,12 @@ export default function AdminDashboardPage() {
                 <ul className="divide-y divide-ink-100">
                   {feed.recent_activity.map((entry) => (
                     <li key={entry.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
-                      <Badge tone="neutral">{humanise(entry.action)}</Badge>
+                      <Badge tone="neutral">{enumLabel(entry.action)}</Badge>
                       <p className="min-w-0 flex-1 truncate text-sm text-ink-700">
                         {entry.summary}
                       </p>
                       <span className="text-xs text-ink-400">
-                        {entry.actor ?? 'system'} · {formatDateTime(entry.created_at)}
+                        {entry.actor ?? t('admin.aud.system')} · {formatDateTime(entry.created_at)}
                       </span>
                     </li>
                   ))}

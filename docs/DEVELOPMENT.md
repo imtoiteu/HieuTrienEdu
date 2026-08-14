@@ -59,8 +59,8 @@ reviewer who cannot get in is worse than an exposed demo password.
 ```bash
 npm run api:seed                  # reload content (idempotent, keeps student data)
 npm run api:seed -- --reset       # drop everything and start over
-npm run api:test                  # 212 backend tests
-npm test                          # 37 frontend tests
+npm run api:test                  # 218 backend tests
+npm test                          # 46 frontend tests
 npm run typecheck                 # tsc --noEmit
 npm run lint
 
@@ -177,6 +177,32 @@ An admin endpoint returning what you just sent it proves nothing about what the 
 served. Every test in `test_admin_user_sync.py` writes through `/admin/…` and reads back through
 the endpoint a browser calls, because that is the only shape that would have caught any of the
 bugs it covers.
+
+### A message key nobody reads is not a translated interface
+
+The admin dictionaries once held **281 keys that no component referenced** — fully translated,
+sitting beside components that still rendered the English literal. Nothing failed and nothing
+warned, so the admin stayed half-English for as long as anyone looked at it.
+
+`src/messages/messages.test.ts` now fails on any key that no source file mentions, alongside the
+checks that both languages define the same keys with the same placeholders. If a key is unused,
+either wire it up where the English is still hardcoded, or delete it.
+
+### Enum values from the API go through `useEnumLabel`
+
+Statuses, formats, question types, audit actions and record types all arrive as snake_case
+strings and resolve through `admin.st.<value>`. `humanise()` is the *fallback* inside that helper,
+for a value the backend invents after the build — calling it directly, as a dozen screens did,
+renders "Pending review" in English whatever language the administrator is using.
+
+### An async server component rendered from a client module never settles
+
+`MarketingShell` fetches the site chrome once, on the server. Three public pages imported it into
+a `'use client'` module, which turns it into a client component — and React re-renders an async
+client component every time its promise resolves. On a healthy API that is only duplicate
+requests; when the API is unreachable the two chrome requests repeat until the browser runs out of
+sockets with `ERR_INSUFFICIENT_RESOURCES`, and the page never renders at all. The route stays a
+server component; the interactive half moves into a client child beside it.
 
 ## Project layout
 

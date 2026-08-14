@@ -21,6 +21,7 @@ import {
   translationsPayload,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
+import { useContentLabel, useIsUntranslated } from '@/lib/content-label';
 import { adminApi, type AdminCourse, type Category } from '@/lib/admin-api';
 import { useRequireAuth } from '@/lib/auth';
 import { useI18n } from '@/lib/i18n';
@@ -29,6 +30,10 @@ const GRADES = Array.from({ length: 12 }, (_, index) => index + 1);
 
 export default function CoursesPage() {
   const { t, locale } = useI18n();
+  const label = useContentLabel();
+  // An English title on a Vietnamese screen is ambiguous — content or fallback? — so the
+  // fallback says so rather than passing silently for a translation.
+  const untranslated = useIsUntranslated();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
   const { run, notify } = useToast();
   const router = useRouter();
@@ -146,11 +151,18 @@ export default function CoursesPage() {
             href={href(`/admin/courses/${row.id}`)}
             className="block truncate font-bold text-ink-900 hover:text-brand-700 hover:underline"
           >
-            {row.title}
+            {label(row, 'title')}
           </Link>
           <p className="truncate text-xs text-ink-500">
             {row.subject_name} · /{row.slug}
           </p>
+            {untranslated(row, 'title') && (
+              <span
+                title={t('admin.a.untranslatedHint', { language: t('admin.les.vietnamese') })}
+              >
+                <Badge tone="neutral">{t('admin.a.untranslated')}</Badge>
+              </span>
+            )}
         </div>
       ),
     },
@@ -158,7 +170,9 @@ export default function CoursesPage() {
       key: 'grade',
       header: t('admin.a.grade'),
       sortKey: 'grade',
-      render: (row) => <Badge tone="neutral">Grade {row.grade}</Badge>,
+      render: (row) => (
+        <Badge tone="neutral">{t('admin.a.gradeN', { n: row.grade })}</Badge>
+      ),
     },
     {
       key: 'structure',
@@ -213,7 +227,7 @@ export default function CoursesPage() {
           </Link>
           <button
             type="button"
-            aria-label={`Duplicate ${row.title}`}
+            aria-label={t('admin.a.duplicateAria', { name: label(row, 'title') })}
             onClick={async () => {
               const copy = await run(
                 () => adminApi.courses.duplicate(row.id),
@@ -227,7 +241,7 @@ export default function CoursesPage() {
           </button>
           <button
             type="button"
-            aria-label={`Delete ${row.title}`}
+            aria-label={t('admin.a.deleteAria', { name: label(row, 'title') })}
             onClick={() => setDeleting(row)}
             className="rounded-lg p-2 text-coral-600 hover:bg-coral-50"
           >
@@ -285,7 +299,7 @@ export default function CoursesPage() {
             label: t('admin.a.grade'),
             options: GRADES.map((grade) => ({
               value: String(grade),
-              label: `Grade ${grade}`,
+              label: t('admin.a.gradeN', { n: grade }),
             })),
           },
           {
@@ -366,7 +380,7 @@ export default function CoursesPage() {
             >
               {GRADES.map((grade) => (
                 <option key={grade} value={grade}>
-                  Grade {grade}
+                  {t('admin.a.gradeN', { n: grade })}
                 </option>
               ))}
             </SelectField>
@@ -410,7 +424,7 @@ export default function CoursesPage() {
                         : 'border-ink-200 text-ink-700'
                     }`}
                   >
-                    {category.name}
+                    {label(category, 'name')}
                   </button>
                 );
               })}
@@ -434,17 +448,16 @@ export default function CoursesPage() {
       <ConfirmDialog
         open={deleting !== null}
         onClose={() => setDeleting(null)}
-        title={`Delete “${deleting?.title}”?`}
+        title={t('admin.a.deleteQ', { name: deleting?.title ?? '' })}
         confirmText={deleting?.title}
         message={
           <>
-            This permanently deletes the course and everything inside it —{' '}
-            <strong>
-              {deleting?.unit_count ?? 0} modules, {deleting?.topic_count ?? 0} topics,{' '}
-              {deleting?.skill_count ?? 0} skills and {deleting?.lesson_count ?? 0} lessons
-            </strong>{' '}
-            — along with every exercise attached to those skills and every student attempt against
-            them. This cannot be undone.
+            {t('admin.crs.deleteBody', {
+              units: deleting?.unit_count ?? 0,
+              topics: deleting?.topic_count ?? 0,
+              skills: deleting?.skill_count ?? 0,
+              lessons: deleting?.lesson_count ?? 0,
+            })}
           </>
         }
         onConfirm={async () => {

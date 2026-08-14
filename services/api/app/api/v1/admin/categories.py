@@ -10,7 +10,7 @@ from __future__ import annotations
 from typing import Annotated, Any
 
 from fastapi import APIRouter, HTTPException, Query, status
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy import func, select
 
 from app.api.v1.admin._common import (
@@ -23,13 +23,18 @@ from app.api.v1.admin._common import (
     paginate,
     record_audit,
 )
+from app.api.v1.admin._translations import (
+    TranslationsPayload,
+    apply_translations,
+    read_translations,
+)
 from app.core.text import unique_slug
 from app.models import CategoryKind, ContentCategory, CourseCategory, ProductCategory
 
 router = APIRouter(prefix="/categories", tags=["admin:categories"])
 
 
-class CategoryIn(BaseModel):
+class CategoryIn(TranslationsPayload):
     name: str = Field(min_length=1, max_length=160)
     slug: str | None = Field(default=None, max_length=140)
     description: str | None = None
@@ -44,7 +49,7 @@ class CategoryIn(BaseModel):
     seo_description: str | None = None
 
 
-class CategoryUpdate(BaseModel):
+class CategoryUpdate(TranslationsPayload):
     """Every field optional — a PATCH must be able to change one thing without resending the rest.
 
     ``model_fields_set`` is what distinguishes "not supplied" from "explicitly set to null", which
@@ -82,6 +87,21 @@ class CategoryRead(BaseModel):
     is_visible_in_nav: bool
     seo_title: str | None = None
     seo_description: str | None = None
+    # Returned so one form round-trips both languages, exactly as every other translatable admin
+    # read does. It is not a column, so it is lifted off ``i18n`` on the way out.
+    translations: dict[str, dict[str, Any]] = Field(default_factory=dict)
+
+    @model_validator(mode="before")
+    @classmethod
+    def _lift_translations(cls, data: Any) -> Any:
+        if isinstance(data, ContentCategory):
+            columns = {
+                name: getattr(data, name)
+                for name in cls.model_fields
+                if name != "translations"
+            }
+            return {**columns, "translations": read_translations(data)}
+        return data
 
 
 class ReorderRequest(BaseModel):
@@ -213,12 +233,13 @@ def create_category(payload: CategoryIn, db: DbSession, admin: CurrentAdmin) -> 
         payload.slug or payload.name, lambda candidate: _slug_taken(db, candidate), max_length=140
     )
     category = ContentCategory(
-        **payload.model_dump(exclude={"slug"}),
+        **payload.model_dump(exclude={"slug", "translations"}),
         slug=slug,
         position=next_position(db, ContentCategory, ContentCategory.parent_id == payload.parent_id),
     )
     db.add(category)
     db.flush()
+    apply_translations(category, payload.translations)
     record_audit(
         db, admin, "create", "category", category.id, f"Created category “{category.name}”"
     )
@@ -237,7 +258,8 @@ def update_category(
     category_id: int, payload: CategoryUpdate, db: DbSession, admin: CurrentAdmin
 ) -> ContentCategory:
     category = get_or_404(db, ContentCategory, category_id, "Category")
-    fields = payload.model_dump(exclude_unset=True)
+    # ``translations`` is not a column: it is merged into ``i18n`` below.
+    fields = payload.model_dump(exclude_unset=True, exclude={"translations"})
 
     if "parent_id" in fields:
         _assert_no_cycle(db, category.id, fields["parent_id"])
@@ -257,6 +279,8 @@ def update_category(
 
     for key, value in fields.items():
         setattr(category, key, value)
+
+    apply_translations(category, payload.translations)
 
     record_audit(
         db,

@@ -183,6 +183,35 @@ and site settings all shipped in exactly this state.
 translatable model to the admin module that owns it and fails if that module does not both store
 and return translations, so a new model cannot be added with only half the pair.
 
+### The admin is the one screen that has to choose a language itself
+
+Everywhere else, the API decides: a public endpoint reads through `localise` and serves one
+language. The admin cannot, because the English column is the field its form *edits* — sending the
+Vietnamese title as `title` would make the next save overwrite the English with it.
+
+So an admin row carries both, and the screen picks:
+
+| What | Where it comes from | How the admin shows it |
+|---|---|---|
+| The row's own fields (`title`, `prompt`, `name`) | English column + `translations` | `useContentLabel()` in `lib/content-label.ts` |
+| A parent's name borrowed for display (`subject_name`, `topic_title`, `breadcrumb`) | Already localised by the API | Rendered as-is |
+
+The split matters because the second kind has no form field to round-trip, so returning English
+plus a blob for it would be pure overhead. `_course_row`, `_lesson_row`, `_question_row`,
+`_class_row` and the enrolment and dashboard rows all take the request locale for exactly this.
+
+Without the helper the admin rendered "Mathematics — Grade 6 · Whole Numbers and Operations" to
+an administrator working entirely in Vietnamese, on content whose Vietnamese title was sitting in
+the same response. The courses list also shows a **Chưa dịch** badge when a title falls back,
+because otherwise English on a Vietnamese screen is ambiguous: content, or fallback?
+
+### Duplicating must carry the translations
+
+Every duplicate endpoint builds its clone field by field, and each one forgot `i18n`. The copy
+arrived English-only on `/vi` while the original was fine, and nothing in the admin explained why.
+`duplicate_translations()` is the shared helper; the "(copy)" marker is translated too, because it
+is a word an administrator reads.
+
 ### Some content is per-locale rows, not a translation blob
 
 FAQs, page sections and announcements are **one row per language** rather than one row with an

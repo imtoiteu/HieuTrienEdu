@@ -24,6 +24,7 @@ Two rules are enforced here rather than left to the UI:
 
 from __future__ import annotations
 
+import copy
 from typing import Any
 
 from fastapi import HTTPException, status
@@ -33,8 +34,10 @@ from app.core.i18n import DEFAULT_LOCALE, SUPPORTED_LOCALES, merge_translation
 from app.models import (
     BlogPost,
     ClassGroup,
+    ContentCategory,
     Course,
     Lesson,
+    LiveSession,
     Question,
     Resource,
     SiteSetting,
@@ -47,12 +50,28 @@ from app.models import (
     Unit,
 )
 
-__all__ = ["TRANSLATABLE", "TranslationsPayload", "apply_translations", "read_translations"]
+__all__ = [
+    "COPY_SUFFIX",
+    "TRANSLATABLE",
+    "TranslationsPayload",
+    "apply_translations",
+    "duplicate_translations",
+    "read_translations",
+]
+
+
+# The marker "Duplicate" appends to a title. It is a word an administrator reads, so it needs a
+# translation like any other: a Vietnamese course whose copy is called "Toán học — Lớp 6 (copy)"
+# is the one English word on an otherwise Vietnamese screen.
+COPY_SUFFIX: dict[str, str] = {"en": "(copy)", "vi": "(bản sao)"}
 
 
 # Which fields of each model an administrator may translate. Anything absent is either structural
 # (ids, positions, flags) or correctness-bearing (answers, BKT parameters) and stays single-valued.
 TRANSLATABLE: dict[Any, tuple[str, ...]] = {
+    # Category names label courses and fill the public navigation, so they are read by
+    # visitors in both languages.
+    ContentCategory: ("name", "description", "seo_title", "seo_description"),
     Subject: ("name", "description"),
     Course: ("title", "summary", "description", "seo_title", "seo_description"),
     Unit: ("title", "summary"),
@@ -71,6 +90,8 @@ TRANSLATABLE: dict[Any, tuple[str, ...]] = {
     # same in every language, and translating it would be wrong rather than merely unnecessary.
     TutoringProduct: ("name", "tagline", "description", "features"),
     ClassGroup: ("name",),
+    # What the next lesson is about, as a student and their parent read it on the schedule.
+    LiveSession: ("title", "topic_summary"),
     Testimonial: ("quote", "author_role"),
     BlogPost: ("title", "excerpt", "body_markdown", "tags"),
     TeacherProfile: (
@@ -174,6 +195,26 @@ def apply_translations(obj: Any, translations: dict[str, dict[str, Any]] | None)
             bucket = _merge_choice_labels(bucket, obj.options or {})
         blob = merge_translation(blob, locale, bucket)
     obj.i18n = blob
+
+
+def duplicate_translations(source: Any, *, suffix_field: str | None = None) -> dict[str, Any]:
+    """The ``i18n`` blob a clone of ``source`` should start life with.
+
+    Duplication builds the clone field by field, and every duplicate endpoint simply forgot this
+    one: a copied course or lesson arrived with an empty ``i18n``, so it read as English on ``/vi``
+    while the original was fine, and nothing in the admin explained why. Deep-copied because the
+    blob is nested and the two rows must not end up sharing a dict.
+
+    ``suffix_field`` marks the copy in each language it has, matching the English title.
+    """
+    blob = copy.deepcopy(getattr(source, "i18n", None) or {})
+    if suffix_field:
+        for locale, values in blob.items():
+            title = (values or {}).get(suffix_field)
+            if isinstance(title, str) and title.strip():
+                marker = COPY_SUFFIX.get(locale, COPY_SUFFIX[DEFAULT_LOCALE])
+                values[suffix_field] = f"{title} {marker}"
+    return blob
 
 
 def read_translations(obj: Any) -> dict[str, dict[str, Any]]:

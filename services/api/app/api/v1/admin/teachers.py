@@ -33,6 +33,8 @@ from app.api.v1.admin._translations import (
     apply_translations,
     read_translations,
 )
+from app.core.deps import RequestLocale
+from app.core.i18n import localise
 from app.core.security import hash_password
 from app.core.text import unique_slug
 from app.models import (
@@ -323,7 +325,9 @@ def create_teacher(payload: TeacherCreate, db: DbSession, admin: CurrentAdmin) -
 
 
 @router.get("/{teacher_id}")
-def get_teacher(teacher_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
+def get_teacher(
+    teacher_id: int, db: DbSession, admin: CurrentAdmin, locale: RequestLocale
+) -> dict[str, Any]:
     profile = db.scalar(
         select(TeacherProfile)
         .where(TeacherProfile.id == teacher_id)
@@ -426,9 +430,9 @@ def get_teacher(teacher_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str
         {
             "id": assignment.id,
             "subject_id": assignment.subject_id,
-            "subject_name": subject.name if subject else None,
+            "subject_name": localise(subject, "name", locale) if subject else None,
             "course_id": assignment.course_id,
-            "course_title": course.title if course else None,
+            "course_title": localise(course, "title", locale) if course else None,
             "grade": assignment.grade,
             "is_lead": assignment.is_lead,
         }

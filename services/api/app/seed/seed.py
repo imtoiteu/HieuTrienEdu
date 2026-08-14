@@ -22,7 +22,7 @@ from sqlalchemy.orm import Session
 from app.content_io.loader import load_all
 from app.core.config import settings
 from app.core.db import SessionLocal, engine
-from app.core.i18n import merge_translation
+from app.core.i18n import localise, merge_translation
 from app.core.security import hash_password
 from app.models import (
     Achievement,
@@ -489,6 +489,19 @@ def seed_classes(db: Session, teachers: dict[str, TeacherProfile]) -> list[Class
                         class_group_id=group.id,
                         title=f"{group.name} — Session {week + 1}",
                         topic_summary="Weekly session. The teacher will share the plan in advance.",
+                        # A session title is built from the class name, so it exists in every
+                        # language the class name does — and it is the line a student reads on
+                        # their schedule.
+                        i18n={
+                            "vi": {
+                                "title": (
+                                    f"{localise(group, 'name', 'vi')} — Buổi {week + 1}"
+                                ),
+                                "topic_summary": (
+                                    "Buổi học hằng tuần. Giáo viên sẽ gửi kế hoạch bài học trước."
+                                ),
+                            }
+                        },
                         starts_at=starts, ends_at=ends,
                         provider=settings.live_class_provider,
                         status=SessionStatus.SCHEDULED,
@@ -499,6 +512,28 @@ def seed_classes(db: Session, teachers: dict[str, TeacherProfile]) -> list[Class
                         ),
                     )
                 )
+    db.flush()
+
+    # Sessions created before ``live_sessions`` had an ``i18n`` column keep their English title
+    # and nothing else. Deriving the Vietnamese from the class name is exactly what the create
+    # branch above does, so an existing demo database ends up in the same state as a fresh one
+    # without touching anything an administrator has since edited.
+    for group in groups:
+        vietnamese_name = localise(group, "name", "vi")
+        if vietnamese_name == group.name:
+            continue
+        for session in group.sessions:
+            if session.i18n or not session.title.startswith(f"{group.name} — Session "):
+                continue
+            number = session.title.rsplit(" ", 1)[-1]
+            session.i18n = {
+                "vi": {
+                    "title": f"{vietnamese_name} — Buổi {number}",
+                    "topic_summary": (
+                        "Buổi học hằng tuần. Giáo viên sẽ gửi kế hoạch bài học trước."
+                    ),
+                }
+            }
     db.flush()
     return groups
 

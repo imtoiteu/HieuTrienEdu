@@ -30,10 +30,14 @@ from app.api.v1.admin._common import (
     snapshot,
 )
 from app.api.v1.admin._translations import (
+    COPY_SUFFIX,
     TranslationsPayload,
     apply_translations,
+    duplicate_translations,
     read_translations,
 )
+from app.core.deps import RequestLocale
+from app.core.i18n import DEFAULT_LOCALE, localise
 from app.core.text import unique_slug
 from app.models import (
     ContentRevision,
@@ -115,6 +119,22 @@ def _apply_lesson_translations(
     apply_translations(lesson, staged)
 
 
+def _clone_lesson_translations(lesson: Lesson) -> dict[str, Any]:
+    """Translations for a duplicated lesson, staged as a draft like the English body.
+
+    The clone starts with an empty live body and everything in the draft, so a copy is never
+    accidentally live. Each translation has to follow the same rule or the languages disagree
+    about what is published.
+    """
+    blob = duplicate_translations(lesson, suffix_field="title")
+    for values in blob.values():
+        body = values.pop("draft_blocks", None) or values.pop("blocks", None)
+        values.pop("blocks", None)
+        if body:
+            values["draft_blocks"] = body
+    return blob
+
+
 def _publish_lesson_translations(lesson: Lesson) -> None:
     """Promote every locale's translated draft to live, alongside the English publish."""
     blob = dict(lesson.i18n or {})
@@ -151,13 +171,17 @@ def _slug_taken(db, slug: str, exclude_id: int | None = None) -> bool:
     return db.scalar(query) is not None
 
 
-def _lesson_row(lesson: Lesson, topic: Topic | None = None) -> dict[str, Any]:
+def _lesson_row(
+    lesson: Lesson, topic: Topic | None = None, locale: str = DEFAULT_LOCALE
+) -> dict[str, Any]:
     return {
         "id": lesson.id,
         "slug": lesson.slug,
         "title": lesson.title,
         "topic_id": lesson.topic_id,
-        "topic_title": topic.title if topic else None,
+        # Borrowed from the parent for display; the lesson form has no topic field to edit,
+        # so it arrives already in the administrator's language.
+        "topic_title": localise(topic, "title", locale) if topic else None,
         "skill_id": lesson.skill_id,
         "summary": lesson.summary,
         "objectives": lesson.objectives or [],
@@ -179,6 +203,7 @@ def _lesson_row(lesson: Lesson, topic: Topic | None = None) -> dict[str, Any]:
 @router.get("")
 def list_lessons(
     db: DbSession,
+    locale: RequestLocale,
     admin: CurrentAdmin,
     course_id: Annotated[int | None, Query()] = None,
     unit_id: Annotated[int | None, Query()] = None,
@@ -225,11 +250,13 @@ def list_lessons(
         },
     )
     rows, total = paginate(db, query, params)
-    return build_page([_lesson_row(row, row.topic) for row in rows], total, params)
+    return build_page([_lesson_row(row, row.topic, locale) for row in rows], total, params)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED)
-def create_lesson(payload: LessonIn, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
+def create_lesson(
+    payload: LessonIn, db: DbSession, admin: CurrentAdmin, locale: RequestLocale
+) -> dict[str, Any]:
     topic = get_or_404(db, Topic, payload.topic_id, "Topic")
     if payload.skill_id is not None:
         get_or_404(db, Skill, payload.skill_id, "Skill")
@@ -270,11 +297,13 @@ def create_lesson(payload: LessonIn, db: DbSession, admin: CurrentAdmin) -> dict
     record_audit(db, admin, "create", "lesson", lesson.id, f"Created lesson “{lesson.title}”")
     db.commit()
     db.refresh(lesson)
-    return _lesson_row(lesson, topic)
+    return _lesson_row(lesson, topic, locale)
 
 
 @router.get("/{lesson_id}")
-def get_lesson(lesson_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
+def get_lesson(
+    lesson_id: int, db: DbSession, admin: CurrentAdmin, locale: RequestLocale
+) -> dict[str, Any]:
     """Full editing payload: draft body, live body, breadcrumb and attached materials."""
     lesson = db.scalar(
         select(Lesson)
@@ -293,7 +322,7 @@ def get_lesson(lesson_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, 
     unit = topic.unit if topic else None
     course = unit.course if unit else None
 
-    data = _lesson_row(lesson, topic)
+    data = _lesson_row(lesson, topic, locale)
     data.update(
         {
             "blocks": lesson.blocks or [],
@@ -313,15 +342,15 @@ def get_lesson(lesson_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, 
                 if lesson.video
                 else None
             ),
-            "skill_name": lesson.skill.name if lesson.skill else None,
+            "skill_name": localise(lesson.skill, "name", locale) if lesson.skill else None,
             "translations": read_translations(lesson),
             "breadcrumb": {
                 "course_id": course.id if course else None,
-                "course_title": course.title if course else None,
+                "course_title": localise(course, "title", locale) if course else None,
                 "unit_id": unit.id if unit else None,
-                "unit_title": unit.title if unit else None,
+                "unit_title": localise(unit, "title", locale) if unit else None,
                 "topic_id": topic.id if topic else None,
-                "topic_title": topic.title if topic else None,
+                "topic_title": localise(topic, "title", locale) if topic else None,
             },
             "resources": [
                 {
@@ -465,7 +494,8 @@ def duplicate_lesson(lesson_id: int, db: DbSession, admin: CurrentAdmin) -> dict
         slug=unique_slug(
             f"{lesson.title} copy", lambda candidate: _slug_taken(db, candidate), max_length=180
         ),
-        title=f"{lesson.title} (copy)",
+        title=f"{lesson.title} {COPY_SUFFIX[DEFAULT_LOCALE]}",
+        i18n=_clone_lesson_translations(lesson),
         topic_id=lesson.topic_id,
         skill_id=lesson.skill_id,
         summary=lesson.summary,
@@ -497,6 +527,7 @@ def preview_lesson(
     lesson_id: int,
     db: DbSession,
     admin: CurrentAdmin,
+    locale: RequestLocale,
     draft: Annotated[bool, Query()] = True,
 ) -> dict[str, Any]:
     """Render the lesson exactly as a student would see it.
@@ -550,9 +581,9 @@ def preview_lesson(
         "is_draft_preview": draft,
         "blocks": blocks,
         "topic_slug": lesson.topic.slug if lesson.topic else None,
-        "topic_title": lesson.topic.title if lesson.topic else None,
+        "topic_title": localise(lesson.topic, "title", locale) if lesson.topic else None,
         "skill_slug": lesson.skill.slug if lesson.skill else None,
-        "skill_name": lesson.skill.name if lesson.skill else None,
+        "skill_name": localise(lesson.skill, "name", locale) if lesson.skill else None,
         "video": (
             {
                 "id": lesson.video.id,

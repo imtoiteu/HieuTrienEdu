@@ -21,6 +21,8 @@ from app.api.v1.admin._common import (
     paginate,
     record_audit,
 )
+from app.core.deps import RequestLocale
+from app.core.i18n import DEFAULT_LOCALE, localise
 from app.models import (
     ClassEnrollment,
     ClassGroup,
@@ -76,7 +78,7 @@ class EnrollmentUpdate(BaseModel):
     cancelled_reason: str | None = Field(default=None, max_length=2000)
 
 
-def _row(enrollment: ClassEnrollment) -> dict[str, Any]:
+def _row(enrollment: ClassEnrollment, locale: str = DEFAULT_LOCALE) -> dict[str, Any]:
     student = enrollment.student
     group = enrollment.class_group
     return {
@@ -86,7 +88,9 @@ def _row(enrollment: ClassEnrollment) -> dict[str, Any]:
         "student_email": student.user.email if student and student.user else None,
         "student_grade": student.grade if student else None,
         "class_group_id": enrollment.class_group_id,
-        "class_name": group.name if group else None,
+        # Display only — the enrolment form picks a class by id, so the borrowed name arrives
+        # in the administrator's language.
+        "class_name": localise(group, "name", locale) if group else None,
         "format": group.format if group else None,
         "delivery_mode": group.delivery_mode if group else None,
         "teacher_id": group.teacher_id if group else None,
@@ -128,6 +132,7 @@ def _loaded(db, enrollment_id: int) -> ClassEnrollment:
 def list_enrollments(
     db: DbSession,
     admin: CurrentAdmin,
+    locale: RequestLocale,
     enrollment_status: Annotated[EnrollmentStatus | None, Query(alias="status")] = None,
     payment_status: Annotated[str | None, Query(max_length=20)] = None,
     class_group_id: Annotated[int | None, Query()] = None,
@@ -182,12 +187,12 @@ def list_enrollments(
         },
     )
     rows, total = paginate(db, query, params)
-    return build_page([_row(row) for row in rows], total, params)
+    return build_page([_row(row, locale) for row in rows], total, params)
 
 
 @router.post("", status_code=status.HTTP_201_CREATED)
 def create_enrollment(
-    payload: EnrollmentCreate, db: DbSession, admin: CurrentAdmin
+    payload: EnrollmentCreate, db: DbSession, admin: CurrentAdmin, locale: RequestLocale
 ) -> dict[str, Any]:
     """Place a student in a class directly — the counter-service path."""
     get_or_404(db, StudentProfile, payload.student_id, "Student")
@@ -244,13 +249,15 @@ def create_enrollment(
         f"Enrolled student #{payload.student_id} in “{group.name}”",
     )
     db.commit()
-    return _row(_loaded(db, enrollment.id))
+    return _row(_loaded(db, enrollment.id), locale)
 
 
 @router.get("/{enrollment_id}")
-def get_enrollment(enrollment_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
+def get_enrollment(
+    enrollment_id: int, db: DbSession, admin: CurrentAdmin, locale: RequestLocale
+) -> dict[str, Any]:
     enrollment = _loaded(db, enrollment_id)
-    data = _row(enrollment)
+    data = _row(enrollment, locale)
     if enrollment.order_id:
         order = db.get(Order, enrollment.order_id)
         data["order"] = (
@@ -269,7 +276,11 @@ def get_enrollment(enrollment_id: int, db: DbSession, admin: CurrentAdmin) -> di
 
 @router.patch("/{enrollment_id}")
 def update_enrollment(
-    enrollment_id: int, payload: EnrollmentUpdate, db: DbSession, admin: CurrentAdmin
+    enrollment_id: int,
+    payload: EnrollmentUpdate,
+    db: DbSession,
+    admin: CurrentAdmin,
+    locale: RequestLocale,
 ) -> dict[str, Any]:
     enrollment = _loaded(db, enrollment_id)
     fields = payload.model_dump(exclude_unset=True)
@@ -327,7 +338,7 @@ def update_enrollment(
         {k: str(v) for k, v in fields.items()},
     )
     db.commit()
-    return _row(_loaded(db, enrollment_id))
+    return _row(_loaded(db, enrollment_id), locale)
 
 
 @router.post("/{enrollment_id}/approve")
@@ -365,7 +376,7 @@ def reject_enrollment(
 
 @router.post("/{enrollment_id}/mark-paid")
 def mark_enrollment_paid(
-    enrollment_id: int, db: DbSession, admin: CurrentAdmin
+    enrollment_id: int, db: DbSession, admin: CurrentAdmin, locale: RequestLocale
 ) -> dict[str, Any]:
     """Reconcile an offline payment against the linked order, if there is one."""
     enrollment = _loaded(db, enrollment_id)
@@ -383,7 +394,7 @@ def mark_enrollment_paid(
         f"Marked enrollment #{enrollment.id} as paid",
     )
     db.commit()
-    result = _row(_loaded(db, enrollment_id))
+    result = _row(_loaded(db, enrollment_id), locale)
     result["payment_id"] = payment_id
     return result
 

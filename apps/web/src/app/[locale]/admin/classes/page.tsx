@@ -14,9 +14,10 @@ import {
   FormRow,
   SelectField,
   TextField,
-  humanise,
+  useEnumLabel,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
+import { useContentLabel } from '@/lib/content-label';
 import {
   adminApi,
   type AdminClass,
@@ -40,6 +41,8 @@ interface Slot {
 
 export default function ClassesPage() {
   const { t, locale, formatDate, formatDateTime } = useI18n();
+  const enumLabel = useEnumLabel();
+  const label = useContentLabel();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
   const { run, notify } = useToast();
 
@@ -122,10 +125,10 @@ export default function ClassesPage() {
             href={href(`/admin/classes/${row.id}`)}
             className="block truncate font-bold text-ink-900 hover:text-brand-700 hover:underline"
           >
-            {row.name}
+            {label(row, 'name')}
           </Link>
           <p className="truncate text-xs text-ink-500">
-            {humanise(row.format)} · {humanise(row.delivery_mode)}
+            {enumLabel(row.format)} · {enumLabel(row.delivery_mode)}
             {row.location ? ` · ${row.location}` : ''}
           </p>
         </div>
@@ -195,7 +198,7 @@ export default function ClassesPage() {
       render: (row) => (
         <button
           type="button"
-          aria-label={`Delete ${row.name}`}
+          aria-label={t('admin.a.deleteAria', { name: label(row, 'name') })}
           onClick={() => setDeleting(row)}
           className="rounded-lg p-2 text-coral-600 hover:bg-coral-50"
         >
@@ -257,12 +260,12 @@ export default function ClassesPage() {
             {
               key: 'format',
               label: t('admin.a.format'),
-              options: FORMATS.map((f) => ({ value: f, label: humanise(f) })),
+              options: FORMATS.map((f) => ({ value: f, label: enumLabel(f) })),
             },
             {
               key: 'delivery_mode',
               label: t('admin.a.delivery'),
-              options: MODES.map((m) => ({ value: m, label: humanise(m) })),
+              options: MODES.map((m) => ({ value: m, label: enumLabel(m) })),
             },
             {
               key: 'teacher_id',
@@ -306,7 +309,7 @@ export default function ClassesPage() {
               {sessions.map((session) => (
                 <li key={session.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-bold text-ink-900">{session.title}</p>
+                    <p className="truncate font-bold text-ink-900">{label(session, 'title')}</p>
                     <p className="truncate text-xs text-ink-500">
                       {session.class_name}
                       {session.teacher_name ? ` · ${session.teacher_name}` : ''}
@@ -321,7 +324,7 @@ export default function ClassesPage() {
                       className="text-xs font-bold text-brand-600 hover:underline"
                     >{t('admin.cls.joinLink')}</a>
                   )}
-                  <Badge tone="neutral">{humanise(session.status)}</Badge>
+                  <Badge tone="neutral">{enumLabel(session.status)}</Badge>
                   <span className="text-xs font-semibold text-ink-700">
                     {formatDateTime(session.starts_at)}
                   </span>
@@ -388,7 +391,7 @@ export default function ClassesPage() {
               <option value={0}>{t('admin.a.none')}</option>
               {courses.map((course) => (
                 <option key={course.id} value={course.id}>
-                  {course.title}
+                  {label(course, 'title')}
                 </option>
               ))}
             </SelectField>
@@ -415,7 +418,7 @@ export default function ClassesPage() {
             >
               {FORMATS.map((f) => (
                 <option key={f} value={f}>
-                  {humanise(f)}
+                  {enumLabel(f)}
                 </option>
               ))}
             </SelectField>
@@ -428,7 +431,7 @@ export default function ClassesPage() {
             >
               {MODES.map((m) => (
                 <option key={m} value={m}>
-                  {humanise(m)}
+                  {enumLabel(m)}
                 </option>
               ))}
             </SelectField>
@@ -555,7 +558,7 @@ export default function ClassesPage() {
       <ConfirmDialog
         open={deleting !== null}
         onClose={() => setDeleting(null)}
-        title={`Delete “${deleting?.name}”?`}
+        title={t('admin.a.deleteQ', { name: deleting?.name ?? '' })}
         message={t('admin.cls.deleteBody')}
         onConfirm={async () => {
           if (!deleting) return;

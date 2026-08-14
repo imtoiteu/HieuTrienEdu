@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
+  <title>HieuTrienEducation</title>
+  <!--
+    The same mark as `Logo` in packages/ui/src/decor.tsx: a rounded square holding an H drawn as a
+    plus sign (Mathematics) beside a pendulum (Physics).
+
+    Strokes are heavier than the on-page logo because a favicon is read at 16px, where the 3.4px
+    stems of the original close up into a blur. The pendulum bob keeps its dark outline for the
+    same reason — at small sizes the yellow needs the contrast to stay visible on the violet.
+  -->
+  <rect x="1.5" y="1.5" width="37" height="37" rx="12" fill="#6D4AFF" />
+  <rect x="1.5" y="1.5" width="37" height="37" rx="12" fill="none" stroke="#1A1633" stroke-width="3" />
+  <path d="M12 11v18M12 20h9M21 11v18" stroke="#FFFFFF" stroke-width="4.2" stroke-linecap="round" />
+  <path d="M29 12v11" stroke="#FFC53D" stroke-width="3.2" stroke-linecap="round" />
+  <circle cx="29" cy="27" r="4" fill="#FFC53D" stroke="#1A1633" stroke-width="2" />
+</svg>

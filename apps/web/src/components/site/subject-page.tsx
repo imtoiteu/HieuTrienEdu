@@ -45,7 +45,7 @@ export async function SubjectPage({
   return (
     <MarketingShell locale={locale}>
       <PageHeader
-        eyebrow={`${t('common.grade')} 6–9`}
+        eyebrow={`${t('common.grade')} 6–12`}
         title={t(`subject.${slug}.title`)}
         subtitle={intro}
         tone={isPhysics ? 'teal' : 'lavender'}

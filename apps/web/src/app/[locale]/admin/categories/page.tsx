@@ -14,14 +14,25 @@ import {
   SelectField,
   TextAreaField,
   TextField,
-  humanise,
+  TranslationPanel,
+  useEnumLabel,
+  translationDraft,
+  translationsPayload,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
+import { useContentLabel } from '@/lib/content-label';
 import { adminApi, type Category, type CategoryKind } from '@/lib/admin-api';
 import { useRequireAuth } from '@/lib/auth';
 import { useI18n } from '@/lib/i18n';
 
 const KINDS: CategoryKind[] = ['subject', 'grade', 'program', 'topic', 'tag'];
+
+// A category name is public — it labels courses and fills the site navigation — so it is
+// authored in both languages, not just the one the administrator happens to be using.
+const CATEGORY_FIELDS = [
+  { name: 'name', label: '' },
+  { name: 'description', label: '' },
+];
 
 const BLANK = {
   name: '',
@@ -38,6 +49,8 @@ const BLANK = {
 
 export default function CategoriesPage() {
   const { t, locale } = useI18n();
+  const enumLabel = useEnumLabel();
+  const label = useContentLabel();
   const { user, loading: authLoading } = useRequireAuth(locale, ['admin']);
   const { run, notify } = useToast();
   const params = useSearchParams();
@@ -45,6 +58,7 @@ export default function CategoriesPage() {
   const [rows, setRows] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Category | null>(null);
+  const [vi, setVi] = useState<Record<string, string>>({});
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState({ ...BLANK });
   const [saving, setSaving] = useState(false);
@@ -115,6 +129,7 @@ export default function CategoriesPage() {
       seo_title: category.seo_title ?? '',
       seo_description: category.seo_description ?? '',
     });
+    setVi(translationDraft(category.translations, CATEGORY_FIELDS));
     setEditing(category);
   }
 
@@ -131,13 +146,14 @@ export default function CategoriesPage() {
       image_url: form.image_url || null,
       seo_title: form.seo_title || null,
       seo_description: form.seo_description || null,
+      translations: translationsPayload(vi),
     };
     const result = await run(
       async () =>
         editing
           ? adminApi.categories.update(editing.id, body)
           : adminApi.categories.create(body),
-      editing ? 'Category updated' : 'Category created',
+      editing ? t('admin.cat.updated') : t('admin.cat.created'),
     );
     setSaving(false);
     if (result) {
@@ -170,7 +186,7 @@ export default function CategoriesPage() {
         category.is_published
           ? adminApi.categories.unpublish(category.id)
           : adminApi.categories.publish(category.id),
-      category.is_published ? 'Category hidden from the site' : 'Category published',
+      category.is_published ? t('admin.cat.hiddenToast') : t('admin.cat.publishedToast'),
     );
     if (ok) await load();
   }
@@ -188,6 +204,7 @@ export default function CategoriesPage() {
         <Button
           onClick={() => {
             setForm({ ...BLANK });
+            setVi({});
             setCreating(true);
           }}
         >
@@ -215,7 +232,7 @@ export default function CategoriesPage() {
                 kindFilter === kind ? 'border-brand-500 bg-brand-500 text-white' : 'border-ink-200'
               }`}
             >
-              {humanise(kind)} ({count})
+              {enumLabel(kind)} ({count})
             </button>
           );
         })}
@@ -247,22 +264,24 @@ export default function CategoriesPage() {
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-bold text-ink-900">{row.name}</span>
-                    <Badge tone="neutral">{humanise(row.kind)}</Badge>
+                    <span className="font-bold text-ink-900">{label(row, 'name')}</span>
+                    <Badge tone="neutral">{enumLabel(row.kind)}</Badge>
                     {!row.is_published && <Badge tone="coral">{t('admin.a.hidden')}</Badge>}
                     {row.is_visible_in_nav && <Badge tone="brand">{t('admin.cat.inMenu')}</Badge>}
                   </div>
                   <p className="truncate text-xs text-ink-500">
                     /{row.slug}
-                    {(row.course_count ?? 0) > 0 && ` · ${row.course_count} course(s)`}
-                    {(row.product_count ?? 0) > 0 && ` · ${row.product_count} programme(s)`}
+                    {(row.course_count ?? 0) > 0 &&
+                      ` · ${t('admin.cat.courseCount', { count: row.course_count ?? 0 })}`}
+                    {(row.product_count ?? 0) > 0 &&
+                      ` · ${t('admin.cat.productCount', { count: row.product_count ?? 0 })}`}
                   </p>
                 </div>
                 <div className="flex items-center gap-1">
                   <button
                     type="button"
                     onClick={() => move(row, -1)}
-                    aria-label={`Move ${row.name} up`}
+                    aria-label={t('admin.a.moveUpAria', { name: label(row, 'name') })}
                     className="rounded-lg p-1.5 text-ink-500 hover:bg-ink-100"
                   >
                     <ArrowUp className="h-4 w-4" aria-hidden="true" />
@@ -270,7 +289,7 @@ export default function CategoriesPage() {
                   <button
                     type="button"
                     onClick={() => move(row, 1)}
-                    aria-label={`Move ${row.name} down`}
+                    aria-label={t('admin.a.moveDownAria', { name: label(row, 'name') })}
                     className="rounded-lg p-1.5 text-ink-500 hover:bg-ink-100"
                   >
                     <ArrowDown className="h-4 w-4" aria-hidden="true" />
@@ -278,7 +297,7 @@ export default function CategoriesPage() {
                   <button
                     type="button"
                     onClick={() => togglePublish(row)}
-                    aria-label={row.is_published ? `Hide ${row.name}` : `Publish ${row.name}`}
+                    aria-label={row.is_published ? t('admin.a.hideAria', { name: row.name }) : t('admin.a.publishAria', { name: row.name })}
                     className="rounded-lg p-1.5 text-ink-500 hover:bg-ink-100"
                   >
                     {row.is_published ? (
@@ -290,7 +309,7 @@ export default function CategoriesPage() {
                   <button
                     type="button"
                     onClick={() => openEdit(row)}
-                    aria-label={`Edit ${row.name}`}
+                    aria-label={t('admin.a.editAria', { name: label(row, 'name') })}
                     className="rounded-lg p-1.5 text-ink-500 hover:bg-ink-100"
                   >
                     <Pencil className="h-4 w-4" aria-hidden="true" />
@@ -298,7 +317,7 @@ export default function CategoriesPage() {
                   <button
                     type="button"
                     onClick={() => setDeleting(row)}
-                    aria-label={`Delete ${row.name}`}
+                    aria-label={t('admin.a.deleteAria', { name: label(row, 'name') })}
                     className="rounded-lg p-1.5 text-coral-600 hover:bg-coral-50"
                   >
                     <Trash2 className="h-4 w-4" aria-hidden="true" />
@@ -316,7 +335,7 @@ export default function CategoriesPage() {
           setEditing(null);
           setCreating(false);
         }}
-        title={editing ? `Edit “${editing.name}”` : 'New category'}
+        title={editing ? t('admin.a.editQ', { name: editing.name }) : t('admin.cat.createFirst')}
         description={t('admin.cat.modalHint')}
         footer={
           <>
@@ -328,7 +347,7 @@ export default function CategoriesPage() {
               }}
             >{t('admin.a.cancel')}</Button>
             <Button loading={saving} onClick={save}>
-              {editing ? 'Save changes' : 'Create category'}
+              {editing ? t('admin.a.saveChanges') : t('admin.cat.create')}
             </Button>
           </>
         }
@@ -339,9 +358,20 @@ export default function CategoriesPage() {
               id="cat-name"
               value={form.name}
               onChange={(event) => setForm({ ...form, name: event.target.value })}
-              placeholder="e.g. Luyện thi vào 10"
+              placeholder={t('admin.cat.placeholderName')}
             />
           </FormRow>
+
+          <div className="sm:col-span-2">
+            <TranslationPanel
+              fields={[
+                { name: 'name', label: t('admin.a.name') },
+                { name: 'description', label: t('admin.a.description'), multiline: true },
+              ]}
+              value={vi}
+              onChange={setVi}
+            />
+          </div>
 
           <FormRow
             label={t('admin.a.slug')}
@@ -366,7 +396,7 @@ export default function CategoriesPage() {
             >
               {KINDS.map((kind) => (
                 <option key={kind} value={kind}>
-                  {humanise(kind)}
+                  {enumLabel(kind)}
                 </option>
               ))}
             </SelectField>
@@ -388,7 +418,7 @@ export default function CategoriesPage() {
                 .filter((row) => row.id !== editing?.id)
                 .map((row) => (
                   <option key={row.id} value={row.id}>
-                    {row.name}
+                    {label(row, 'name')}
                   </option>
                 ))}
             </SelectField>
@@ -446,7 +476,7 @@ export default function CategoriesPage() {
       <ConfirmDialog
         open={deleting !== null}
         onClose={() => setDeleting(null)}
-        title={`Delete “${deleting?.name}”?`}
+        title={t('admin.a.deleteQ', { name: deleting?.name ?? '' })}
         message={
           <>
             This removes the category from the site. Courses and programmes in it are not deleted,
