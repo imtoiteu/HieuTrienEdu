@@ -475,6 +475,7 @@
   "admin.crs.skillName": "Tên kỹ năng",
   "admin.crs.statusToast": "Đã chuyển khoá học sang {status}",
   "admin.crs.structure": "Cấu trúc",
+  "admin.crs.structureSummary": "{units} chương · {topics} chủ đề · {lessons} bài học",
   "admin.crs.subtitle": "Khoá học và cấu trúc chuyên đề → chủ đề → bài học.",
   "admin.crs.title": "Khoá học",
   "admin.crs.topic": "Chủ đề",

@@ -336,14 +336,15 @@ export default function CourseStructurePage({
           <Card className="mb-6 flex flex-wrap items-center gap-4">
             <StatusBadge value={course.status} />
             <span className="text-sm text-ink-600">
-              {course.unit_count ?? course.units.length} modules ·{' '}
-              {course.units.reduce((sum, unit) => sum + unit.topics.length, 0)} topics ·{' '}
-              {course.units.reduce(
-                (sum, unit) =>
-                  sum + unit.topics.reduce((inner, topic) => inner + topic.lessons.length, 0),
-                0,
-              )}{' '}
-              lessons
+              {t('admin.crs.structureSummary', {
+                units: course.unit_count ?? course.units.length,
+                topics: course.units.reduce((sum, unit) => sum + unit.topics.length, 0),
+                lessons: course.units.reduce(
+                  (sum, unit) =>
+                    sum + unit.topics.reduce((inner, topic) => inner + topic.lessons.length, 0),
+                  0,
+                ),
+              })}
             </span>
             {course.categories.map((category) => (
               <Badge key={category.id} tone="brand">

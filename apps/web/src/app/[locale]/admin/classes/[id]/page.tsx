@@ -208,7 +208,7 @@ export default function ClassDetailPage({
                           rel="noreferrer"
                           className="text-xs font-bold text-brand-600 hover:underline"
                         >
-                          Join
+                          {t('admin.cls.join')}
                         </a>
                       )}
                       <Badge tone="neutral">{enumLabel(session.status)}</Badge>

@@ -474,6 +474,7 @@
   "admin.crs.skillName": "Skill name",
   "admin.crs.statusToast": "Course set to {status}",
   "admin.crs.structure": "Structure",
+  "admin.crs.structureSummary": "{units} modules · {topics} topics · {lessons} lessons",
   "admin.crs.subtitle": "Academic courses and their module → topic → lesson structure.",
   "admin.crs.title": "Courses",
   "admin.crs.topic": "Topic",
