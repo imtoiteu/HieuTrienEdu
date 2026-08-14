@@ -138,7 +138,7 @@ export default function CoursesPage() {
   const columns: Column<AdminCourse>[] = [
     {
       key: 'title',
-      header: 'Course',
+      header: t('admin.a.course'),
       sortKey: 'title',
       render: (row) => (
         <div className="min-w-0">
@@ -156,13 +156,13 @@ export default function CoursesPage() {
     },
     {
       key: 'grade',
-      header: 'Grade',
+      header: t('admin.a.grade'),
       sortKey: 'grade',
       render: (row) => <Badge tone="neutral">Grade {row.grade}</Badge>,
     },
     {
       key: 'structure',
-      header: 'Structure',
+      header: t('admin.crs.structure'),
       hideOnMobile: true,
       render: (row) => (
         <span className="text-xs text-ink-600">
@@ -173,7 +173,7 @@ export default function CoursesPage() {
     },
     {
       key: 'categories',
-      header: 'Categories',
+      header: t('admin.a.categories'),
       hideOnMobile: true,
       render: (row) =>
         row.categories.length === 0 ? (
@@ -190,7 +190,7 @@ export default function CoursesPage() {
     },
     {
       key: 'status',
-      header: 'Status',
+      header: t('admin.a.status'),
       sortKey: 'status',
       render: (row) => (
         <div className="flex items-center gap-1.5">

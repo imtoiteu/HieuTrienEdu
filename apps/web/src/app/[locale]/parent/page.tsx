@@ -291,8 +291,7 @@ export default function ParentPage({ params }: { params: Promise<{ locale: strin
             {t('parent.schedule')} &amp; {t('parent.payments')}
           </h2>
           <p className="mt-2 text-sm text-ink-700">
-            Attendance records, upcoming class schedules and payment history for each child are
-            available from the navigation. They populate once a child is enrolled in a class.
+            {t('parent.moreInNav')}
           </p>
         </Card>
       </div>

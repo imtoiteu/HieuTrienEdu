@@ -301,7 +301,7 @@ export default function MediaPage() {
                 className="max-h-64 w-full rounded-2xl object-contain"
               />
             )}
-            <FormRow label="URL" hint={t('admin.med.urlHint')}>
+            <FormRow label={t('admin.a.url')} hint={t('admin.med.urlHint')}>
               <TextField readOnly value={editing.url} className="font-mono text-xs" />
             </FormRow>
             <FormRow label={t('admin.a.title')} htmlFor="m-title">

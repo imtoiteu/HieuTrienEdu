@@ -8,15 +8,7 @@ import { Alert, Button, Card, Field, Input, Select, Textarea } from '@hietedu/ui
 import { ApiError, api, type TeacherCard } from '@/lib/api';
 import { useI18n } from '@/lib/i18n';
 
-const WEEKDAYS = [
-  { value: 0, label: 'Monday' },
-  { value: 1, label: 'Tuesday' },
-  { value: 2, label: 'Wednesday' },
-  { value: 3, label: 'Thursday' },
-  { value: 4, label: 'Friday' },
-  { value: 5, label: 'Saturday' },
-  { value: 6, label: 'Sunday' },
-];
+const WEEKDAYS = [0, 1, 2, 3, 4, 5, 6].map((value) => ({ value }));
 
 /**
  * The tutoring registration flow: format → teacher → schedule → submit.
@@ -226,7 +218,7 @@ export function TutoringEnquiryForm({
                     onChange={() => toggleSlot(day.value)}
                     className="sr-only"
                   />
-                  {day.label.slice(0, 3)}
+                  {t(`common.weekdayShort.${day.value}`)}
                 </label>
               );
             })}

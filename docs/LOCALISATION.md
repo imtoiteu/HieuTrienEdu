@@ -170,6 +170,34 @@ live lesson writes to `i18n.vi.draft_blocks`, and publishing promotes every lang
 The question editor can preview a variant in either language at the same seed, which is the only
 way to check that Vietnamese prose still reads well with real numbers substituted in.
 
+### A read path without a write path is the failure mode to watch for
+
+The dangerous shape is a model listed in `TRANSLATABLE` whose public endpoint calls `localise`
+but whose *admin* endpoint accepts no `translations`. It looks correct: `/vi` shows Vietnamese,
+because the seed put it in the column. It stays correct right up until somebody edits the row —
+after which English moves on, the Vietnamese does not, the two languages disagree, and the CMS
+offers no way to reconcile them. Teacher profiles, testimonials, programmes, classes, blog posts
+and site settings all shipped in exactly this state.
+
+`test_admin_user_sync.py::test_every_publicly_localised_model_has_an_admin_write_path` maps each
+translatable model to the admin module that owns it and fails if that module does not both store
+and return translations, so a new model cannot be added with only half the pair.
+
+### Some content is per-locale rows, not a translation blob
+
+FAQs, page sections and announcements are **one row per language** rather than one row with an
+`i18n` blob, because their number differs between languages — an English site may want six
+questions where the Vietnamese one wants ten. The consequences are worth knowing:
+
+* The public endpoint filters on `locale` and only falls back to English when the requested
+  language has **no** rows at all. A row created in the wrong language is invisible, not merely
+  untranslated.
+* The admin editor therefore has to set `locale`, and defaults it to the language the
+  administrator is working in. Defaulting to `en` meant every FAQ an administrator added went to
+  the half of the site almost nobody visits.
+* The admin list shows a `VI`/`EN` badge, because two rows of the same question are the intended
+  state and look like an accidental duplicate without it.
+
 ## Adding a language
 
 1. Add the code to `SUPPORTED_LOCALES` in `app/core/i18n.py`.

@@ -23,7 +23,8 @@ import { useRequireAuth } from '@/lib/auth';
 import { useI18n } from '@/lib/i18n';
 
 type Detail = Record<string, any>;
-const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+/** Weekday indexes; the names come from the dictionary so they follow the interface language. */
+const WEEKDAYS = [0, 1, 2, 3, 4, 5, 6];
 
 export default function ClassDetailPage({
   params,
@@ -286,7 +287,7 @@ export default function ClassDetailPage({
                 <ul className="mt-3 space-y-1.5">
                   {group.schedule.map((slot: Detail, index: number) => (
                     <li key={index} className="text-sm">
-                      <span className="font-semibold">{slot.weekday_label}</span>{' '}
+                      <span className="font-semibold">{t(`common.weekday.${slot.weekday % 7}`)}</span>{' '}
                       {slot.start_time}–{slot.end_time}
                     </li>
                   ))}
@@ -533,9 +534,9 @@ export default function ClassDetailPage({
                   setSchedule(next);
                 }}
               >
-                {WEEKDAYS.map((day, dayIndex) => (
-                  <option key={day} value={dayIndex}>
-                    {day}
+                {WEEKDAYS.map((dayIndex) => (
+                  <option key={dayIndex} value={dayIndex}>
+                    {t(`common.weekday.${dayIndex}`)}
                   </option>
                 ))}
               </SelectField>
@@ -587,7 +588,7 @@ export default function ClassDetailPage({
         open={deletingSession !== null}
         onClose={() => setDeletingSession(null)}
         title={t('admin.cls.deleteSessionQ')}
-        message="Attendance recorded against it is deleted too."
+        message={t('admin.cls.deleteSessionBody')}
         onConfirm={async () => {
           if (!deletingSession) return;
           const ok = await run(

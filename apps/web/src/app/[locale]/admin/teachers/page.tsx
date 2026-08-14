@@ -67,7 +67,7 @@ export default function TeachersPage() {
   const columns: Column<AdminTeacher>[] = [
     {
       key: 'name',
-      header: 'Teacher',
+      header: t('admin.a.teacher'),
       sortKey: 'name',
       render: (row) => (
         <div className="flex min-w-0 items-center gap-3">
@@ -86,7 +86,7 @@ export default function TeachersPage() {
     },
     {
       key: 'subjects',
-      header: 'Teaches',
+      header: t('admin.tea.teaches'),
       hideOnMobile: true,
       render: (row) => (
         <div className="flex flex-wrap gap-1">
@@ -103,7 +103,7 @@ export default function TeachersPage() {
     },
     {
       key: 'experience',
-      header: 'Experience',
+      header: t('admin.tea.experience'),
       sortKey: 'experience',
       hideOnMobile: true,
       render: (row) => <span className="text-sm">{row.years_experience} years</span>,
@@ -116,7 +116,7 @@ export default function TeachersPage() {
     },
     {
       key: 'status',
-      header: 'Profile',
+      header: t('admin.tea.profile'),
       render: (row) => (
         <div className="flex items-center gap-1.5">
           {row.is_published ? (
@@ -238,7 +238,7 @@ export default function TeachersPage() {
               loading={saving}
               onClick={async () => {
                 if (!form.full_name.trim() || !form.email.trim()) {
-                  notify('Name and email are required', 'error');
+                  notify(t('admin.stu.nameEmailRequired'), 'error');
                   return;
                 }
                 setSaving(true);

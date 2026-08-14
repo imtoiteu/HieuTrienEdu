@@ -113,7 +113,7 @@ export default function LessonsPage() {
   const columns: Column<AdminLesson>[] = [
     {
       key: 'title',
-      header: 'Lesson',
+      header: t('admin.les.lesson'),
       sortKey: 'title',
       render: (row) => (
         <div className="min-w-0">
@@ -129,7 +129,7 @@ export default function LessonsPage() {
     },
     {
       key: 'blocks',
-      header: 'Content',
+      header: t('admin.les.content'),
       hideOnMobile: true,
       render: (row) => (
         <span className="text-xs text-ink-600">
@@ -139,7 +139,7 @@ export default function LessonsPage() {
     },
     {
       key: 'status',
-      header: 'Status',
+      header: t('admin.a.status'),
       sortKey: 'status',
       render: (row) => (
         <div className="flex flex-wrap items-center gap-1.5">
@@ -150,7 +150,7 @@ export default function LessonsPage() {
     },
     {
       key: 'updated',
-      header: 'Updated',
+      header: t('admin.a.updatedAt'),
       sortKey: 'updated_at',
       hideOnMobile: true,
       render: (row) => <span className="text-xs text-ink-500">{formatDate(row.updated_at)}</span>,

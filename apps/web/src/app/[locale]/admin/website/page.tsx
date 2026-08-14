@@ -13,7 +13,10 @@ import {
   SelectField,
   TextAreaField,
   TextField,
+  TranslationPanel,
   humanise,
+  translationDraft,
+  translationsPayload,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
 import {
@@ -26,6 +29,8 @@ import {
 } from '@/lib/admin-api';
 import { useRequireAuth } from '@/lib/auth';
 import { useI18n } from '@/lib/i18n';
+
+const TESTIMONIAL_FIELDS = [{ name: 'quote', label: '' }, { name: 'author_role', label: '' }];
 
 const TABS = [
   { id: 'pages', labelKey: 'admin.web.tab.pages' },
@@ -58,6 +63,7 @@ export default function WebsitePage() {
   const [editingTestimonial, setEditingTestimonial] = useState<Partial<TestimonialRow> | null>(
     null,
   );
+  const [testimonialVi, setTestimonialVi] = useState<Record<string, string>>({});
   const [deleting, setDeleting] = useState<{ kind: string; id: number; label: string } | null>(
     null,
   );
@@ -264,8 +270,7 @@ export default function WebsitePage() {
                 </Card>
               ))}
               <p className="text-xs text-ink-500">
-                These values appear immediately on the public site — there is no separate publish
-                step for contact details.
+                {t('admin.web.contactLive')}
               </p>
             </div>
           )}
@@ -277,7 +282,13 @@ export default function WebsitePage() {
                 <Button
                   size="sm"
                   onClick={() =>
-                    setEditingFaq({ question: '', answer: '', category: 'general', is_published: true })
+                    setEditingFaq({
+                      question: '',
+                      answer: '',
+                      category: 'general',
+                      is_published: true,
+                      locale,
+                    })
                   }
                 >
                   <Plus className="h-4 w-4" aria-hidden="true" />{t('admin.web.addQuestion')}</Button>
@@ -292,12 +303,13 @@ export default function WebsitePage() {
                         <p className="font-semibold text-ink-900">{faq.question}</p>
                         <p className="mt-0.5 line-clamp-2 text-sm text-ink-600">{faq.answer}</p>
                       </div>
+                      <Badge tone="brand">{faq.locale === 'vi' ? 'VI' : 'EN'}</Badge>
                       <Badge tone="neutral">{humanise(faq.category)}</Badge>
                       {!faq.is_published && <Badge tone="coral">{t('admin.a.hidden')}</Badge>}
                       <Button size="sm" variant="ghost" onClick={() => setEditingFaq(faq)}>{t('admin.a.edit')}</Button>
                       <button
                         type="button"
-                        aria-label={`Delete ${faq.question}`}
+                        aria-label={`${t('admin.a.delete')} ${faq.question}`}
                         onClick={() =>
                           setDeleting({ kind: 'faq', id: faq.id, label: faq.question })
                         }
@@ -327,11 +339,12 @@ export default function WebsitePage() {
                       kind: 'banner',
                       tone: 'brand',
                       is_published: false,
+                      locale,
                     })
                   }
                 >
                   <Plus className="h-4 w-4" aria-hidden="true" />
-                  Add
+                  {t('admin.a.add')}
                 </Button>
               </div>
               {announcements.length === 0 ? (
@@ -383,18 +396,19 @@ export default function WebsitePage() {
                 <h2 className="font-display text-lg">{t('admin.web.tab.testimonials')}</h2>
                 <Button
                   size="sm"
-                  onClick={() =>
+                  onClick={() => {
+                    setTestimonialVi({});
                     setEditingTestimonial({
                       author_name: '',
                       author_role: 'Parent',
                       quote: '',
                       rating: 5,
                       is_published: true,
-                    })
-                  }
+                    });
+                  }}
                 >
                   <Plus className="h-4 w-4" aria-hidden="true" />
-                  Add
+                  {t('admin.a.add')}
                 </Button>
               </div>
               {testimonials.length === 0 ? (
@@ -416,7 +430,16 @@ export default function WebsitePage() {
                       <Button
                         size="sm"
                         variant="ghost"
-                        onClick={() => setEditingTestimonial(item)}
+                        onClick={() => {
+                          setTestimonialVi(
+                            translationDraft(
+                              (item as { translations?: Record<string, Record<string, unknown>> })
+                                .translations,
+                              TESTIMONIAL_FIELDS,
+                            ),
+                          );
+                          setEditingTestimonial(item);
+                        }}
                       >{t('admin.a.edit')}</Button>
                       <button
                         type="button"
@@ -524,7 +547,7 @@ export default function WebsitePage() {
       <Modal
         open={editingFaq !== null}
         onClose={() => setEditingFaq(null)}
-        title={editingFaq?.id ? 'Edit question' : 'New question'}
+        title={editingFaq?.id ? t('admin.web.editQuestion') : t('admin.web.newQuestion')}
         footer={
           <>
             <Button variant="ghost" onClick={() => setEditingFaq(null)}>{t('admin.a.cancel')}</Button>
@@ -539,6 +562,9 @@ export default function WebsitePage() {
                   answer: editingFaq.answer,
                   category: editingFaq.category ?? 'general',
                   is_published: editingFaq.is_published ?? true,
+                  // FAQs are one row per language rather than a translation blob, so the row is
+                  // only ever shown to readers of the language stored here.
+                  locale: editingFaq.locale ?? locale,
                 };
                 const ok = await run(
                   () =>
@@ -573,6 +599,17 @@ export default function WebsitePage() {
                 onChange={(e) => setEditingFaq({ ...editingFaq, answer: e.target.value })}
               />
             </FormRow>
+            <FormRow label={t('admin.web.locale')} htmlFor="faq-locale">
+              <SelectField
+                id="faq-locale"
+                value={editingFaq.locale ?? locale}
+                onChange={(e) => setEditingFaq({ ...editingFaq, locale: e.target.value })}
+              >
+                <option value="vi">{t('admin.web.localeVi')}</option>
+                <option value="en">{t('admin.web.localeEn')}</option>
+              </SelectField>
+              <p className="mt-1 text-xs text-ink-500">{t('admin.web.localeHint')}</p>
+            </FormRow>
             <FormRow label={t('admin.a.category')} htmlFor="faq-c">
               <SelectField
                 id="faq-c"
@@ -598,7 +635,7 @@ export default function WebsitePage() {
       <Modal
         open={editingAnnouncement !== null}
         onClose={() => setEditingAnnouncement(null)}
-        title={editingAnnouncement?.id ? 'Edit announcement' : 'New announcement'}
+        title={editingAnnouncement?.id ? t('admin.web.editAnnouncement') : t('admin.web.newAnnouncement')}
         footer={
           <>
             <Button variant="ghost" onClick={() => setEditingAnnouncement(null)}>{t('admin.a.cancel')}</Button>
@@ -646,6 +683,19 @@ export default function WebsitePage() {
                   setEditingAnnouncement({ ...editingAnnouncement, title: e.target.value })
                 }
               />
+            </FormRow>
+            <FormRow label={t('admin.web.locale')} htmlFor="an-locale">
+              <SelectField
+                id="an-locale"
+                value={editingAnnouncement.locale ?? locale}
+                onChange={(e) =>
+                  setEditingAnnouncement({ ...editingAnnouncement, locale: e.target.value })
+                }
+              >
+                <option value="vi">{t('admin.web.localeVi')}</option>
+                <option value="en">{t('admin.web.localeEn')}</option>
+              </SelectField>
+              <p className="mt-1 text-xs text-ink-500">{t('admin.web.localeHint')}</p>
             </FormRow>
             <FormRow label={t('admin.web.body')} htmlFor="an-body" className="sm:col-span-2">
               <TextAreaField
@@ -745,7 +795,7 @@ export default function WebsitePage() {
       <Modal
         open={editingTestimonial !== null}
         onClose={() => setEditingTestimonial(null)}
-        title={editingTestimonial?.id ? 'Edit testimonial' : 'New testimonial'}
+        title={editingTestimonial?.id ? t('admin.web.editTestimonial') : t('admin.web.newTestimonial')}
         footer={
           <>
             <Button variant="ghost" onClick={() => setEditingTestimonial(null)}>{t('admin.a.cancel')}</Button>
@@ -762,6 +812,9 @@ export default function WebsitePage() {
                   rating: editingTestimonial.rating ?? 5,
                   is_published: editingTestimonial.is_published ?? true,
                   is_featured: editingTestimonial.is_featured ?? false,
+                  // /vi reads the quote through ``localise``; without this the testimonial
+                  // stays English there however the rest of the page is set.
+                  translations: translationsPayload(testimonialVi),
                 };
                 const ok = await run(
                   () =>
@@ -810,6 +863,16 @@ export default function WebsitePage() {
                 }
               />
             </FormRow>
+            <div className="sm:col-span-2">
+              <TranslationPanel
+                fields={[
+                  { name: 'quote', label: t('admin.web.quote'), multiline: true },
+                  { name: 'author_role', label: t('admin.web.authorRole') },
+                ]}
+                value={testimonialVi}
+                onChange={setTestimonialVi}
+              />
+            </div>
             <FormRow label={t('admin.web.rating')} htmlFor="te-rating">
               <SelectField
                 id="te-rating"
@@ -852,7 +915,7 @@ export default function WebsitePage() {
         open={deleting !== null}
         onClose={() => setDeleting(null)}
         title={`Delete “${deleting?.label}”?`}
-        message="This is removed from the public website immediately."
+        message={t('admin.web.deleteBody')}
         onConfirm={async () => {
           if (!deleting) return;
           const remove =

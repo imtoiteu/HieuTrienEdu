@@ -28,6 +28,11 @@ from app.api.v1.admin._common import (
     paginate,
     record_audit,
 )
+from app.api.v1.admin._translations import (
+    TranslationsPayload,
+    apply_translations,
+    read_translations,
+)
 from app.core.security import hash_password
 from app.core.text import unique_slug
 from app.models import (
@@ -60,7 +65,7 @@ CREDENTIAL_KINDS = (
 )
 
 
-class TeacherCreate(BaseModel):
+class TeacherCreate(TranslationsPayload):
     email: EmailStr
     full_name: str = Field(min_length=1, max_length=200)
     password: str | None = Field(default=None, min_length=8, max_length=72)
@@ -73,7 +78,7 @@ class TeacherCreate(BaseModel):
     is_published: bool = False
 
 
-class TeacherUpdate(BaseModel):
+class TeacherUpdate(TranslationsPayload):
     # account
     full_name: str | None = Field(default=None, min_length=1, max_length=200)
     email: EmailStr | None = None
@@ -169,6 +174,10 @@ def _teacher_row(profile: TeacherProfile) -> dict[str, Any]:
         "public_email": profile.public_email,
         "public_phone": profile.public_phone,
         "position": profile.position,
+        # The public teacher page reads every prose field through ``localise``. Returning the
+        # translations here is what lets the editor round-trip them; without it the Vietnamese
+        # copy is readable by students but invisible and uneditable to the person maintaining it.
+        "translations": read_translations(profile),
         "created_at": profile.created_at,
     }
 
@@ -298,6 +307,7 @@ def create_teacher(payload: TeacherCreate, db: DbSession, admin: CurrentAdmin) -
     )
     db.add(profile)
     db.flush()
+    apply_translations(profile, payload.translations)
 
     record_audit(
         db, admin, "create", "teacher", profile.id,
@@ -461,7 +471,9 @@ def update_teacher(
     if profile is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Teacher not found")
 
-    fields = payload.model_dump(exclude_unset=True, exclude={"slug"})
+    # ``translations`` is not a column: it is merged into ``i18n`` below, so setting it as an
+    # attribute would either raise or shadow the real blob.
+    fields = payload.model_dump(exclude_unset=True, exclude={"slug", "translations"})
     user_fields = {"full_name", "email", "phone", "avatar_url"}
 
     before: dict[str, Any] = {}
@@ -495,6 +507,8 @@ def update_teacher(
             lambda candidate: _slug_taken(db, candidate, exclude_id=profile.id),
             max_length=160,
         )
+
+    apply_translations(profile, payload.translations)
 
     record_audit(
         db, admin, "update", "teacher", profile.id,

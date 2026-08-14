@@ -26,6 +26,11 @@ from app.api.v1.admin._common import (
     record_audit,
     snapshot,
 )
+from app.api.v1.admin._translations import (
+    TranslationsPayload,
+    apply_translations,
+    read_translations,
+)
 from app.core.text import unique_slug
 from app.models import (
     Announcement,
@@ -250,7 +255,7 @@ def delete_section(section_id: int, db: DbSession, admin: CurrentAdmin) -> None:
 # --------------------------------------------------------------------------------------
 
 
-class SettingIn(BaseModel):
+class SettingIn(TranslationsPayload):
     key: str = Field(min_length=1, max_length=120)
     label: str = Field(min_length=1, max_length=200)
     group: str = Field(default="general", max_length=60)
@@ -259,7 +264,7 @@ class SettingIn(BaseModel):
     description: str | None = None
 
 
-class SettingValue(BaseModel):
+class SettingValue(TranslationsPayload):
     value: dict[str, Any]
 
 
@@ -283,6 +288,7 @@ def list_settings(
             "value_type": s.value_type,
             "description": s.description,
             "position": s.position,
+            "translations": read_translations(s),
             "updated_at": s.updated_at,
         }
         for s in rows
@@ -309,13 +315,19 @@ def upsert_setting(
         db.add(setting)
     before = setting.value
     setting.value = payload.value
+    apply_translations(setting, payload.translations)
     record_audit(
         db, admin, "update", "site_setting", setting.id or None,
         f"Updated setting “{key}”", {"from": before, "to": payload.value},
     )
     db.commit()
     db.refresh(setting)
-    return {"id": setting.id, "key": setting.key, "value": setting.value}
+    return {
+        "id": setting.id,
+        "key": setting.key,
+        "value": setting.value,
+        "translations": read_translations(setting),
+    }
 
 
 @router.post("/settings", status_code=status.HTTP_201_CREATED)
@@ -324,15 +336,23 @@ def create_setting(payload: SettingIn, db: DbSession, admin: CurrentAdmin) -> di
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT, detail="That setting key already exists"
         )
-    setting = SiteSetting(**payload.model_dump(), position=next_position(db, SiteSetting))
+    setting = SiteSetting(
+        **payload.model_dump(exclude={"translations"}), position=next_position(db, SiteSetting)
+    )
     db.add(setting)
     db.flush()
+    apply_translations(setting, payload.translations)
     record_audit(
         db, admin, "create", "site_setting", setting.id, f"Created setting “{setting.key}”"
     )
     db.commit()
     db.refresh(setting)
-    return {"id": setting.id, "key": setting.key, "value": setting.value}
+    return {
+        "id": setting.id,
+        "key": setting.key,
+        "value": setting.value,
+        "translations": read_translations(setting),
+    }
 
 
 @router.delete("/settings/{key}", status_code=status.HTTP_204_NO_CONTENT)
@@ -566,7 +586,7 @@ def delete_announcement(
 # --------------------------------------------------------------------------------------
 
 
-class TestimonialIn(BaseModel):
+class TestimonialIn(TranslationsPayload):
     author_name: str = Field(min_length=1, max_length=150)
     author_role: str = Field(default="Parent", max_length=120)
     quote: str = Field(min_length=1)
@@ -578,7 +598,7 @@ class TestimonialIn(BaseModel):
     is_featured: bool = False
 
 
-class TestimonialUpdate(BaseModel):
+class TestimonialUpdate(TranslationsPayload):
     author_name: str | None = Field(default=None, min_length=1, max_length=150)
     author_role: str | None = Field(default=None, max_length=120)
     quote: str | None = Field(default=None, min_length=1)
@@ -603,6 +623,7 @@ def _testimonial_row(item: Testimonial) -> dict[str, Any]:
         "is_published": item.is_published,
         "is_featured": item.is_featured,
         "position": item.position,
+        "translations": read_translations(item),
     }
 
 
@@ -618,9 +639,12 @@ def list_testimonials(db: DbSession, admin: CurrentAdmin) -> list[dict[str, Any]
 def create_testimonial(
     payload: TestimonialIn, db: DbSession, admin: CurrentAdmin
 ) -> dict[str, Any]:
-    item = Testimonial(**payload.model_dump(), position=next_position(db, Testimonial))
+    item = Testimonial(
+        **payload.model_dump(exclude={"translations"}), position=next_position(db, Testimonial)
+    )
     db.add(item)
     db.flush()
+    apply_translations(item, payload.translations)
     record_audit(
         db, admin, "create", "testimonial", item.id,
         f"Added testimonial from {item.author_name}",
@@ -635,8 +659,9 @@ def update_testimonial(
     testimonial_id: int, payload: TestimonialUpdate, db: DbSession, admin: CurrentAdmin
 ) -> dict[str, Any]:
     item = get_or_404(db, Testimonial, testimonial_id, "Testimonial")
-    for key, value in payload.model_dump(exclude_unset=True).items():
+    for key, value in payload.model_dump(exclude_unset=True, exclude={"translations"}).items():
         setattr(item, key, value)
+    apply_translations(item, payload.translations)
     record_audit(
         db, admin, "update", "testimonial", item.id,
         f"Updated testimonial from {item.author_name}",
@@ -672,7 +697,7 @@ def reorder_testimonials(
 # --------------------------------------------------------------------------------------
 
 
-class PostIn(BaseModel):
+class PostIn(TranslationsPayload):
     title: str = Field(min_length=1, max_length=250)
     excerpt: str = Field(min_length=1)
     body_markdown: str = Field(min_length=1)
@@ -685,7 +710,7 @@ class PostIn(BaseModel):
     status: ReviewStatus = ReviewStatus.DRAFT
 
 
-class PostUpdate(BaseModel):
+class PostUpdate(TranslationsPayload):
     title: str | None = Field(default=None, min_length=1, max_length=250)
     excerpt: str | None = Field(default=None, min_length=1)
     body_markdown: str | None = Field(default=None, min_length=1)
@@ -711,6 +736,7 @@ def _post_row(post: BlogPost) -> dict[str, Any]:
         "author_name": post.author_name,
         "status": post.status,
         "published_at": post.published_at,
+        "translations": read_translations(post),
         "updated_at": post.updated_at,
     }
 
@@ -745,7 +771,7 @@ def get_post(post_id: int, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]
 @router.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_post(payload: PostIn, db: DbSession, admin: CurrentAdmin) -> dict[str, Any]:
     post = BlogPost(
-        **payload.model_dump(exclude={"slug"}),
+        **payload.model_dump(exclude={"slug", "translations"}),
         slug=unique_slug(
             payload.slug or payload.title,
             lambda candidate: db.scalar(select(BlogPost.id).where(BlogPost.slug == candidate))
@@ -759,6 +785,7 @@ def create_post(payload: PostIn, db: DbSession, admin: CurrentAdmin) -> dict[str
     )
     db.add(post)
     db.flush()
+    apply_translations(post, payload.translations)
     record_audit(db, admin, "create", "post", post.id, f"Created post “{post.title}”")
     db.commit()
     db.refresh(post)
@@ -770,9 +797,10 @@ def update_post(
     post_id: int, payload: PostUpdate, db: DbSession, admin: CurrentAdmin
 ) -> dict[str, Any]:
     post = get_or_404(db, BlogPost, post_id, "Post")
-    fields = payload.model_dump(exclude_unset=True, exclude={"slug"})
+    fields = payload.model_dump(exclude_unset=True, exclude={"slug", "translations"})
     for key, value in fields.items():
         setattr(post, key, value)
+    apply_translations(post, payload.translations)
     if payload.slug:
         post.slug = unique_slug(
             payload.slug,
@@ -806,7 +834,7 @@ def delete_post(post_id: int, db: DbSession, admin: CurrentAdmin) -> None:
 programs_router = APIRouter(prefix="/programs", tags=["admin:programs"])
 
 
-class ProgramIn(BaseModel):
+class ProgramIn(TranslationsPayload):
     name: str = Field(min_length=1, max_length=200)
     tagline: str | None = Field(default=None, max_length=300)
     description: str | None = None
@@ -876,6 +904,7 @@ def _program_row(db, product: TutoringProduct) -> dict[str, Any]:
         "categories": [
             {"id": c.id, "name": c.name, "slug": c.slug} for c in categories
         ],
+        "translations": read_translations(product),
     }
 
 
@@ -930,7 +959,7 @@ def create_program(payload: ProgramIn, db: DbSession, admin: CurrentAdmin) -> di
             detail="The highest grade cannot be below the lowest grade",
         )
     product = TutoringProduct(
-        **payload.model_dump(exclude={"category_ids"}),
+        **payload.model_dump(exclude={"category_ids", "translations"}),
         slug=unique_slug(
             payload.name,
             lambda candidate: db.scalar(
@@ -943,6 +972,7 @@ def create_program(payload: ProgramIn, db: DbSession, admin: CurrentAdmin) -> di
     )
     db.add(product)
     db.flush()
+    apply_translations(product, payload.translations)
     if payload.category_ids:
         _set_program_categories(db, product, payload.category_ids)
     record_audit(
@@ -964,7 +994,9 @@ def update_program(
     program_id: int, payload: ProgramUpdate, db: DbSession, admin: CurrentAdmin
 ) -> dict[str, Any]:
     product = get_or_404(db, TutoringProduct, program_id, "Programme")
-    fields = payload.model_dump(exclude_unset=True, exclude={"category_ids"})
+    fields = payload.model_dump(
+        exclude_unset=True, exclude={"category_ids", "translations"}
+    )
     grade_min = fields.get("grade_min", product.grade_min)
     grade_max = fields.get("grade_max", product.grade_max)
     if grade_max < grade_min:
@@ -974,6 +1006,7 @@ def update_program(
         )
     for key, value in fields.items():
         setattr(product, key, value)
+    apply_translations(product, payload.translations)
     if payload.category_ids is not None:
         _set_program_categories(db, product, payload.category_ids)
     record_audit(

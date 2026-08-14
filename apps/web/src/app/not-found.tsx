@@ -8,9 +8,11 @@ import Link from 'next/link';
  * file, an unknown URL falls back to Next's unstyled default page.
  *
  * It is a server component with no translation context, because a URL that matched no route has
- * no locale to read. The copy is therefore English, with links into the localised site.
+ * no locale to read — there is nothing to infer a language from. Rather than guess, it shows both
+ * languages, and the primary action goes to the Vietnamese site because Vietnamese is the
+ * product's primary language; the English entry point sits beside it.
  */
-export const metadata = { title: 'Page not found' };
+export const metadata = { title: 'Không tìm thấy trang · Page not found' };
 
 export default function RootNotFound() {
   return (
@@ -27,18 +29,29 @@ export default function RootNotFound() {
         />
       </svg>
 
-      <h1 className="mt-6 font-display text-3xl font-extrabold text-ink-900 sm:text-4xl">We cannot find that page</h1>
-      <p className="mt-3 max-w-md text-ink-600">The link may be out of date, or the page may have moved.</p>
+      <h1 className="mt-6 font-display text-3xl font-extrabold text-ink-900 sm:text-4xl">
+        Không tìm thấy trang
+      </h1>
+      <p className="mt-3 max-w-md text-ink-600">
+        Đường dẫn có thể đã cũ hoặc trang đã được chuyển đi.
+      </p>
+      <p className="mt-2 max-w-md text-sm text-ink-500">
+        We cannot find that page — the link may be out of date, or the page may have moved.
+      </p>
 
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         <Link
-          href="/en"
+          href="/vi"
           className="inline-flex h-12 items-center rounded-2xl border-2 border-ink-900 bg-brand-500 px-6 font-bold text-white shadow-pop transition-all hover:bg-brand-600 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none"
-        >Back to the home page</Link>
+        >Về trang chủ</Link>
         <Link
-          href="/en/courses"
+          href="/vi/courses"
           className="inline-flex h-12 items-center rounded-2xl border-2 border-ink-900 bg-white px-6 font-bold text-ink-900 shadow-pop-sm transition-all hover:bg-ink-50"
-        >Courses</Link>
+        >Khoá học</Link>
+        <Link
+          href="/en"
+          className="inline-flex h-12 items-center rounded-2xl border-2 border-ink-200 bg-white px-6 font-bold text-ink-600 transition-all hover:bg-ink-50"
+        >English</Link>
       </div>
     </div>
   );

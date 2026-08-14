@@ -239,7 +239,7 @@ export default function ExercisesPage() {
   const columns: Column<AdminQuestion>[] = [
     {
       key: 'prompt',
-      header: 'Exercise',
+      header: t('admin.ex.exercise'),
       render: (row) => (
         <div className="min-w-0">
           <p className="line-clamp-2 font-semibold text-ink-900">{row.prompt}</p>
@@ -252,14 +252,14 @@ export default function ExercisesPage() {
     },
     {
       key: 'type',
-      header: 'Type',
+      header: t('admin.ex.type'),
       sortKey: 'type',
       hideOnMobile: true,
       render: (row) => <Badge tone="neutral">{humanise(row.question_type)}</Badge>,
     },
     {
       key: 'difficulty',
-      header: 'Level',
+      header: t('admin.stu.level'),
       sortKey: 'difficulty',
       render: (row) => (
         <span className="font-bold tabular-nums text-ink-700">{row.difficulty}</span>
@@ -267,7 +267,7 @@ export default function ExercisesPage() {
     },
     {
       key: 'usage',
-      header: 'Usage',
+      header: t('admin.ex.usage'),
       sortKey: 'served',
       hideOnMobile: true,
       render: (row) => (
@@ -280,7 +280,7 @@ export default function ExercisesPage() {
     },
     {
       key: 'status',
-      header: 'Status',
+      header: t('admin.a.status'),
       sortKey: 'status',
       render: (row) => <StatusBadge value={row.status} />,
     },

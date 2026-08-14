@@ -26,6 +26,11 @@ from app.api.v1.admin._common import (
     paginate,
     record_audit,
 )
+from app.api.v1.admin._translations import (
+    TranslationsPayload,
+    apply_translations,
+    read_translations,
+)
 from app.core.text import unique_slug
 from app.models import (
     Attendance,
@@ -61,7 +66,7 @@ class ScheduleSlotIn(BaseModel):
         return value
 
 
-class ClassIn(BaseModel):
+class ClassIn(TranslationsPayload):
     name: str = Field(min_length=1, max_length=200)
     course_id: int | None = None
     product_id: int | None = None
@@ -77,7 +82,7 @@ class ClassIn(BaseModel):
     schedule: list[ScheduleSlotIn] = Field(default_factory=list)
 
 
-class ClassUpdate(BaseModel):
+class ClassUpdate(TranslationsPayload):
     name: str | None = Field(default=None, min_length=1, max_length=200)
     course_id: int | None = None
     product_id: int | None = None
@@ -169,6 +174,7 @@ def _class_row(group: ClassGroup) -> dict[str, Any]:
             for slot in sorted(group.schedule_slots, key=lambda s: (s.weekday, s.start_time))
         ],
         "session_count": len(group.sessions),
+        "translations": read_translations(group),
         "created_at": group.created_at,
     }
 
@@ -275,7 +281,7 @@ def create_class(payload: ClassIn, db: DbSession, admin: CurrentAdmin) -> dict[s
         )
 
     group = ClassGroup(
-        **payload.model_dump(exclude={"schedule"}),
+        **payload.model_dump(exclude={"schedule", "translations"}),
         slug=unique_slug(
             payload.name,
             lambda candidate: db.scalar(
@@ -287,6 +293,7 @@ def create_class(payload: ClassIn, db: DbSession, admin: CurrentAdmin) -> dict[s
     )
     db.add(group)
     db.flush()
+    apply_translations(group, payload.translations)
     _replace_schedule(db, group, payload.schedule)
 
     record_audit(db, admin, "create", "class", group.id, f"Created class “{group.name}”")
@@ -341,7 +348,7 @@ def update_class(
     class_id: int, payload: ClassUpdate, db: DbSession, admin: CurrentAdmin
 ) -> dict[str, Any]:
     group = _loaded(db, class_id)
-    fields = payload.model_dump(exclude_unset=True, exclude={"schedule"})
+    fields = payload.model_dump(exclude_unset=True, exclude={"schedule", "translations"})
 
     if fields.get("course_id") is not None:
         get_or_404(db, Course, fields["course_id"], "Course")
@@ -378,6 +385,7 @@ def update_class(
         setattr(group, key, value)
     if payload.schedule is not None:
         _replace_schedule(db, group, payload.schedule)
+    apply_translations(group, payload.translations)
 
     record_audit(
         db, admin, "update", "class", group.id, f"Updated class “{group.name}”",

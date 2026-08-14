@@ -22,7 +22,7 @@ import { getTranslator } from '@/lib/dictionaries';
 
 export const dynamic = 'force-dynamic';
 
-const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
 
 /**
  * A teacher's public page, generated entirely from admin-managed data.
@@ -367,7 +367,7 @@ export default async function TeacherProfilePage({
                   <ul className="mt-3 space-y-1 text-sm">
                     {teacher.availability.map((slot, index) => (
                       <li key={index}>
-                        <span className="font-semibold">{WEEKDAYS[slot.weekday % 7]}</span>{' '}
+                        <span className="font-semibold">{t(`common.weekdayShort.${Number(slot.weekday) % 7}`)}</span>{' '}
                         {slot.start}–{slot.end}
                       </li>
                     ))}

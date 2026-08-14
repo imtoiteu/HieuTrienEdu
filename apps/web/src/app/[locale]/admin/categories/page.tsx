@@ -430,7 +430,7 @@ export default function CategoriesPage() {
           <div className="space-y-2 sm:col-span-2">
             <CheckboxField
               label={t('admin.a.published')}
-              hint="Unpublished categories are hidden from the public website."
+              hint={t('admin.cat.publishedHint')}
               checked={form.is_published}
               onChange={(value) => setForm({ ...form, is_published: value })}
             />

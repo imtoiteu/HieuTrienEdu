@@ -34,6 +34,15 @@ from app.services.notifications import notify_admins
 
 router = APIRouter(prefix="/site", tags=["site"])
 
+CONTACT_ACK = {
+    "en": (
+        "Thank you — we have received your message and will be in touch within one working day."
+    ),
+    "vi": (
+        "Cảm ơn bạn — trung tâm đã nhận được tin nhắn và sẽ liên hệ trong vòng một ngày làm việc."
+    ),
+}
+
 
 class TestimonialRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -218,7 +227,10 @@ def site_stats(db: DbSession) -> SiteStats:
 
 @router.post("/contact", response_model=ContactLeadAck, status_code=status.HTTP_201_CREATED)
 def submit_contact(
-    payload: ContactLeadCreate, db: DbSession, user: OptionalUser = None
+    payload: ContactLeadCreate,
+    db: DbSession,
+    locale: RequestLocale,
+    user: OptionalUser = None,
 ) -> ContactLeadAck:
     """Receive a contact / consultation enquiry from the public site.
 
@@ -261,13 +273,9 @@ def submit_contact(
     )
     db.commit()
     db.refresh(lead)
-    return ContactLeadAck(
-        id=lead.id,
-        message=(
-            "Thank you — we have received your message and will be in touch within one "
-            "working day."
-        ),
-    )
+    # The web form shows its own translated confirmation, but this field is part of the public
+    # API contract and was English regardless of who asked.
+    return ContactLeadAck(id=lead.id, message=CONTACT_ACK.get(locale, CONTACT_ACK[DEFAULT_LOCALE]))
 
 
 # --------------------------------------------------------------------------------------
@@ -362,14 +370,29 @@ def public_faqs(
 @router.get("/announcements")
 def public_announcements(
     db: DbSession,
+    locale: RequestLocale,
     kind: Annotated[str | None, Query(max_length=30)] = None,
 ) -> list[dict[str, Any]]:
-    """Banners and notices that are published *and* currently within their date window."""
+    """Banners and notices that are published *and* currently within their date window.
+
+    Announcements are per-locale rows like FAQs, but this endpoint ignored the column entirely,
+    so a Vietnamese banner also appeared on ``/en`` and vice versa. Fall back to English only
+    when this locale has no live announcement at all, rather than showing nothing.
+    """
     now = dt.datetime.now(dt.UTC)
     query = select(Announcement).where(Announcement.is_published.is_(True))
     if kind:
         query = query.where(Announcement.kind == kind)
-    rows = db.scalars(query.order_by(Announcement.position, Announcement.created_at.desc()))
+
+    def live_for(code: str) -> list[Announcement]:
+        ordered = query.where(Announcement.locale == code).order_by(
+            Announcement.position, Announcement.created_at.desc()
+        )
+        return [row for row in db.scalars(ordered) if row.is_live(now)]
+
+    rows = live_for(locale)
+    if not rows and locale != DEFAULT_LOCALE:
+        rows = live_for(DEFAULT_LOCALE)
     return [
         {
             "id": item.id,
@@ -382,7 +405,6 @@ def public_announcements(
             "image_url": item.image_url,
         }
         for item in rows
-        if item.is_live(now)
     ]
 
 

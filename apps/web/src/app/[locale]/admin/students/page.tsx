@@ -60,7 +60,7 @@ export default function StudentsPage() {
   const columns: Column<AdminStudent>[] = [
     {
       key: 'name',
-      header: 'Student',
+      header: t('admin.a.student'),
       sortKey: 'name',
       render: (row) => (
         <div className="min-w-0">
@@ -76,19 +76,19 @@ export default function StudentsPage() {
     },
     {
       key: 'grade',
-      header: 'Grade',
+      header: t('admin.a.grade'),
       sortKey: 'grade',
       render: (row) => <Badge tone="neutral">Grade {row.grade}</Badge>,
     },
     {
       key: 'school',
-      header: 'School',
+      header: t('admin.stu.school'),
       hideOnMobile: true,
       render: (row) => <span className="text-sm text-ink-600">{row.school ?? '—'}</span>,
     },
     {
       key: 'progress',
-      header: 'Progress',
+      header: t('admin.stu.progress'),
       sortKey: 'xp',
       hideOnMobile: true,
       render: (row) => (
@@ -99,13 +99,13 @@ export default function StudentsPage() {
     },
     {
       key: 'active',
-      header: 'Account',
+      header: t('admin.stu.account'),
       render: (row) =>
         row.is_active ? <Badge tone="teal">{t('admin.st.active')}</Badge> : <Badge tone="coral">{t('admin.stu.disabled')}</Badge>,
     },
     {
       key: 'joined',
-      header: 'Joined',
+      header: t('admin.stu.joined'),
       sortKey: 'created_at',
       hideOnMobile: true,
       render: (row) => <span className="text-xs text-ink-500">{formatDate(row.created_at)}</span>,

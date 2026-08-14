@@ -116,9 +116,7 @@ export default function ParentPaymentsPage({ params }: { params: Promise<{ local
 
                 {order.status === 'awaiting_payment' && (
                   <p className="mt-4 rounded-2xl bg-sun-50 p-3 text-sm text-ink-700">
-                    Transfer the total quoting reference{' '}
-                    <strong className="font-mono">{order.reference}</strong>, or pay at the centre.
-                    Your place is held for 48 hours.
+                    {t('parent.payments.transferHint', { reference: order.reference })}
                   </p>
                 )}
               </Card>

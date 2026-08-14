@@ -13,6 +13,7 @@ from app.adaptive import MASTERY_THRESHOLD, recommend_next
 from app.core.deps import CurrentStudent, DbSession, RequestLocale
 from app.core.i18n import localise
 from app.models import (
+    Achievement,
     Assignment,
     AssignmentSubmission,
     Attempt,
@@ -252,8 +253,8 @@ def dashboard(
     achievements = [
         AchievementRead(
             slug=link.achievement.slug,
-            name=link.achievement.name,
-            description=link.achievement.description,
+            name=localise(link.achievement, "name", locale),
+            description=localise(link.achievement, "description", locale),
             icon=link.achievement.icon,
             tier=link.achievement.tier,
             earned_at=link.earned_at,
@@ -408,3 +409,24 @@ def enroll_in_course(
     )
     db.commit()
     return {"enrolled": True, "course_id": course.id, "already_enrolled": False}
+
+
+@router.get("/achievements", response_model=list[AchievementRead])
+def list_achievements(db: DbSession, locale: RequestLocale) -> list[AchievementRead]:
+    """Every badge the platform defines, in the reader's language.
+
+    The achievements screen used to carry its own hardcoded copy of this list so it could show
+    the ones still to earn. That copy was English-only and drifted from the database the moment
+    either changed; serving the catalogue makes the database the single source of truth for both
+    the earned and the unearned half of the screen.
+    """
+    return [
+        AchievementRead(
+            slug=row.slug,
+            name=localise(row, "name", locale),
+            description=localise(row, "description", locale),
+            icon=row.icon,
+            tier=row.tier,
+        )
+        for row in db.scalars(select(Achievement).order_by(Achievement.id))
+    ]

@@ -78,6 +78,17 @@ def _lesson_resources(db, lesson: Lesson, locale: str) -> list[ResourceRead]:
     ]
 
 
+def _visible_to(course: Course | None, user) -> bool:
+    """Whether this course's contents may be served to ``user``.
+
+    Anything below a course inherits the course's published state — a unit or skill reachable
+    while its course is a draft is the same leak by a different URL.
+    """
+    if course is None or course.is_published:
+        return True
+    return user is not None and user.role in {UserRole.TEACHER, UserRole.ADMIN}
+
+
 def _skill_read(skill: Skill, locale: str) -> SkillRead:
     """Serialise a skill with its name and description in the requested language."""
     return SkillRead(
@@ -188,7 +199,12 @@ def list_courses(
 
 
 @router.get("/courses/{course_slug}", response_model=CourseDetail)
-def get_course(course_slug: str, db: DbSession, locale: RequestLocale) -> CourseDetail:
+def get_course(
+    course_slug: str,
+    db: DbSession,
+    locale: RequestLocale,
+    user: OptionalUser = None,
+) -> CourseDetail:
     course = db.scalar(
         select(Course)
         .where(Course.slug == course_slug)
@@ -200,6 +216,14 @@ def get_course(course_slug: str, db: DbSession, locale: RequestLocale) -> Course
         )
     )
     if course is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Course not found")
+    # Unpublishing removed a course from the listings but left this endpoint serving it in full,
+    # so the slug — which is guessable and stays in search results and old links — remained a way
+    # to read a draft. Staff keep access so they can preview before publishing, exactly as
+    # ``get_lesson`` does.
+    if not course.is_published and (
+        user is None or user.role not in {UserRole.TEACHER, UserRole.ADMIN}
+    ):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Course not found")
 
     counts = _course_counts(db, [course.id]).get(course.id, {})
@@ -233,13 +257,17 @@ def get_course(course_slug: str, db: DbSession, locale: RequestLocale) -> Course
 
 
 @router.get("/units/{unit_slug}", response_model=UnitRead)
-def get_unit(unit_slug: str, db: DbSession, locale: RequestLocale) -> UnitRead:
+def get_unit(
+    unit_slug: str, db: DbSession, locale: RequestLocale, user: OptionalUser = None
+) -> UnitRead:
     unit = db.scalar(
         select(Unit)
         .where(Unit.slug == unit_slug)
-        .options(selectinload(Unit.topics).selectinload(Topic.skills))
+        .options(
+            selectinload(Unit.course), selectinload(Unit.topics).selectinload(Topic.skills)
+        )
     )
-    if unit is None:
+    if unit is None or not _visible_to(unit.course, user):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Unit not found")
     return UnitRead(
         id=unit.id, slug=unit.slug, title=localise(unit, 'title', locale),
@@ -258,7 +286,9 @@ def get_unit(unit_slug: str, db: DbSession, locale: RequestLocale) -> UnitRead:
 
 
 @router.get("/skills/{skill_slug}", response_model=SkillDetail)
-def get_skill(skill_slug: str, db: DbSession, locale: RequestLocale) -> SkillDetail:
+def get_skill(
+    skill_slug: str, db: DbSession, locale: RequestLocale, user: OptionalUser = None
+) -> SkillDetail:
     skill = db.scalar(
         select(Skill)
         .where(Skill.slug == skill_slug)
@@ -266,6 +296,9 @@ def get_skill(skill_slug: str, db: DbSession, locale: RequestLocale) -> SkillDet
                  .selectinload(Course.subject))
     )
     if skill is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Skill not found")
+    unit = skill.topic.unit if skill.topic else None
+    if not _visible_to(unit.course if unit else None, user):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Skill not found")
 
     prerequisites = list(
@@ -320,10 +353,16 @@ def get_skill(skill_slug: str, db: DbSession, locale: RequestLocale) -> SkillDet
 
 @router.get("/topics/{topic_slug}/lessons", response_model=list[LessonSummary])
 def list_topic_lessons(
-    topic_slug: str, db: DbSession, locale: RequestLocale
+    topic_slug: str, db: DbSession, locale: RequestLocale, user: OptionalUser = None
 ) -> list[LessonSummary]:
-    topic = db.scalar(select(Topic).where(Topic.slug == topic_slug))
+    topic = db.scalar(
+        select(Topic)
+        .where(Topic.slug == topic_slug)
+        .options(selectinload(Topic.unit).selectinload(Unit.course))
+    )
     if topic is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Topic not found")
+    if not _visible_to(topic.unit.course if topic.unit else None, user):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Topic not found")
     lessons = db.scalars(
         select(Lesson)

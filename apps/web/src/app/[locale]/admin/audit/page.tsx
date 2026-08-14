@@ -60,14 +60,14 @@ export default function AuditPage() {
   const columns: Column<AuditRow>[] = [
     {
       key: 'action',
-      header: 'Action',
+      header: t('admin.aud.action'),
       render: (row) => (
         <Badge tone={ACTION_TONES[row.action] ?? 'neutral'}>{humanise(row.action)}</Badge>
       ),
     },
     {
       key: 'summary',
-      header: 'What happened',
+      header: t('admin.aud.what'),
       render: (row) => (
         <div className="min-w-0">
           <p className="truncate text-sm text-ink-800">{row.summary}</p>
@@ -84,7 +84,7 @@ export default function AuditPage() {
     },
     {
       key: 'entity',
-      header: 'Record',
+      header: t('admin.aud.record'),
       hideOnMobile: true,
       render: (row) => (
         <span className="text-xs text-ink-500">
@@ -95,12 +95,12 @@ export default function AuditPage() {
     },
     {
       key: 'actor',
-      header: 'By',
+      header: t('admin.aud.by'),
       render: (row) => <span className="text-xs text-ink-600">{row.actor_email ?? 'system'}</span>,
     },
     {
       key: 'when',
-      header: 'When',
+      header: t('admin.aud.when'),
       render: (row) => (
         <span className="whitespace-nowrap text-xs text-ink-500">
           {formatDateTime(row.created_at)}

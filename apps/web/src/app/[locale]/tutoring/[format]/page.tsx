@@ -198,7 +198,7 @@ export default async function TutoringFormatPage({
                                 {group.schedule
                                   .map(
                                     (slot) =>
-                                      `${slot.weekday_label} ${slot.start_time}–${slot.end_time}`,
+                                      `${t(`common.weekday.${slot.weekday % 7}`)} ${slot.start_time}–${slot.end_time}`,
                                   )
                                   .join(', ')}
                               </dd>

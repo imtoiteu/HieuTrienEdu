@@ -290,7 +290,11 @@ def list_teachers(
     query = (
         select(TeacherProfile)
         .join(User, TeacherProfile.user_id == User.id)
-        .where(User.is_active.is_(True))
+        # ``is_published`` is the administrator's "show this person on the site" switch. Filtering
+        # only on ``is_active`` made that switch decorative: hiding a profile in the admin left
+        # them on the public roster, and the account had to be disabled to take them down —
+        # which also locks them out of their own login.
+        .where(User.is_active.is_(True), TeacherProfile.is_published.is_(True))
         .options(selectinload(TeacherProfile.user))
         .order_by(TeacherProfile.is_featured.desc(), TeacherProfile.rating.desc())
     )
@@ -314,7 +318,12 @@ def list_teachers(
 def get_teacher(teacher_id: int, db: DbSession, locale: RequestLocale) -> TeacherCard:
     teacher = db.scalar(
         select(TeacherProfile)
-        .where(TeacherProfile.id == teacher_id)
+        .join(User, TeacherProfile.user_id == User.id)
+        .where(
+            TeacherProfile.id == teacher_id,
+            TeacherProfile.is_published.is_(True),
+            User.is_active.is_(True),
+        )
         .options(selectinload(TeacherProfile.user))
     )
     if teacher is None:

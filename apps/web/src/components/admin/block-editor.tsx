@@ -16,6 +16,7 @@ import { Badge, Button, cn } from '@hietedu/ui';
 import { FormRow, SelectField, StringListField, TextAreaField, TextField, humanise } from './form';
 import type { LessonBlock } from '@/lib/admin-api';
 import { useI18n } from '@/lib/i18n';
+import type { Translator } from '@hietedu/localization';
 
 /**
  * The block palette.
@@ -53,25 +54,28 @@ export const BLOCK_TYPES: {
 
 export const SECTIONS = ['theory', 'examples', 'practice', 'homework', 'materials'] as const;
 
-const SECTION_LABELS: Record<string, string> = {
-  theory: 'Theory',
-  examples: 'Examples',
-  practice: 'Practice',
-  homework: 'Homework',
-  materials: 'Additional materials',
+/** Section names live in the dictionary; this only maps a section id onto its key. */
+const SECTION_LABEL_KEYS: Record<string, string> = {
+  theory: 'admin.blk.section.theory',
+  examples: 'admin.blk.section.examples',
+  practice: 'admin.blk.section.practice',
+  homework: 'admin.blk.section.homework',
+  materials: 'admin.blk.section.materials',
 };
 
-function blankBlock(type: string, section: string): LessonBlock {
+/** The starter content of a new block. It is placeholder prose the author replaces, so it is
+ *  written in the *author's* language rather than left in English. */
+function blankBlock(type: string, section: string, t: Translator): LessonBlock {
   const base: LessonBlock = { type, section, id: `b${Date.now()}-${type}` };
   switch (type) {
     case 'heading':
-      return { ...base, text: 'New heading', level: 2 };
+      return { ...base, text: t('admin.blk.new.heading'), level: 2 };
     case 'text':
-      return { ...base, markdown: 'Write the lesson text here.' };
+      return { ...base, markdown: t('admin.blk.new.text') };
     case 'summary':
-      return { ...base, points: ['First key point'] };
+      return { ...base, points: [t('admin.blk.new.keyPoint')] };
     case 'callout':
-      return { ...base, variant: 'note', title: '', text: 'Something worth noticing.' };
+      return { ...base, variant: 'note', title: '', text: t('admin.blk.new.callout') };
     case 'image':
       return { ...base, url: '', alt: '', caption: '' };
     case 'video':
@@ -79,23 +83,23 @@ function blankBlock(type: string, section: string): LessonBlock {
     case 'audio':
       return { ...base, url: '', caption: '' };
     case 'document':
-      return { ...base, url: '', title: 'Worksheet' };
+      return { ...base, url: '', title: t('admin.blk.new.worksheet') };
     case 'embed':
       return { ...base, url: '' };
     case 'math':
       return { ...base, latex: 'ax^2 + bx + c = 0', caption: '' };
     case 'example':
-      return { ...base, title: 'Example', steps: [{ text: 'First step' }] };
+      return { ...base, title: t('admin.les.exampleLabel'), steps: [{ text: t('admin.blk.new.step') }] };
     case 'table':
-      return { ...base, headers: ['Column 1', 'Column 2'], rows: [['', '']] };
+      return { ...base, headers: [t('admin.blk.new.column1'), t('admin.blk.new.column2')], rows: [['', '']] };
     case 'interactive':
       return { ...base, widget: 'number-line', config: { min: 0, max: 10, marks: [] } };
     case 'figure':
       return { ...base, shape: 'right-triangle', config: { base: 4, height: 3 } };
     case 'practice':
-      return { ...base, skill: '', prompt: 'Practise this skill' };
+      return { ...base, skill: '', prompt: t('admin.blk.new.practice') };
     case 'quiz':
-      return { ...base, question_ids: [], title: 'Quick check' };
+      return { ...base, question_ids: [], title: t('admin.blk.new.quiz') };
     case 'homework':
       return { ...base, question_ids: [], instructions: '' };
     default:
@@ -163,7 +167,7 @@ export function BlockEditor({
           <section key={section} aria-labelledby={`section-${section}`}>
             <div className="mb-2 flex items-center justify-between">
               <h3 id={`section-${section}`} className="font-display text-lg">
-                {SECTION_LABELS[section]}
+                {t(SECTION_LABEL_KEYS[section])}
                 <span className="ml-2 text-xs font-normal text-ink-400">
                   {sectionBlocks.length} block{sectionBlocks.length === 1 ? '' : 's'}
                 </span>
@@ -179,7 +183,7 @@ export function BlockEditor({
                 className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-ink-200 bg-ink-50/40 py-6 text-sm font-semibold text-ink-500 hover:border-brand-300 hover:text-brand-600"
               >
                 <Plus className="h-4 w-4" aria-hidden="true" />
-                Add a block to {SECTION_LABELS[section].toLowerCase()}
+                Add a block to {t(SECTION_LABEL_KEYS[section]).toLowerCase()}
               </button>
             ) : (
               <ul className="space-y-2">
@@ -231,7 +235,7 @@ export function BlockEditor({
                         >
                           {SECTIONS.map((value) => (
                             <option key={value} value={value}>
-                              {SECTION_LABELS[value]}
+                              {t(SECTION_LABEL_KEYS[value])}
                             </option>
                           ))}
                         </select>
@@ -264,10 +268,10 @@ export function BlockEditor({
         <BlockPalette
           onClose={() => setAdding(null)}
           onPick={(type) => {
-            onChange([...blocks, blankBlock(type, adding)]);
+            onChange([...blocks, blankBlock(type, adding, t)]);
             setAdding(null);
           }}
-          section={SECTION_LABELS[adding]}
+          section={t(SECTION_LABEL_KEYS[adding])}
         />
       )}
     </div>

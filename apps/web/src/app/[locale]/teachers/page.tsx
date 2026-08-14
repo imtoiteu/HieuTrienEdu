@@ -22,7 +22,7 @@ export async function generateMetadata({
   return { title: t('nav.teachers') };
 }
 
-const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
 
 export default async function TeachersPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = await params;
@@ -191,7 +191,7 @@ function TeacherProfileCard({
                   key={index}
                   className="rounded-lg bg-ink-100 px-2 py-1 text-xs font-semibold text-ink-700"
                 >
-                  {WEEKDAYS[slot.weekday % 7]} {slot.start}–{slot.end}
+                  {t(`common.weekdayShort.${Number(slot.weekday) % 7}`)} {slot.start}–{slot.end}
                 </span>
               ))}
             </dd>

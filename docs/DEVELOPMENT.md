@@ -59,7 +59,7 @@ reviewer who cannot get in is worse than an exposed demo password.
 ```bash
 npm run api:seed                  # reload content (idempotent, keeps student data)
 npm run api:seed -- --reset       # drop everything and start over
-npm run api:test                  # 133 backend tests
+npm run api:test                  # 212 backend tests
 npm test                          # 37 frontend tests
 npm run typecheck                 # tsc --noEmit
 npm run lint
@@ -154,6 +154,29 @@ upgrade.
 ### Editing `next.config.mjs` restarts the dev server
 
 Obvious in hindsight; less obvious when it happens mid-test-run and every test fails at once.
+
+### "Unpublish" has to be checked on the *detail* endpoint, not just the listing
+
+Filtering a listing on `is_published` is the obvious half. The half that gets forgotten is that
+the row's own slug is a public address that survives in links and search results, so a detail
+endpoint without the same filter keeps serving the draft to anyone who has the URL. `get_course`,
+`get_unit`, `get_skill` and the public teacher endpoints each had this hole. Staff are let through
+deliberately, so previewing before publishing still works — see `_visible_to` in
+`api/v1/curriculum.py`.
+
+### A read path without a matching write path looks like it works
+
+If a public endpoint calls `localise` on a field but no admin endpoint accepts a translation for
+it, `/vi` still shows Vietnamese — the seed put it there. It only breaks when someone edits the
+row, after which the two languages disagree with no way to reconcile them from the CMS.
+`tests/test_admin_user_sync.py` guards this for every model in `TRANSLATABLE`.
+
+### Verify through the public API, not the admin response
+
+An admin endpoint returning what you just sent it proves nothing about what the learner is
+served. Every test in `test_admin_user_sync.py` writes through `/admin/…` and reads back through
+the endpoint a browser calls, because that is the only shape that would have caught any of the
+bugs it covers.
 
 ## Project layout
 

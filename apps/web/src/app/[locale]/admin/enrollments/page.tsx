@@ -77,7 +77,7 @@ export default function EnrollmentsPage() {
   const columns: Column<AdminEnrollment>[] = [
     {
       key: 'student',
-      header: 'Student',
+      header: t('admin.a.student'),
       render: (row) => (
         <div className="min-w-0">
           <Link
@@ -92,7 +92,7 @@ export default function EnrollmentsPage() {
     },
     {
       key: 'class',
-      header: 'Class',
+      header: t('admin.a.class'),
       render: (row) => (
         <div className="min-w-0">
           <Link
@@ -109,7 +109,7 @@ export default function EnrollmentsPage() {
     },
     {
       key: 'schedule',
-      header: 'Requested',
+      header: t('admin.enr.requested'),
       hideOnMobile: true,
       render: (row) => (
         <span className="text-xs text-ink-600">
@@ -119,19 +119,19 @@ export default function EnrollmentsPage() {
     },
     {
       key: 'status',
-      header: 'Status',
+      header: t('admin.a.status'),
       sortKey: 'status',
       render: (row) => <StatusBadge value={row.status} kind="enrollment" />,
     },
     {
       key: 'payment',
-      header: 'Payment',
+      header: t('admin.enr.payment'),
       sortKey: 'payment',
       render: (row) => <StatusBadge value={row.payment_status} kind="payment" />,
     },
     {
       key: 'created',
-      header: 'Requested on',
+      header: t('admin.enr.requestedOn'),
       sortKey: 'created_at',
       hideOnMobile: true,
       render: (row) => <span className="text-xs text-ink-500">{formatDate(row.created_at)}</span>,

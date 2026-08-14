@@ -6,30 +6,9 @@ import { useEffect, useState } from 'react';
 import { Badge, Card, ProgressBar, Spinner } from '@hietedu/ui';
 
 import { AppShell } from '@/components/app/app-shell';
-import { api, type Dashboard } from '@/lib/api';
+import { api, type AchievementDefinition, type Dashboard } from '@/lib/api';
 import { useRequireAuth } from '@/lib/auth';
 import { useI18n } from '@/lib/i18n';
-
-/**
- * All achievements the platform defines, so a student can see what is still available.
- *
- * The criteria are duplicated here purely as display copy — the server remains the sole authority
- * on whether one has been earned, and the earned list comes from the API.
- */
-const CATALOGUE = [
-  { slug: 'first-steps', name: 'First Steps', description: 'Answer your first question', tier: 'bronze' },
-  { slug: 'getting-going', name: 'Getting Going', description: 'Answer 25 questions', tier: 'bronze' },
-  { slug: 'century', name: 'Century', description: 'Answer 100 questions', tier: 'silver' },
-  { slug: 'sharp-shooter', name: 'Sharp Shooter', description: 'Get 50 questions correct', tier: 'silver' },
-  { slug: 'first-mastery', name: 'Skill Unlocked', description: 'Master your first skill', tier: 'bronze' },
-  { slug: 'five-skills', name: 'Building Momentum', description: 'Master 5 skills', tier: 'silver' },
-  { slug: 'twenty-skills', name: 'Serious Progress', description: 'Master 20 skills', tier: 'gold' },
-  { slug: 'three-day-streak', name: 'Three in a Row', description: 'Practise three days running', tier: 'bronze' },
-  { slug: 'week-streak', name: 'Week Warrior', description: 'Practise seven days running', tier: 'silver' },
-  { slug: 'month-streak', name: 'Unstoppable', description: 'Practise thirty days running', tier: 'gold' },
-  { slug: 'level-five', name: 'Level 5', description: 'Reach level 5', tier: 'silver' },
-  { slug: 'level-ten', name: 'Level 10', description: 'Reach level 10', tier: 'gold' },
-];
 
 const TIER_STYLES: Record<string, string> = {
   gold: 'bg-sun-200 text-sun-900 border-sun-400',
@@ -42,6 +21,10 @@ export default function AchievementsPage({ params }: { params: Promise<{ locale:
   const { user, loading: authLoading } = useRequireAuth(locale, ['student']);
 
   const [data, setData] = useState<Dashboard | null>(null);
+  // The catalogue is what the platform defines; the dashboard says which of them this student
+  // has. Both come from the API so the screen shows the same badges, in the same language, as
+  // the server awards — a second copy in the frontend could only ever drift.
+  const [catalogue, setCatalogue] = useState<AchievementDefinition[]>([]);
 
   useEffect(() => {
     if (!user) return;
@@ -49,6 +32,10 @@ export default function AchievementsPage({ params }: { params: Promise<{ locale:
     api.progress
       .dashboard()
       .then((result) => !cancelled && setData(result))
+      .catch(() => undefined);
+    api.progress
+      .achievements()
+      .then((result) => !cancelled && setCatalogue(result))
       .catch(() => undefined);
     return () => {
       cancelled = true;
@@ -103,11 +90,11 @@ export default function AchievementsPage({ params }: { params: Promise<{ locale:
             </Card>
 
             <p className="mt-8 text-ink-600">
-              {earned.size} / {CATALOGUE.length}
+              {earned.size} / {catalogue.length}
             </p>
 
             <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {CATALOGUE.map((achievement) => {
+              {catalogue.map((achievement) => {
                 const unlocked = earned.get(achievement.slug);
                 return (
                   <li key={achievement.slug}>

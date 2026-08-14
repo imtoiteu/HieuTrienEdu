@@ -443,6 +443,15 @@ export interface PathNode {
   blocked_by: string[];
 }
 
+export interface AchievementDefinition {
+  slug: string;
+  name: string;
+  description: string;
+  icon: string;
+  tier: string;
+  earned_at?: string | null;
+}
+
 export interface Dashboard {
   student: {
     id: number;
@@ -500,14 +509,7 @@ export interface Dashboard {
     score_percent: number | null;
     question_count: number;
   }[];
-  achievements: {
-    slug: string;
-    name: string;
-    description: string;
-    icon: string;
-    tier: string;
-    earned_at: string | null;
-  }[];
+  achievements: AchievementDefinition[];
   enrolled_courses: {
     course_id: number;
     slug: string;
@@ -818,6 +820,8 @@ export const api = {
 
   progress: {
     dashboard: () => apiFetch<Dashboard>('/progress/dashboard'),
+    /** Every badge the platform defines, localised — including ones not yet earned. */
+    achievements: () => apiFetch<AchievementDefinition[]>('/progress/achievements'),
     mastery: (subject?: string) =>
       apiFetch<Record<string, unknown>[]>(
         `/progress/mastery${subject ? `?subject=${subject}` : ''}`,

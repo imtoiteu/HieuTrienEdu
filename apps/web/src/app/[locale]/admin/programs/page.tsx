@@ -16,7 +16,10 @@ import {
   StringListField,
   TextAreaField,
   TextField,
+  TranslationPanel,
   humanise,
+  translationDraft,
+  translationsPayload,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
 import { adminApi, type AdminTeacher, type Category, type ProgramRow } from '@/lib/admin-api';
@@ -25,6 +28,12 @@ import { useI18n } from '@/lib/i18n';
 
 const FORMATS = ['one_to_one', 'group', 'online_live', 'recorded', 'hybrid'];
 const MODES = ['online', 'offline', 'hybrid'];
+
+const PROGRAM_FIELDS = [
+  { name: 'name', label: '' },
+  { name: 'tagline', label: '' },
+  { name: 'description', label: '' },
+];
 
 const BLANK = {
   name: '',
@@ -67,6 +76,8 @@ export default function ProgramsPage() {
   const [creating, setCreating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ ...BLANK });
+  // The public pricing and tutoring pages localise these, so they need somewhere to be typed.
+  const [vi, setVi] = useState<Record<string, string>>({});
   const [deleting, setDeleting] = useState<ProgramRow | null>(null);
 
   const load = useCallback(async () => {
@@ -121,6 +132,12 @@ export default function ProgramsPage() {
       is_featured: program.is_featured,
       category_ids: program.categories.map((c) => c.id),
     });
+    setVi(
+      translationDraft(
+        (program as { translations?: Record<string, Record<string, unknown>> }).translations,
+        PROGRAM_FIELDS,
+      ),
+    );
     setEditing(program);
   }
 
@@ -139,10 +156,11 @@ export default function ProgramsPage() {
       teacher_id: form.teacher_id || null,
       start_date: form.start_date || null,
       end_date: form.end_date || null,
+      translations: translationsPayload(vi),
     };
     const ok = await run(
       () => (editing ? adminApi.programs.update(editing.id, body) : adminApi.programs.create(body)),
-      editing ? 'Programme saved' : 'Programme created',
+      editing ? t('admin.pro.saved') : t('admin.pro.created'),
     );
     setSaving(false);
     if (ok) {
@@ -156,7 +174,7 @@ export default function ProgramsPage() {
   const columns: Column<ProgramRow>[] = [
     {
       key: 'name',
-      header: 'Programme',
+      header: t('admin.pro.programme'),
       render: (row) => (
         <div className="min-w-0">
           <button
@@ -172,7 +190,7 @@ export default function ProgramsPage() {
     },
     {
       key: 'format',
-      header: 'Format',
+      header: t('admin.a.format'),
       render: (row) => (
         <div className="flex flex-wrap gap-1">
           <Badge tone="brand">{humanise(row.format)}</Badge>
@@ -182,7 +200,7 @@ export default function ProgramsPage() {
     },
     {
       key: 'grades',
-      header: 'Grades',
+      header: t('admin.pro.grades'),
       hideOnMobile: true,
       render: (row) => (
         <span className="text-sm">
@@ -194,7 +212,7 @@ export default function ProgramsPage() {
     },
     {
       key: 'price',
-      header: 'Price',
+      header: t('admin.pro.price'),
       render: (row) => (
         <span className="font-bold tabular-nums">
           {formatCurrency(row.price_vnd)}
@@ -204,7 +222,7 @@ export default function ProgramsPage() {
     },
     {
       key: 'status',
-      header: 'Status',
+      header: t('admin.a.status'),
       render: (row) => <StatusBadge value={row.status} />,
     },
     {
@@ -270,6 +288,7 @@ export default function ProgramsPage() {
         <Button
           onClick={() => {
             setForm({ ...BLANK });
+            setVi({});
             setCreating(true);
           }}
         >
@@ -361,6 +380,17 @@ export default function ProgramsPage() {
               onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
           </FormRow>
+          <div className="sm:col-span-2">
+            <TranslationPanel
+              fields={[
+                { name: 'name', label: t('admin.a.name') },
+                { name: 'tagline', label: t('admin.pro.tagline') },
+                { name: 'description', label: t('admin.a.description'), multiline: true },
+              ]}
+              value={vi}
+              onChange={setVi}
+            />
+          </div>
           <FormRow label={t('admin.a.format')} htmlFor="p-format">
             <SelectField
               id="p-format"
@@ -548,7 +578,7 @@ export default function ProgramsPage() {
         open={deleting !== null}
         onClose={() => setDeleting(null)}
         title={`Delete “${deleting?.name}”?`}
-        message="The programme is removed from the public site. Existing orders keep their own price snapshot."
+        message={t('admin.pro.deleteBody')}
         onConfirm={async () => {
           if (!deleting) return;
           const ok = await run(() => adminApi.programs.remove(deleting.id), t('admin.pro.deletedToast'));

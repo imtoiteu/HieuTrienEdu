@@ -18,7 +18,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.base import Base, TimestampMixin
+from app.models.base import Base, TimestampMixin, TranslatableMixin
 from app.models.curriculum import Course, Skill
 from app.models.question import Question, QuestionVariant
 
@@ -189,7 +189,13 @@ class XPEvent(Base, TimestampMixin):
     occurred_on: Mapped[dt.date] = mapped_column(Date, nullable=False)
 
 
-class Achievement(Base, TimestampMixin):
+class Achievement(Base, TimestampMixin, TranslatableMixin):
+    """A badge and the rule that earns it.
+
+    Translatable because the name and description are shown to the student. ``criteria`` is not:
+    it is machine-checkable and must mean the same thing in every language.
+    """
+
     __tablename__ = "achievements"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)

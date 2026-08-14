@@ -16,7 +16,10 @@ import {
   StringListField,
   TextAreaField,
   TextField,
+  TranslationPanel,
   humanise,
+  translationDraft,
+  translationsPayload,
 } from '@/components/admin/form';
 import { useToast } from '@/components/admin/toast';
 import { adminApi, type AdminClass, type AdminCourse, type TeacherCredential } from '@/lib/admin-api';
@@ -24,6 +27,14 @@ import { useRequireAuth } from '@/lib/auth';
 import { useI18n } from '@/lib/i18n';
 
 type Detail = Record<string, any>;
+
+/** Prose the public profile localises. Must match TRANSLATABLE[TeacherProfile] on the API. */
+const TRANSLATABLE_FIELDS = [
+  { name: 'headline', label: '' },
+  { name: 'bio', label: '' },
+  { name: 'teaching_philosophy', label: '' },
+  { name: 'teaching_style', label: '' },
+];
 
 const CREDENTIAL_KINDS = [
   'education',
@@ -59,6 +70,10 @@ export default function TeacherDetailPage({
   const [tab, setTab] = useState<TabId>('profile');
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState<Record<string, any>>({});
+  // The public teacher page reads these fields through ``localise``, so without somewhere to type
+  // the Vietnamese the /vi profile could only ever show English — or, worse, keep showing the
+  // Vietnamese from the last seed while the English half moved on.
+  const [vi, setVi] = useState<Record<string, string>>({});
   const [credential, setCredential] = useState<Partial<TeacherCredential> | null>(null);
   const [deletingCredential, setDeletingCredential] = useState<TeacherCredential | null>(null);
   const [courses, setCourses] = useState<AdminCourse[]>([]);
@@ -73,6 +88,7 @@ export default function TeacherDetailPage({
     try {
       const result = (await adminApi.teachers.get(teacherId)) as Detail;
       setTeacher(result);
+      setVi(translationDraft(result.translations, TRANSLATABLE_FIELDS));
       setForm({
         full_name: result.full_name ?? '',
         email: result.email ?? '',
@@ -121,6 +137,7 @@ export default function TeacherDetailPage({
     const ok = await run(
       () =>
         adminApi.teachers.update(teacherId, {
+          translations: translationsPayload(vi),
           full_name: form.full_name,
           email: form.email,
           phone: form.phone || null,
@@ -321,6 +338,20 @@ export default function TeacherDetailPage({
                       onChange={(e) => setForm({ ...form, video_intro_url: e.target.value })}
                     />
                   </FormRow>
+                  <TranslationPanel
+                    fields={[
+                      { name: 'headline', label: t('admin.tea.shortIntro') },
+                      { name: 'bio', label: t('admin.tea.fullBio'), multiline: true },
+                      {
+                        name: 'teaching_philosophy',
+                        label: t('admin.tea.philosophy'),
+                        multiline: true,
+                      },
+                      { name: 'teaching_style', label: t('admin.tea.style'), multiline: true },
+                    ]}
+                    value={vi}
+                    onChange={setVi}
+                  />
                 </div>
               </Card>
 
@@ -463,8 +494,7 @@ export default function TeacherDetailPage({
 
               {(teacher.credentials ?? []).length === 0 ? (
                 <p className="mt-6 text-sm text-ink-500">
-                  Nothing added yet. Add degrees, awards, certifications and publications — each
-                  as its own entry rather than one long paragraph.
+                  {t('admin.tea.noCredentials')}
                 </p>
               ) : (
                 <div className="mt-6 space-y-6">
@@ -868,7 +898,7 @@ export default function TeacherDetailPage({
         open={deletingCredential !== null}
         onClose={() => setDeletingCredential(null)}
         title={`Delete “${deletingCredential?.title}”?`}
-        message="This entry is removed from the public profile."
+        message={t('admin.tea.deleteEntryBody')}
         onConfirm={async () => {
           if (!deletingCredential) return;
           const ok = await run(

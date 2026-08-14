@@ -27,7 +27,8 @@ import {
 import { useRequireAuth } from '@/lib/auth';
 import { useI18n } from '@/lib/i18n';
 
-const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+/** Weekday indexes; the names come from the dictionary so they follow the interface language. */
+const WEEKDAYS = [0, 1, 2, 3, 4, 5, 6];
 const FORMATS = ['one_to_one', 'group', 'online_live', 'recorded', 'hybrid'];
 const MODES = ['online', 'offline', 'hybrid'];
 
@@ -113,7 +114,7 @@ export default function ClassesPage() {
   const columns: Column<AdminClass>[] = [
     {
       key: 'name',
-      header: 'Class',
+      header: t('admin.a.class'),
       sortKey: 'name',
       render: (row) => (
         <div className="min-w-0">
@@ -132,7 +133,7 @@ export default function ClassesPage() {
     },
     {
       key: 'teacher',
-      header: 'Teacher',
+      header: t('admin.a.teacher'),
       render: (row) =>
         row.teacher_name ? (
           <span className="text-sm">{row.teacher_name}</span>
@@ -142,7 +143,7 @@ export default function ClassesPage() {
     },
     {
       key: 'seats',
-      header: 'Places',
+      header: t('admin.cls.places'),
       render: (row) => (
         <Badge tone={row.seats_available === 0 ? 'coral' : 'neutral'}>
           {row.seats_taken}/{row.capacity}
@@ -151,7 +152,7 @@ export default function ClassesPage() {
     },
     {
       key: 'schedule',
-      header: 'Schedule',
+      header: t('admin.cls.schedule'),
       hideOnMobile: true,
       render: (row) =>
         row.schedule.length === 0 ? (
@@ -160,7 +161,7 @@ export default function ClassesPage() {
           <div className="flex flex-wrap gap-1">
             {row.schedule.map((slot, index) => (
               <Badge key={index} tone="brand">
-                {slot.weekday_label.slice(0, 3)} {slot.start_time}
+                {t(`common.weekdayShort.${slot.weekday % 7}`)} {slot.start_time}
               </Badge>
             ))}
           </div>
@@ -168,7 +169,7 @@ export default function ClassesPage() {
     },
     {
       key: 'dates',
-      header: 'Runs',
+      header: t('admin.cls.runs'),
       hideOnMobile: true,
       render: (row) => (
         <span className="text-xs text-ink-600">
@@ -179,7 +180,7 @@ export default function ClassesPage() {
     },
     {
       key: 'open',
-      header: 'Enrolment',
+      header: t('admin.cls.enrolment'),
       render: (row) =>
         row.is_open_for_enrollment ? (
           <Badge tone="teal">{t('admin.cls.open')}</Badge>
@@ -298,8 +299,7 @@ export default function ClassesPage() {
             <p className="p-8 text-center text-sm text-ink-500">{t('admin.a.loading')}</p>
           ) : sessions.length === 0 ? (
             <p className="p-8 text-center text-sm text-ink-500">
-              No upcoming sessions. Open a class and generate its sessions from the weekly
-              schedule.
+              {t('admin.cls.noSessions')}
             </p>
           ) : (
             <ul className="divide-y divide-ink-100">
@@ -344,7 +344,7 @@ export default function ClassesPage() {
               loading={saving}
               onClick={async () => {
                 if (!form.name.trim()) {
-                  notify('A class name is required', 'error');
+                  notify(t('admin.cls.nameRequired'), 'error');
                   return;
                 }
                 setSaving(true);
@@ -481,9 +481,9 @@ export default function ClassesPage() {
                       setForm({ ...form, schedule: next });
                     }}
                   >
-                    {WEEKDAYS.map((day, dayIndex) => (
-                      <option key={day} value={dayIndex}>
-                        {day}
+                    {WEEKDAYS.map((dayIndex) => (
+                      <option key={dayIndex} value={dayIndex}>
+                        {t(`common.weekday.${dayIndex}`)}
                       </option>
                     ))}
                   </SelectField>
@@ -556,7 +556,7 @@ export default function ClassesPage() {
         open={deleting !== null}
         onClose={() => setDeleting(null)}
         title={`Delete “${deleting?.name}”?`}
-        message="Classes with enrolled students cannot be deleted — move or cancel them first."
+        message={t('admin.cls.deleteBody')}
         onConfirm={async () => {
           if (!deleting) return;
           const ok = await run(() => adminApi.classes.remove(deleting.id), t('admin.cls.deletedToast'));

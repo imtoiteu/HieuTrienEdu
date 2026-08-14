@@ -124,12 +124,13 @@ export function CheckboxField({
 export function StringListField({
   values,
   onChange,
-  placeholder = 'Add an item…',
+  placeholder,
 }: {
   values: string[];
   onChange: (values: string[]) => void;
   placeholder?: string;
 }) {
+  const { t } = useI18n();
   const [draft, setDraft] = useState('');
 
   function add() {
@@ -174,13 +175,13 @@ export function StringListField({
               add();
             }
           }}
-          placeholder={placeholder}
+          placeholder={placeholder ?? t('admin.a.addItem')}
           className={fieldClass}
         />
         <button
           type="button"
           onClick={add}
-          aria-label="Add"
+          aria-label={t('admin.a.add')}
           className="shrink-0 rounded-xl border-2 border-ink-200 px-3 hover:bg-ink-50"
         >
           <Plus className="h-4 w-4" aria-hidden="true" />

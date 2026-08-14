@@ -85,7 +85,7 @@ export default function ConsultationsPage() {
   const columns: Column<LeadRow & { id: number }>[] = [
     {
       key: 'name',
-      header: 'Contact',
+      header: t('admin.con.contact'),
       sortKey: 'name',
       render: (row) => (
         <div className="min-w-0">
@@ -101,7 +101,7 @@ export default function ConsultationsPage() {
     },
     {
       key: 'phone',
-      header: 'Phone',
+      header: t('admin.a.phone'),
       hideOnMobile: true,
       render: (row) =>
         row.phone ? (
@@ -118,7 +118,7 @@ export default function ConsultationsPage() {
     },
     {
       key: 'interest',
-      header: 'Interested in',
+      header: t('admin.con.interestedIn'),
       hideOnMobile: true,
       render: (row) => (
         <div className="min-w-0">
@@ -129,7 +129,7 @@ export default function ConsultationsPage() {
     },
     {
       key: 'source',
-      header: 'Form',
+      header: t('admin.con.form'),
       render: (row) => (
         <Badge tone={row.source === 'tutoring' ? 'brand' : 'neutral'}>
           {row.source === 'tutoring' ? 'Tutoring request' : 'Contact form'}
@@ -138,7 +138,7 @@ export default function ConsultationsPage() {
     },
     {
       key: 'assigned',
-      header: 'Assigned to',
+      header: t('admin.con.assignedTo'),
       hideOnMobile: true,
       render: (row) =>
         row.assigned_to_name ? (
@@ -149,13 +149,13 @@ export default function ConsultationsPage() {
     },
     {
       key: 'status',
-      header: 'Status',
+      header: t('admin.a.status'),
       sortKey: 'status',
       render: (row) => <StatusBadge value={row.status} kind="lead" />,
     },
     {
       key: 'created',
-      header: 'Received',
+      header: t('admin.con.received'),
       sortKey: 'created_at',
       render: (row) => <span className="text-xs text-ink-500">{formatDate(row.created_at)}</span>,
     },

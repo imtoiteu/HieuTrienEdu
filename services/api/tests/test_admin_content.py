@@ -95,7 +95,8 @@ def test_deleting_category_reparents_children(client: TestClient, admin_headers,
         json={"name": "Nested", "parent_id": parent["id"]},
     ).json()
 
-    assert client.delete(f"{API}/categories/{parent['id']}", headers=admin_headers).status_code == 204
+    deleted = client.delete(f"{API}/categories/{parent['id']}", headers=admin_headers)
+    assert deleted.status_code == 204
 
     db.expire_all()
     surviving = db.get(ContentCategory, child["id"])
@@ -483,7 +484,8 @@ def test_question_publish_controls_what_students_are_served(
 def test_question_import_is_a_dry_run_by_default(client: TestClient, admin_headers, curriculum):
     csv_body = (
         "question,type,options,correct_answer,explanation,difficulty,skill_slug,tags\n"
-        f'"What is 2 + 3?",multiple_choice,4|5|6|7,5,"Add them.",1,{curriculum["foundation"].slug},arithmetic\n'
+        f'"What is 2 + 3?",multiple_choice,4|5|6|7,5,"Add them.",1,'
+        f'{curriculum["foundation"].slug},arithmetic\n'
         '"Broken row",multiple_choice,,,,,unknown-skill,\n'
     )
     files = {"file": ("bank.csv", io.BytesIO(csv_body.encode()), "text/csv")}

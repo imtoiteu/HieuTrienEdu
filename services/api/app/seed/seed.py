@@ -134,17 +134,45 @@ def seed_achievements(db: Session) -> int:
         ("level-ten", "Level 10", "Reach level 10", "star", "gold",
          {"type": "level", "value": 10}, 150),
     ]
+    # Vietnamese is the primary language of the product, so a badge without a translation would
+    # be one of the few English things left on a student's screen. Keyed by slug so a new badge
+    # that is added above without a translation here is visibly missing rather than silently
+    # English-only.
+    vietnamese = {
+        "first-steps": ("Bước đầu tiên", "Trả lời câu hỏi đầu tiên"),
+        "getting-going": ("Bắt nhịp", "Trả lời 25 câu hỏi"),
+        "century": ("Trăm câu", "Trả lời 100 câu hỏi"),
+        "sharp-shooter": ("Thiện xạ", "Trả lời đúng 50 câu hỏi"),
+        "first-mastery": ("Mở khoá kỹ năng", "Thành thạo kỹ năng đầu tiên"),
+        "five-skills": ("Đà tiến", "Thành thạo 5 kỹ năng"),
+        "twenty-skills": ("Tiến bộ vượt bậc", "Thành thạo 20 kỹ năng"),
+        "three-day-streak": ("Ba ngày liên tiếp", "Luyện tập ba ngày liên tiếp"),
+        "week-streak": ("Chiến binh tuần", "Luyện tập bảy ngày liên tiếp"),
+        "month-streak": ("Không thể cản", "Luyện tập ba mươi ngày liên tiếp"),
+        "level-five": ("Cấp 5", "Đạt cấp độ 5"),
+        "level-ten": ("Cấp 10", "Đạt cấp độ 10"),
+    }
+
     created = 0
     for slug, name, description, icon, tier, criteria, xp in definitions:
+        translation = vietnamese.get(slug)
+        i18n = (
+            {"vi": {"name": translation[0], "description": translation[1]}}
+            if translation
+            else {}
+        )
         existing = db.scalar(select(Achievement).where(Achievement.slug == slug))
         if existing is None:
             db.add(
                 Achievement(
                     slug=slug, name=name, description=description, icon=icon, tier=tier,
-                    criteria=criteria, xp_reward=xp,
+                    criteria=criteria, xp_reward=xp, i18n=i18n,
                 )
             )
             created += 1
+        elif i18n and not existing.i18n:
+            # Backfill databases seeded before achievements were translatable.
+            existing.i18n = i18n
     db.flush()
     return created
 

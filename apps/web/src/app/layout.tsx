@@ -7,7 +7,7 @@ import 'katex/dist/katex.min.css';
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
   title: {
-    default: 'HieuTrienEducation — Mathematics & Physics for Grades 6–9',
+    default: 'HieuTrienEducation — Mathematics & Physics for Grades 6–12',
     template: '%s · HieuTrienEducation',
   },
   description:
@@ -22,13 +22,16 @@ export const metadata: Metadata = {
     'grade 7',
     'grade 8',
     'grade 9',
+    'grade 10',
+    'grade 11',
+    'grade 12',
     'adaptive learning',
     'Vietnam',
   ],
   openGraph: {
     type: 'website',
     siteName: 'HieuTrienEducation',
-    title: 'HieuTrienEducation — Mathematics & Physics for Grades 6–9',
+    title: 'HieuTrienEducation — Mathematics & Physics for Grades 6–12',
     description:
       'Find the exact gap holding a student back, then close it with practice that never runs out.',
   },

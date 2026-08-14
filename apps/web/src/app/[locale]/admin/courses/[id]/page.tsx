@@ -427,8 +427,7 @@ export default function CourseStructurePage({
                       <div className="divide-y divide-ink-100">
                         {unit.topics.length === 0 ? (
                           <p className="p-4 text-sm text-ink-500">
-                            No topics yet. A topic holds the lessons and skills students work
-                            through.
+                            {t('admin.crs.noTopicsBody')}
                           </p>
                         ) : (
                           unit.topics.map((topic, topicIndex) => (

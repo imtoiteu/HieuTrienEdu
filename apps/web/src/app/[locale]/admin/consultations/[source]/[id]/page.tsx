@@ -319,8 +319,7 @@ export default function ConsultationDetailPage({
 
               {lead.notes.length === 0 ? (
                 <p className="mt-4 text-sm text-ink-500">
-                  No contact recorded yet. Log every call and email here so nothing is repeated or
-                  forgotten.
+                  {t('admin.con.noContactYet')}
                 </p>
               ) : (
                 <ol className="mt-4 space-y-3">
@@ -574,8 +573,7 @@ export default function ConsultationDetailPage({
                   {converted.temporary_password}
                 </code>
                 <p className="mt-1 text-xs">
-                  This is shown once and cannot be retrieved later. Share it securely and ask them
-                  to change it after signing in.
+                  {t('admin.con.passwordOnce')}
                 </p>
               </Alert>
             )}

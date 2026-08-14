@@ -255,8 +255,7 @@ export default function QuestionBankPage({ params }: { params: Promise<{ locale:
 
                 {!preview ? (
                   <p className="mt-4 text-sm text-ink-500">
-                    Choose a question to see a freshly generated variant, with its answer and
-                    worked solution.
+                    {t('teacher.previewHint')}
                   </p>
                 ) : (
                   <div className="mt-4 space-y-4 text-sm">
