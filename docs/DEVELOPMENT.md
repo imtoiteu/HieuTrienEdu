@@ -107,6 +107,25 @@ CORS_ORIGINS="http://localhost:3200,http://127.0.0.1:3200" npm run api
 
 The API client logs an explicit hint naming the origin in development.
 
+### Serving to a browser on another machine needs *two* settings
+
+The section above assumes the browser is on the same machine as the servers. Once it is not — a
+demo box, a colleague testing over the LAN — a second default bites, and it produces the *same*
+"Cannot reach the server":
+
+| Setting | Default | Why it breaks |
+|---|---|---|
+| `NEXT_PUBLIC_API_URL` | `http://127.0.0.1:8000` | This is the address the **browser** calls. For a visitor, `127.0.0.1` is their own computer. |
+| `CORS_ORIGINS` | localhost/127.0.0.1 only | The visitor's origin is missing, so the API answers 200 without the header and the browser discards the response. |
+
+Two things make this easy to miss. `NEXT_PUBLIC_*` is **inlined into the client bundle at build
+time**, so setting it and restarting is not enough — the app must be rebuilt. And only
+*client-side* calls fail: server-rendered pages keep working, because the server really is on
+`127.0.0.1`. Curl-based checks and any crawl of rendered HTML will therefore pass while login is
+broken. Test with an `Origin` header, or a real browser.
+
+`scripts/serve-demo.sh` sets both from `.env` (or `PUBLIC_HOST`), rebuilds, and starts the pair.
+
 ### `CORS_ORIGINS` accepts two formats
 
 Comma-separated (`a,b`) or a JSON array (`["a","b"]`). Both work. This needed `NoDecode` on the

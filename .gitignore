@@ -40,3 +40,4 @@ blob-report/
 .idea/
 .vscode/
 *.swp
+.run/
